@@ -123,6 +123,8 @@ function onTouchEnd(evt) {
 
 function onTickHandler(evt) {
 
+canvas.getContext( '2d' ).clearRect(0,0,canvas.width, canvas.height); 
+
 for(var i=0; i<touches.length; i++)
 		{
 			var touch = touches[i]; 
