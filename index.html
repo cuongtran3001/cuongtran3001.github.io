@@ -1,0 +1,139 @@
+<style>
+  body { margin: 0; padding: 0 }
+  #canvas { position: absolute; background-color: orange; }
+</style>
+
+<canvas id="canvas"></canvas>
+
+<script src="easeljs-0.8.0.min.js"></script>
+<script src="Vector.js"></script>
+
+<script>
+/*****************************
+********CONTROL class*********
+*****************************/
+(function() {
+
+function Control() {
+	this.initialize();
+}
+  
+var p = Control.prototype = new createjs.Container();
+Control.prototype.Container_initialize = Control.prototype.initialize;
+
+p.initialize = function() {
+	
+  this.Container_initialize();
+  
+  var x = 90;
+  var y = 90;
+  var radius = 60
+  var startAngle;
+  var endAngle;
+  var counterClockwise = false;
+  var shape;
+  
+  function onClickHandler(evt) {
+    alert(evt.target == this.stage.getObjectUnderPoint(evt.stageX, evt.stageY));
+  }
+
+  for (var i = 0; i <= 20; i ++) {
+    
+    if (i == 14 || i % 2 != 0) {
+      continue;
+    }
+  
+    startAngle = i/10 * Math.PI;
+    endAngle = i == 12 ? startAngle + 0.18 * Math.PI : startAngle + 0.08 * Math.PI;
+   
+    shape = new createjs.Shape();
+    shape.graphics.beginStroke('#DDD').setStrokeStyle(17, 'round').arc(x, y, radius, startAngle, endAngle, counterClockwise).endFill();
+    
+    if (i == 12) {
+      shape.graphics.beginStroke('#DDD').setStrokeStyle(10, 'round').moveTo(x - 40, y - radius - 5).lineTo(x - 15, y - radius).lineTo(x - 20, y - radius + 22);
+    }
+    
+    if (i == 16) {
+      shape.graphics.beginFill('#DDD').drawCircle(x + 8, y - radius, 5);
+    }
+    
+    shape.name = 'shape_' + i;    
+    this.addChild(shape);
+    
+    shape.on('click', onClickHandler, this);    
+  }
+};
+
+createjs.Control = Control;
+  
+}());
+/*****************************
+****end of BUTTON class*******
+*****************************/
+
+var canvas, stage, touches = [];
+
+window.addEventListener('load', onLoadedHandler);
+window.addEventListener('resize', onResizedHandler);
+
+function onResizedHandler(evt) {  
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+};
+  
+function onLoadedHandler(evt) {
+  canvas = document.querySelector('canvas');
+  onResizedHandler();
+  
+  canvas.addEventListener( 'touchstart', onTouchStart, false );
+  canvas.addEventListener( 'touchmove', onTouchMove, false );
+  canvas.addEventListener( 'touchend', onTouchEnd, false );
+  
+  //create Stage instance to wrap canvas element
+  stage = new createjs.Stage("canvas");
+  stage.enableMouseOver();
+  
+  var control = stage.addChild(new createjs.Control());
+  //control.scaleX = control.scaleY = 0.8;
+  stage.addChild(control);
+  
+  //update Stage by using Ticker - can use requestAnimationFrame
+  createjs.Ticker.on("tick", onTickHandler);
+};
+
+function onTouchStart(evt) { 
+	touches = evt.touches; 
+}
+ 
+function onTouchMove(evt) {
+	 // Prevent the browser from doing its default thing (scroll, zoom)
+	evt.preventDefault();
+	touches = e.touches; 
+	
+} 
+ 
+function onTouchEnd(evt) { 
+   touches = evt.touches; 
+}
+
+function onTickHandler(evt) {
+
+for(var i=0; i<touches.length; i++)
+		{
+			var touch = touches[i]; 
+			c.beginPath(); 
+			c.fillStyle = "white";
+			c.fillText("touch id : "+touch.identifier+" x:"+touch.clientX+" y:"+touch.clientY, touch.clientX+30, touch.clientY-30); 
+
+			c.beginPath(); 
+			c.strokeStyle = "cyan";
+			c.lineWidth = "6";
+			c.arc(touch.clientX, touch.clientY, 40, 0, Math.PI*2, true); 
+			c.stroke();
+		}
+		
+  stage.update();
+};
+
+
+</script>
