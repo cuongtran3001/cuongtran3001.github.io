@@ -76,7 +76,7 @@ createjs.Control = Control;
 ****end of BUTTON class*******
 *****************************/
 
-var canvas, stage, touches = [];
+var canvas, stage, c, touches = [];
 
 window.addEventListener('load', onLoadedHandler);
 window.addEventListener('resize', onResizedHandler);
@@ -94,6 +94,8 @@ function onLoadedHandler(evt) {
   canvas.addEventListener( 'touchmove', onTouchMove, false );
   canvas.addEventListener( 'touchend', onTouchEnd, false );
   
+  c = canvas.getContext( '2d' );
+  
   //create Stage instance to wrap canvas element
   stage = new createjs.Stage("canvas");
   stage.enableMouseOver();
@@ -108,13 +110,12 @@ function onLoadedHandler(evt) {
 
 function onTouchStart(evt) { 
 	touches = evt.touches; 
-	alert(touches);
 }
  
 function onTouchMove(evt) {
 	 // Prevent the browser from doing its default thing (scroll, zoom)
 	evt.preventDefault();
-	touches = e.touches; 
+	touches = evt.touches; 
 	
 } 
  
@@ -124,7 +125,9 @@ function onTouchEnd(evt) {
 
 function onTickHandler(evt) {
 
-canvas.getContext( '2d' ).clearRect(0,0,canvas.width, canvas.height); 
+c.clearRect(0,0,canvas.width, canvas.height); 
+
+stage.update();
 
 for(var i=0; i<touches.length; i++)
 		{
@@ -140,7 +143,7 @@ for(var i=0; i<touches.length; i++)
 			c.stroke();
 		}
 		
-  //stage.update();
+  
 };
 
 
