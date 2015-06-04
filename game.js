@@ -250,9 +250,8 @@ function onTickHandler(evt) {
           if (i == 0) {
             txtLeft.text = 'Left:' + pos.targets.length;
           } else {
-            txtRight.text = 'Left:' + pos.targets.length;
+            txtRight.text = 'Right:' + pos.targets.length;
           }
-
 
           //reset
           pos.targets = [];
@@ -264,6 +263,8 @@ function onTickHandler(evt) {
   if (car.distance != 0) {
     var newX = car.x + car.distance;
     createjs.Tween.get(car, {override:true}).to({x: newX}, 100);
+
+    txtRight.text = txtRight.text + ' - ' + car.distance;
     //console.log(car.distance);
   }
 
