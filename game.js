@@ -148,17 +148,17 @@ function onLoadedHandler(evt) {
   stage.enableMouseOver();
   
   car = stage.addChild(new createjs.Car());
-  //car.y = 200;
+  car.scaleX = car.scaleY = 0.5;
   stage.addChild(car);
 
   var controlLeft = stage.addChild(new createjs.Control());
   controlLeft.x = 70;
-  controlLeft.y = 130;
+  controlLeft.y = 80;
   stage.addChild(controlLeft);
   
   var controlRight = stage.addChild(new createjs.Control());
   controlRight.x = 230;
-  controlRight.y = 130;
+  controlRight.y = 80;
   stage.addChild(controlRight);
   
   //update Stage by using Ticker - can use requestAnimationFrame
