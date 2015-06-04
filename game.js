@@ -125,7 +125,7 @@
 ****end of CAR class**********
 *****************************/
 
-var canvas, stage, arrPos = [], touches = [], car, distance = 0;
+var canvas, stage, arrPos = [], touches = [], car;
 
 window.addEventListener('load', onLoadedHandler);
 window.addEventListener('resize', onResizedHandler);
@@ -205,7 +205,7 @@ function getPos(touchID) {
 function onTickHandler(evt) {
 
   var i, touch, shape, index, pos;
-  distance = 0;
+  car.distance = 0;
 
   for(i = 0; i < touches.length; i ++) {
     touch = touches[i]; 
@@ -235,8 +235,7 @@ function onTickHandler(evt) {
             pos.targets[j].alpha = 0.7;
           }
 
-          distance += pos.targets.length;
-
+          car.distance += pos.targets.length;
           //reset
           pos.targets = [];
         }
@@ -244,9 +243,10 @@ function onTickHandler(evt) {
     }
   }
 
-  var newX = car.x + distance;  
+  console.log(car.distance);
 
-  createjs.Tween.get(car, {override:true}).to({x: newX}, 300);
+  var newX = car.x + car.distance;
+  createjs.Tween.get(car, {override:true}).to({x: newX}, 100);
   
   stage.update();
 };
