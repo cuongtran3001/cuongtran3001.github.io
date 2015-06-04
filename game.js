@@ -125,7 +125,7 @@
 ****end of CAR class**********
 *****************************/
 
-var canvas, stage, arrPos = [], touches = [], car, txtLeft, txtRight;
+var canvas, stage, arrPos = [], touches = [], car, txt, txtLeft, txtRight;
 
 window.addEventListener('load', onLoadedHandler);
 window.addEventListener('resize', onResizedHandler);
@@ -171,6 +171,11 @@ function onLoadedHandler(evt) {
   txtRight.x = controlRight.x;
   txtRight.y = 210;
   stage.addChild(txtRight);
+
+  txt = new createjs.Text('Total', '20px Arial', '#FF0');
+  txt.x = controlRight.x + 150;
+  txt.y = 210;
+  stage.addChild(txt);
   
   //update Stage by using Ticker - can use requestAnimationFrame
   createjs.Ticker.on("tick", onTickHandler);
@@ -245,7 +250,7 @@ function onTickHandler(evt) {
             pos.targets[j].alpha = 0.7;
           }
 
-          car.distance += pos.targets.length;
+          car.distance = car.distance + pos.targets.length;
 
           if (i == 0) {
             txtLeft.text = 'Left:' + pos.targets.length;
@@ -264,7 +269,7 @@ function onTickHandler(evt) {
     var newX = car.x + car.distance;
     createjs.Tween.get(car, {override:true}).to({x: newX}, 100);
 
-    txtRight.text = txtRight.text + ' - ' + car.distance;
+    txt.text = 'Total:' + car.distance;
     //console.log(car.distance);
   }
 
