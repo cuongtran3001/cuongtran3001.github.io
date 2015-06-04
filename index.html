@@ -100,11 +100,13 @@ function onLoadedHandler(evt) {
   stage.enableMouseOver();
   
   var controlLeft = stage.addChild(new createjs.Control());
-  controlLeft.x = 50;
+  controlLeft.x = 70;
+  controlLeft.y = 20;
   stage.addChild(controlLeft);
   
   var controlRight = stage.addChild(new createjs.Control());
-  controlRight.x = 250;
+  controlRight.x = 230;
+  controlRight.y = 20;
   stage.addChild(controlRight);
   
   //update Stage by using Ticker - can use requestAnimationFrame
