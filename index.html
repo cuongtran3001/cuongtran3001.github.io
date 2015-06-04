@@ -99,9 +99,13 @@ function onLoadedHandler(evt) {
   stage = new createjs.Stage("canvas");
   stage.enableMouseOver();
   
-  var control = stage.addChild(new createjs.Control());
-  //control.scaleX = control.scaleY = 0.8;
-  stage.addChild(control);
+  var controlLeft = stage.addChild(new createjs.Control());
+  controlLeft.x = 50;
+  stage.addChild(controlLeft);
+  
+  var controlRight = stage.addChild(new createjs.Control());
+  controlRight.x = 250;
+  stage.addChild(controlRight);
   
   //update Stage by using Ticker - can use requestAnimationFrame
   createjs.Ticker.on("tick", onTickHandler);
