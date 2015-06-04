@@ -125,7 +125,7 @@
 ****end of CAR class**********
 *****************************/
 
-var canvas, stage, arrPos = [], touches = [], car;
+var canvas, stage, arrPos = [], touches = [], car, txtLeft, txtRight;
 
 window.addEventListener('load', onLoadedHandler);
 window.addEventListener('resize', onResizedHandler);
@@ -156,11 +156,21 @@ function onLoadedHandler(evt) {
   controlLeft.x = 70;
   controlLeft.y = 60;
   stage.addChild(controlLeft);
+
+  txtLeft = new createjs.Text('Left', '20px Arial', '#FF0');
+  txtLeft.x = controlLeft.x;
+  txtLeft.y = 210;
+  stage.addChild(txtLeft);
   
   var controlRight = stage.addChild(new createjs.Control());
   controlRight.x = 230;
   controlRight.y = 60;
   stage.addChild(controlRight);
+
+  txtRight = new createjs.Text('Right', '20px Arial', '#FF0');
+  txtRight.x = controlRight.x;
+  txtRight.y = 210;
+  stage.addChild(txtRight);
   
   //update Stage by using Ticker - can use requestAnimationFrame
   createjs.Ticker.on("tick", onTickHandler);
@@ -236,15 +246,25 @@ function onTickHandler(evt) {
           }
 
           car.distance += pos.targets.length;
+
+          if (i == 0) {
+            txtLeft.text = 'Left:' + pos.targets.length;
+          } else {
+            txtRight.text = 'Left:' + pos.targets.length;
+          }
+
+
           //reset
           pos.targets = [];
-
-          var newX = car.x + car.distance;
-          createjs.Tween.get(car, {override:true}).to({x: newX}, 100);
-  
         }
       }
     }
+  }
+
+  if (car.distance != 0) {
+    var newX = car.x + car.distance;
+    createjs.Tween.get(car, {override:true}).to({x: newX}, 100);
+    //console.log(car.distance);
   }
 
   
