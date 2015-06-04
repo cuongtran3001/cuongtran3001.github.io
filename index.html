@@ -11,7 +11,7 @@
 <canvas id="canvas"></canvas>
 
 <script src="easeljs-0.8.0.min.js"></script>
-<script src="Vector.js"></script>
+<!--script src="Vector.js"></script-->
 
 <script>
 /*****************************
@@ -64,7 +64,7 @@ p.initialize = function() {
     
     shape.name = 'shape_' + i;    
     this.addChild(shape);
-	shape.alpha = 0.5;
+	shape.alpha = 0.7;
     
    // shape.on('click', onClickHandler, this);    
   }
@@ -95,8 +95,6 @@ function onLoadedHandler(evt) {
   canvas.addEventListener( 'touchmove', onTouchMove, false );
   canvas.addEventListener( 'touchend', onTouchEnd, false );
   
- // c = canvas.getContext( '2d' );
-  
   //create Stage instance to wrap canvas element
   stage = new createjs.Stage("canvas");
   stage.enableMouseOver();
@@ -111,6 +109,7 @@ function onLoadedHandler(evt) {
 
 function onTouchStart(evt) { 
 	touches = evt.touches; 
+	isTouch = true;
 }
  
 function onTouchMove(evt) {
@@ -120,7 +119,18 @@ function onTouchMove(evt) {
 } 
  
 function onTouchEnd(evt) { 
-   touches = evt.touches; 
+   touches = evt.touches;
+   
+   for(var i = 0; i < arrPos.length; i ++) {
+		resetPos(arrPos[i]);
+	}
+}
+
+function resetPos(pos) {
+	for(var i = 0; i < pos.targets.length; i ++) {
+		pos.targets[i].alpha = 0.7;
+	}
+	pos.targets = [];
 }
 
 function getPos(touchID) {
@@ -132,9 +142,8 @@ function getPos(touchID) {
 	return -1;
 }
 
-function onTickHandler(evt) {
 
-	//c.clearRect(0,0,canvas.width, canvas.height); 
+function onTickHandler(evt) {
 
 	var i, touch, shape, index, pos;
 	for(i = 0; i < touches.length; i ++) {
@@ -151,7 +160,7 @@ function onTickHandler(evt) {
 		
 		shape = stage.getObjectUnderPoint(touch.clientX, touch.clientY);
 
-		if (shape) {
+		if (shape && isTouch) {
 			if (pos.targets.indexOf(shape) == - 1) {
 				pos.targets.push(shape);
 				shape.alpha = 1;
@@ -159,22 +168,12 @@ function onTickHandler(evt) {
 				
 				if (pos.targets.length > 1 && pos.targets[0] == shape) {
 					for(var j = 0; j < pos.targets.length; j ++) {
-						pos.targets[j].alpha = 0.5;
+						pos.targets[j].alpha = 0.7;
 					}
 					pos.targets = [];
 				}
 			}
-		}	
-		
-		//c.beginPath(); 
-		//c.fillStyle = "white";
-		//c.fillText("touch id : "+touch.identifier+" x:"+touch.clientX+" y:"+touch.clientY, touch.clientX+30, touch.clientY-30); 
-
-		//c.beginPath(); 
-		//c.strokeStyle = "cyan";
-		//c.lineWidth = "6";
-		//c.arc(touch.clientX, touch.clientY, 40, 0, Math.PI*2, true); 
-		//c.stroke();
+		}		
 	}
 	
 	stage.update();
