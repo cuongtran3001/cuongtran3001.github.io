@@ -238,15 +238,15 @@ function onTickHandler(evt) {
           car.distance += pos.targets.length;
           //reset
           pos.targets = [];
+
+          var newX = car.x + car.distance;
+          createjs.Tween.get(car, {override:true}).to({x: newX}, 100);
+  
         }
       }
     }
   }
 
-  console.log(car.distance);
-
-  var newX = car.x + car.distance;
-  createjs.Tween.get(car, {override:true}).to({x: newX}, 100);
   
   stage.update();
 };
