@@ -220,6 +220,9 @@ function getPos(touchID) {
 function onTickHandler(evt) {
 
   var i, touch, shape, index, pos;
+
+  var isCircle = false;
+
   car.distance = 0;
 
   for(i = 0; i < touches.length; i ++) {
@@ -252,12 +255,6 @@ function onTickHandler(evt) {
 
           car.distance = car.distance + pos.targets.length;
 
-          if (i == 0) {
-            txtLeft.text = 'Left:' + pos.targets.length;
-          } else {
-            txtRight.text = 'Right:' + pos.targets.length;
-          }
-
           //reset
           pos.targets = [];
         }
@@ -266,11 +263,8 @@ function onTickHandler(evt) {
   }
 
   if (car.distance != 0) {
-    var newX = car.x + car.distance;
-    createjs.Tween.get(car, {override:true}).to({x: newX}, 100);
-
-    txt.text = 'Total:' + car.distance;
-    //console.log(car.distance);
+    //var newX = car.x + car.distance;
+    //createjs.Tween.get(car, {override:true}).to({x: newX}, 100);
   }
 
   
