@@ -125,7 +125,7 @@
 ****end of CAR class**********
 *****************************/
 
-var canvas, stage, arrPos = [], touches = [], car;
+var canvas, stage, arrPos = [], touches = [], car, distance = 0;
 
 window.addEventListener('load', onLoadedHandler);
 window.addEventListener('resize', onResizedHandler);
@@ -149,16 +149,17 @@ function onLoadedHandler(evt) {
   
   car = stage.addChild(new createjs.Car());
   car.scaleX = car.scaleY = 0.5;
+  car.y = 5;
   stage.addChild(car);
 
   var controlLeft = stage.addChild(new createjs.Control());
   controlLeft.x = 70;
-  controlLeft.y = 80;
+  controlLeft.y = 60;
   stage.addChild(controlLeft);
   
   var controlRight = stage.addChild(new createjs.Control());
   controlRight.x = 230;
-  controlRight.y = 80;
+  controlRight.y = 60;
   stage.addChild(controlRight);
   
   //update Stage by using Ticker - can use requestAnimationFrame
@@ -204,6 +205,8 @@ function getPos(touchID) {
 function onTickHandler(evt) {
 
   var i, touch, shape, index, pos;
+  distance = 0;
+
   for(i = 0; i < touches.length; i ++) {
     touch = touches[i]; 
     
@@ -220,7 +223,7 @@ function onTickHandler(evt) {
 
     if (shape && isTouch) {
       
-      if (pos.targets.indexOf(shape) == - 1) {
+      if (pos.targets.indexOf(shape) == -1) {
         pos.targets.push(shape);
         shape.alpha = 1;
       } 
@@ -231,14 +234,20 @@ function onTickHandler(evt) {
           for(var j = 0; j < pos.targets.length; j ++) {
             pos.targets[j].alpha = 0.7;
           }
-          pos.targets = [];
-          car.x ++;
-          //
 
+          distance += pos.targets.length;
+
+          //reset
+          pos.targets = [];
         }
       }
-    }   
+    }
   }
+
+  var newX = car.x + distance;  
+
+  createjs.Tween.get(car, {override:true}).to({x: newX}, 300);
   
   stage.update();
 };
+
