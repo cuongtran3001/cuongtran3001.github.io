@@ -1,0 +1,104 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html lang="en" class="no-js ie ie8"><![endif]-->
+<!--[if IE 9]><html lang="en" class="no-js ie ie9"><![endif]-->
+<!--[if gt IE 9]><!-->
+<html lang="en" class="no-js">
+  <!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1"><![endif]-->
+    <title>Homepage</title>
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <meta name="robots" content="index, follow">
+    <meta name="author" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1, minimal-ui">
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="css/jquery-ui.min.css">
+    <link rel="stylesheet" href="css/style.css">
+    <!--[if lt IE 8]><link rel="stylesheet" href="css/ie.css"><![endif]-->
+    <script src="js/modernizr.js"></script>
+    <script src="http://10.0.2.203:8080/target/target-script-min.js#anonymous"></script>
+  </head>
+  <body class="home">
+    <div id="container">
+      <header id="header"><a href="index.html" title="Logo" class="logo">Logo</a>
+        <nav>
+          <ul>
+            <li class="active"><a href="index.html" title="Home">Home</a>
+            </li>
+            <li><a href="template-layer.html" title="Layer">Layer</a>
+            </li>
+            <li><a href="template-sprite.html" title="Sprite">Sprite</a>
+            </li>
+            <li><a href="template-style-guide.html" title="Style Guide">Style Guide</a>
+            </li>
+            <li><a href="sitemap.html" title="Sitemap">Sitemap</a>
+            </li>
+          </ul>
+        </nav>
+      </header>
+      <div class="video-wrapper-1">
+        <div data-video-youku="{&quot;width&quot;: &quot;700&quot;, &quot;height&quot;: &quot;420&quot;, &quot;vid&quot;:&quot;XMTI1NzYzOTYwOA&quot;}" class="youku bg-black"></div><br>
+        <button onclick="play()" class="play">Play</button>
+        <button onclick="pause()" class="pause">Pause</button>
+        <button onclick="showControls()" class="showControls">Show controls</button>
+        <button onclick="hideControls()" class="hideControls">Hide controls</button><br><br>
+        <button onclick="gettime()" class="gettime">Get current time</button>
+        <button onclick="seek()" class="seek">Seek</button>
+        <input type="text" placeholder="Seek to (seconds)" class="time">
+      </div><br>
+      <script type="text/javascript">
+        function play() {
+          $(document).on('click', '.play', function() {
+            $(this).siblings('[data-video-youku]').data('app-video-youku').play();
+          });
+        }
+        
+        function pause() {
+          $(document).on('click', '.pause', function() {
+            $(this).siblings('[data-video-youku]').data('app-video-youku').pause();
+          });
+        }
+        
+        function gettime() {
+          $(document).on('click', '.gettime', function() {
+            var video = $(this).siblings('[data-video-youku]').data('app-video-youku');
+            var sec = video.getCurrentTime();
+            video.pause();
+            window.alert(sec);
+          });
+        }
+        
+        function seek() {
+          $(document).on('click', '.seek', function() {
+            var sec = $('.time').val();
+            sec = sec.length > 0 ? sec : 0;
+            $(this).siblings('[data-video-youku]').data('app-video-youku').seekTo(sec);
+          });
+        }
+        
+        function showControls() {
+          $(document).on('click', '.showControls', function() {
+            $(this).siblings('[data-video-youku]').data('app-video-youku').player.showControls();
+          });
+        }
+        
+        function hideControls() {
+          $(document).on('click', '.hideControls', function() {
+            $(this).siblings('[data-video-youku]').data('app-video-youku').player.hideControls();
+          });
+        }
+        
+      </script>
+      <footer id="footer"> 
+        <p>Copyright &copy; Company</p>
+      </footer>
+    </div>
+    <script src="js/l10n.js"></script>
+    <script src="js/libs.js"></script>
+    <script src="js/script.js"></script>
+    <!--[if lt IE 8]><p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p><![endif]-->
+    <noscript>JavaScript is off. Please enable to view full site.</noscript>
+  </body>
+</html>
