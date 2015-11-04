@@ -76,7 +76,8 @@
 
       function loadFiles(folderId) {
 
-        var request = gapi.client.drive.files.list({
+        //var request = gapi.client.drive.files.list({
+        var request = gapi.client.drive.children.list({
           'folderId': folderId,
           'maxResults': 1000,
           'q': 'mimeType="application/vnd.google-apps.folder" or mimeType="application/vnd.google-apps.photo"'
