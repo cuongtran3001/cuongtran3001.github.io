@@ -64,40 +64,41 @@
        * Load Drive API client library.
        */
       function loadDriveApi() {
-        gapi.client.load('drive', 'v2', listFiles);
+        gapi.client.load('drive', 'v2', onDriveLoadHandler);
       }
 
       /**
        * Print files.
        */
-      function listFiles() {
+      function onDriveLoadHandler() {
+        loadFiles('root');
+      }
+
+      function loadFiles(folderId) {
+
         var request = gapi.client.drive.files.list({
-            'folderId': 'root',
-            'maxResults': 1000,
-            'q': 'mimeType="application/vnd.google-apps.folder" or mimeType="application/vnd.google-apps.photo"'
-          });
+          'folderId': folderId,
+          'maxResults': 1000,
+          'q': 'mimeType="application/vnd.google-apps.folder" or mimeType="application/vnd.google-apps.photo"'
+        });
 
         //application/vnd.google-apps.folder
         //application/vnd.google-apps.photo
         //application/vnd.google-apps.audio
         //application/vnd.google-apps.video
 
+        request.execute(function(resp) {
+          $('#output').empty();
 
-          request.execute(function(resp) {
-            $('#output').empty();
-
-            console.log(resp);
-
-            var files = resp.items;
-            if (files && files.length > 0) {
-              for (var i = 0; i < files.length; i++) {
-                appendPre(files[i]);
-              }
-            } else {
-              appendPre('No files found.');
+          var files = resp.items;
+          if (files && files.length > 0) {
+            for (var i = 0; i < files.length; i++) {
+              appendPre(files[i]);
             }
-          });
-
+          } else {
+            appendPre('No files found.');
+          }
+        });
       }
 
       /**
@@ -109,6 +110,12 @@
       function appendPre(file) {
         var li = $('<li><img src="' + file.iconLink + '"/>' + file.title + '</li>')
         $('#output').append(li);
+
+        var folderId = file.id;
+
+        li.on('click', function(evt) {
+          loadFiles(folderId);
+        });
       }
 
     </script>
