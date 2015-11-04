@@ -65,12 +65,14 @@
           });
 
           request.execute(function(resp) {
-            appendPre('Files:');
+            $('#output').empty();
+
+            console.log(resp);
+
             var files = resp.items;
             if (files && files.length > 0) {
               for (var i = 0; i < files.length; i++) {
-                var file = files[i];
-				        appendPre(file.title + ' (' + file.id + ')');
+                appendPre(files[i]);
               }
             } else {
               appendPre('No files found.');
@@ -84,8 +86,8 @@
        *
        * @param {string} message Text to be placed in pre element.
        */
-      function appendPre(name) {
-        var li = $('<li>' + name + '</li>')
+      function appendPre(file) {
+        var li = $('<li><img src="' + file.iconLink + '"/>' + file.title + '</li>')
         $('#output').append(li);
       }
 
