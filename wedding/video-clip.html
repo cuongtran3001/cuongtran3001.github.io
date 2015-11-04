@@ -1,5 +1,12 @@
 <html>
   <head>
+
+    <style>
+      #output {
+        list-style-type:none;
+      }
+    </style>
+
     <script type="text/javascript">
       // Your Client ID can be retrieved from your project in the Google
       // Developer Console, https://console.developers.google.com
@@ -61,6 +68,7 @@
        */
       function listFiles() {
         var request = gapi.client.drive.files.list({
+            'q': 'root',
             'maxResults': 10
           });
 
