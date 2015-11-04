@@ -12,12 +12,16 @@
       // Developer Console, https://console.developers.google.com
       var CLIENT_ID = '647572881480-3iq5hf43hhdnu9474b3vjp7mia9jigid.apps.googleusercontent.com';
 
+      var API_KEY = 'AIzaSyCbJYq6i_CJzt8okRFQw4frnBtvjp4IV80';
+
       var SCOPES = ['https://www.googleapis.com/auth/drive.metadata.readonly'];
 
       /**
        * Check if current user has authorized this application.
        */
       function checkAuth() {
+        gapi.client.setApiKey(API_KEY);
+
         gapi.auth.authorize(
           {
             'client_id': CLIENT_ID,
@@ -86,7 +90,7 @@
               appendPre('No files found.');
             }
           });
-          
+
       }
 
       /**
