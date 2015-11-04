@@ -73,8 +73,15 @@
       function listFiles() {
         var request = gapi.client.drive.files.list({
             'folderId': 'root',
-            'maxResults': 10
+            'maxResults': 1000,
+            'q': 'mimeType="application/vnd.google-apps.folder" or mimeType="application/vnd.google-apps.photo"'
           });
+
+        //application/vnd.google-apps.folder
+        //application/vnd.google-apps.photo
+        //application/vnd.google-apps.audio
+        //application/vnd.google-apps.video
+
 
           request.execute(function(resp) {
             $('#output').empty();
