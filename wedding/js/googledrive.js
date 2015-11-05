@@ -9,6 +9,13 @@ function GoogleDrive() {
 }
 
 GoogleDrive.prototype.init = function() {
-	alert(0);
+	console.log('init');
 };
 
+GoogleDrive.prototype.connect = function() {
+	console.log('connect');
+};
+
+$('#googledrive-connect').on('click', function(evt) {
+	googleDrive.connect();
+}
