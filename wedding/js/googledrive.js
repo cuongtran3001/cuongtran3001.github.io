@@ -28,6 +28,9 @@ GoogleDrive.prototype.connect = function() {
 			that.loadDriveApi();
 		}
 	});
+	
+	//dispatch event here
+	$('#uploadGoogle').modal('show');
 };
 
 GoogleDrive.prototype.loadDriveApi = function() {
