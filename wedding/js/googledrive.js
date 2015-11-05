@@ -1,4 +1,7 @@
 var googleDrive = new GoogleDrive();
+$('#googledrive-connect').on('click', function(evt) {
+	googleDrive.connect();
+});
 
 function onGooglClientApiLoadedHandler() {
 	googleDrive.init();
@@ -20,7 +23,7 @@ GoogleDrive.prototype.connect = function() {
         'client_id': this.CLIENT_ID,
         'scope': this.SCOPES.join(' '),
         'immediate': true
-    }, function(result) {
+    }, function(authResult) {
 		if (authResult && !authResult.error) {
 			that.loadDriveApi();
 		}
@@ -35,10 +38,24 @@ GoogleDrive.prototype.loadDriveApi = function() {
 };
 
 GoogleDrive.prototype.onDriveLoadHandler = function() {
-	console.log(gapi.client.drive.files.list);
+	this.loadFiles('root');
 };
 
+GoogleDrive.prototype.loadFiles = function(folderId) {
 
-$('#googledrive-connect').on('click', function(evt) {
-	googleDrive.connect();
-});
+	var request = gapi.client.drive.files.list({
+	  'folderId': folderId + ' in parents',
+	  'maxResults': 1000,
+	  'q': folderId + ' in parents and mimeType="application/vnd.google-apps.folder" or mimeType="image/jpeg" or mimeType="image/png"'
+	});
+
+	request.execute(function(resp) {
+	  var files = resp.items;
+	  if (files && files.length > 0) {
+		for (var i = 0; i < files.length; i++) {
+			//appendPre(files[i]);
+			console.log(files[i]);
+		}
+	  }
+	});
+};
