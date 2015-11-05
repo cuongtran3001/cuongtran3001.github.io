@@ -11,7 +11,7 @@ function GoogleDrive() {
 }
 
 GoogleDrive.prototype.init = function() {
-	gapi.client.setApiKey(API_KEY);
+	gapi.client.setApiKey(this.API_KEY);
 };
 
 GoogleDrive.prototype.connect = function() {
@@ -33,7 +33,7 @@ GoogleDrive.prototype.onAuthResultHandler = function(authResult) {
 };
 
 GoogleDrive.prototype.loadDriveApi = function() {
-	gapi.client.load('drive', 'v2', onDriveLoadHandler);
+	gapi.client.load('drive', 'v2', this.onDriveLoadHandler);
 };
 
 GoogleDrive.prototype.onDriveLoadHandler = function() {
