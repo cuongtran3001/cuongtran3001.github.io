@@ -30,6 +30,7 @@ GoogleDrive.prototype.connect = function() {
 	});
 	
 	//dispatch event here
+	$('#googledrive-content').empty();
 	$('#uploadGoogle').modal('show');
 };
 
@@ -45,7 +46,7 @@ GoogleDrive.prototype.onDriveLoadHandler = function() {
 };
 
 GoogleDrive.prototype.loadFiles = function(folderId) {
-
+	var that = this;
 	var request = gapi.client.request({
 		'path': 'drive/v2/files?q=trashed=false ' +
 				'and ( ' +
@@ -59,9 +60,13 @@ GoogleDrive.prototype.loadFiles = function(folderId) {
 	  var files = resp.items;
 	  if (files && files.length > 0) {
 		for (var i = 0; i < files.length; i++) {
-			//appendPre(files[i]);
-			console.log(files[i]);
+			that.addFile(files[i]);
 		}
 	  }
 	});
+};
+
+GoogleDrive.prototype.addFile = function(file) {
+	var div = $('<div data-item-id="item_1" data-item-url="Image1.png" class="item col-xs-3"><div class="thumb"><img src="' + file.thumbnailLink + '" alt="" class="img-responsive"/></div></div>');
+	$('#googledrive-content').append(div);
 };
