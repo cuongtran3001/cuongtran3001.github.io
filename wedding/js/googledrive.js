@@ -15,25 +15,23 @@ GoogleDrive.prototype.init = function() {
 };
 
 GoogleDrive.prototype.connect = function() {
+	var that = this;
 	gapi.auth.authorize({
         'client_id': this.CLIENT_ID,
         'scope': this.SCOPES.join(' '),
         'immediate': true
-    }, this.onAuthResultHandler);
-};
-
-GoogleDrive.prototype.onAuthResultHandler = function(authResult) {
-    if (authResult && !authResult.error) {
-		this.loadDriveApi();
-    }
-
-	else {
-		
-	}
+    }, function(result) {
+		if (authResult && !authResult.error) {
+			that.loadDriveApi();
+		}
+	});
 };
 
 GoogleDrive.prototype.loadDriveApi = function() {
-	gapi.client.load('drive', 'v2', this.onDriveLoadHandler);
+	var that = this;
+	gapi.client.load('drive', 'v2', function() {
+		that.onDriveLoadHandler();
+	});
 };
 
 GoogleDrive.prototype.onDriveLoadHandler = function() {
