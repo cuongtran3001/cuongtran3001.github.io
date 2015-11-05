@@ -17,6 +17,7 @@ var Site = (function($, window, undefined) {
         });
       });
     });
+
     $('.social li a').each(function(){
       $(this).addClass('animated');
       $(this).off('mouseover').on('mouseover',function(){
@@ -28,6 +29,31 @@ var Site = (function($, window, undefined) {
       });
     });
   }
+  if($('.change-title').length){
+    var replaceWith = $('<input name="temp" type="text" />'),
+        connectWith = $('input[name="hiddenField"]');
+
+    $('.change-title').inlineEdit(replaceWith, connectWith);
+  }
+  var limit = $('[data-multiple-select]').data('option-check');
+
+  $('[data-multiple-select]').change(function() {
+  }).multipleSelect({
+    placeholder: "",
+    width: '100%',
+    filter: false,
+    selectAll: false,
+    onClick: function(view) {
+      var checkboxes = $("[data-multiple-select]").next().find("input[type='checkbox']").not(":checked");
+      var selectedLen = $("[data-multiple-select]").multipleSelect('getSelects').length;
+      if (selectedLen >= limit) {
+        checkboxes.prop("disabled", true);
+      } else {
+        checkboxes.prop("disabled", false);
+      }
+    }
+  });
+  $('.testselect2').SumoSelect({ okCancelInMulti: true });
   $('[data-sortable]').sortable();
   $('[data-rate]').raty({
     numberMax : 5,
@@ -50,7 +76,7 @@ var Site = (function($, window, undefined) {
     // console.log('all images loaded, at least one is broken');
   })
   .progress( function( instance, image ) {
-    $(image.img).before(templateLoading);
+    // $(image.img).before(templateLoading);
     // var result = image.isLoaded ? 'loaded' : 'broken';
     // console.log( 'image is ' + result + ' for ' + image.img.src );
   });
@@ -170,15 +196,17 @@ var Site = (function($, window, undefined) {
           // }
         });
     });
-    $('.replay-comment').each(function(){
-      var that = $(this);
-      that.off('click').on('click', function(e){
-        e.preventDefault;
-        $(this).parent().addClass('active');
-        $(this).closest('.btn-group').next().removeClass('hidden');
-        $(this).closest('.btn-group').next().slideToggle();
+    if($('.replay-comment').length){
+      $('.replay-comment').each(function(){
+        var that = $(this);
+        that.off('click').on('click', function(e){
+          e.preventDefault;
+          $(this).parent().addClass('active');
+          $(this).closest('.btn-group').next().removeClass('hidden');
+          $(this).closest('.btn-group').next().slideToggle();
+        });
       });
-    });
+    }
     $('[data-money]').number(true);
     $('[data-fancybox]').fancybox({
       helpers: {
@@ -489,6 +517,27 @@ var Site = (function($, window, undefined) {
     $('[data-slider-small]').find('.slick-slide').eq(3).addClass('slick-current');
     $('[data-modal-ajax]').on('show.bs.modal', function (e) {
       setTimeout(function(){
+        $('[data-money]').number(true);
+        $('[data-check]').check();
+        $('[data-picker]').datepicker({
+          showButtonPanel: true,
+          dateFormat: "dd/mm/yy",
+           autoSize: true,
+          beforeShow: function(input, inst) {
+            setTimeout(function(){
+              var widthItem = $('[data-picker]').parent().width();
+              $('#ui-datepicker-div').css({width: widthItem});
+            },200);
+          }
+        });
+        setTimeout(function(){
+          var widthItem = $('[data-picker]').parent().width();
+          $('#ui-datepicker-div').css({width: widthItem});
+        },200);
+        $(window).resize(function() {
+          $('[data-picker]').datepicker('hide');
+            $('[data-picker]').blur();
+        });
         $('.slidershow-album .thumbnail-album').slick({
           slidesToShow: 1,
           slidesToScroll: 1,
@@ -526,7 +575,6 @@ var Site = (function($, window, undefined) {
           });
         }).trigger('resize.album');
         $('[data-money]').number(true);
-        $('[data-check]').check();
         $('.slidershow-album .control-album').slick({
           slidesToShow: 8,
           slidesToScroll: 1,
@@ -630,6 +678,7 @@ var Site = (function($, window, undefined) {
 
     $('[data-picker]').datepicker({
       showButtonPanel: true,
+      autoSize: true,
       dateFormat: "dd/mm/yy",
       beforeShow: function(input, inst) {
         setTimeout(function(){
@@ -649,8 +698,9 @@ var Site = (function($, window, undefined) {
         });
       },300);
     });
+    if($('#fileupload').length){
     var url = window.location.hostname === 'blueimp.github.io' ?'//jquery-file-upload.appspot.com/' : $('.upload-form').data('uploadlink'),
-    uploadButton = $('<button/>')
+    uploadButton = $('<button type="button"/>')
         .addClass('btn-2')
         .prop('disabled', true)
         .text('Processing...')
@@ -688,7 +738,7 @@ var Site = (function($, window, undefined) {
               node.append(uploadButton.clone(true).data(data));
               setTimeout(function(){
               if($('.fileinput-button').length){
-                $('.file-upload-custom .fileinput-button span').hide();
+                $('.file-upload-custom.avatar .fileinput-button span').hide();
               }else{
 
               }
@@ -701,7 +751,7 @@ var Site = (function($, window, undefined) {
             file = data.files[index],
             node = $(data.context.children()[index]);
         if (file.preview) {
-            $('.file-upload-custom .text-danger').hide();
+            $('.file-upload-custom.avatar .text-danger').hide();
             node.prepend(file.preview);
         }
         if (file.error) {
@@ -733,10 +783,10 @@ var Site = (function($, window, undefined) {
                     .prop('href', file.url);
                 $(data.context.children()[index])
                     .wrap(link);
-                $('.file-upload-custom .fileinput-button span').show();
+                $('.file-upload-custom.avatar .fileinput-button span').show();
             } else if (file.error) {
                 var error = $('<span class="text-danger"/>').text(file.error);
-                $('.file-upload-custom .fileinput-button span').show();
+                $('.file-upload-custom.avatar .fileinput-button span').show();
                 $(data.context.children()[index])
                     .append(error);
                 
@@ -749,8 +799,10 @@ var Site = (function($, window, undefined) {
                 .append(error);
         });
     }).prop('disabled', !$.support.fileInput).parent().addClass($.support.fileInput ? undefined : 'disabled');
+    }
+    if($('#fileupload1').length){
     var url = window.location.hostname === 'blueimp.github.io' ?'//jquery-file-upload.appspot.com/' : $('.upload-form').data('uploadlink'),
-    uploadButton = $('<button/>')
+    uploadButton = $('<button type="button"/>')
         .addClass('btn-2')
         .prop('disabled', true)
         .text('Processing...')
@@ -833,10 +885,10 @@ var Site = (function($, window, undefined) {
                     .prop('href', file.url);
                 $(data.context.children()[index])
                     .wrap(link);
-                $('.file-upload-custom .fileinput-button span').show();
+                $('.file-upload-custom.cover .fileinput-button span').show();
             } else if (file.error) {
                 var error = $('<span class="text-danger"/>').text(file.error);
-                $('.file-upload-custom .fileinput-button span').show();
+                $('.file-upload-custom.cover .fileinput-button span').show();
                 $(data.context.children()[index])
                     .append(error);
                 
@@ -849,6 +901,7 @@ var Site = (function($, window, undefined) {
                 .append(error);
         });
     }).prop('disabled', !$.support.fileInput).parent().addClass($.support.fileInput ? undefined : 'disabled');
+  }
   }
   function loadMore() {
     var flag = true;
@@ -931,7 +984,6 @@ var Site = (function($, window, undefined) {
             }
           });
         }
-        e.preventDefault();
       });
     })
   }
@@ -939,11 +991,12 @@ var Site = (function($, window, undefined) {
     var flag = true;
     $('.accordion .item').each(function(){
       var deleteBtn = $('.icon-delete', $(this)),
-          that = $(this);
+          that = $(this),
+          marryBlock = $('.marry-block');
       // $(deleteBtn).on('click', function(){
       //   that.remove();
       // });
-      var urlContent = 'data/data-8.json';
+      var urlContent = deleteBtn.parent().data('delete');
       $(deleteBtn).on('click', function(e){
         if (flag === true){
           $.ajax({
@@ -954,10 +1007,11 @@ var Site = (function($, window, undefined) {
               loading.appendTo();
             },
             success: function(data){
-              if (data.result === 0) {
+              if (data.result === 1) {
                 that.fadeOut(800,function(){
                   that.remove();
                 });
+                marryBlock.find('.list-unstyled').html(data.content);
               }
             },
             error: function(){
@@ -965,13 +1019,42 @@ var Site = (function($, window, undefined) {
             }
           });
         }
-        e.preventDefault();
+      });
+    })
+  }
+  function deleteImg() {
+    $('.block-album .item').each(function(){
+      var deleteBtn = $('.fancybox-close', $(this)),
+          that = $(this);
+      // $(deleteBtn).on('click', function(){
+      //   that.remove();
+      // });
+      var urlContent = $(deleteBtn).data('url');
+      $(deleteBtn).on('click', function(e){
+        $.ajax({
+          url: urlContent,
+          dataType: 'json',
+          beforeSend: function(){
+            loading.appendTo();
+          },
+          success: function(data){
+            if (data.result === 0) {
+              that.fadeOut(800,function(){
+                that.remove();
+              });
+            }
+          },
+          error: function(){
+            alert('Please try again');
+          }
+        });
       });
     })
   }
   function uploadIMG(){
+    if($('[data-upload-multi]').length){
     var urlUpload = window.location.hostname === $('.upload-form-1').data('uploadlink'),
-        uploadButton = $('<button/>')
+        uploadButton = $('<button type="button"/>')
             .addClass('btn btn-primary')
             .prop('disabled', true)
             .text('Processing...')
@@ -1065,6 +1148,7 @@ var Site = (function($, window, undefined) {
     }).prop('disabled', !$.support.fileInput)
         .parent().addClass($.support.fileInput ? undefined : 'disabled');
   }
+  }
   return {
     publicVar: 1,
     publicObj: {
@@ -1073,6 +1157,7 @@ var Site = (function($, window, undefined) {
     },
     loadMore: loadMore,
     deleteInvitation: deleteInvitation,
+    deleteImg: deleteImg,
     effectSocial: effectSocial,
     loadingImg: loadingImg,
     uploadIMG: uploadIMG,
@@ -1090,6 +1175,7 @@ jQuery(function() {
   Site.uploadIMG();
   Site.loadingImg();
   Site.deleteInvitation();
+  Site.deleteImg();
 });
 (function (window, App) {
 
@@ -1104,6 +1190,75 @@ jQuery(function() {
 }(window));
 
 
+/**
+ *  @name read-more
+ *  @description description
+ *  @version 1.0
+ *  @options
+ *    option
+ *  @events
+ *    event
+ *  @methods
+ *    init
+ *    publicMethod
+ *    destroy
+ */
+;(function($, window, undefined) {
+  var pluginName = 'add-phone';
+  
+
+  function Plugin(element, options) {
+    this.element = $(element);
+    this.options = $.extend({}, $.fn[pluginName].defaults, this.element.data(), options);
+    this.init();
+  }
+
+  Plugin.prototype = {
+    init: function() {
+      var that = this,
+          ele = that.element;
+      var i = 1; 
+      ele.find('.add-more-phone').on('click.'+ pluginName, function(){
+        var self = $(this),
+            nameItem = self.prev('.wrap').find('input').attr('name');
+        var numberappend = $('<div class="item-more"><input type="number" name="'+nameItem+'-'+ i + '" value="" autocomplete="off" class="input-1 more-input" placeholder=""><a class="delete" href="javascript:void(0);" title="delete"><span class="fa fa-minus"></span></div>');
+        self.prev('.wrap').append(numberappend);
+        self.addClass('center-block');  
+        self.prev('.wrap').addClass('wrap-more');
+        ele.find('.item-more .delete').on('click.'+ pluginName, function(){
+          $(this).closest('.item-more').remove();
+          if (self.prev('.wrap').children().length === 1) {
+            self.prev('.wrap').removeClass('wrap-more')
+              .end().removeClass('center-block');
+          }
+        });
+        
+        i++;
+      });
+    }
+  };
+
+  $.fn[pluginName] = function(options, params) {
+    return this.each(function() {
+      var instance = $.data(this, pluginName);
+      if (!instance) {
+        $.data(this, pluginName, new Plugin(this, options));
+      } else if (instance[options]) {
+        instance[options](params);
+      } else {
+        window.console && console.log(options ? options + ' method is not exists in ' + pluginName : pluginName + ' plugin has been initialized');
+      }
+    });
+  };
+
+  $.fn[pluginName].defaults = {
+  };
+
+  $(function() {
+    $('[data-' + pluginName + ']')[pluginName]();
+  });
+
+}(jQuery, window));
  /**
  *  @name Select
  *  @description Custom select boxes
@@ -1553,20 +1708,71 @@ jQuery(function() {
     init: function() {
       var that = this,
           customEl= this.element,
-          formEl = this.element.find('input');
+          checkAll = $('[data-checkall]'),
+          formEl = customEl.find('input');
+      var xhr;
+      var marryBlock = $('.marry-block');
       customEl.tooltip();
-      $('[data-validate]').validate();
       formEl.on('click.'+ pluginName, function(){
         var formElment = this;
         that.check(this, customEl);
         var el = $(formElment).closest('.accordion .item');
-        var checkedBtn = $(formElment, el);
+        var checkedBtn = $(formElment, el)
         if(!el.hasClass('active')){
           el.addClass('active').fadeOut();
         }else{
           el.removeClass('active');
         }
+        if(xhr){
+          xhr.abort();
+        }
+        xhr = $.ajax({
+          url: customEl.data('url'),
+          data: formEl,
+          dataType: 'json',
+          success: function(res){
+            if(res.result == 1){
+              marryBlock.find('.list-unstyled').html(res.content);
+            }
+          }
+        });
       });
+      // if(checkAll.length){
+      //   checkAll.click(function () {
+      //     $('input:checkbox').attr('checked');
+      //   });
+      // }
+      if(checkAll.length){
+        checkAll.change(function(){
+          // customEl.prop('checked',$(this).prop("checked"));
+          if (checkAll.find('input').is(':checked')) {
+            $('input:checkbox').prop('checked','checked');
+            $('input:checkbox').closest(customEl).addClass('checked');
+            checkAll.addClass('checked');
+          }else{
+            $('input:checkbox').prop('checked', false);
+            $('input:checkbox').closest(customEl).removeClass('checked');
+            checkAll.removeClass('checked');
+          }
+        });
+        // if (checkAll.hasClass('checked')) {
+        //   checkAll.click(function(){
+        //     if ($('input:checkbox').is(':checked')) {
+        //       $('input:checkbox').prop('checked',false);
+        //       customEl.removeClass('checked');
+        //     }
+        //   });
+        // }
+        customEl.not(checkAll).click(function(){
+          if(customEl.length == customEl.hasClass('checked').length) {
+            checkAll.find('input').attr("checked", "checked");
+          } else {
+            checkAll.find('input').removeAttr("checked");
+            checkAll.removeClass('checked');
+          }
+        });
+      }
+      $('[data-validate]').validate();
     },
     check: function(el, wrapper) {
       wrapper.toggleClass('checked');
@@ -1694,8 +1900,12 @@ jQuery(function() {
           var el = $(this),
               textShow = that.element.find('.text-val');
           textShow.text(el.text());
+          textShow.data('val', el.data('val'));
+
           select.val(el.data('val'));
           that.toggle(this, false);
+          
+          textShow.trigger("customSelectChangeEvent");
         });
         that.vars.template2.find('li>span').on('click', function(){
           var el = $(this),
@@ -1703,6 +1913,9 @@ jQuery(function() {
           textShow.text(el.text());
           select.val(el.data('val'));
           that.toggle(this, false);
+          
+          textShow.data('val', el.data('val'));
+          textShow.trigger("customSelectChangeEvent");
         });
         win.bind('resize.' + pluginName , function(){
           switch(that.vars.effect){
@@ -1722,11 +1935,16 @@ jQuery(function() {
           var el = $(this);
           var titleSpan = el.siblings('.text-val');
           titleSpan.text(el.find('option:selected').text());
+
+          titleSpan.data('val', el.find('option:selected').value);
+          titleSpan.trigger("customSelectChangeEvent");
         });
         $('.custom-select select', that.element).each(function() {
           var el = $(this);
           var titleSpan = el.siblings('.text-val');
           titleSpan.text(el.find('option:selected').text());
+          titleSpan.data('val', el.find('option:selected').value);
+          titleSpan.trigger("customSelectChangeEvent");
         });
       }
     },
@@ -5374,11 +5592,63 @@ and dependencies (minified).
   });
 
 }(jQuery, window));
+// /**
+//  *  @name scroll-video
+//  *  @description description
+//  *  @version 1.0
+//  *  @options
+//  *    option
+//  *  @events
+//  *    event
+//  *  @methods
+//  *    init
+//  *    publicMethod
+//  *    destroy
+//  */
+// ;(function($, window, undefined) {
+//   var pluginName = 'scroll-video';
+
+//   function Plugin(element, options) {
+//     this.element = $(element);
+//     this.options = $.extend({}, $.fn[pluginName].defaults, this.element.data(), options);
+//     this.init();
+//   }
+
+//   Plugin.prototype = {
+//     init: function() {
+//       var that = this,
+//           ele = that.element;
+
+//       ele.jScrollPane();
+//     }
+//   };
+
+//   $.fn[pluginName] = function(options, params) {
+//     return this.each(function() {
+//       var instance = $.data(this, pluginName);
+//       if (!instance) {
+//         $.data(this, pluginName, new Plugin(this, options));
+//       } else if (instance[options]) {
+//         instance[options](params);
+//       } else {
+//         window.console && console.log(options ? options + ' method is not exists in ' + pluginName : pluginName + ' plugin has been initialized');
+//       }
+//     });
+//   };
+
+//   $.fn[pluginName].defaults = {
+//   };
+
+//   $(function() {
+//     $('[data-' + pluginName + ']')[pluginName]();
+//   });
+
+// }(jQuery, window));
 /* =================
  * seat.js
  * ================= */
 
-(function($, createjs, App) {
+;(function($, window, createjs, App) {
 
   "use strict";
 
@@ -5414,7 +5684,7 @@ and dependencies (minified).
       var textHeight = this.text.getMeasuredHeight();
 
       this.text.x = (this.size - textWidth)/2 - 5;
-      this.text.y = (this.size - textHeight)/2 - 6;      
+      this.text.y = (this.size - textHeight)/2 - 6;
     };
 
     createjs.Person = createjs.promote(Person, "Container");
@@ -5429,22 +5699,27 @@ and dependencies (minified).
       
       this.background = null;
       this.text = null;
-
+      this.select = null;
       this.groupText = null;
       this.editText = null;
       this.deleteText = null;
-
-      this.label = label;
-
-      this.numOfPerson = numOfPerson;
       this.container = null;
+      this.tooltip = null;
+      this.tooltipText = null;
+      this.tooltipBG = null;
+      
       this.arrPerson = [];
-
       this.SIZE = 20;
-
+      this.TOOLTIP_WIDTH = 200;
+      this.listener = null;
+      
+      this.label = label;
+      this.numOfPerson = numOfPerson;
       this.tableWidth = width;
       this.tableHeight = height;
-  
+      this.rotate = 0;
+      this.comment = '';
+
       this.createElement();
 
       this.setSize(width, height);
@@ -5457,7 +5732,12 @@ and dependencies (minified).
 
       //create background
       this.background = new createjs.Shape();
-      this.addChild(this.background); 
+      this.addChild(this.background);
+
+      this.select = new createjs.Shape();
+      this.select.visible = false;
+      this.select.mouseEnabled = false;
+      this.addChild(this.select); 
       
       //create table name
       this.text = new createjs.Text(this.label, "13px myriadPro-regular", "black");
@@ -5468,9 +5748,10 @@ and dependencies (minified).
       
       //create edit and delete text
       this.groupText = new createjs.Container();
-      
+      this.groupText.visible = false;
       this.addChild(this.groupText);
-      this.editText = new createjs.Text('Chỉnh sửa', "13px myriadPro-regular", "#bc2670");
+
+      this.editText = new createjs.Text(editLabel, "13px myriadPro-regular", "#bc2670");
       this.editText.textBaseline = "top";
       this.editText.textAlign = "left";
       this.groupText.addChild(this.editText); 
@@ -5481,7 +5762,7 @@ and dependencies (minified).
       seperateText.x = this.editText.x + this.editText.getMeasuredWidth() + 5;
       this.groupText.addChild(seperateText); 
     
-      this.deleteText = new createjs.Text('Xóa', "13px myriadPro-regular", "#bc2670");
+      this.deleteText = new createjs.Text(deleteLabel, "13px myriadPro-regular", "#bc2670");
       this.deleteText.textBaseline = "top";
       this.deleteText.textAlign = "left";
       this.deleteText.x = seperateText.x + seperateText.getMeasuredWidth() + 5;
@@ -5492,28 +5773,47 @@ and dependencies (minified).
       this.addChild(this.container);
       this.setNumOfPerson(this.numOfPerson);
 
+      this.tooltip = new createjs.Container();
+      this.tooltip.visible = false;
+      this.tooltip.mouseEnabled = false;
+      this.tooltip.mouseChildren = false;
+      this.addChild(this.tooltip);
+
+      this.tooltipBG = new createjs.Shape();
+      this.tooltip.addChild(this.tooltipBG);
+
+      this.tooltipText = new createjs.Text('Table: ' + this.label, "13px myriadPro-regular", "black");
+      this.tooltipText.textBaseline = "top";
+      this.tooltipText.textAlign = "left";
+      this.tooltipText.lineWidth = this.TOOLTIP_WIDTH - 20;
+      this.tooltipText.x = this.tooltipText.y = 10;
+      this.tooltip.addChild(this.tooltipText); 
+      this.updateTooltip();
+
       //add event for elements
       var that = this; 
       
-      this.on("mousedown", function (evt) {
-        this.offset = {x: this.x - evt.stageX, y: this.y - evt.stageY};
-        this.parent.addChild(this);
-      });
-    
-      this.on("pressmove", function (evt) {
-        this.x = evt.stageX + this.offset.x;
-        this.y = evt.stageY + this.offset.y;
-      });
-
       this.on("mouseover", function (evt) {
-        //createjs.Tween.get(that.text).to({y: orY - 5}, 200);
+        //that.parent.addChild(that);
+        if (!this.select.visible) {
+          that.stage.addChild(that.tooltip);
+          that.groupText.visible = true;
+          that.tooltip.visible = true;
+          that.listener = that.stage.on("stagemousemove", that.onMouseMoveHandler, this);
+        }
       });
 
       this.on("mouseout", function (evt) {
-        //createjs.Tween.get(that.text).to({y: orY}, 200);
+        if (!this.select.visible) {
+          that.stage.off("stagemousemove", that.listener);
+          that.groupText.visible = false;
+          that.tooltip.visible = false;
+        }
       });
 
       this.editText.on("click", function (evt) {
+        //evt.stopPropagation();
+
         var editEvent = {
           type: "editEvent"
         };
@@ -5521,6 +5821,8 @@ and dependencies (minified).
       });
 
       this.deleteText.on("click", function (evt) {
+        //evt.stopPropagation();
+
         var deleteEvent = {
           type: "deleteEvent"
         };
@@ -5528,9 +5830,30 @@ and dependencies (minified).
       });
     };
 
+    p.onMouseMoveHandler = function(evt) {
+      //var point = this.globalToLocal(evt.stageX, evt.stageY);
+      this.tooltip.x = evt.stageX - 25;
+      this.tooltip.y = evt.stageY - this.tooltipBG.tooltipHeight - 5;
+    };
+
+    p.setDisplayTooltip = function(value) {
+      this.tooltip.visible = value;
+    };
+
+    p.setDisplayEdit = function(value) {
+      this.groupText.visible = value;
+    };
+
+    p.setSelect = function(selected) {
+      this.select.visible = selected;
+    };
+
     p.setLabel = function(label) {
+      this.label = label;
       this.text.text = label;
+      
       this.updateText();
+      this.updateTooltip();
     };
 
     p.setNumOfPerson = function(numOfPerson) {
@@ -5548,16 +5871,63 @@ and dependencies (minified).
       this.updatePerson();
     };
 
+    p.setRotate = function(rotate) {
+      this.rotate = rotate;
+      this.rotation = rotate;
+    };
+
+    p.setComment = function(comment) {
+      this.comment = comment;
+      this.updateTooltip();
+    };
+
+    p.updateTooltip = function() {
+      this.tooltipText.text = 'Tên: ' + this.label + '\n\nLưu ý: ' + ($.trim(this.comment) != '' ? $.trim(this.comment) : "chưa có");
+
+      this.tooltipBG.tooltipHeight = this.tooltipText.getMeasuredHeight() + 40;
+
+      this.tooltipBG.graphics.beginStroke('#7e7e7e').setStrokeStyle(1).beginFill('#edcdce')
+        .moveTo(0, 0).lineTo(this.TOOLTIP_WIDTH, 0).lineTo(this.TOOLTIP_WIDTH, this.tooltipText.getMeasuredHeight() + 20)
+        .lineTo(35, this.tooltipText.getMeasuredHeight() + 20).lineTo(25, this.tooltipText.getMeasuredHeight() + 40)
+        .lineTo(15, this.tooltipText.getMeasuredHeight() + 20) 
+        .lineTo(0, this.tooltipText.getMeasuredHeight() + 20).lineTo(0, 0).endFill();
+    };
+
+    p.toJSON = function() {
+      var json = '';
+      json = '{' +
+              '"type": "' + this.constructor.name + '"' +
+              ', "label": "' + this.label + '"' +
+              ', "tableWidth": ' + this.tableWidth +
+              ', "tableHeight": ' + this.tableHeight +
+              ', "numOfPerson": ' + this.numOfPerson + 
+              ', "rotate": ' + this.rotate + 
+              ', "comment": "' + this.comment + '"' + 
+              ', "x": ' + this.x +
+              ', "y": ' + this.y +
+              this.getCustomJSON() +
+             '}';
+      return json;
+    };
+
+    p.getCustomJSON = function() {
+      return '';
+    };
+
     p.setSize = function(width, height) {
-    
     };
 
     p.updateText = function() {
-    
     };
 
     p.updatePerson = function() {
+    };
 
+    p.isEqual = function() {
+      return false;
+    };
+
+    p.clone = function() {
     };
 
     createjs.Table = createjs.promote(Table, "Container");
@@ -5577,8 +5947,16 @@ and dependencies (minified).
       this.tableWidth = width;
       this.tableHeight = height;
 
+      this.background.graphics.clear();
       this.background.graphics.beginStroke('#7e7e7e').setStrokeStyle(1).beginFill('#edcdce').drawRect(0, 0, this.tableWidth, this.tableHeight);
-      
+      this.background.x = -this.tableWidth/2;
+      this.background.y = -this.tableHeight/2;
+
+      this.select.graphics.clear();
+      this.select.graphics.beginStroke('#7e7e7e').setStrokeStyle(1).beginFill('#fed4aa').drawRect(0, 0, this.tableWidth, this.tableHeight);
+      this.select.x = -this.tableWidth/2;
+      this.select.y = -this.tableHeight/2;
+
       this.updateText();
       this.updatePerson();
     };
@@ -5588,10 +5966,10 @@ and dependencies (minified).
       var textWidth = this.text.getMeasuredWidth();
       var textHeight = this.text.getMeasuredHeight();
 
-      this.text.x = (this.tableWidth - textWidth)/2;
-      this.text.y = (this.tableHeight - textHeight)/2 - 5;
+      this.text.x = - textWidth/2;
+      this.text.y = - textHeight/2 - 5;
 
-      this.groupText.x = (this.tableWidth - this.groupText.getBounds().width)/2;
+      this.groupText.x = - this.groupText.getBounds().width/2;
       this.groupText.y = this.text.y + textHeight + 5;
     };
 
@@ -5602,13 +5980,20 @@ and dependencies (minified).
       wid = Math.floor(wid / (this.numOfPerson - 1)); 
 
       var person;
-      var toX = this.SIZE/2;
+      var toX = -this.tableWidth/2 + this.SIZE/2;
       for (var i = 0; i < this.arrPerson.length; i ++) {
         person = this.arrPerson[i];
         person.x = toX;
-        person.y = -10;
+        person.y = - this.tableHeight/2 - 10;
         toX = toX + this.SIZE + wid;
       }
+    };
+
+    p.clone = function() {
+      var table = new createjs.HalfRectTable(this.label, this.tableWidth, this.tableHeight, this.numOfPerson);
+      table.rotate = this.rotate;
+      table.comment = this.comment;
+      return table;
     };
 
     createjs.HalfRectTable = createjs.promote(HalfRectTable, "Table");
@@ -5638,12 +6023,12 @@ and dependencies (minified).
 
       var i;
       var person;
-      var toX = this.SIZE/2;
+      var toX = -this.tableWidth/2 + this.SIZE/2;
       
       for (i = 0; i < up; i ++) {
         person = this.arrPerson[i];
         person.x = toX;
-        person.y = -10;
+        person.y = - this.tableHeight/2 - 10;
         toX = toX + this.SIZE + wid;
       }
 
@@ -5651,14 +6036,21 @@ and dependencies (minified).
       wid = this.tableWidth - (down * this.SIZE);
       wid = Math.floor(wid / (down - 1)); 
 
-      toX = this.SIZE/2;
+      var toX = -this.tableWidth/2 + this.SIZE/2;
       
       for (i = up; i < this.arrPerson.length; i ++) {
         person = this.arrPerson[i];
         person.x = toX;
-        person.y = this.tableHeight + 10;
+        person.y = this.tableHeight/2 + 10;
         toX = toX + this.SIZE + wid;
       }
+    };
+
+    p.clone = function() {
+      var table = new createjs.RectTable(this.label, this.tableWidth, this.tableHeight, this.numOfPerson);
+      table.rotate = this.rotate;
+      table.comment = this.comment;
+      return table;
     };
 
     createjs.RectTable = createjs.promote(RectTable, "HalfRectTable");
@@ -5675,10 +6067,13 @@ and dependencies (minified).
     var p = createjs.extend(CircleTable, createjs.Table);
 
     p.setSize = function(width, height) {
-      this.tableWidth = width;
-      this.tableHeight = height;
+      this.tableWidth = this.tableHeight = width;
 
-      this.background.graphics.beginStroke('#7e7e7e').setStrokeStyle(1).beginFill('#edcdce').drawCircle(0, 0, this.tableWidth);
+      this.background.graphics.clear();
+      this.background.graphics.beginStroke('#7e7e7e').setStrokeStyle(1).beginFill('#edcdce').drawCircle(0, 0, this.tableWidth/2);
+      
+      this.select.graphics.clear();
+      this.select.graphics.beginStroke('#7e7e7e').setStrokeStyle(1).beginFill('#fed4aa').drawCircle(0, 0, this.tableWidth/2);
       
       this.updateText();
       this.updatePerson();
@@ -5704,14 +6099,25 @@ and dependencies (minified).
       var person;
       var angle;
 
-      var toX = this.tableWidth + this.SIZE/2;
+      var toX = this.tableWidth/2 + this.SIZE/2;
       for (var i = 0; i < this.arrPerson.length; i ++) {
         angle = -(90 + i * step) * Math.PI / 180;
 
         person = this.arrPerson[i];
-        person.x = (this.tableWidth + 10) * Math.sin(angle);
-        person.y = (this.tableWidth + 10) * Math.cos(angle);
+        person.x = (this.tableWidth/2 + 10) * Math.sin(angle);
+        person.y = (this.tableWidth/2 + 10) * Math.cos(angle);
       }
+    };
+
+    p.clone = function() {
+      var table = new createjs.CircleTable(this.label, this.tableWidth, this.tableHeight, this.numOfPerson);
+      table.rotate = this.rotate;
+      table.comment = this.comment;
+      return table;
+    };
+
+    p.isEqual = function() {
+      return true;
     };
 
     createjs.CircleTable = createjs.promote(CircleTable, "Table");
@@ -5728,11 +6134,18 @@ and dependencies (minified).
     var p = createjs.extend(SquareTable, createjs.Table);
 
     p.setSize = function(width, height) {
-      this.tableWidth = width;
-      this.tableHeight = height;
+      this.tableWidth = this.tableHeight = width;
 
+      this.background.graphics.clear();
       this.background.graphics.beginStroke('#7e7e7e').setStrokeStyle(1).beginFill('#edcdce').drawRect(0, 0, this.tableWidth, this.tableWidth);
-      
+      this.background.x = -this.tableWidth/2;
+      this.background.y = -this.tableHeight/2;
+
+      this.select.graphics.clear();
+      this.select.graphics.beginStroke('#7e7e7e').setStrokeStyle(1).beginFill('#fed4aa').drawRect(0, 0, this.tableWidth, this.tableWidth);
+      this.select.x = -this.tableWidth/2;
+      this.select.y = -this.tableHeight/2;
+
       this.updateText();
       this.updatePerson();
     };
@@ -5742,10 +6155,10 @@ and dependencies (minified).
       var textWidth = this.text.getMeasuredWidth();
       var textHeight = this.text.getMeasuredHeight();
 
-      this.text.x = (this.tableWidth - textWidth)/2;
-      this.text.y = (this.tableHeight - textHeight)/2 - 5;
+      this.text.x = - textWidth/2;
+      this.text.y = - textHeight/2 - 5;
 
-      this.groupText.x = (this.tableWidth - this.groupText.getBounds().width)/2;
+      this.groupText.x = - this.groupText.getBounds().width/2;
       this.groupText.y = this.text.y + textHeight + 5;
     };
 
@@ -5765,11 +6178,11 @@ and dependencies (minified).
       //left side
       distance = this.tableWidth - (left * this.SIZE);
       distance = Math.floor(distance / (left + 1)); 
-      toY = this.tableWidth - distance - this.SIZE/2;      
+      toY = this.tableHeight/2 - distance - this.SIZE/2;      
       
       for (i = 0; i < left; i ++) {
         person = this.arrPerson[i];
-        person.x = -10;
+        person.x = -this.tableWidth/2 - 10;
         person.y = toY;
         
         toY = toY - this.SIZE - distance;
@@ -5778,12 +6191,12 @@ and dependencies (minified).
       //top
       distance = this.tableWidth - (top * this.SIZE);
       distance = Math.floor(distance / (top + 1)); 
-      toX = distance + this.SIZE/2;
+      toX = - this.tableWidth/2 + distance + this.SIZE/2;
       
       for (i = left; i < leftTop; i ++) {
         person = this.arrPerson[i];
         person.x = toX;
-        person.y = -10;
+        person.y = - this.tableHeight/2 - 10;
         
         toX = toX + this.SIZE + distance;
       }
@@ -5791,11 +6204,11 @@ and dependencies (minified).
       //right
       distance = this.tableWidth - (right * this.SIZE);
       distance = Math.floor(distance / (right + 1)); 
-      toY = distance + this.SIZE/2;     
+      toY = -this.tableHeight/2 + distance + this.SIZE/2;     
 
       for (i = leftTop; i < leftTop + right; i ++) {
         person = this.arrPerson[i];
-        person.x = this.tableWidth + 10;
+        person.x = this.tableWidth/2 + 10;
         person.y = toY;
         
         toY = toY + this.SIZE + distance;
@@ -5804,15 +6217,26 @@ and dependencies (minified).
       //bottom
       distance = this.tableWidth - (bottom * this.SIZE);
       distance = Math.floor(distance / (bottom + 1)); 
-      toX = this.tableWidth - distance - this.SIZE/2;
+      toX = this.tableWidth/2 - distance - this.SIZE/2;
 
       for (i = leftTop + right; i < this.numOfPerson; i ++) {
         person = this.arrPerson[i];
         person.x = toX;
-        person.y = this.tableWidth + 10;
+        person.y = this.tableHeight/2 + 10;
         
         toX = toX - this.SIZE - distance;
       }
+    };
+
+    p.clone = function() {
+      var table = new createjs.SquareTable(this.label, this.tableWidth, this.tableHeight, this.numOfPerson);
+      table.rotate = this.rotate;
+      table.comment = this.comment;
+      return table;
+    };
+
+    p.isEqual = function() {
+      return true;
     };
 
     createjs.SquareTable = createjs.promote(SquareTable, "Table");
@@ -5822,40 +6246,53 @@ and dependencies (minified).
   //CUSTOM TABLE CLASS
   (function() {
 
-    function CustomTable(label, width, height, typeOfTable, url) {
+    function CustomTable(label, width, height, typeOfTable, customId, customURL) {
       this.typeOfTable = typeOfTable;
-
-      if (this.typeOfTable == 1) {
-        width = 70;
-      }
-
-      else if (this.typeOfTable == 2) {
-        height = width ;
-      }
-      
+      this.customId = customId;
+      this.customURL = customURL;
       this.bitmap = null;
+      this.item = null;
 
       this.Table_constructor(label, width, height, 0);
 
-      this.setItem(url);
+      this.item = new createjs.Container();
+      this.addChild(this.item);
+      this.addChild(this.tooltip);
+
+      this.setItem(customURL);
     }
   
     var p = createjs.extend(CustomTable, createjs.Table);
 
     p.setSize = function(width, height) {
       this.tableWidth = width;
-      this.tableHeight = height;
+      
+      this.background.graphics.clear();
+      this.select.graphics.clear();
 
       if (this.typeOfTable == 1) {
-        this.background.graphics.beginStroke('#7e7e7e').setStrokeStyle(1).beginFill('#edcdce').drawCircle(this.tableWidth/2, this.tableWidth/2, this.tableWidth);
+        this.tableHeight = this.tableWidth;
+        this.background.graphics.beginStroke('#7e7e7e').setStrokeStyle(1).beginFill('#edcdce').drawRect(0, 0, this.tableWidth, this.tableWidth);
+        this.select.graphics.beginStroke('#7e7e7e').setStrokeStyle(1).beginFill('#fed4aa').drawRect(0, 0, this.tableWidth, this.tableWidth);
+
+        this.background.x = this.select.x = -this.tableWidth/2;
+        this.background.y = this.select.y = -this.tableWidth/2;
       }
 
       else if (this.typeOfTable == 2) {
-        this.background.graphics.beginStroke('#7e7e7e').setStrokeStyle(1).beginFill('#edcdce').drawRect(0, 0, this.tableWidth, this.tableWidth);
+        this.tableHeight = this.tableWidth;
+        this.background.graphics.beginStroke('#7e7e7e').setStrokeStyle(1).beginFill('#edcdce').drawCircle(0, 0, this.tableWidth/2);
+        this.select.graphics.beginStroke('#7e7e7e').setStrokeStyle(1).beginFill('#fed4aa').drawCircle(0, 0, this.tableWidth/2);
+        this.background.x = this.select.x = 0;
+        this.background.y = this.select.y = 0;
       }
 
       else {
+        this.tableHeight = height;
         this.background.graphics.beginStroke('#7e7e7e').setStrokeStyle(1).beginFill('#edcdce').drawRect(0, 0, this.tableWidth, this.tableHeight);
+        this.select.graphics.beginStroke('#7e7e7e').setStrokeStyle(1).beginFill('#fed4aa').drawRect(0, 0, this.tableWidth, this.tableHeight);
+        this.background.x = this.select.x = -this.tableWidth/2;
+        this.background.y = this.select.y = -this.tableHeight/2;
       }
 
       this.updateText();
@@ -5863,30 +6300,42 @@ and dependencies (minified).
     };
 
     p.updateText = function() {
-      //update text after change sizev []
       var textWidth = this.text.getMeasuredWidth();
       var textHeight = this.text.getMeasuredHeight();
 
-      this.text.x = (this.tableWidth - textWidth)/2;
-      this.text.y = (this.tableHeight - textHeight)/2 - 5;
+      this.text.x = - textWidth/2;
+      this.text.y = - textHeight/2 - 5;
 
-      this.groupText.x = (this.tableWidth - this.groupText.getBounds().width)/2;
+      this.groupText.x = -this.groupText.getBounds().width/2;
       this.groupText.y = this.text.y + textHeight + 5;
     };
 
     p.updatePerson = function() {
     };
 
+    p.setTypeOfTable = function(typeOfTable) {
+      this.typeOfTable = typeOfTable;
+    };
+
+    p.setCustom = function(customId) {
+      this.customId = customId;
+    };
+
     p.setItem = function(url) {
+      this.customURL = url;
       var that = this;
+
+      if (this.item.contains(this.bitmap)) {
+        this.item.removeChild(this.bitmap);
+      }
 
       var img = new Image();
       img.onload = function() {
         that.bitmap = new createjs.Bitmap(img);
-        that.addChild(that.bitmap);
+        that.item.addChild(that.bitmap);
         that.updatePosition();
       }
-      img.src = url;  
+      img.src = url;
     };
 
     p.updatePosition = function() {
@@ -5894,18 +6343,220 @@ and dependencies (minified).
         return;
       }
 
-      this.bitmap.x = (this.tableWidth - this.bitmap.getBounds().width) / 2;
-        
-      if (this.typeOfTable == 1) {
-        this.bitmap.y = - this.bitmap.getBounds().height;
-      } else {
-        this.bitmap.y = - this.bitmap.getBounds().height + 20;
-      }  
+      this.bitmap.x = - this.bitmap.getBounds().width / 2;
+      this.bitmap.y = - this.tableHeight / 2 - this.bitmap.getBounds().height + 10;
     };
 
+     p.clone = function() {
+      var table = new createjs.CustomTable(this.label, this.tableWidth, this.tableHeight, this.typeOfTable, this.customId, this.customURL);
+      table.rotate = this.rotate;
+      table.comment = this.comment;
+      return table;
+    };
+
+     p.getCustomJSON = function() {
+      var json = '' +
+                 ', "typeOfTable": ' + this.typeOfTable +
+                 ', "customId": "' + this.customId + '"' +
+                 ', "customURL": "' + this.customURL + '"';
+      return json;
+    };
+
+    p.isEqual = function() {
+      return (this.typeOfTable == 1 || this.typeOfTable == 2) ?  true : false;
+    };
 
     createjs.CustomTable = createjs.promote(CustomTable, "Table");
       
+  }());
+
+  ////TRANSFORM CLASS/////  
+  (function() {
+    function Transform() {
+      this.Container_constructor();
+      
+      this.line = null;
+      this.center = null;
+      
+      this.top = null;
+      this.right = null;
+      this.bottom = null;
+      this.left = null;
+      
+      this.rtopleft = null;
+      this.rtopright = null;
+      this.rbottomleft = null;
+      this.rbottomright = null;
+      
+      this.createElement();
+      this.alpha = 0.5;
+      this.target = null;
+      this.isOne = false;
+      
+      this.angle = 0;      
+    };
+  
+    var p = createjs.extend(Transform, createjs.Container);
+
+    p.createElement = function() {
+      this.line = this.addChild(new createjs.Shape());
+      
+      //this.center = this.addChild(new createjs.Shape());
+      //this.center.graphics.beginFill('red').drawCircle(0, 0, 3);
+      
+      this.rtopleft = this.addChild(new createjs.Shape());
+      this.rtopleft.graphics.beginFill('white').beginStroke('red').setStrokeStyle(2, 'round').drawCircle(0, 0, 6, 6);
+      this.rtopleft.cursor = 'pointer';      
+      
+      this.top = this.addChild(new createjs.Shape());
+      this.top.graphics.beginFill('white').beginStroke('red').setStrokeStyle(2, 'round').drawRect(-5, -5, 10, 10);
+      this.top.cursor = 'n-resize';
+       
+      this.rtopright = this.addChild(new createjs.Shape());
+      this.rtopright.graphics.beginFill('white').beginStroke('red').setStrokeStyle(2, 'round').drawCircle(0, 0, 6, 6);
+      this.rtopright.cursor = 'pointer';
+      
+      this.right = this.addChild(new createjs.Shape());
+      this.right.graphics.beginFill('white').beginStroke('red').setStrokeStyle(2, 'round').drawRect(-5, -5, 10, 10);
+      this.right.cursor = 'e-resize';
+      
+      this.rbottomleft = this.addChild(new createjs.Shape());
+      this.rbottomleft.graphics.beginFill('white').beginStroke('red').setStrokeStyle(2, 'round').drawCircle(0, 0, 6, 6);
+      this.rbottomleft.cursor = 'pointer';
+      
+      this.bottom = this.addChild(new createjs.Shape());
+      this.bottom.graphics.beginFill('white').beginStroke('red').setStrokeStyle(2, 'round').drawRect(-5, -5, 10, 10);
+      this.bottom.cursor = 'n-resize';
+      
+      this.rbottomright = this.addChild(new createjs.Shape());
+      this.rbottomright.graphics.beginFill('white').beginStroke('red').setStrokeStyle(2, 'round').drawCircle(0, 0, 6, 6);
+      this.rbottomright.cursor = 'pointer';
+      
+      this.left = this.addChild(new createjs.Shape());
+      this.left.graphics.beginFill('white').beginStroke('red').setStrokeStyle(2, 'round').drawRect(-5, -5, 10, 10);
+      this.left.cursor = 'e-resize';
+      
+      var that = this;
+      this.top.on('pressmove', function(evt) { that.onVertialResizeHandler(evt); });
+      this.right.on('pressmove', function(evt) { that.onHorizonalResizeHandler(evt); });
+      this.bottom.on('pressmove', function(evt) { that.onVertialResizeHandler(evt); });
+      this.left.on('pressmove', function(evt) { that.onHorizonalResizeHandler(evt); });
+      
+      this.rtopleft.on('mousedown', function(evt) { that.onRotateHandler(evt); });
+      this.rtopright.on('mousedown', function(evt) { that.onRotateHandler(evt); });
+      this.rbottomleft.on('mousedown', function(evt) { that.onRotateHandler(evt); });
+      this.rbottomright.on('mousedown', function(evt) { that.onRotateHandler(evt); });       
+    };
+    
+    p.onHorizonalResizeHandler = function(evt) {
+      var global = this.localToGlobal(0, 0); 
+      
+      var disX = Math.abs(evt.stageX - global.x);
+      
+      this.updateWidth(2 * disX);
+
+      if (this.isOne) {
+         this.updateHeight(2 * disX);
+      }
+        
+      var resizeEvent = {
+        type: "hResizeEvent",
+        distance: 2 * disX
+      };
+      this.dispatchEvent(resizeEvent);     
+    };
+  
+    p.onVertialResizeHandler = function(evt) {
+      var global = this.localToGlobal(0, 0); 
+      
+      var disY = Math.abs(evt.stageY - global.y);
+      
+      if (this.isOne) {
+         this.updateWidth(2 * disY);
+      }
+      this.updateHeight(2 * disY);
+
+      var resizeEvent = {
+        type: "vResizeEvent",
+        distance: 2 * disY
+      };
+      this.dispatchEvent(resizeEvent);
+    };
+    
+    p.getAngle = function(cX, cY, mX, mY){
+      var angle = Math.atan2(mY - cY, mX - cX);
+      return angle;
+    };
+  
+    p.onRotateHandler = function(evt) {
+      
+      this.global = this.localToGlobal(0, 0); 
+      
+      this.clickAngle = this.getAngle(this.global.x, this.global.y, evt.stageX, evt.stageY) - this.angle;
+      
+      var that = this;
+      this.pressmove = this.stage.on('pressmove', function(evt) { that.onRotateMoveHandler(evt); });
+      this.pressup = this.stage.on('pressup', function(evt) { that.onRotateUpHandler(evt); });
+    };
+  
+    p.onRotateUpHandler = function(evt) {
+      this.stage.off('pressmove', this.pressmove);      
+      this.stage.off('pressup', this.pressup);  
+    };
+    
+    p.onRotateMoveHandler = function(evt) {
+      
+      this.angle = this.getAngle(this.global.x, this.global.y, evt.stageX, evt.stageY) - this.clickAngle;
+      
+      var rotate = this.angle * 180 / Math.PI;
+      
+      this.rotation = rotate;
+      
+      var rotateEvent = {
+        type: "rotateEvent",
+        data: {rotation: rotate }
+      };
+      this.dispatchEvent(rotateEvent);
+    };
+    
+    p.setTarget = function(target, isOne) {
+      this.target = target;
+      this.isOne = isOne;
+
+      if (target) {
+        target.parent.addChild(this);
+        this.x = target.x;
+        this.y = target.y;
+        this.rotation = target.rotation;
+      } else {
+        if (this.parent) {
+          this.parent.removeChild(this);
+        }
+      }
+    };
+  
+    p.updateWidth = function(width) {
+      this.right.x = width/2;
+      this.left.x = -width/2;
+      
+      this.rtopleft.x = this.rbottomleft.x = -width/2;
+      this.rtopright.x = this.rbottomright.x = width/2; 
+    };
+    
+    p.updateHeight = function(height) {
+      
+      this.top.y = -height/2;
+      this.bottom.y = height/2;
+      this.rtopleft.y = this.rtopright.y = -height/2;
+      this.rbottomleft.y = this.rbottomright.y = height/2;
+      
+      /*
+      this.line.graphics.clear();
+      this.line.graphics.beginStroke('red').setStrokeStyle(2, 'round').moveTo(this.topleft.x, this.topleft.y).lineTo(this.topright.x, this.topright.y).lineTo(this.bottomright.x, this.bottomright.y).lineTo(this.bottomleft.x, this.bottomleft.y).lineTo(this.topleft.x, this.topleft.y);*/
+    };
+  
+    createjs.Transform = createjs.promote(Transform, "Container");
+
   }());
 
   /* =============== */
@@ -5913,24 +6564,37 @@ and dependencies (minified).
   /* =============== */
 
   var defaults = {};
-
+  var pluginName = 'seat';
   var cvsId = 'cvsSeat';
+   
+  var defaultTable = [
+    {"id": "custom", "type": "CustomTable", "label": "VẬT PHẨM", "tableWidth": 100, "tableHeight": 50, "numOfPerson": 0, "rotate": 0, "comment": "", "x": 0, "y": 0, "typeOfTable": 2, "customId": "item-1", "customURL": "images/seat/1.png"},
+    {"id": "circle", "type": "CircleTable", "label": "BÀN TIỆC", "tableWidth": 100, "tableHeight": 50, "numOfPerson": 10, "rotate": 0, "comment": "", "x": 0, "y": 0}, 
+    {"id": "square", "type": "SquareTable", "label": "BÀN TIỆC", "tableWidth": 100, "tableHeight": 90, "numOfPerson": 10, "rotate": 0, "comment": "", "x": 0, "y": 0}, 
+    {"id": "rect", "type": "RectTable", "label": "BÀN TIỆC", "tableWidth": 180, "tableHeight": 80, "numOfPerson": 10, "rotate": 0, "comment": "", "x": 0, "y": 0}, 
+    {"id": "halfrect", "type": "HalfRectTable", "label": "BÀN TIỆC", "tableWidth": 160, "tableHeight": 65, "numOfPerson": 5, "rotate": 0, "comment": "", "x": 0, "y": 0}];
+  
+  var defaultLabel = 'BÀN TIỆC';
+  var defaultCustomLabel = 'VẬT PHẨM';
+  var editLabel = 'Chỉnh sửa';
+  var deleteLabel = 'Xóa';
 
   /* ================= */
   /* MODULE DEFINITION */
   /* ================= */
 
-  function Seat(opts) {
-    this.settings = $.extend({}, defaults, opts);
+  function Seat(element, options) {
+    this.element = $(element);
+    this.options = $.extend({}, $.fn[pluginName].defaults, options);
 
     this.gridX = 0;
     this.gridY = 0;
 
     this.gridWidth = 0;
     this.gridHeight = 0;
+    this.zoomLevel = 1;
 
     this.canvas = null;
-
     this.stage = null;
     
     this.container = null;
@@ -5950,6 +6614,10 @@ and dependencies (minified).
     this.isHScroll = false;
     this.isVScroll = false;
 
+    this.selectedTable = null;
+
+    this.transform = null;
+
     return this.init();
   }
 
@@ -5959,129 +6627,334 @@ and dependencies (minified).
 
   Seat.prototype.init = function() {
 
+    this.canvas = document.getElementById(cvsId);
+
     this.stage = new createjs.Stage(cvsId);
-    
     this.stage.enableMouseOver();
     createjs.Touch.enable(this.stage);
 
-    this.canvas = document.getElementById(cvsId);
+    this.background = this.stage.addChild(new createjs.Shape());
+    this.container = this.stage.addChild(new createjs.Container());
 
-    this.background = new createjs.Shape();
-    this.stage.addChild(this.background);
-
-    this.container = new createjs.Container();
-    this.stage.addChild(this.container);
-
-    this.drag = new createjs.Shape();
+    this.drag = this.container.addChild(new createjs.Shape());
     this.drag.alpha = 0.1;
-    this.container.addChild(this.drag);
-
-    this.grid = new createjs.Shape();
-    this.container.addChild(this.grid);
-
-    this.table = new createjs.Container();
-    this.container.addChild(this.table);
-
-    this.hscroll = new createjs.Container();
-    this.stage.addChild(this.hscroll);
+    
+    this.grid = this.container.addChild(new createjs.Shape());
+    this.table = this.container.addChild(new createjs.Container());
 
     //horizonal scroll
-    this.hscrollBgd = new createjs.Shape();
-    this.hscroll.addChild(this.hscrollBgd);
-
-    this.hscrollBar = new createjs.Shape();
-    this.hscroll.addChild(this.hscrollBar);
+    this.hscroll = this.stage.addChild(new createjs.Container());
+    this.hscrollBgd = this.hscroll.addChild(new createjs.Shape());
+    this.hscrollBar = this.hscroll.addChild(new createjs.Shape());
 
     //vertial scroll
-    this.vscroll = new createjs.Container();
-    this.stage.addChild(this.vscroll);
+    this.vscroll = this.stage.addChild(new createjs.Container());
+    this.vscrollBgd = this.vscroll.addChild(new createjs.Shape());
+    this.vscrollBar = this.vscroll.addChild(new createjs.Shape());
 
-    this.vscrollBgd = new createjs.Shape();
-    this.vscroll.addChild(this.vscrollBgd);
-
-    this.vscrollBar = new createjs.Shape();
-    this.vscroll.addChild(this.vscrollBar);
+    this.transform = new createjs.Transform();
+    this.transform.on('vResizeEvent', function(evt) {
+      if (that.selectedTable) {
+        that.selectedTable.setSize(that.selectedTable.isEqual() ? evt.distance : that.selectedTable.tableWidth, evt.distance);
+      }
+    });
+    
+    this.transform.on('hResizeEvent', function(evt) {
+      if (that.selectedTable) {
+        that.selectedTable.setSize(evt.distance, that.selectedTable.isEqual() ? evt.distance : that.selectedTable.tableHeight);
+      }
+    });
+    
+    this.transform.on('rotateEvent', function(evt) {
+       if (that.selectedTable) {
+        that.selectedTable.setRotate(evt.data.rotation);
+      }
+    });
 
     var that = this;
-    createjs.Ticker.addEventListener("tick", function(event) {
+    createjs.Ticker.addEventListener("tick", function(evt) {
       that.stage.update();
     });
 
-    $('.addsize').find('button').on('click', function(evt) {
-      var wrap = $(evt.target).parent().prev();
-      var wid = wrap.find("input[name='Width']").val();
-      var hei = wrap.find("input[name='Length']").val();
-      that.changeSize(Number(wid), Number(hei));
+    //show/hide tool bar event
+    $('.arrow-show').on('click', function(evt){
+      evt.preventDefault();
+      $(this).closest('.block-seat').toggleClass('active');
+      that.resize();
     });
 
-    $('.select-tool').find("a[data-control]").on('click', function(evt) {
-      that.handleControl($(this).data('control'));
-    });
+    //fullscreen event
+    document.addEventListener("fullscreenchange", function(evt) { that.onFullScreenChange(evt);});
+    document.addEventListener("webkitfullscreenchange", function(evt) { that.onFullScreenChange(evt);});
+    document.addEventListener("mozfullscreenchange", function(evt) { that.onFullScreenChange(evt);});
+    document.addEventListener("MSFullscreenChange", function(evt) { that.onFullScreenChange(evt);});
 
-    this.updateScroll();
+    $('.control-toolbar').find("a[class='full']").on('click', function(evt) { that.onClickFullHandler(evt);});
+    $('.block-seat').find('.addsize').find("button[type='submit']").on('click', function(evt) { that.onClickChangeSizeHandler(evt); });
+    $('.select-tool').find("a[data-control]").on('click', function(evt) { that.handleControl($(this).data('control')); });
+
+    $('.save-seat').on('click', function(evt) { that.saveSeat(); });
+    $('.export-seat').on('click', function(evt) { that.exportSeat(); });
 
     //horizonal scroll event
     this.hscrollBar.on("mousedown", function (evt) {
       this.offset = {x: this.x - evt.stageX};
     });
     
-    this.hscrollBar.on("pressmove", function (evt) {
-      var toX = evt.stageX + this.offset.x;
-
-      toX = toX < 0 ? 0 : toX;      
-      toX = toX > that.hscrollBgd.width - that.hscrollBar.width ? that.hscrollBgd.width - that.hscrollBar.width : toX;
-
-      this.x = toX;
-
-      that.updateGrid(true);
-    });
-
     //vertical scroll event
     this.vscrollBar.on("mousedown", function (evt) {
       this.offset = {y: this.y - evt.stageY};
     });
     
-    this.vscrollBar.on("pressmove", function (evt) {
-      var toY = evt.stageY + this.offset.y;
+    this.hscrollBar.on("pressmove", function (evt) { that.onPressMoveHScrollBarHandler(evt); });
+    this.vscrollBar.on("pressmove", function (evt) { that.onPressMoveVScrollBarHandler(evt); });
 
-      toY = toY < 0 ? 0 : toY;      
-      toY = toY > that.vscrollBgd.height - that.vscrollBar.height ? that.vscrollBgd.height - that.vscrollBar.height : toY;
-
-      this.y = toY;
-
-      that.updateGrid(false);
-    });
-
-    //horizonal scroll event
-    this.drag.on("mousedown", function (evt) {
-      that.container.offset = {x: that.container.x - evt.stageX, y: that.container.y - evt.stageY};
-    });
+    this.drag.on("mousedown", function (evt) { that.onMouseDownDragHandler(evt); });
+    this.drag.on("pressmove", function (evt) { that.onPressMoveDragHandler(evt); });
     
-    this.drag.on("pressmove", function (evt) {
-      var toX = evt.stageX + that.container.offset.x;
-      var toY = evt.stageY + that.container.offset.y;
-
-      toX = toX > 0 ? 0 : toX;
-      toX = toX < (that.hscrollBgd.width - that.gridWidth) ? (that.hscrollBgd.width - that.gridWidth) : toX;
-
-      toY = toY > 0 ? 0 : toY
-      toY = toY < (that.vscrollBgd.height - that.gridHeight) ? (that.vscrollBgd.height - that.gridHeight) : toY;
-
-      that.container.x = toX;
-      that.container.y = toY;
-
-      that.updateScrollBar();
-    });
-
     $(window).on('resize', function(evt) {
       that.resize();
     });
-    that.resize();
 
-    //default
-    $('.addsize').find('.wrap').find("input[name='Width']").val('100');
-    $('.addsize').find('.wrap').find("input[name='Length']").val('100');
-    this.changeSize(100, 100);
+    this.updateScroll();
+    this.resize();
+    this.start();
+
+    //var dataseat = $('.block-seat').data('seat');
+    //var seatnew = $('#seatnew');
+    //seatnew.modal('show');
+
+    //if ($.trim(dataseat) != '') {
+    //  this.loadSeat(dataseat);
+    //} else {
+    //  this.setDefaultSeat(150, 50);
+    //}
+  };
+
+  Seat.prototype.start = function() {
+    var that = this;
+    var isClick = false;
+
+    var dialog = $('#seatNew');
+    dialog.modal('show');
+
+    var totalseat = dialog.find("input[name='totalseat']");
+    totalseat.val(25);
+
+    dialog.find('div[data-check]').removeClass('checked');
+    $(dialog.find('div[data-check]')[0]).addClass('checked');
+
+    var start = dialog.find("button[name='start-new']");
+    start.off('click').on('click', function (evt) {
+      isClick = true;
+      dialog.modal('hide');
+
+      var numOfTable = Number(totalseat.val());
+      numOfTable = numOfTable < 5 || isNaN(numOfTable) ? 25 : numOfTable;
+
+      var typeitem = dialog.find('div[data-check][class*="checked"]');
+
+      that.createSeat(numOfTable, Number(typeitem.data('seat-type')));
+    });
+
+    var cancel = dialog.find("button[name='cancel-new']");
+    cancel.off('click').on('click', function (evt) {
+      isClick = true;
+      dialog.modal('hide');
+      that.setDefaultSeat(150, 50);
+    });
+
+    dialog.off('hidden.bs.modal').on('hidden.bs.modal', function (evt) {
+      if (!isClick) {
+        that.setDefaultSeat(150, 50);
+      }
+    });
+  };
+
+  Seat.prototype.createSeat = function(numOfTable, typeOfSeat) {
+
+    if (typeOfSeat == 1) {
+      this.setDefaultSeat(60, 150);
+    
+      //circle
+      var custom = this.getDefaultJsonTable('custom');
+      custom.label = 'SÂN KHẤU';
+
+      var table = this.createTable(custom, true);
+      table.setSize(50 * 20, 60);
+      table.x = 30 * 20;
+      table.y = 80;
+
+      var row = 0;
+      var toX = 150;
+      var toY = 200;
+
+      for (var i = 0; i < numOfTable; i ++) {
+        custom = this.getDefaultJsonTable('circle');
+        custom.label = 'BÀN TIỆC ' + (i + 1);
+        table = this.createTable(custom, false);
+        table.x = toX;
+        table.y = toY;
+        toX += Number(table.tableWidth) + ((row == 1) ? 250 : 170);
+        row ++;
+        if (row >= 4) {
+          row = 0;
+          toX = 150;
+          toY += Number(table.tableHeight) + 100;
+        }
+      }
+
+    }
+  };
+
+  Seat.prototype.setDefaultSeat = function(gridWidth, gridHeight) {
+    $('.addsize').find('.wrap').find("input[name='Width']").val(gridWidth);
+    $('.addsize').find('.wrap').find("input[name='Length']").val(gridHeight);
+    this.changeSize(gridWidth, gridHeight);
+  };
+
+  Seat.prototype.loadSeat = function(url) {
+    var that = this;
+    var ajax = $.ajax({
+      url: url,
+      method: "GET",
+      data: { id : '' },
+      dataType: "json"
+    });
+     
+    ajax.done(function(data) {
+      try {
+        that.parseSeat(data);
+      } catch(err) {
+        that.setDefaultSeat(150, 50);
+      }
+    });
+     
+    ajax.fail(function(jqXHR, textStatus) {
+      that.setDefaultSeat(150, 50);
+    });
+  };
+
+  Seat.prototype.parseSeat = function(json) {
+    this.zoomLevel = json.zoomLevel;
+    this.setDefaultSeat(json.gridWidth, json.gridHeight);
+
+    //create table here;
+    var table;
+    for (var i = 0; i < json.table.length; i ++) {
+      this.createTable(json.table[i], false);
+    }
+  };
+
+  Seat.prototype.onClickFullHandler = function(evt) {
+    var blockSeat = $('.block-seat');
+    blockSeat.toggleClass('full-screen');
+
+    if (blockSeat.hasClass('full-screen')) {
+      this.fullscreen(document.documentElement);
+    } else {
+      this.exitFullscreen();
+    }
+  };
+
+  Seat.prototype.onClickChangeSizeHandler = function(evt) {
+    var wrap = $(evt.target).parent().prev();
+
+    var wid = Number(wrap.find("input[name='Width']").val());
+    var hei = Number(wrap.find("input[name='Length']").val());
+
+    wid = wid < 40 || isNaN(wid) ? 40 : wid;
+    hei = hei < 40 || isNaN(hei) ? 40 : hei;
+
+    $('.addsize').find('.wrap').find("input[name='Width']").val(wid);
+    $('.addsize').find('.wrap').find("input[name='Length']").val(hei);
+
+    this.changeSize(Number(wid), Number(hei));
+  };
+
+  Seat.prototype.onPressMoveHScrollBarHandler = function(evt) {
+    var toX = evt.stageX + evt.currentTarget.offset.x;
+
+    toX = toX < 0 ? 0 : toX;
+    toX = toX > this.hscrollBgd.width - this.hscrollBar.width ? this.hscrollBgd.width - this.hscrollBar.width : toX;
+
+    evt.currentTarget.x = toX;
+
+    this.updateGrid(true);
+  };
+
+  Seat.prototype.onPressMoveVScrollBarHandler = function(evt) {
+    var toY = evt.stageY + evt.currentTarget.offset.y;
+
+    toY = toY < 0 ? 0 : toY;
+    toY = toY > this.vscrollBgd.height - this.vscrollBar.height ? this.vscrollBgd.height - this.vscrollBar.height : toY;
+
+    evt.currentTarget.y = toY;
+
+    this.updateGrid(false);
+  };
+
+  Seat.prototype.onMouseDownDragHandler = function(evt) {
+    if (this.selectedTable) {
+      this.selectedTable.setSelect(false);
+      this.selectedTable = null;
+    }
+
+    this.transform.setTarget(null);
+
+    this.container.offset = {x: this.container.x - evt.stageX, y: this.container.y - evt.stageY};
+  };
+  
+  Seat.prototype.onPressMoveDragHandler = function(evt) {
+    var toX = evt.stageX + this.container.offset.x;
+    var toY = evt.stageY + this.container.offset.y;
+
+    toX = toX > 0 ? 0 : toX;
+    toX = toX < (this.hscrollBgd.width - (this.gridWidth * this.zoomLevel)) ? (this.hscrollBgd.width - (this.gridWidth * this.zoomLevel)) : toX;
+
+    toY = toY > 0 ? 0 : toY
+    toY = toY < (this.vscrollBgd.height - (this.gridHeight * this.zoomLevel)) ? (this.vscrollBgd.height - (this.gridHeight * this.zoomLevel)) : toY;
+
+    if (this.isHScroll) {
+      this.container.x = toX;
+    }
+
+    if (this.isVScroll) {
+      this.container.y = toY;
+    }
+
+    this.updateScrollBar();
+  };
+
+  Seat.prototype.onFullScreenChange = function(evt) {
+    var isFullScreen = document.fullScreen || document.mozFullScreen || document.webkitIsFullScreen;
+
+    if (!isFullScreen) {
+      var blockSeat = $('.block-seat');
+      blockSeat.removeClass('full-screen');
+    }
+  };
+
+  Seat.prototype.fullscreen = function(element) {
+    if(element.requestFullscreen) {
+      element.requestFullscreen();
+    } else if(element.mozRequestFullScreen) {
+      element.mozRequestFullScreen();
+    } else if(element.webkitRequestFullscreen) {
+      element.webkitRequestFullscreen();
+    } else if(element.msRequestFullscreen) {
+      element.msRequestFullscreen();
+    }
+  };
+
+  Seat.prototype.exitFullscreen = function() {
+    if(document.exitFullscreen) {
+      document.exitFullscreen();
+    } else if(document.mozCancelFullScreen) {
+      document.mozCancelFullScreen();
+    } else if(document.webkitExitFullscreen) {
+      document.webkitExitFullscreen();
+    }
   };
 
   Seat.prototype.resize = function() {
@@ -6114,18 +6987,18 @@ and dependencies (minified).
     this.hscroll.y = this.canvas.height - 10;
     this.vscroll.x = this.canvas.width - 10;
     
-    this.hscrollBgd.width = this.canvas.width;
-    this.vscrollBgd.height = this.canvas.height;
-
     this.drag.graphics.clear();
     this.drag.graphics.beginFill('#FFFFFF').drawRect(0, 1, this.gridWidth, this.gridHeight).endFill();
 
-    this.isHScroll = this.gridWidth > this.canvas.width ? true : false;
+    this.hscrollBgd.width = this.canvas.width;
+    this.vscrollBgd.height = this.canvas.height;
+
+    this.isHScroll = this.hscrollBgd.width < (this.gridWidth * this.zoomLevel) ? true : false;
 
     if (this.isHScroll) {
-       this.isVScroll = this.gridHeight > (this.canvas.height - 10) ? true : false; 
+       this.isVScroll = (this.gridHeight * this.zoomLevel) > (this.canvas.height - 10) ? true : false; 
     } else {
-      this.isVScroll = this.gridHeight > this.canvas.height ? true : false; 
+      this.isVScroll = (this.gridHeight * this.zoomLevel) > this.canvas.height ? true : false; 
     }
   
     if (this.isVScroll) {
@@ -6167,7 +7040,7 @@ and dependencies (minified).
       this.hscrollBgd.graphics.beginStroke('#b6b6b6').setStrokeStyle(1).beginFill('#e7e7e7').drawRoundRect(0, 0, this.hscrollBgd.width, 10, 5).endFill();
       
       //calculate width of hscrollbar
-      var hscrollbarWidth = (this.hscrollBgd.width / this.gridWidth) * this.hscrollBgd.width;
+      var hscrollbarWidth = (this.hscrollBgd.width / (this.gridWidth * this.zoomLevel)) * this.hscrollBgd.width;
 
       this.hscrollBar.graphics.beginFill('#b33175').drawRoundRect(0, 0, hscrollbarWidth, 10, 5).endFill();
       this.hscrollBar.width = hscrollbarWidth;    
@@ -6182,52 +7055,111 @@ and dependencies (minified).
       this.vscrollBgd.graphics.beginStroke('#b6b6b6').setStrokeStyle(1).beginFill('#e7e7e7').drawRoundRect(0, 0, 10, this.vscrollBgd.height, 5).endFill();
       
       //calculate height of vscrollbar
-      var vscrollbarHeight = (this.vscrollBgd.height / this.gridHeight) * this.vscrollBgd.height;
+      var vscrollbarHeight = (this.vscrollBgd.height / (this.gridHeight * this.zoomLevel)) * this.vscrollBgd.height;
 
       this.vscrollBar.graphics.beginFill('#b33175').drawRoundRect(0, 0, 10, vscrollbarHeight, 5).endFill();
       this.vscrollBar.height = vscrollbarHeight;    
     }
   };
 
+  Seat.prototype.updateScrollBar = function() {
+    this.hscrollBar.x = - this.container.x * (this.hscrollBgd.width - this.hscrollBar.width) / ((this.gridWidth * this.zoomLevel) - this.hscrollBgd.width);
+    this.vscrollBar.y = - this.container.y * (this.vscrollBgd.height - this.vscrollBar.height) / ((this.gridHeight * this.zoomLevel) - this.vscrollBgd.height);
+  };
+
   Seat.prototype.updateGrid = function(horizonal) {
     if (horizonal) {
-      this.container.x = - this.hscrollBar.x * (this.gridWidth - this.hscrollBgd.width) / (this.hscrollBgd.width - this.hscrollBar.width);
+      this.container.x = - this.hscrollBar.x * ((this.gridWidth * this.zoomLevel) - this.hscrollBgd.width) / (this.hscrollBgd.width - this.hscrollBar.width);
     } else {
-      this.container.y = - this.vscrollBar.y * (this.gridHeight - this.vscrollBgd.height) / (this.vscrollBgd.height - this.vscrollBar.height);
+      this.container.y = - this.vscrollBar.y * ((this.gridHeight * this.zoomLevel) - this.vscrollBgd.height) / (this.vscrollBgd.height - this.vscrollBar.height);
     }
   };
 
-  Seat.prototype.updateScrollBar = function() {
-    this.hscrollBar.x = - this.container.x * (this.hscrollBgd.width - this.hscrollBar.width) / (this.gridWidth - this.hscrollBgd.width);
-    this.vscrollBar.y = - this.container.y * (this.vscrollBgd.height - this.vscrollBar.height) / (this.gridHeight - this.vscrollBgd.height);
+  Seat.prototype.setGridDisplay = function(isDisplay) {
+    var grid = $('.select-tool').find("a[data-control='grid']").parent();
+    var ungrid = $('.select-tool').find("a[data-control='ungrid']").parent();
+
+    if (isDisplay) {    
+      grid.addClass('active');
+      ungrid.removeClass('active');
+    } else {
+      grid.removeClass('active');
+      ungrid.addClass('active');
+    }
+
+    this.grid.visible = isDisplay;
   };
 
-  Seat.prototype.setGridDisplay = function(isDisplay) {
-    this.grid.visible = isDisplay;
+  Seat.prototype.zoom = function(zoomLevel) {
+    
+    //limit zoom level
+    if (zoomLevel <= 0 || zoomLevel > 4) {
+      return;
+    }
+    
+    zoomLevel = Math.floor(zoomLevel * 100) / 100;
+    
+    //get the current center point
+    var cenX = Math.abs(this.container.x) + this.hscrollBgd.width/2;    
+    var cenY = Math.abs(this.container.y) + this.vscrollBgd.height/2;
+    
+    cenX = cenX / this.zoomLevel;
+    cenY = cenY / this.zoomLevel;
+    
+    //zoom
+    this.zoomLevel = zoomLevel;
+    this.container.scaleX = this.container.scaleY = this.zoomLevel;
+    
+    this.hscrollBgd.width = this.canvas.width;
+    this.vscrollBgd.height = this.canvas.height;
+
+    this.isHScroll = this.hscrollBgd.width < (this.gridWidth * this.zoomLevel) ? true : false;
+
+    if (this.isHScroll) {
+       this.isVScroll = (this.gridHeight * this.zoomLevel) > (this.canvas.height - 10) ? true : false; 
+    } else {
+      this.isVScroll = (this.gridHeight * this.zoomLevel) > this.canvas.height ? true : false; 
+    }
+  
+    if (this.isVScroll) {
+      this.hscrollBgd.width = this.canvas.width - 10;
+    } 
+
+    if (this.isHScroll) {
+      this.vscrollBgd.height = this.canvas.height - 10;
+    }
+
+    //calculate new center point
+    var newX = cenX * this.zoomLevel;
+    var newY = cenY * this.zoomLevel;
+
+    //limit the position
+    var toX = this.hscrollBgd.width/2 - newX;
+    toX = toX > 0 ? 0 : toX;
+    toX = toX < (this.hscrollBgd.width - (this.gridWidth * this.zoomLevel)) ? (this.hscrollBgd.width - (this.gridWidth * this.zoomLevel)) : toX;
+    
+    var toY = this.vscrollBgd.height/2 - newY;
+    toY = toY > 0 ? 0 : toY
+    toY = toY < (this.vscrollBgd.height - (this.gridHeight * this.zoomLevel)) ? (this.vscrollBgd.height - (this.gridHeight * this.zoomLevel)) : toY;
+
+    //move to new center point
+    this.container.x = this.isHScroll ? toX : 0;    
+    this.container.y = this.isVScroll ? toY : 0;
+    
+    this.updateScroll();
+    this.updateScrollBar();
   };
 
   Seat.prototype.handleControl = function(control) {
 
     switch(control) {
-      case 'halfrect':
-        this.addTable('halfrect');
+      case 'zoomin':
+        this.zoom(this.zoomLevel + 0.1);
         break;
 
-      case 'rect':
-        this.addTable('rect');
-        break;  
-
-      case 'circle':
-        this.addTable('circle');
-        break;   
-
-      case 'square':
-        this.addTable('square');
+      case 'zoomout':
+        this.zoom(this.zoomLevel - 0.1);
         break;
-
-      case 'custom':
-        this.addTable('custom');
-        break;    
 
       case 'grid':
         this.setGridDisplay(true);
@@ -6235,52 +7167,513 @@ and dependencies (minified).
 
       case 'ungrid':
         this.setGridDisplay(false);
-        break; 
+        break;
+      
+      case 'custom':
+        this.prepareCustomTable();
+        break;
+
+      case 'copy':
+        this.copyTable();
+        break;
+
+      case 'print':
+        this.printSeat();
+        break;
+
+      case 'email':
+        this.showPopupEmail();
+        break;  
+      
+      default:
+        this.prepareTable(control);
     }
   };
 
-  Seat.prototype.addTable = function(type) {
+  Seat.prototype.getDefaultJsonTable = function(type) {
     var table;
+    for (var i = 0; i < defaultTable.length; i ++) {
+      if (defaultTable[i].id == type) {
+        return defaultTable[i];
+      }
+    }
+    return null;
+  };
 
-    if (type == 'halfrect') {
-      table = this.table.addChild(new createjs.HalfRectTable("NỮA BÀN HÌNH CHỮ NHẬT", 160, 65, 5));
+  Seat.prototype.prepareTable = function(type) {
+    var json = this.getDefaultJsonTable(type);
+    if (json) {
+      this.createTable(json, true);
+    }
+  };
+
+  Seat.prototype.prepareCustomTable = function() {
+    var that = this;
+
+    var dialog = $('#seatItem');
+    dialog.modal('show');
+
+    var nameitem = dialog.find("input[name='nameitem']");
+    var kinditem = dialog.find("select[name='kinditem']");
+    var sizeitem = dialog.find("input[name='sizeitem']");
+    var rotateitem = dialog.find("input[name='rotateitem']");
+    
+    nameitem.val('');
+    sizeitem.val('');
+    rotateitem.val('');
+    dialog.find('div[data-check]').removeClass('checked');
+    $(dialog.find('div[data-check]')[0]).addClass('checked');
+
+    var edit = dialog.find("button[name='edit']");
+    edit.off('click').on('click', function (evt) {
+      dialog.modal('hide');
+
+      var typeitem = dialog.find('div[data-check][class*="checked"]');
+      kinditem = dialog.find("select[name='kinditem']").find('option:selected');
+
+      var label = nameitem.val();
+      label = $.trim(label) == '' ? defaultCustomLabel : label;
+
+      var wid = Number(sizeitem.val());
+      wid = wid < 100 || isNaN(wid) ? 100 : wid;
+
+      var typeOfTable = Number(kinditem.val());
+      typeOfTable = typeOfTable < 1 || typeOfTable > 3 || isNaN(typeOfTable) ? 1 : typeOfTable;
+
+      var table = that.table.addChild(new createjs.CustomTable(label, wid, wid/2, typeOfTable, typeitem.data('item-id'), typeitem.data('item-url')));
+      that.addTable(table, true);
+    });
+
+    var cancel = dialog.find("button[name='cancel']");
+    cancel.off('click').on('click', function (evt) {
+       dialog.modal('hide');
+    });
+  };
+
+  Seat.prototype.createTable = function(json, isCenter) {
+    var label = json.label;
+    var tableWidth = json.tableWidth;
+    var tableHeight = json.tableHeight;
+    var numOfPerson = json.numOfPerson;
+
+    var table;
+    if (json.type == 'CustomTable') {
+      table = this.table.addChild(new createjs[json.type](label, tableWidth, tableHeight, numOfPerson, json.customId, json.customURL));
+    } else {
+      table = this.table.addChild(new createjs[json.type](label, tableWidth, tableHeight, numOfPerson));
     }
 
-    else if (type == 'rect') {
-      table = this.table.addChild(new createjs.RectTable("BÀN HÌNH CHỮ NHẬT", 180, 80, 10));
+    table.x = json.x;
+    table.y = json.y;
+    this.addTable(table, isCenter);
+
+    return table;
+  };
+
+  Seat.prototype.addTable = function(table, isCenter) {
+    var that = this;
+    
+    //set position
+    if (isCenter) {
+      table.x = Math.abs(this.container.x) + this.hscrollBgd.width/2;
+      table.y = Math.abs(this.container.y) + this.vscrollBgd.height/2;
     }
 
-    else if (type == 'circle') {
-      table = this.table.addChild(new createjs.CircleTable("BÀN TRÒN", 50, 50, 10));
-    }
+    //add event
+    //table.on("mouseover", function (evt) {
+      //if (that.transform.target == this) {
+        //that.table.addChild(that.transform);
+      //}
+    //});
 
-    else if (type == 'square') {
-      table = this.table.addChild(new createjs.SquareTable("BÀN VUÔNG", 90, 90, 10));
-    }
-
-    else if (type == 'custom') {
-      table = this.table.addChild(new createjs.CustomTable("VẬT PHẨM", 130, 75, Math.ceil(Math.random() * 3), 'images/seat/' + Math.ceil(Math.random() * 4) + '.png'));
-    }
-
-    table.x = Math.abs(this.container.x) + this.hscrollBgd.width/2;
-    table.y = Math.abs(this.container.y) + this.vscrollBgd.height/2;
-
-    //table.x = table.y = 100;
-    table.on('editEvent', function(evt) {
+    table.on("mousedown", function (evt) {
+      table.offset = {x: evt.stageX, y: evt.stageY};
+      that.table.addChild(table);
       
+      if (that.selectedTable) {
+        that.selectedTable.setSelect(false);
+      }
+
+      that.selectedTable = table;
+      that.selectedTable.setSelect(true);
+
+      that.transform.setTarget(table, table.isEqual());
+      that.transform.updateWidth(table.tableWidth);
+      that.transform.updateHeight(table.tableHeight);
+    });
+
+    table.on("pressmove", function (evt) {
+      table.setDisplayTooltip(false);
+      table.setDisplayEdit(false);
+      
+      var toX = (evt.stageX - table.offset.x) / that.zoomLevel;
+      var toY = (evt.stageY - table.offset.y) / that.zoomLevel;
+
+      table.offset = {x: evt.stageX, y: evt.stageY};
+
+      var tmpX = table.x + toX;
+      var tmpY = table.y + toY;
+
+      tmpX = tmpX < table.getBounds().width/2 ? table.getBounds().width/2 : tmpX;
+      tmpX = tmpX > table.gridWidth - table.getBounds().width/2 ? that.gridWidth - table.getBounds().width/2 : tmpX;
+
+      tmpY = tmpY < table.getBounds().height/2 ? table.getBounds().height/2 : tmpY;
+      tmpY = tmpY > table.gridHeight - table.getBounds().height/2 ? that.gridHeight - table.getBounds().height/2 : tmpY;
+
+      table.x = tmpX;
+      table.y = tmpY;
+      
+      if (that.transform.target == table) {
+        that.transform.setTarget(table, table.isEqual());
+      }
+    });
+
+    //table.on("click", function (evt) {
+    //  table.setDisplayTooltip(false);
+    //  table.setDisplayEdit(false);
+    //});
+
+    //add custom event
+    table.on('editEvent', function(evt) {
+      if (table instanceof createjs.CustomTable) {
+        that.editCustomTable(table);
+      } else {
+        that.editTable(table);
+      }
+      table.setDisplayTooltip(false);
+    });
+
+    table.on('deleteEvent', function(evt) {
+      table.setDisplayTooltip(false);
+      that.deleteTable(this);
+      that.transform.setTarget(null);
+    });
+
+    this.updateInfo();
+  };
+
+  Seat.prototype.editTable = function(table) {
+    var that = this;
+
+    var dialog = $('#seatEdit');
+    dialog.modal('show');
+
+    var nameseat = dialog.find("input[name='nameseat']");
+    var sizeseat = dialog.find("input[name='sizeseat']");
+    var positionseat = dialog.find("input[name='positionseat']");
+    var rotateseat = dialog.find("input[name='rotateseat']");
+    var commentseat = dialog.find("textarea[name='commentseat']");
+ 
+    nameseat.val(table.label);
+    sizeseat.val(table.tableWidth);
+    positionseat.val(table.numOfPerson);
+    rotateseat.val(table.rotate);
+    commentseat.val(table.comment);
+
+    var edit = dialog.find("button[name='edit']");
+    edit.off('click').on('click', function (evt) {
+      dialog.modal('hide');
+
+      var wid = Number(sizeseat.val());
+      wid = wid < 100 || isNaN(wid) ? 100 : wid;
+      table.setSize(wid, wid / 2);
+      
+      var label = nameseat.val();
+      label = $.trim(label) == '' ? defaultLabel : label;
+      table.setLabel(label.toUpperCase());
+      
+      var numOfPerson = Number(positionseat.val());
+      numOfPerson = numOfPerson < 1 || numOfPerson > 15 || isNaN(numOfPerson) ? 10 : numOfPerson;
+      table.setNumOfPerson(numOfPerson);
+      
+      var rotate = Number(rotateseat.val());
+      rotate = rotate < 0 || rotate > 360 || isNaN(rotate) ? 0 : rotate;
+      table.setRotate(rotate);
+      table.setComment(commentseat.val());
+
+      that.transform.setTarget(table, table.isEqual());
+      that.transform.updateWidth(table.tableWidth);
+      that.transform.updateHeight(table.tableHeight);
+
+      that.updateInfo();
     })
+
+    var cancel = dialog.find("button[name='cancel']");
+    cancel.off('click').on('click', function (evt) {
+       dialog.modal('hide');
+    });
+  };
+
+  Seat.prototype.editCustomTable = function(table) {
+    var that = this;
+
+    var dialog = $('#seatItem');
+    dialog.modal('show');
+
+    var nameitem = dialog.find("input[name='nameitem']");
+    var sizeitem = dialog.find("input[name='sizeitem']");
+    var rotateitem = dialog.find("input[name='rotateitem']");
+ 
+    nameitem.val(table.label);
+    sizeitem.val(table.tableWidth);
+    rotateitem.val(table.rotate);
+    
+    dialog.find('div[data-check]').removeClass('checked');
+    dialog.find('div[data-check][data-item-id="' + table.customId + '"]').addClass('checked');
+
+    var kinditem = dialog.find("select[name='kinditem']").find('option[value="' + table.typeOfTable + '"]');
+    dialog.find('.custom-select').find('.text-val').html(kinditem.text());
+
+    var edit = dialog.find("button[name='edit']");
+    edit.off('click').on('click', function (evt) {
+      dialog.modal('hide');
+
+      var label = nameitem.val();
+      label = $.trim(label) == '' ? defaultCustomLabel : label;
+      table.setLabel(label.toUpperCase());
+
+      var rotate = Number(rotateitem.val());
+      rotate = rotate < 0 || rotate > 360 || isNaN(rotate) ? 0 : rotate;
+      table.setRotate(rotate);
+      
+      kinditem = dialog.find("select[name='kinditem']").find('option:selected');
+      var typeOfTable = Number(kinditem.val());
+      typeOfTable = typeOfTable < 1 || typeOfTable > 3 || isNaN(typeOfTable) ? 1 : typeOfTable;
+      table.setTypeOfTable(typeOfTable);
+
+      var wid = Number(sizeitem.val());
+      wid = wid < 100 || isNaN(wid) ? 100 : wid;
+      table.setSize(wid, wid / 2);
+      
+      var typeitem = dialog.find('div[data-check][class*="checked"]');
+      table.setCustom(typeitem.data('item-id'));
+      table.setItem(typeitem.data('item-url'));
+
+      that.transform.setTarget(table, table.isEqual());
+      that.transform.updateWidth(table.tableWidth);
+      that.transform.updateHeight(table.tableHeight);
+    });
+
+    var cancel = dialog.find("button[name='cancel']");
+    cancel.off('click').on('click', function (evt) {
+       dialog.modal('hide');
+    });
+  };
+
+  Seat.prototype.copyTable = function() {
+    if (!this.selectedTable) {
+      return;
+    }
+
+    var table = this.table.addChild(this.selectedTable.clone());
+    this.addTable(table, true);
+  };
+
+  Seat.prototype.deleteTable = function(table) {
+    this.table.removeChild(table);
+    
+    this.updateInfo();
+  };
+
+  Seat.prototype.updateInfo = function() {
+
+    var table;
+    var numOfTable = 0;
+    var numOfPerson = 0;
+    var numOfItem = 0;
+
+    for (var i = 0; i < this.table.numChildren; i ++) {
+      table = this.table.getChildAt(i);
+
+      if (table instanceof createjs.Transform) {
+        continue;
+      }
+
+      if (table instanceof createjs.CustomTable) {
+        numOfItem ++;
+      } else {
+        numOfTable ++;
+        numOfPerson += table.numOfPerson;
+      }      
+    }
+
+    $('.infor-seat').find('.total-table').html('Bàn: ' + numOfTable);
+    $('.infor-seat').find('.total-seat').html('Ghế: ' + numOfPerson);
+    $('.infor-seat').find('.total-item').html('Vật phẩm: ' + numOfItem);
+  };
+
+  Seat.prototype.prepare = function(callback, timeout) {
+    //set zoom to 1
+    var tmpZoomLevel = this.zoomLevel;
+    this.zoom(1);
+
+    //resize canvas to width, height of zoom 1
+    var tmpGridWidth = this.canvas.width;;
+    var tmpGridHeight = this.canvas.height;
+
+    this.updateCanvas(this.gridWidth, this.gridHeight);
+
+    this.hscroll.visible = this.vscroll.visible = false;
+
+    //export
+    var that = this;
+    setTimeout(function() {
+      
+      //send image back
+      callback.apply(this, [that.canvas.toDataURL('image/jpeg')]);
+
+      //show scroll bar
+      that.hscroll.visible = that.vscroll.visible = true;
+
+      //resize to old size
+      that.updateCanvas(tmpGridWidth, tmpGridHeight);
+
+      //reset to old zoom
+      that.zoom(tmpZoomLevel);
+
+    }, timeout);
+  };
+
+  Seat.prototype.printSeat = function() {
+    this.prepare(function(canvasData) {
+      var windowContent = '<!DOCTYPE html>';
+      windowContent += '<html>'
+      windowContent += '<head><title>Print Seat</title></head>';
+      windowContent += '<body><img src="' + canvasData + '"></body>';
+      windowContent += '</html>';
+      
+      var printWin = window.open('','','width=1280,height=768');
+      printWin.document.open();
+      printWin.document.write(windowContent);
+      printWin.document.close();
+      printWin.focus();
+      printWin.print();
+      printWin.close();
+    }, 100);
+  };
+  
+  Seat.prototype.showPopupEmail = function() {
+    var that = this;
+
+    var dialog = $('#seatEmail');
+    dialog.modal('show');
+
+    var nameemail = dialog.find("input[name='nameemail']");
+    var titleemail = dialog.find("input[name='titleemail']");
+    var contentemail = dialog.find("textarea[name='contentemail']");
+
+    var send = dialog.find("button[name='send-email']");
+    send.off('click').on('click', function (evt) {
+
+      var re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+      
+      if (!re.test(nameemail.val())) {
+        nameemail.focus();
+        return;
+      }
+
+      if ($.trim(titleemail.val()) == '') {
+        titleemail.focus();
+        return;
+      }
+
+      if ($.trim(contentemail.val()) == '') {
+        contentemail.focus();
+        return;
+      }
+
+      dialog.modal('hide');
+      that.sendEmail(nameemail.val(), titleemail.val(), contentemail.val());
+    });
+
+    var cancel = dialog.find("button[name='cancel-email']");
+    cancel.off('click').on('click', function (evt) {
+       dialog.modal('hide');
+    });
+  };
+  
+  Seat.prototype.sendEmail = function(email, title, content) {
+    this.prepare(function(canvasData) {
+      var ajax = $.ajax({
+        url: 'http://localhost:3001/wedding/public/server/seat/sendEmail.php',
+        method: "POST",
+        data: { id : '', data: canvasData, email: email, title: title, content: content },
+        dataType: "text",
+        contentType: 'application/x-www-form-urlencoded'
+      });
+     
+      ajax.done(function(data) {
+      });
+     
+      ajax.fail(function(jqXHR, textStatus) {
+      });
+    }, 100);
+  };
+
+  Seat.prototype.saveSeat = function() {
+    var json = '{' +
+               '"zoomLevel" : ' + this.zoomLevel +
+               ', "gridWidth" : ' + this.gridWidth / 20 +
+               ', "gridHeight" : ' + this.gridHeight / 20+
+               ', "table" : [';
+    var table;
+    var numOfTable = this.table.numChildren;
+
+    for (var i = 0; i < numOfTable; i ++) {
+      table = this.table.getChildAt(i);
+      json = json + table.toJSON();
+      if (i != numOfTable - 1) {
+        json = json + ', '
+      }
+    }
+    json = json + ']}';
+
+    var that = this;
+    var ajax = $.ajax({
+      url: 'http://localhost:3001/wedding/public/server/seat/saveSeat.php',
+      method: "POST",
+      data: { id : '', seat: json },
+      dataType: "json"
+    });
+     
+    ajax.done(function(data) {
+    });
+     
+    ajax.fail(function(jqXHR, textStatus) {
+    });
+  };
+
+  Seat.prototype.exportSeat = function() {
+    this.prepare(function(canvasData) {
+      window.open(canvasData);
+    }, 100);
   };
 
   /* =============== */
   /* MODULE DATA-API */
   /* =============== */
 
+  $.fn[pluginName] = function(options, params) {
+    return this.each(function() {
+      var instance = $.data(this, pluginName);
+      if (!instance) {
+        $.data(this, pluginName, new Seat(this, options));
+      } else if (instance[options]) {
+        instance[options](params);
+      } else {
+        window.console && console.log(options ? options + ' method is not exists in ' + pluginName : pluginName + ' plugin has been initialized');
+      }
+    });
+  };
+
+  $.fn[pluginName].defaults = {};
+
   $(function() {
-    var opts = {};
-    App.Seat = new Seat(opts);
+    $('[data-' + pluginName + ']')[pluginName]({});
   });
 
-}(window.jQuery, window.createjs, window.App));
+}(window.jQuery, window, window.createjs, window.App));
+
 /* =========
  * sample.js
  * ========= */
@@ -6383,6 +7776,76 @@ and dependencies (minified).
   /* MODULE TRIGGER */
   /* ============== */
 
+  var sliderShowA = '.slideshow-tab';
+
+  /* =============== */
+  /* MODULE DEFAULTS */
+  /* =============== */
+
+  var defaults = {};
+
+  /* ================= */
+  /* MODULE DEFINITION */
+  /* ================= */
+
+  function SliderTab(opts) {
+    this.settings = $.extend({}, defaults, opts);
+    return this.init();
+  }
+
+  /* ============== */
+  /* MODULE METHODS */
+  /* ============== */
+
+  SliderTab.prototype.init = function() {
+    var slider = $(sliderShowA);
+    slider.slick({
+      dots: false,
+      infinite: true,
+      speed: 300,
+      responsive: [
+        {
+          breakpoint: 767,
+          settings: {
+            slidesToShow: 1,
+            slidesToScroll: 1
+          }
+        },
+        {
+          breakpoint: 480,
+          settings: {
+            slidesToShow: 1,
+            slidesToScroll: 1
+          }
+        }
+      ]
+    });
+    return this;
+  };
+
+
+  /* =============== */
+  /* MODULE DATA-API */
+  /* =============== */
+
+  $(function() {
+    var opts = {};
+    App.sliderTab = new SliderTab(opts);
+  });
+
+}(window.jQuery, window.App));
+/* =========
+ * sample.js
+ * ========= */
+
+(function($, App) {
+
+  "use strict";
+
+  /* ============== */
+  /* MODULE TRIGGER */
+  /* ============== */
+
   var sliderShow = '[data-slidershow]';
 
   /* =============== */
@@ -6426,6 +7889,2093 @@ and dependencies (minified).
   });
 
 }(window.jQuery, window.App));
+/**
+ *  @name scroll-video
+ *  @description description
+ *  @version 1.0
+ *  @options
+ *    option
+ *  @events
+ *    event
+ *  @methods
+ *    init
+ *    publicMethod
+ *    destroy
+ */
+;(function($, window, undefined) {
+  var pluginName = 'tab-video-small';
+
+  function Plugin(element, options) {
+    this.element = $(element);
+    this.options = $.extend({}, $.fn[pluginName].defaults, this.element.data(), options);
+    this.init();
+  }
+
+  Plugin.prototype = {
+    init: function() {
+      var that = this,
+          ele = that.element,
+          control = $('[data-control-small]', ele),
+          content = $('[data-content-small]', ele);
+      control.find('a').each(function(){
+        var el = $(this);
+        el.on('click.' + pluginName, function(e){
+          e.preventDefault();
+          var idControl = el.attr('href');
+          if(el.parent().hasClass('active')){
+            return;
+          }
+          else{
+            var beforeEL = content.filter('.active');
+            if(beforeEL.length){
+              beforeEL.removeClass('active');
+            }
+            control.find('li').removeClass('active');
+            el.parent().addClass('active');
+            $(idControl).addClass('active');
+          }
+          
+        });
+      });
+    },
+    destroy: function() {
+      $.removeData(this.element[0], pluginName);
+    }
+  };
+
+  $.fn[pluginName] = function(options, params) {
+    return this.each(function() {
+      var instance = $.data(this, pluginName);
+      if (!instance) {
+        $.data(this, pluginName, new Plugin(this, options));
+      } else if (instance[options]) {
+        instance[options](params);
+      } else {
+        window.console && console.log(options ? options + ' method is not exists in ' + pluginName : pluginName + ' plugin has been initialized');
+      }
+    });
+  };
+
+  $.fn[pluginName].defaults = {
+  };
+
+  $(function() {
+    $('[data-' + pluginName + ']')[pluginName]();
+  });
+
+}(jQuery, window));
+/**
+ *  @name scroll-video
+ *  @description description
+ *  @version 1.0
+ *  @options
+ *    option
+ *  @events
+ *    event
+ *  @methods
+ *    init
+ *    publicMethod
+ *    destroy
+ */
+;(function($, window, undefined) {
+  var pluginName = 'tab-video';
+
+  function Plugin(element, options) {
+    this.element = $(element);
+    this.options = $.extend({}, $.fn[pluginName].defaults, this.element.data(), options);
+    this.init();
+  }
+
+  Plugin.prototype = {
+    init: function() {
+      var that = this,
+          ele = that.element,
+          control = $('[data-control]', ele),
+          content = $('[data-content]', ele);
+      control.find('a').each(function(){
+        var el = $(this);
+        el.on('click.' + pluginName, function(e){
+          e.preventDefault();
+          var idControl = el.attr('href');
+          if(el.parent().hasClass('active')){
+            return;
+          }
+          else{
+            var beforeEL = content.filter('.active');
+            if(beforeEL.length){
+              beforeEL.removeClass('active');
+            }
+            control.find('li').removeClass('active');
+            el.parent().addClass('active');
+            $(idControl).addClass('active');
+          }
+          
+        });
+      });
+    },
+    destroy: function() {
+      $.removeData(this.element[0], pluginName);
+    }
+  };
+
+  $.fn[pluginName] = function(options, params) {
+    return this.each(function() {
+      var instance = $.data(this, pluginName);
+      if (!instance) {
+        $.data(this, pluginName, new Plugin(this, options));
+      } else if (instance[options]) {
+        instance[options](params);
+      } else {
+        window.console && console.log(options ? options + ' method is not exists in ' + pluginName : pluginName + ' plugin has been initialized');
+      }
+    });
+  };
+
+  $.fn[pluginName].defaults = {
+  };
+
+  $(function() {
+    $('[data-' + pluginName + ']')[pluginName]();
+  });
+
+}(jQuery, window));
+/* =================
+ * video-clip.js
+ * ================= */
+
+;(function($, window, createjs, App) {
+
+  "use strict";
+
+  function TextData() {    
+    this.text = '';
+    this.font = 'Arial';
+    this.fontName = 'Arial';
+    this.style = '';
+
+    this.halign = 'center';
+    this.valign = 'middle';
+    this.padding = 20;
+    
+    this.size = 36;
+    this.color = 'Magenta';
+  };
+
+  function FrameData() {
+    //text data
+    this.text = new TextData();
+    this.textEffect = 'TFade';
+    this.textEffectClass = 'TEffect_Fade';
+    this.textEffectDelay = 5;
+    this.textEffectDuration = 5;
+
+    //image data
+    this.bitmapId = '';
+    this.bitmapUrl =  '';
+    this.bitmapEffect = 'BFade';
+    this.bitmapEffectClass = 'BEffect_Fade';
+    this.bitmapEffectDelay = 3;
+    this.bitmapEffectDuration = 5;
+
+    //video data
+    this.videoId = null;
+    this.videoUrl = null;
+    this.videoStart = 0;
+    this.videoEnd = -1
+
+    //audio data
+    this.audioId = null;
+    this.audioUrl = null;
+    this.audioStart = 0;
+    this.audioEnd = -1;
+
+    //time data
+    this.backgroundColor = 0xFFFFFF;
+    this.duration = 5;
+    this.type = '';
+
+    this.bitmapView = null;
+    this.textView = null;
+  };
+
+  var EffectUtils = function() {
+    var arrEffect = [];
+    
+    return {
+      addEffectPlugin : function(type, effect) {
+        var isExist = false;
+        for (var key in arrEffect) {
+          if (key == type) {
+            isExist = true;
+            break;
+          }
+        }
+        if (!isExist) {
+          arrEffect[type] = effect;
+        }
+        return !isExist;
+      },
+
+      getEffectPlugin : function(type) {
+        for (var key in arrEffect) {
+          if (key == type) {
+            return arrEffect[key];
+          }
+        }
+      }
+    };
+  }();
+
+  //////////TEffect_Fade//////////
+  function TEffect_Fade() {}
+  TEffect_Fade.prototype.play = function(container, preText, text, delay, time) {
+
+    if (preText) {
+      TweenLite.to(preText, 1, {alpha: 0, onComplete: function() {
+        container.removeChild(preText);
+      }});
+    }
+
+    container.addChild(text);
+    text.alpha = 0;
+    TweenLite.to(text, time, {delay: delay, alpha: 1});
+  };
+  window.TEffect_Fade = TEffect_Fade;
+
+  //////////TEffect_SlideLeft//////////
+  function TEffect_SlideLeft() {}
+  TEffect_SlideLeft.prototype.play = function(container, preText, text, delay, time) {
+    if (preText) {
+      TweenLite.to(preText, time, {delay: delay, x: -container.VC_WIDTH, onComplete: function() {
+        container.removeChild(preText);
+      }});
+    }
+
+    container.addChild(text);
+    var orgX = text.x;
+
+    text.x = container.VC_WIDTH;
+    TweenLite.to(text, time, {delay: delay, x: orgX});
+  };
+  window.TEffect_SlideLeft = TEffect_SlideLeft;
+
+  //////////BEffect_Fade//////////
+  function BEffect_Fade() {}
+  BEffect_Fade.prototype.play = function(container, prevBitmap, nextBitmap, delay, time) {
+    container.addChild(nextBitmap);
+    nextBitmap.alpha = 0;
+    TweenLite.to(nextBitmap, time, {delay: delay, alpha: 1});
+  };
+  window.BEffect_Fade = BEffect_Fade;
+
+  //////////BEffect_Slide//////////
+  function BEffect_SlideLeft() {}
+  BEffect_SlideLeft.prototype.play = function(container, prevBitmap, nextBitmap, delay, time) {
+
+    if (prevBitmap) {
+      TweenLite.to(prevBitmap, 1.5, {x: -container.VC_WIDTH});
+    }
+
+    container.addChild(nextBitmap);
+    nextBitmap.x = container.VC_WIDTH;
+    TweenLite.to(nextBitmap, 1.5, {x: 0});
+  }
+  window.BEffect_SlideLeft = BEffect_SlideLeft;
+
+  //////////BEffect_SlideRight//////////
+  function BEffect_SlideRight() {}
+  BEffect_SlideRight.prototype.play = function(container, prevBitmap, nextBitmap, delay, time) {
+
+    if (prevBitmap) {
+      TweenLite.to(prevBitmap, 1.5, {x: container.VC_WIDTH});
+    }
+
+    container.addChild(nextBitmap);
+    nextBitmap.x = -container.VC_WIDTH;
+    TweenLite.to(nextBitmap, 1.5, {x: 0});
+  }
+  window.BEffect_SlideRight = BEffect_SlideRight;
+
+  //////////BEffect_SlideUp//////////
+  function BEffect_SlideUp() {}
+  BEffect_SlideUp.prototype.play = function(container, prevBitmap, nextBitmap, delay, time) {
+
+    if (prevBitmap) {
+      TweenLite.to(prevBitmap, 1.5, {y: -container.VC_HEIGHT});
+    }
+
+    container.addChild(nextBitmap);
+    nextBitmap.y = container.VC_HEIGHT;
+    TweenLite.to(nextBitmap, 1.5, {y: 0});
+  }
+  window.BEffect_SlideUp = BEffect_SlideUp;
+
+  //////////BEffect_SlideDown//////////
+  function BEffect_SlideDown() {}
+  BEffect_SlideDown.prototype.play = function(container, prevBitmap, nextBitmap, delay, time) {
+
+    if (prevBitmap) {
+      TweenLite.to(prevBitmap, 1.5, {y: container.VC_HEIGHT});
+    }
+
+    container.addChild(nextBitmap);
+    nextBitmap.y = -container.VC_HEIGHT;
+    TweenLite.to(nextBitmap, 1.5, {y: 0});
+  }
+  window.BEffect_SlideDown = BEffect_SlideDown;
+
+  //////////BEffect_ZoomIn//////////
+  function BEffect_ZoomIn() {}
+  BEffect_ZoomIn.prototype.play = function(container, prevBitmap, nextBitmap, delay, time) {
+   
+    container.addChild(nextBitmap);
+    
+    var scale = nextBitmap.scaleX;
+    nextBitmap.alpha = 0;
+
+    nextBitmap.scaleX = nextBitmap.scaleY = 0.5;
+    nextBitmap.x = 0.5 * nextBitmap.getBounds().width / 2;
+    nextBitmap.y = 0.5 * nextBitmap.getBounds().height / 2;
+    
+    TweenLite.to(nextBitmap, time, {delay: delay, alpha: 1, x: 0, y :0, scaleX: scale, scaleY: scale});
+  }
+  window.BEffect_ZoomIn = BEffect_ZoomIn;
+  
+//////////BEffect_ZoomOut//////////
+  function BEffect_ZoomOut() {}
+  BEffect_ZoomOut.prototype.play = function(container, prevBitmap, nextBitmap, delay, time) {
+   
+    container.addChild(nextBitmap);
+    
+    var scale = nextBitmap.scaleX;
+    nextBitmap.alpha = 0;
+    nextBitmap.scaleX = nextBitmap.scaleY = 2;
+    nextBitmap.x = - nextBitmap.getBounds().width / 2;
+    nextBitmap.y = - nextBitmap.getBounds().height / 2;
+    
+    TweenLite.to(nextBitmap, 3, {alpha: 1, x: 0, y :0, scaleX: scale, scaleY: scale});
+  }
+  window.BEffect_ZoomOut = BEffect_ZoomOut;
+  
+  //////////BEffect_AlphaBars//////////
+  function BEffect_AlphaBars() {}
+  BEffect_AlphaBars.prototype.play = function(container, prevBitmap, nextBitmap, delay, time) {
+    
+    //step 1: create temp bitmap with corrected size
+    var w = nextBitmap.getBounds().width;
+    var h = nextBitmap.getBounds().height;
+    
+    nextBitmap.cache(0, 0, w, h);
+    
+    var matrix = new createjs.Matrix2D(container.VC_WIDTH/ w, 0, 0, container.VC_WIDTH/ w, 0, (container.VC_HEIGHT - (container.VC_WIDTH/ w) * h)/2);      
+    var bitmapData = new createjs.BitmapData(null, container.VC_WIDTH, container.VC_HEIGHT, 0x000000);
+    bitmapData.draw(nextBitmap, matrix, null, null, null, true);
+    
+    var temp = new createjs.Container();
+    container.addChild(temp); 
+    
+    //step 2: create and show bars
+    var barWidth = 30;
+    var numOfBar = Math.ceil(container.VC_WIDTH / barWidth);
+    var bar;
+    var showTime = 0.5;
+    var delayTime = 0.03;
+    
+    for (var i = 0; i < numOfBar; i ++) {
+      bar = new createjs.Bitmap(bitmapData.canvas);
+      bar.sourceRect = new createjs.Rectangle(barWidth * i, 0, barWidth, container.VC_HEIGHT);
+      bar.x = barWidth * i;
+      bar.alpha = 0;
+      temp.addChild(bar); 
+      
+      TweenLite.to(bar, showTime, {alpha: 1, delay: i < numOfBar / 2  ? delayTime * i : numOfBar * delayTime - delayTime * i, onComplete: onCompleteShowBar, onCompleteParams: [bar, i]});
+    }      
+    
+    function onCompleteShowBar(bar, index) {
+      if (index == numOfBar - 1) {
+        container.addChild(new createjs.Bitmap(bitmapData.canvas));
+        temp.removeAllChildren();
+        container.removeChild(temp);
+      }
+    }      
+  };
+  window.BEffect_AlphaBars = BEffect_AlphaBars;
+  
+  //////////BEffect_SquareExplode//////////
+  function BEffect_SquareExplode() {}
+  BEffect_SquareExplode.prototype.play = function(container, prevBitmap, nextBitmap, delay, time) {
+    
+    //step 1: create temp bitmap with corrected size
+    var w = nextBitmap.getBounds().width;
+    var h = nextBitmap.getBounds().height;
+    
+    nextBitmap.cache(0, 0, w, h);
+    
+    var matrix = new createjs.Matrix2D(container.VC_WIDTH/ w, 0, 0, container.VC_WIDTH/ w, 0, (container.VC_HEIGHT - (container.VC_WIDTH/ w) * h)/2);      
+    var bitmapData = new createjs.BitmapData(null, container.VC_WIDTH, container.VC_HEIGHT, 0x000000);
+    bitmapData.draw(nextBitmap, matrix, null, null, null, true);
+    
+    var temp = new createjs.Container();
+    container.addChild(temp); 
+    
+    //create image with mask
+    var imageMask = new createjs.Shape();
+    imageMask.graphics.drawRect(0, 0, container.VC_WIDTH, container.VC_HEIGHT);
+    imageMask.scaleX = 0;
+    temp.addChild(imageMask);
+    
+    var bitmap = new createjs.Bitmap(bitmapData.canvas);
+    bitmap.cache(0, 0, container.VC_WIDTH, container.VC_HEIGHT);
+    temp.addChild(bitmap);
+    
+    temp.mask = imageMask;
+    TweenLite.to(imageMask, 2, {scaleX: 1, ease: Power2.easeOut });
+    
+    //step 2: create and show bars
+    var barWidth = 40;
+    var barHeight = 40;
+    var col = Math.ceil(container.VC_HEIGHT / barHeight);
+    var row = Math.ceil(container.VC_WIDTH / barWidth);      
+    var i, j;
+    var bar;      
+    var showTime = 1;
+    var delayTime = 0.06;
+    var distance = 150;
+    var toX, toY;
+    
+    for (i = 0; i < row; i ++) {
+      for (j = 0; j < col; j ++) {
+        bar = new createjs.Bitmap(bitmapData.canvas);
+        bar.sourceRect = new createjs.Rectangle(barWidth * i, barHeight * j, barWidth, barHeight);
+        bar.x = barWidth * i;
+        bar.y = barHeight * j;
+        temp.addChild(bar); 
+        
+        toX = bar.x + (Math.random() < 0.5 ? -Math.random() * distance : Math.random() * distance);
+        toY = bar.y + (Math.random() < 0.5 ? -Math.random() * distance : Math.random() * distance);
+      
+        TweenLite.to(bar, showTime, {alpha: 0, delay: delayTime * i, x: toX, y: toY, onComplete: onCompleteShowEffect, onCompleteParams: [bar]});
+      }      
+    }
+    
+    function onCompleteShowEffect(bar) {
+      temp.removeChild(bar);
+    }
+  };
+  window.BEffect_SquareExplode = BEffect_SquareExplode;
+
+  //////////BEffect_BrightSquares//////////
+  function BEffect_BrightSquares() {}
+  BEffect_BrightSquares.prototype.play = function(container, prevBitmap, nextBitmap, delay, time) {
+    
+    //step 1: create temp bitmap with corrected size
+    var w = nextBitmap.getBounds().width;
+    var h = nextBitmap.getBounds().height;
+    
+    nextBitmap.cache(0, 0, w, h);
+    
+    var matrix = new createjs.Matrix2D(container.VC_WIDTH/ w, 0, 0, container.VC_WIDTH/ w, 0, (container.VC_HEIGHT - (container.VC_WIDTH/ w) * h)/2);      
+    var bitmapData = new createjs.BitmapData(null, container.VC_WIDTH, container.VC_HEIGHT, 0x000000);
+    bitmapData.draw(nextBitmap, matrix, null, null, null, true);
+    
+    var temp = new createjs.Container();
+    container.addChild(temp); 
+    
+    //step 2: create and show bars
+    var barWidth = 40;
+    var barHeight = 40;
+    var col = Math.ceil(container.VC_HEIGHT / barHeight);
+    var row = Math.ceil(container.VC_WIDTH / barWidth);      
+    var i, j;
+    var bar;      
+    var bitmap;
+    var bright;
+    var showTime = 0.5;
+    var delayTime = 0.01;
+    var delay;
+    
+    for (i = 0; i < row; i ++) {
+      for (j = 0; j < col; j ++) {
+        bar = new createjs.Container();
+        bar.orgX = barWidth * i;
+        bar.orgY = barHeight * j;
+        bar.x = bar.orgX + barWidth/2;
+        bar.y = bar.orgY + barHeight/2;
+        bar.scaleX = bar.scaleY = 0;
+        temp.addChild(bar); 
+        
+        bitmap = new createjs.Bitmap(bitmapData.canvas);
+        bitmap.sourceRect = new createjs.Rectangle(barWidth * i, barHeight * j, barWidth, barHeight);
+        bar.addChild(bitmap); 
+        
+        bright = new createjs.Shape();          
+        bright.graphics.beginFill('#FFFFFF').drawRect(0, 0, barWidth, barHeight).endFill();
+        bar.addChild(bright);
+        
+        delay = delayTime *  i * (col - j);                    
+        TweenLite.to(bright, showTime + 0.2, {alpha: 0, delay: delay + 0.2});
+        
+        TweenLite.to(bar, showTime, {alpha: 1, x: bar.orgX, y: bar.orgY, scaleX: 1, scaleY: 1, delay: delay, onComplete: onCompleteShowEffect, onCompleteParams: [bar]});
+      }      
+    }
+    
+    function onCompleteShowEffect(bar) {
+      //temp.removeChild(bar);
+    }
+  };
+  window.BEffect_BrightSquares = BEffect_BrightSquares;
+
+  EffectUtils.addEffectPlugin('TFade', new window['TEffect_Fade']());
+  EffectUtils.addEffectPlugin('TSlideLeft', new window['TEffect_SlideLeft']());
+  EffectUtils.addEffectPlugin('BFade', new window['BEffect_Fade']());
+  EffectUtils.addEffectPlugin('BSlideLeft', new window['BEffect_SlideLeft']());
+  EffectUtils.addEffectPlugin('BSlideRight', new window['BEffect_SlideRight']());
+  EffectUtils.addEffectPlugin('BSlideUp', new window['BEffect_SlideUp']());
+  EffectUtils.addEffectPlugin('BSlideDown', new window['BEffect_SlideDown']());
+  EffectUtils.addEffectPlugin('BZoomIn', new window['BEffect_ZoomIn']());
+  EffectUtils.addEffectPlugin('BZoomOut', new window['BEffect_ZoomOut']());
+  EffectUtils.addEffectPlugin('BAlphaBars', new window['BEffect_AlphaBars']());
+  EffectUtils.addEffectPlugin('BSquareExplode', new window['BEffect_SquareExplode']());
+  EffectUtils.addEffectPlugin('BBrightSquares', new window['BEffect_BrightSquares']());
+
+  /* =============== */
+  /* MODULE DEFAULTS */
+  /* =============== */
+
+  var defaults = {};
+  var pluginName = 'videoclip';
+
+  var SERVER_URL = 'http://localhost:3001/wedding/public';
+
+  var IMAGE = 'image';
+  var AUDIO = 'audio';
+  var VIDEO = 'video';
+
+  var PANEL_INTRO = 'intro';
+  var PANEL_TEXT = 'text';
+  var PANEL_IMAGE = 'image';
+  var PANEL_VIDEO = 'video';
+  var PANEL_EFFECT = 'effect';
+  var PANEL_AUDIO = 'audio';
+  var PANEL_TEXT_EFFECT = 'texteffect';
+
+  var FROM_LIBRARY = 'library';
+  var FROM_UPLOAD = 'upload';
+  var FROM_YOURS = 'yours';
+
+  var HA_LEFT = 'left';
+  var HA_CENTER = 'center';
+  var HA_RIGHT = 'right';
+
+  var VA_TOP = 'top';
+  var VA_MIDDLE = 'middle';
+  var VA_BOTTOM = 'bottom';  
+
+  /* ================= */
+  /* MODULE DEFINITION */
+  /* ================= */
+
+  function VideoClip(element, options) {
+    this.element = $(element);
+    this.options = $.extend({}, $.fn[pluginName].defaults, options);
+
+    this.vcid = Math.random().toString(36).substring(12);
+
+    this.arrFrame = [];
+    this.curFrameIndex = -1;
+    this.curFrame = null;
+
+    this.curFrameImage = null;
+    this.curFrameVideo = null;
+    this.curFrameText = null;
+    this.curFrameEffect = null;
+    this.curFrameAudio = null;
+
+    this.curFrameHAlign = null;
+    this.curFrameVAlign = null;
+    this.curFrameStyle  = null;
+
+    this.isBackground = false;
+    this.isAudio = false;
+
+    this.canvas = null;
+    this.stage = null;
+    
+    this.bitmapContainer = null;
+    this.frameBitmap = null;
+    
+    this.frameText = null
+    this.textContainer = null;
+
+    this.effectSetting = null;
+    this.mediaSetting = null;
+    this.loading = null;
+
+    this.audioInstance = null;
+    this.videoInstance = null;
+
+    this.curPanel = null;
+    this.previewVC = new PreviewVC(); 
+
+    return this.init();
+  }
+
+  /* ============== */
+  /* MODULE METHODS */
+  /* ============== */
+
+  VideoClip.prototype.init = function() {
+
+    var that = this;
+
+    this.canvas = document.getElementById('cvsVC');
+    this.stage = new createjs.Stage("cvsVC");
+    this.bitmapContainer = this.stage.addChild(new createjs.Container());
+    this.textContainer = this.stage.addChild(new createjs.Container());
+
+    createjs.Ticker.addEventListener("tick", function() { that.stage.update(); });
+    
+    $(window).on('resize', function(evt) { that.resize(); });
+    this.resize();
+
+    this.effectSetting = $('.effect-setting');
+
+    this.videoInstance = document.getElementById('video');
+
+    this.loading = $('.vc-loading-wrapp');
+      
+    //media-setting events
+    this.mediaSetting = $('.media-setting');
+
+    this.mediaSetting.find('.time-start').on('mousedown', function(evt) {
+      that.onMoveTimeHandler(this);
+    });
+
+    this.mediaSetting.find('.time-end').on('mousedown', function(evt) {
+      that.onMoveTimeHandler(this);
+    });
+
+    this.mediaSetting.find('.play-pause').off('click').on('click', function(evt) {
+      that.onClickPlayPauseHandler(this);
+    });
+
+    //add new
+    $('.vc-backgrounds').find('.add-more').off('click').on('click', function(evt) { that. onClickAddBackgroundHandler(evt);});
+    $('.vc-audios').find('.add-more').off('click').on('click', function(evt) { that. onClickAddAudioHandler(evt);});
+    $('.vc-frames').find('.add-more-effect').off('click').on('click', function(evt) { that. onClickAddFrameHandler(evt);});    
+    $('#vc-add-intro').find('.intro-click').off('click').on('click', function(evt) { that. onClickAddFrameHandler(evt);});
+
+    $('.vc-frames').find('.add-more-effect').off('click').on('click', function(evt) { that. onClickAddFrameHandler(evt);});
+    $(window).on('resize.videoResize', function(){
+      $('.wrapper-video .tfooter .add-function-block .item .content').jScrollPane('reinitialise');
+    }).trigger('resize.videoResize');
+    //menu
+    var controlMenu = $('.control-menu').find('li');
+    controlMenu.off('click').on('click', function(evt) {
+      that.changePanel($(this).attr('id'));
+    });
+
+    //save, preview and finish
+    var listControl = $('.list-control');
+    listControl.find('.save-vc').off('click').on('click', function(evt) { that.save();});
+    listControl.find('.preview-vc').off('click').on('click', function(evt) { that.preview();});
+    listControl.find('.finish-vc').off('click').on('click', function(evt) { that.finish();});
+
+    //select image from library
+    var imageLibrary = $('#vc-image-library').find('.item');
+    imageLibrary.off('click').on('click', function(evt) {
+      that.selectFrameData(this, IMAGE);
+    });
+
+    //select image from local
+    var imageUpload = $('#vc-image-upload').find('.vc-image-upload-local');
+    imageUpload.off('click').on('click', function(evt) {
+      that.browseFile(IMAGE, that.uploadFrameData);
+    });
+
+    //select image from your album
+    var imageYours = $('#vc-image-yours').find('.item');
+    imageYours.off('click').on('click', function(evt) {
+      that.selectFrameData(this, IMAGE);
+    });
+
+    //select video from library
+    var videoLibrary = $('#vc-video-library').find('.item');
+    videoLibrary.off('click').on('click', function(evt) {
+      that.selectFrameData(this, VIDEO);
+    });
+
+    //select video from local
+    var videoUpload = $('#vc-video-upload').find('.vc-video-upload-local');
+    videoUpload.off('click').on('click', function(evt) {
+      that.browseFile(VIDEO, that.uploadFrameData);
+    });
+
+    //select video from your album
+    var videoYours = $('#vc-video-yours').find('.item');
+    videoYours.off('click').on('click', function(evt) {
+      that.selectFrameData(this, VIDEO);
+    });
+
+    ///vc-add-text///////////////////////////////////////////////////
+    //add text effect
+    var addTextEffect = $('#vc-add-text').find('.text-effect .add-more');
+    addTextEffect.off('click').on('click', function(evt) {
+      that.showPanel(PANEL_TEXT_EFFECT);
+    });
+
+    //select text effect
+    var textEffect = $('#vc-add-texteffect').find('.item');
+    textEffect.off('click').on('click', function(evt) {
+      that.selectFrameTextEffect(this);
+    });
+
+    $('#vc-add-text').find('textarea[name="frametext"]').bind('input propertychange', function(evt) {
+      that.applyFrameText();
+    });
+
+    $('#vc-add-text').find('input[name="textsize"]').bind('input propertychange', function(evt) {
+      that.applyFrameText();
+    });
+
+    $('#vc-add-text').find('input[name="textcolor"]').bind('input propertychange', function(evt) {
+      that.applyFrameText();
+    });
+
+    $('#vc-add-text').find('input[name="textpadding"]').bind('input propertychange', function(evt) {
+      that.applyFrameText();
+    });
+
+    //halign event handler
+    $('#vc-add-text').find('.halign li').off('click').on('click', function(evt) {
+      that.onClickHAlignHandler(this);
+    });
+
+    //valign event handler
+    $('#vc-add-text').find('.valign li').off('click').on('click', function(evt) {
+      that.onClickVAlignHandler(this);
+    });
+
+    //valign event handler
+    $('#vc-add-text').find('.custom-select .text-val').bind('customSelectChangeEvent', function(evt) {
+      that.applyFrameText();
+    });
+
+    //valign event handler
+    $('#vc-add-text').find('.fontstyle li').off('click').on('click', function(evt) {
+      that.onClickFontStyleHandler(this);
+    });
+
+    //$('#frame-text-next').off('click').on('click', function(evt) {
+    //  that.showPanel(PANEL_IMAGE);
+    //});
+
+    //save text for current frame
+    //$('#frame-text-save').off('click').on('click', function(evt) {
+    //  that.selectFrameText();
+    //});
+    /////////////////////////////////////////////////////////////////
+
+    //select effect
+    var imageEffect = $('#vc-add-effect').find('.item');
+    imageEffect.off('click').on('click', function(evt) {
+      that.selectFrameImageEffect(this);
+    });
+
+    //select audio from library
+    var audioLibrary = $('#vc-audio-library').find('.item');
+    audioLibrary.each(function() {
+      that.addEventsForAudioItem(this);
+    });
+
+    //select audio from local
+    var audioUpload = $('#vc-audio-upload').find('.vc-audio-upload-local');
+    audioUpload.off('click').on('click', function(evt) {
+      that.browseFile(AUDIO, that.uploadFrameData);
+    });
+
+    //select audio from your album
+    var audioYours = $('#vc-audio-yours').find('.item');
+    audioYours.each(function() {
+      that.addEventsForAudioItem(this);
+    });
+
+    //apply effect
+    var saveEffect = $('.effect-setting').find('.btn-1');
+    saveEffect.off('click').on('click', function(evt) {
+      that.applyEffect();
+    });
+
+    this.displayOnlyMenu(true, PANEL_INTRO);
+  };
+
+  VideoClip.prototype.resize = function() {
+    var videoClip = $('.video-clip');
+    this.canvas.width = videoClip.width();
+    this.canvas.height = videoClip.height();
+
+    this.bitmapContainer.VC_WIDTH = this.textContainer.VC_WIDTH = this.canvas.width;
+    this.bitmapContainer.VC_HEIGHT = this.textContainer.VC_HEIGHT = this.canvas.height;
+  };
+
+  VideoClip.prototype.onMoveTimeHandler = function(target) {
+    var that = this;
+    target = $(target);
+
+    var left = that.mediaSetting.find('.time').offset().left;
+    var width = that.mediaSetting.find('.time').width();
+    var duration = that.mediaSetting.find('.time').data('duration');
+
+    $(document.body).off("mousemove").on("mousemove", function(evt) {
+      if (!target) {
+        return;
+      }
+    
+      var toX = evt.pageX - 10;
+
+      if (target.hasClass('time-start')) {
+        var timeEnd = that.mediaSetting.find('.time-end').offset().left;
+  
+        toX = toX < left - 10 ? left - 10: toX;
+        toX = (toX > timeEnd) ? timeEnd : toX;
+
+        target.offset({left: toX});
+        
+        that.mediaSetting.find('.timeline').offset({left: target.offset().left + 10});
+        that.mediaSetting.find('.timeline').width(timeEnd - toX);
+
+        var ts = (that.mediaSetting.find('.timeline').offset().left - left) * duration / width;
+        target.find('.text').html(that.formatTime(ts));
+
+      } else {
+        
+        var timeStart = that.mediaSetting.find('.time-start').offset().left;
+
+        toX = (toX < timeStart) ? timeStart : toX;
+        toX = (toX > left + width - 10) ? left + width - 10 : toX;
+
+        target.offset({left: toX});
+
+        that.mediaSetting.find('.timeline').width(toX - timeStart);
+
+        var te = (that.mediaSetting.find('.timeline').offset().left + that.mediaSetting.find('.timeline').width() - left) * duration / width;
+        target.find('.text').html(that.formatTime(te));
+      }
+    });
+
+    $(document.body).off("mouseup").on("mouseup", function (evt) {
+      
+      target = null;
+
+      $(document.body).off("mousemove");
+      $(document.body).off("mouseup");
+
+      that.seekMedia((that.mediaSetting.find('.timeline').offset().left - left) * duration / width);
+    });
+  };
+
+  VideoClip.prototype.addEventsForAudioItem = function(item) {
+    var that = this;
+    item = $(item);
+    //item.find('.play-pause').off('click').on('click', function(evt) {
+    item.off('click').on('click', function(evt) {
+      that.selectFrameAudio(item);
+    });
+    //item.find('.add-more').off('click').on('click', function(evt) {
+    //  that.selectFrameAudio(item);
+    //});
+  };
+
+  VideoClip.prototype.onClickAddBackgroundHandler = function(evt) {
+    //this.browseFile(IMAGE, this.addBackground);
+    this.isBackground = true;
+    this.displayOnlyMenu(true, PANEL_IMAGE);
+  };
+
+  VideoClip.prototype.onClickAddAudioHandler = function(evt) {
+    this.isAudio = true;
+    this.displayOnlyMenu(true, PANEL_AUDIO);
+  };
+
+  VideoClip.prototype.onClickAddFrameHandler = function(evt) {
+    //just hide the intro and show the panel text in the first time click on add frame
+    if (this.arrFrame.length == 0 || this.isAudio || this.isBackground)  {
+      this.isAudio = false;
+      this.isBackground = false;
+      this.showPanel(PANEL_TEXT);
+    }
+    
+    var frame = this.addEmptyFrame();
+    frame.click();
+    // setTimeout(function(){
+    //   $('.wrapper-video .tfooter .add-function-block .item .content').jScrollPane('reinitialise');
+    // }, 1000);
+    // $('.wrapper-video .tfooter .add-function-block .item .content').jScrollPane({
+    //   autoReinitialise: true
+    // });
+    // $('.wrapper-video .tfooter .add-function-block .item .content').jScrollPaneRemove();
+    // $('.wrapper-video .tfooter .add-function-block .item .content').jScrollPane('reinitialise');
+  };
+
+  VideoClip.prototype.onClickHAlignHandler = function(li) {
+    if(this.curFrameHAlign) {
+      this.curFrameHAlign.removeClass('actived');
+    }
+    this.curFrameHAlign = $(li);
+    this.curFrameHAlign.addClass('actived');
+
+    this.applyFrameText();
+  };
+
+  VideoClip.prototype.onClickVAlignHandler = function(li) {
+    if(this.curFrameVAlign) {
+      this.curFrameVAlign.removeClass('actived');
+    }
+    this.curFrameVAlign = $(li);
+    this.curFrameVAlign.addClass('actived');
+
+    this.applyFrameText();
+  };
+
+  VideoClip.prototype.onClickFontStyleHandler = function(li) {
+    if(this.curFrameStyle) {
+      this.curFrameStyle.removeClass('actived');
+    }
+    this.curFrameStyle = $(li);
+    this.curFrameStyle.addClass('actived');
+
+    this.applyFrameText();
+  };
+
+  VideoClip.prototype.browseFile = function(type, callback) {
+    var that = this;
+    var file = document.createElement('input');
+    file.name = 'file';
+    file.type = 'file';
+    file.accept = type + '/*';
+    file.multiple = true;
+    $(file).on('change', function(evt) {
+      that.uploadData(evt.target.files, type, 0, callback);
+    });
+    file.click();
+  };
+
+  VideoClip.prototype.uploadData = function(files, type, count, callback) {
+    var that = this;
+
+    if (count < files.length) {
+      var name = files[count].name;
+      name = name.substr(0, name.lastIndexOf('.'));
+      
+      var formData = new FormData();
+      formData.append("file", files[count]);
+      formData.append("type", type);
+      formData.append("vcid", this.vcid);
+      
+      var ajax = new XMLHttpRequest();
+      ajax.onreadystatechange = function () {
+        if (ajax.readyState === 4 && ajax.status === 200) {
+          count = count + 1;
+          
+          if (count >= files.length) {
+            callback.apply(that, [type, name, ajax.responseText, true]);
+          } else {
+            callback.apply(that, [type, name, ajax.responseText, false]);
+            that.uploadData(files, type, count, callback);
+          }
+        }
+      };
+      ajax.open("POST", SERVER_URL + "/server/videoclip/uploadData.php");
+      ajax.send(formData);
+    }
+  };
+
+  VideoClip.prototype.addBackground = function(type, name, url) {
+    var div =  $('<div class="box"><div class="img-add"><img src="' + url + '" alt=""></div><span class="time">00:05</span><a href="javascript:void(0);" title="Delete" class="delete"><span class="fa fa-minus"></span></a></div>');
+    $('.vc-backgrounds').find('.list-box').append(div);
+  };
+
+  VideoClip.prototype.addFrame = function(type, name, url) {
+    var listframe =  $('.vc-frames').find('.list-frame');
+
+    if (listframe.children().length >= 1) {
+      div = $('<div class="effect"><a href="javascript:void(0);" title="Effect">Effect</a></div>');
+      listframe.append(div);
+    }
+
+    var div =  $('<div class="frame"><div class="icon-show"><span class="fa fa-sort-desc"></span></div><div class="thumb"><img src="' + url + '" alt=""></div><div class="desc"><span class="icon-edit-text"></span><p>text here</p></div></div>');
+    listframe.append(div);
+
+    var frameData = new FrameData();
+    frameData.bitmapUrl = url;
+
+    this.arrFrame.push(frameData);
+  };
+
+  VideoClip.prototype.uploadFrameData = function(type, name, url, actived) {
+    var that = this;
+    var item, list;
+    
+    //add to your album
+    if (type == AUDIO) {
+      list = $('#vc-' + type + '-yours').find('.audio-control');
+      item = $('<div data-item-id="item-' + type +'-yours_'  + (list.children().length + 1)  + '" data-item-url="' + url + '" class="item"><div class="control-media"><a href="javascript:void(0);" title="Play" class="play-pause"><span class="fa fa-play"></span></a></div><div class="title"><strong>Audio song name - upload </strong></div><a href="javascript:void(0)" title="Select" class="add-more"><span class="fa fa-plus"></span></a><span class="time">00:05</span></div>');
+      this.addEventsForAudioItem(item);
+    } else {
+      list = $('#vc-' + type + '-yours');
+      item = $('<div data-item-id="item_' + type + '-yours_' + (list.children().length + 1) + '" data-item-url="' + url + '" class="item"><div class="thumb"><img src="http://placehold.it/150x100/?text=upload" alt="" class="img-responsive"></div></div>');
+      
+      //add event
+      item.off('click').on('click', function(evt) {
+        that.selectFrameData(this, type);
+      });
+    }
+    list.append(item);
+      
+    //apply to current frame
+    if (actived) {
+      //show album tab
+      var tab = $('#vc-add-' + type).find('a[href="#vc-' + type + '-yours"]');
+      tab.click();
+
+      item.click();
+    }
+  };
+
+  VideoClip.prototype.addEmptyFrame = function() {
+    var that = this;
+
+    var listframe =  $('.vc-frames').find('.list-frame');
+    //if (listframe.children().length >= 1) {
+    //  var effect = $('<div class="effect"><a href="javascript:void(0);" title="Effect">Effect</a></div>');
+    //  listframe.append(effect);
+    //}
+
+    var frame =  $('<div class="frame"><div class="icon-show"><span class="fa fa-sort-desc"></span></div><div class="thumb"><img src="images/videoclip/default.jpg" alt=""></div><div class="desc"><span class="icon-edit-text"></span><p class="frame-text">text here</p></div></div>');
+    listframe.append(frame);
+    listframe.closest('.wrap-list').css({
+      width: listframe.find('.frame').length * 130 + 'px'
+    });
+
+    frame.on('click', function(evt) {
+      that.activeFrame(frame);
+    });
+
+    var frameData = new FrameData();
+    this.arrFrame.push(frameData);
+
+    return frame;
+  };
+
+  VideoClip.prototype.activeFrame = function(frame) {
+    
+    if (this.curFrame) {
+      this.curFrame.removeClass('active');
+    }
+
+    this.curFrame = $(frame);
+    this.curFrame.addClass('active');
+
+    this.curFrameIndex = frame.index();
+    
+    //var listframe =  $('.vc-frames').find('.frame');
+    //for (var i = 0; i < listframe.length; i ++) {
+    //  if (frame.is($(listframe[i]))) {
+    //    this.curFrameIndex = i;
+    //    break;
+    //  }
+    //}
+
+    //active menu
+    //this.showPanel(PANEL_TEXT);
+    
+    this.showCurrentFrameVideo();
+  };
+
+  VideoClip.prototype.selectFrameData = function(item, type) {
+    if (this.curFrameIndex < 0 && this.curFrameIndex >= this.arrFrame.length) {
+      return;
+    }
+
+    var itemId = $(item).data('item-id');
+    var itemSrc = $(item).find('.thumb img').attr('src');
+    var itemUrl = $(item).data('item-url');
+
+    //if choosing image for background then
+    if (this.isBackground && type == IMAGE) {
+      
+      this.addBackground(null, null, itemUrl);
+      this.isBackground = false;
+
+      if (this.curFrame) {
+        this.showPanel(PANEL_TEXT);
+      } else {
+        this.showPanel(PANEL_INTRO);
+      }
+      return;
+    }
+
+    //reset current imag or video
+    if (this.curFrameImage) {
+      this.curFrameImage.removeClass('active');
+      this.curFrameImage = null;
+    }
+
+    if (this.curFrameVideo) {
+      this.curFrameVideo.removeClass('active');
+      this.curFrameVideo = null;
+    }
+
+    var frameData = this.arrFrame[this.curFrameIndex];
+    frameData.type = type;
+
+    if (frameData.bitmapId == itemId) {
+      this.curFrame.find('.thumb img').attr('src', 'images/videoclip/default.jpg');
+      frameData.bitmapId = null;
+      frameData.bitmapUrl = null;
+      this.curFrameImage = null;
+      this.bitmapContainer.removeAllChildren();
+      return;
+    }
+
+    if (frameData.videoId == itemId) {
+      this.curFrame.find('.thumb img').attr('src', 'images/videoclip/default.jpg');
+      this.curFrame.find('.thumb').removeClass('video');
+      frameData.videoId = null;
+      frameData.videoUrl = null;
+      this.curFrameVideo = null;
+      $('#video').attr('src', '');
+      this.videoInstance.pause();
+      this.mediaSetting.hide();
+      return;
+    }
+
+    //set new image or video
+    if (type == IMAGE) {
+      this.curFrameImage = $(item);
+      this.curFrameImage.addClass('active');
+    } else {
+      this.curFrameVideo = $(item);
+      this.curFrameVideo.addClass('active');
+    }
+
+    //apply data here
+    if (this.curFrame) {
+      this.curFrame.find('.thumb img').attr('src', itemSrc);
+      
+      if (type == IMAGE) {
+        this.curFrame.find('.thumb').removeClass('video');
+      } else {
+        this.curFrame.find('.thumb').addClass('video');
+      }
+
+      this.bitmapContainer.removeAllChildren();
+      this.videoInstance.pause();
+      $('#video').attr('src', '');
+      
+      //update image
+      if (type == IMAGE) {
+        frameData.bitmapId = itemId;
+        frameData.bitmapUrl = itemUrl;
+        frameData.videoId = null;
+        frameData.videoUrl = null;
+        this.loadFrameImage(frameData.bitmapUrl);
+      } 
+
+      else {
+        //update video
+        frameData.videoId = itemId;
+        frameData.videoUrl = itemUrl;
+        frameData.bitmapId = null;
+        frameData.bitmapUrl = null;
+        this.loadFrameVideo(frameData.videoUrl);
+      }
+    }
+  };
+
+  VideoClip.prototype.applyFrameText = function() {
+    if (this.curFrameIndex < 0 && this.curFrameIndex >= this.arrFrame.length) {
+      return;
+    }
+
+    var frameData = this.arrFrame[this.curFrameIndex];
+
+    if (!this.frameText) {
+      this.frameText = new createjs.Text("Text", "20px Arial", "#ff7700");
+      this.textContainer.addChild(this.frameText);
+    }
+
+    var textarea = $('#vc-add-text').find('textarea[name="frametext"]');
+    frameData.text.text = this.frameText.text = textarea.val();
+
+    var str = frameData.text.text;
+    str = str.substr(0, 12);
+    if (str.lastIndexOf(" ") != -1) {
+      str = str.substr(0, str.lastIndexOf(" "));
+    }
+    str = str + (frameData.text.text.length > 12 ? "..." : "");
+    this.curFrame.find('.frame-text').html($.trim(str) != '' ? str : 'text here');
+
+    var size = $('#vc-add-text').find('input[name="textsize"]');
+    frameData.text.size = size = Number(size.val());
+
+    var font = $('#vc-add-text').find('.custom-select .text-val').data('val');
+    frameData.text.font = font;
+    frameData.text.fontName = $('#vc-add-text').find('.custom-select .text-val').html();
+    
+    var style = this.curFrameStyle ? this.curFrameStyle.data('style') : "";
+    frameData.text.style = style;
+
+    this.frameText.font = style + ' ' + size + 'px ' + font;
+
+    var color = $('#vc-add-text').find('input[name="textcolor"]');
+    frameData.text.color = this.frameText.color = color.val();
+
+    var padding = $('#vc-add-text').find('input[name="textpadding"]');
+    frameData.text.padding = padding = Number(padding.val());
+
+    if (this.curFrameHAlign) {
+      var halign = this.curFrameHAlign.data('align');
+      this.frameText.textAlign = halign;
+      frameData.text.halign = halign;
+
+      if (halign == HA_LEFT) {
+        this.frameText.x = padding;
+      }
+      else if (halign == HA_CENTER) {
+        this.frameText.x = this.textContainer.VC_WIDTH/2;
+      }
+      else if (halign == HA_RIGHT) {
+        this.frameText.x = this.textContainer.VC_WIDTH - padding;
+      }
+    }
+
+    if (this.curFrameVAlign) {
+      var valign = this.curFrameVAlign.data('align');
+      frameData.text.valign = valign;
+
+      var textHeight = this.frameText.getBounds() ? this.frameText.getBounds().height : 0;
+      if (valign == VA_TOP) {
+        this.frameText.y = padding;
+      }
+      else if (valign == VA_MIDDLE) {
+        this.frameText.y = this.textContainer.VC_HEIGHT/2 - textHeight/2;
+      }
+      else if (valign == VA_BOTTOM) {
+        this.frameText.y = this.textContainer.VC_HEIGHT - textHeight - padding;
+      }
+    }
+  };
+
+  VideoClip.prototype.selectFrameTextEffect = function(item) {
+    if (this.curFrameText) {
+      this.curFrameText.removeClass('active');
+    }
+    this.curFrameText = $(item);
+    this.curFrameText.addClass('active');
+
+    if (this.curFrame) {
+      //apply data here
+      var frameData = this.arrFrame[this.curFrameIndex];
+      frameData.textEffect = this.curFrameText.data('item-id');
+      frameData.textEffectClass = this.curFrameText.data('item-url');
+    }
+  }; 
+
+  VideoClip.prototype.selectFrameImageEffect = function(item) {
+    if (this.curFrameEffect) {
+      this.curFrameEffect.removeClass('active');
+    }
+    this.curFrameEffect = $(item);
+    this.curFrameEffect.addClass('active');
+
+    if (this.curFrame) {
+      //apply data here
+      var frameData = this.arrFrame[this.curFrameIndex];
+      frameData.bitmapEffect = this.curFrameEffect.data('item-id');
+      frameData.bitmapEffectClass = this.curFrameEffect.data('item-url');
+    }
+  };
+
+  VideoClip.prototype.applyEffect = function() {
+    if (this.curFrameIndex < 0 && this.curFrameIndex >= this.arrFrame.length) {
+      return;
+    }
+
+    var delayTime = this.effectSetting.find('input[name="delay"]').val();
+    var effectTime = this.effectSetting.find('input[name="time"]').val();
+
+    delayTime = Number(delayTime);
+    delayTime = delayTime < 0 ? 0 : delayTime;
+
+    effectTime = Number(effectTime);
+    effectTime = effectTime < 1 ? 1 : effectTime;
+    
+    var frameData = this.arrFrame[this.curFrameIndex];
+
+    //bitmap effect
+    if ($('#vc-add-effect').hasClass('active')) {
+      frameData.bitmapEffectDelay = delayTime;
+      frameData.bitmapEffectDuration = effectTime;
+
+      //preview bitmap effect
+      var bitmapEffectPlugin = EffectUtils.getEffectPlugin(frameData.bitmapEffect);
+      if (bitmapEffectPlugin) {
+        this.bitmapContainer.removeAllChildren();
+        bitmapEffectPlugin.play(this.bitmapContainer, null, this.frameBitmap, delayTime, effectTime);
+      }
+    } 
+
+    else {
+      //text effect
+      frameData.textEffectDelay = delayTime;
+      frameData.textEffectDuration = effectTime;
+
+      $('#vc-add-text').find('.effect-detail').html(frameData.textEffect + "(delay: " + frameData.textEffectDelay + ", time: " + frameData.textEffectDuration + ")");
+      
+      //preview text effect
+      var textEffectPlugin = EffectUtils.getEffectPlugin(frameData.textEffect);
+      if (textEffectPlugin) {
+        this.textContainer.removeAllChildren();
+        textEffectPlugin.play(this.textContainer, null, this.frameText, delayTime, effectTime);
+      }
+    }
+
+    this.effectSetting.hide();
+    var that = this;
+    var time = delayTime + effectTime;
+    var ti = setTimeout(function() {
+      clearTimeout(ti);
+      that.effectSetting.show();
+    }, time * 1000);
+  };
+
+  VideoClip.prototype.selectFrameAudio = function(item) {
+
+    if (this.isAudio) {
+
+      //this.isAudio = false;
+
+      return;
+    }
+
+    if (this.curFrameIndex < 0 && this.curFrameIndex >= this.arrFrame.length) {
+      return;
+    }
+
+    var that = this;
+
+    if (this.curFrameAudio) {
+      this.curFrameAudio.removeClass('active');
+      this.curFrameAudio.find('.add-more span').removeClass('fa fa-minus').addClass('fa fa-plus');;
+      this.curFrameAudio = null;
+    }
+
+    var itemId = $(item).data('item-id');
+    var itemUrl = $(item).data('item-url');
+
+    var frameData = this.arrFrame[this.curFrameIndex];
+    if (frameData.audioId == itemId) {
+      frameData.audioId = null;
+      frameData.audioUrl = null;
+      this.clearAudio();
+      this.mediaSetting.hide();
+      return;
+    }
+    
+    this.curFrameAudio =  $(item);
+    this.curFrameAudio.addClass('active');
+    this.curFrameAudio.find('.add-more span').addClass('fa fa-minus');
+
+    frameData.audioId = itemId;
+    frameData.audioUrl = itemUrl;
+
+    this.loadFrameAudio(itemId, itemUrl);
+  };
+
+  VideoClip.prototype.formatTime = function(time) {
+      
+    var hour = Math.floor(time / 3600);
+    var strHour = (hour > 9) ? ('' + hour)  : ('0' + hour);
+
+    time = time % 3600;
+    var minute = Math.floor(time / 60);
+    var strMinute = (minute > 9) ? ('' + minute)  : ('0' + minute);
+
+    time = time % 60;
+    var second = Math.floor(time % 60);
+    var strSecond = (second > 9) ? ('' + second)  : ('0' + second);
+
+    if (hour > 0) {     
+      return strHour + ':' + strMinute + ':' + strSecond;
+    }
+    return strMinute + ':' + strSecond;
+  };
+
+  VideoClip.prototype.onClickPlayPauseHandler = function(item) {
+    item = $(item);
+    var icon = item.find('span');
+    if (icon.hasClass('fa-pause')) {
+      icon.removeClass('fa-pause').addClass('fa-play');
+
+      if (this.audioInstance) {
+        this.audioInstance.stop();
+      } else {
+        this.videoInstance.pause();
+      }
+    }
+    else if (icon.hasClass('fa-play')) {
+      icon.removeClass('fa-play').addClass('fa-pause');
+      if (this.audioInstance) {
+        this.audioInstance.play();
+      } else {
+        this.videoInstance.play();
+      }
+    }
+  };
+
+  VideoClip.prototype.updateMedia = function(position) {
+    this.mediaSetting.find('.position').html(this.formatTime(position));
+  };
+
+  VideoClip.prototype.seekMedia = function(startTime) {
+    if (this.curFrameIndex < 0 && this.curFrameIndex >= this.arrFrame.length) {
+      return;
+    }
+    var frameData = this.arrFrame[this.curFrameIndex];
+
+    if (this.audioInstance) {
+      this.audioInstance.stop();
+      this.audioInstance.startTime = startTime;
+      this.audioInstance.play();
+    }
+
+    else {
+      this.videoInstance.currentTime = startTime;
+      this.videoInstance.play();
+    }
+  };
+
+  VideoClip.prototype.endMedia = function() {
+    this.mediaSetting.find('.play-pause').find('span').removeClass('fa-pause').addClass('fa-play');
+  };
+
+  VideoClip.prototype.changePanel = function(id) {
+    var name = id.substr(id.lastIndexOf('-') + 1, id.length);
+
+    var arrPanel = [PANEL_TEXT, PANEL_IMAGE, PANEL_VIDEO, PANEL_EFFECT, PANEL_AUDIO];
+    var index = arrPanel.indexOf(name);
+
+    this.showPanel(arrPanel[index]);
+  };
+
+  VideoClip.prototype.showPanel = function(name) {
+    this.curPanel = name;
+
+    $('.control-menu').find('li').removeClass('disabled');
+
+    //active menu    
+    if ($('#vc-menu-' + name).length) {
+      $('.control-menu').find('li').removeClass('active');
+      $('#vc-menu-' + name).addClass('active');
+    }
+
+    //hide all content
+    $('.block-tab-video').removeClass('active').hide();
+
+    //show corresponding content
+    $('#vc-add-' + name).addClass('active').show().children('[data-scroll-video]').jScrollPane();
+    $(window).on('resize', function(){
+      $('#vc-add-' + name + '.active').show().children('[data-scroll-video]').jScrollPane();
+    });
+    //hide or show effect setting
+    if (name == PANEL_EFFECT || name == PANEL_TEXT_EFFECT) {
+      this.effectSetting.show();
+    } else {
+      this.effectSetting.hide();
+    }
+
+    //hide media setting
+    this.mediaSetting.hide();
+
+    //stop all sounds
+    this.clearAudio();
+
+    //stop all videos
+    this.videoInstance.pause();
+    $('#video').attr('src', '');
+
+    this.loading.hide();
+  };
+
+  VideoClip.prototype.displayOnlyMenu = function(disabled, name) {
+    
+    if (disabled) {
+      $('.control-menu').find('li').addClass('disabled');
+    } else {
+      $('.control-menu').find('li').removeClass('disabled');
+    }
+
+    //deactive all menu
+    $('.control-menu').find('li').removeClass('active');
+    this.effectSetting.hide();
+    this.mediaSetting.hide();
+
+    //stop all sounds
+    this.clearAudio();
+
+    //stop all videos
+    this.videoInstance.pause();
+    $('#video').attr('src', '');
+
+    this.loading.hide();
+
+      //active menu
+    if ($('#vc-menu-' + name).length) {
+      $('#vc-menu-' + name).addClass('active');
+    }
+
+    //hide all content
+    $('.block-tab-video').removeClass('active').hide();
+
+    //show corresponding content
+    if ($('#vc-add-' + name).length) {
+      $('#vc-add-' + name).addClass('active').show().children('[data-scroll-video]').jScrollPane();
+    }
+  };
+
+  VideoClip.prototype.showCurrentFrameVideo = function() {
+    if (this.curFrameIndex < 0 && this.curFrameIndex >= this.arrFrame.length) {
+      return;
+    }
+
+    this.previewVC.clear();
+    
+    //reset all currrent
+    this.curFrameImage = null;
+    $('#vc-image-library').find('div[data-item-id]').removeClass('active');
+    $('#vc-image-yours').find('div[data-item-id]').removeClass('active');
+    
+    this.curFrameEffect = null;
+    $('#vc-add-effect').find('div[data-item-id]').removeClass('active');
+
+    this.curFrameText = null;
+    $('#vc-add-texteffect').find('div[data-item-id]').removeClass('active');
+
+    this.curFrameVideo = null;
+    $('#vc-video-library').find('div[data-item-id]').removeClass('active');
+    $('#vc-video-yours').find('div[data-item-id]').removeClass('active');
+
+    this.curFrameAudio = null;
+    $('#vc-audio-library').find('div[data-item-id]').removeClass('active');
+    $('#vc-audio-yours').find('div[data-item-id]').removeClass('active');
+
+    //stop all sounds
+    this.clearAudio();
+
+    this.mediaSetting.hide();
+
+    //remove image
+    this.bitmapContainer.visible = true;
+    this.bitmapContainer.removeAllChildren();
+    
+    this.textContainer.visible = true;
+    this.textContainer.removeAllChildren();
+
+    //stop all videos
+    this.videoInstance.pause();
+    $('#video').attr('src', '');
+
+    //get current FrameData
+    var frameData = this.arrFrame[this.curFrameIndex];
+
+    //show current text edit
+    var panelText = $('#vc-add-text');
+    panelText.find('textarea[name="frametext"]').val(frameData.text.text);
+    panelText.find('.custom-select .text-val').data('val', frameData.text.font);
+    panelText.find('.custom-select .text-val').html(frameData.text.fontName);
+
+    panelText.find('.fontstyle').find('li[data-style]').removeClass('actived');
+    panelText.find('.halign').find('li[data-align]').removeClass('actived');
+    panelText.find('.valign').find('li[data-align]').removeClass('actived');
+    
+    this.curFrameStyle = panelText.find('.fontstyle').find('li[data-style="' + frameData.text.style + '"]');
+    this.curFrameStyle.addClass('actived');
+
+    this.curFrameHAlign = panelText.find('.halign').find('li[data-align="' + frameData.text.halign + '"]');
+    this.curFrameHAlign.addClass('actived');
+
+    this.curFrameVAlign = panelText.find('.valign').find('li[data-align="' + frameData.text.valign + '"]');
+    this.curFrameVAlign.addClass('actived');
+
+    panelText.find('input[name="textpadding"]').val(frameData.text.padding);
+    panelText.find('input[name="textsize"]').val(frameData.text.size);
+    panelText.find('input[name="textcolor"]').val(frameData.text.color);
+
+    this.applyFrameText();
+
+    //show current image edit
+    if (frameData.type == IMAGE) {
+      var itemImage = $('#vc-image-library').find('div[data-item-id="'+ frameData.bitmapId + '"]');
+      if (!itemImage.length) {
+        itemImage = $('#vc-image-yours').find('div[data-item-id="'+ frameData.bitmapId + '"]');
+      }
+      if (itemImage.length) {
+        this.curFrameImage = $(itemImage[0]);
+        this.curFrameImage.addClass('active');
+
+        //load frame image
+        if (frameData.bitmapUrl) {
+          this.loadFrameImage(frameData.bitmapUrl);
+        }
+      }
+    }
+
+    else if (frameData.type == VIDEO) {
+      //show current video edit
+      var itemVideo = $('#vc-video-library').find('div[data-item-id="'+ frameData.videoId + '"]');
+      if (!itemVideo.length) {
+        itemVideo = $('#vc-video-yours').find('div[data-item-id="'+ frameData.videoId + '"]');
+      }
+      if (itemVideo.length) {
+        this.curFrameVideo = $(itemVideo[0]);
+        this.curFrameVideo.addClass('active');
+
+        //load frame image
+        if (frameData.videoUrl && this.curPanel == PANEL_VIDEO) {
+          this.loadFrameVideo(frameData.videoUrl);
+        }
+      }
+    }
+
+    //show current text effect edit
+    var textEffect = $('#vc-add-texteffect').find('div[data-item-id="'+ frameData.textEffect + '"]');
+    if (textEffect.length) {
+      this.curFrameText = $(textEffect[0]);
+      this.curFrameText.addClass('active');
+    }
+    panelText.find('.effect-detail').html(frameData.textEffect + "(delay: " + frameData.textEffectDelay + ", time: " + frameData.textEffectDuration + ")");
+
+    //show current bitmap effect edit
+    var bitmapEffect = $('#vc-add-effect').find('div[data-item-id="'+ frameData.bitmapEffect + '"]');
+    if (bitmapEffect.length) {
+      this.curFrameEffect = $(bitmapEffect[0]);
+      this.curFrameEffect.addClass('active');
+    }
+
+    //show current audio edit
+    var itemAudio = $('#vc-audio-library').find('div[data-item-id="'+ frameData.audioId + '"]');
+      if (!itemAudio.length) {
+        itemAudio = $('#vc-audio-yours').find('div[data-item-id="'+ frameData.audioId + '"]');
+      }
+      if (itemAudio.length) {
+        this.curFrameAudio = $(itemAudio[0]);
+        this.curFrameAudio.addClass('active');
+
+        //load frame audio
+        if (frameData.audioUrl && this.curPanel == PANEL_AUDIO) {
+          this.loadFrameAudio(frameData.audioId, frameData.audioUrl);
+        }
+      }
+  };
+
+  VideoClip.prototype.loadFrameImage = function(url) {
+    var that = this;
+
+    this.loading.show();
+
+    var image = new Image();
+    image.onload = function(evt) {
+      that.loading.hide();
+
+      var w = image.width;
+      var h = image.height;
+      
+      //find corrected scale
+      var scale = that.bitmapContainer.VC_WIDTH / w;
+      if(h * scale > that.bitmapContainer.VC_HEIGHT) {
+        scale = that.bitmapContainer.VC_HEIGHT / h;
+      }
+
+      var translateX = (that.bitmapContainer.VC_WIDTH - scale * w)/2;
+      var translateY = (that.bitmapContainer.VC_HEIGHT - scale * h)/2;
+    
+      var matrix = new createjs.Matrix2D(scale, 0, 0, scale, translateX, translateY);
+      var bitmapData = new createjs.BitmapData(image, that.bitmapContainer.VC_WIDTH, that.bitmapContainer.VC_HEIGHT, 0x000000);
+      bitmapData.draw(image, matrix, null, null, null, true);
+    
+      that.frameBitmap = that.bitmapContainer.addChild(new createjs.Bitmap(bitmapData.canvas));
+    };
+    image.src = url;
+  };
+
+  VideoClip.prototype.clearAudio = function() {
+    createjs.Sound.stop();
+    createjs.Sound.removeAllSounds();
+
+    if (this.audioInstance && this.audioInstance.playProgressTimeout) {
+      clearInterval(this.audioInstance.playProgressTimeout);
+    };
+    this.audioInstance = null;
+  };
+
+  VideoClip.prototype.loadFrameAudio = function(id, url) {
+    var that = this;
+
+    this.clearAudio();
+
+    //load audio if not exist
+    createjs.Sound.alternateExtensions = ["mp3", "m4a", "wav"];
+    createjs.Sound.registerPlugins([createjs.WebAudioPlugin]);
+    createjs.Sound.addEventListener("fileload", onAudioLoadHandler);
+    createjs.Sound.registerSound({id: id, src: url});
+
+    this.loading.show();
+
+    function onAudioLoadHandler(evt) {
+      that.loading.hide();
+
+      // Play the loaded sound
+      that.mediaSetting.show();
+      
+      that.audioInstance = createjs.Sound.play(evt.src);
+      that.saveMediaMetaData(0, that.audioInstance.duration / 1000);
+      
+      that.mediaSetting.find('.play-pause').find('span').removeClass('fa-pause').addClass('fa-pause');
+      that.mediaSetting.find('.time').data('duration', that.audioInstance.duration / 1000);
+      that.mediaSetting.find('.time-start .text').html(that.formatTime(0));
+      that.mediaSetting.find('.time-end .text').html(that.formatTime(that.audioInstance.duration / 1000));
+      
+      that.audioInstance.on("complete", onAudioPlayCompleteHandler);
+      that.audioInstance.playProgressTimeout = setInterval(onAudioPlayProgressHandler, 100);
+    }
+
+    function onAudioPlayProgressHandler(evt) {
+      if (that.audioInstance) {
+        that.updateMedia(that.audioInstance.position/1000);
+      }
+    }
+
+    function onAudioPlayCompleteHandler(evt) {
+      if (that.audioInstance) {
+        clearInterval(that.audioInstance.playProgressTimeout);
+      }
+      that.endMedia();
+    }
+  };
+
+  VideoClip.prototype.loadFrameVideo = function(url) {
+    var that = this;
+
+    this.loading.show();
+
+    $('#video').attr('src', url);
+    this.videoInstance.play();
+
+    this.mediaSetting.show();
+    that.mediaSetting.find('.play-pause').find('span').removeClass('fa-pause').addClass('fa-pause');
+
+    $('#video').off('loadedmetadata').on('loadedmetadata', function(evt) {
+      that.loading.hide();
+      that.saveMediaMetaData(0, that.videoInstance.duration);
+    });
+
+    $('#video').off('canplay').on('canplay', function(evt) {
+      //enable start and end dragging here
+    });
+
+    $('#video').off('timeupdate').on('timeupdate', function(evt) {
+      that.updateMedia(that.videoInstance.currentTime);
+    });
+
+    $('#video').off('ended').on('ended', function(evt) {
+      that.endMedia();
+    }); 
+  };
+
+  VideoClip.prototype.saveMediaMetaData = function(position, duration) {
+
+    this.mediaSetting.find('.position').html(this.formatTime(position));
+    this.mediaSetting.find('.duration').html(this.formatTime(duration));
+
+    var left = this.mediaSetting.find('.time').offset().left;
+    var width = this.mediaSetting.find('.time').width();
+
+    this.mediaSetting.find('.time').data('duration', duration);
+    this.mediaSetting.find('.timeline').offset({left: left});
+    this.mediaSetting.find('.timeline').width(width);
+    this.mediaSetting.find('.time-start').offset({left: left - 10});
+    this.mediaSetting.find('.time-end').offset({left: left + width - 10});
+    this.mediaSetting.find('.time-start .text').html(this.formatTime(position));
+    this.mediaSetting.find('.time-end .text').html(this.formatTime(duration));
+  };
+
+  VideoClip.prototype.save = function() {
+  };
+
+  VideoClip.prototype.preview = function() {
+    this.textContainer.visible = false;
+    this.bitmapContainer.visible = false;
+    
+    this.effectSetting.hide();
+    this.mediaSetting.hide();
+
+    this.previewVC.setData(this.arrFrame, this.stage, this.bitmapContainer.VC_WIDTH, this.bitmapContainer.VC_HEIGHT);
+  };
+
+  VideoClip.prototype.finish = function() {
+    var videoComplete = $('#videoComplete');
+    videoComplete.modal('show');
+
+  };
+
+  //////////PreviewVC/////////////
+  function PreviewVC() {
+    this.curFrame = -1;
+    this.arrFrame = [];
+
+    this.container = new createjs.Container();
+    this.bitmapContainer = this.container.addChild(new createjs.Container());
+    this.textContainer = this.container.addChild(new createjs.Container());
+    
+    this.VC_WIDTH = 0;
+    this.VC_HEIGHT = 0;
+  };
+
+  PreviewVC.prototype.setData = function(arrFrame, stage, width, height) {
+    this.arrFrame = arrFrame;
+    
+    this.VC_WIDTH = this.textContainer.VC_WIDTH = this.bitmapContainer.VC_WIDTH = width;
+    this.VC_HEIGHT = this.textContainer.VC_HEIGHT = this.bitmapContainer.VC_HEIGHT = height;
+
+    this.textContainer.removeAllChildren();
+    this.bitmapContainer.removeAllChildren();
+    stage.addChild(this.container);
+    
+    this.loadImage(0);
+  };
+
+  PreviewVC.prototype.loadImage = function(index) {
+
+    if (index >= this.arrFrame.length) {
+      this.play();
+      return;
+    }
+
+    if (this.arrFrame[index].bitmapUrl == null) {
+      index ++;
+      this.loadImage(index);
+    }
+
+    var that = this;
+
+    var image = new Image();
+    image.onload = function(evt) {
+      var w = image.width;
+      var h = image.height;
+      
+      //find corrected scale
+      var scale = that.VC_WIDTH / w;
+      if(h * scale > that.VC_HEIGHT) {
+        scale = that.VC_HEIGHT / h;
+      }
+
+      var translateX = (that.VC_WIDTH - scale * w)/2;
+      var translateY = (that.VC_HEIGHT - scale * h)/2;
+    
+      var matrix = new createjs.Matrix2D(scale, 0, 0, scale, translateX, translateY);
+      var bitmapData = new createjs.BitmapData(image, that.VC_WIDTH, that.VC_HEIGHT, 0x000000);
+      bitmapData.draw(image, matrix, null, null, null, true);
+      
+      that.arrFrame[index].bitmapView = new createjs.Bitmap(bitmapData.canvas);
+
+      index ++;
+      that.loadImage(index);
+    };
+    image.src = this.arrFrame[index].bitmapUrl;
+  };
+
+  PreviewVC.prototype.createText = function(textData, textView) {
+
+    var frameText =  textView;
+    if (!frameText) {
+      frameText = new createjs.Text("Text", "20px Arial", "#FF7700");
+    }
+
+    frameText.text = textData.text;
+    frameText.font = textData.style + ' ' + textData.size + 'px ' + textData.fontName;
+    frameText.color = textData.color;
+    frameText.textAlign = textData.halign;
+
+    if (textData.halign == HA_LEFT) {
+      frameText.x = textData.padding;
+    }
+    else if (textData.halign == HA_CENTER) {
+      frameText.x = this.VC_WIDTH/2;
+    }
+    else if (textData.halign == HA_RIGHT) {
+      frameText.x = this.VC_WIDTH - textData.padding;
+    }
+    
+    var textHeight = frameText.getBounds() ? frameText.getBounds().height : 0;
+    if (textData.valign == VA_TOP) {
+      frameText.y = textData.padding;
+    }
+    else if (textData.valign == VA_MIDDLE) {
+      frameText.y = this.VC_HEIGHT/2 - textHeight/2;
+    }
+    else if (textData.valign == VA_BOTTOM) {
+      frameText.y = this.VC_HEIGHT - textHeight - textData.padding;
+    }
+
+    return frameText;
+  };
+
+  PreviewVC.prototype.nextFrame = function() {
+    this.curFrame ++;
+
+    if (this.curFrame >= this.arrFrame.length) {
+      return;
+    }
+
+    var preFrameData;
+    if (this.curFrame > 0) {
+      preFrameData = this.arrFrame[this.curFrame - 1];
+    }
+    
+    var nexFrameData = this.arrFrame[this.curFrame];
+    var that = this;
+    this.playFrame(preFrameData, nexFrameData, function() { 
+      that.nextFrame(); 
+    });
+  };
+
+  PreviewVC.prototype.playFrame = function(prev, next, onCompleteFunctionHandler) {
+
+    //play video or play sound
+    this.container.visible = true;
+    
+    //bitmap effect
+    var bitmapEffectPlugin = EffectUtils.getEffectPlugin(next.bitmapEffect);
+    if (bitmapEffectPlugin) {
+      bitmapEffectPlugin.play(this.bitmapContainer, prev ? prev.bitmapView : null, next.bitmapView, next.bitmapEffectDelay, next.bitmapEffectDuration);
+    }
+
+    //text effect
+    if (next.text.text != '') {
+      next.textView = this.createText(next.text, next.textView);
+
+      var textEffectPlugin = EffectUtils.getEffectPlugin(next.textEffect);
+      if (textEffectPlugin) {
+        textEffectPlugin.play(this.textContainer, prev ? prev.textView : null, next.textView, next.textEffectDelay, next.textEffectDuration);
+      }
+    }
+
+    //frame duration
+    var time = next.bitmapEffectDelay + next.bitmapEffectDuration;
+    var timeoutId = setTimeout(function() {
+      clearTimeout(timeoutId);
+      onCompleteFunctionHandler();
+    }, time * 1000);
+  };
+
+  PreviewVC.prototype.play = function() {
+    this.curFrame = -1;
+    this.nextFrame();
+  };
+
+  PreviewVC.prototype.pause = function() {
+
+  };
+
+  PreviewVC.prototype.seek = function(position) {
+
+  };
+
+  PreviewVC.prototype.clear = function() {
+    this.container.visible = false;
+
+  };
+
+  /* =============== */
+  /* MODULE DATA-API */
+  /* =============== */
+
+  $.fn[pluginName] = function(options, params) {
+    return this.each(function() {
+      var instance = $.data(this, pluginName);
+      if (!instance) {
+        $.data(this, pluginName, new VideoClip(this, options));
+      } else if (instance[options]) {
+        instance[options](params);
+      } else {
+        window.console && console.log(options ? options + ' method is not exists in ' + pluginName : pluginName + ' plugin has been initialized');
+      }
+    });
+  };
+
+  $.fn[pluginName].defaults = {};
+
+  $(function() {
+    $('[data-' + pluginName + ']')[pluginName]({});
+  });
+
+}(window.jQuery, window, window.createjs, window.App));
+
+/**
+ *  @name scroll-video
+ *  @description description
+ *  @version 1.0
+ *  @options
+ *    option
+ *  @events
+ *    event
+ *  @methods
+ *    init
+ *    publicMethod
+ *    destroy
+ */
+;(function($, window, undefined) {
+  var pluginName = 'color';
+
+  function Plugin(element, options) {
+    this.element = $(element);
+    this.options = $.extend({}, $.fn[pluginName].defaults, this.element.data(), options);
+    this.init();
+  }
+
+  Plugin.prototype = {
+    init: function() {
+      var that = this,
+          ele = that.element;
+
+      // ele.colorpicker({
+      //   displayIndicator: false
+      // });
+    }
+  };
+
+  $.fn[pluginName] = function(options, params) {
+    return this.each(function() {
+      var instance = $.data(this, pluginName);
+      if (!instance) {
+        $.data(this, pluginName, new Plugin(this, options));
+      } else if (instance[options]) {
+        instance[options](params);
+      } else {
+        window.console && console.log(options ? options + ' method is not exists in ' + pluginName : pluginName + ' plugin has been initialized');
+      }
+    });
+  };
+
+  $.fn[pluginName].defaults = {
+  };
+
+  $(function() {
+    $('[data-' + pluginName + ']')[pluginName]();
+  });
+
+}(jQuery, window));
 /**
  *  @name video-frame
  *  @description description

@@ -1,140 +1,209 @@
-<html>
+<!DOCTYPE html>
+<!--[if IE 8]><html lang="en" class="no-js ie ie8"><![endif]-->
+<!--[if IE 9]><html lang="en" class="no-js ie ie9"><![endif]-->
+<!--[if gt IE 9]><!-->
+<html lang="en" class="no-js">
+  <!--<![endif]-->
   <head>
-
-    <style>
-      #output {
-        list-style-type:none;
-      }
-    </style>
-
-    <script type="text/javascript">
-      // Your Client ID can be retrieved from your project in the Google
-      // Developer Console, https://console.developers.google.com
-      var CLIENT_ID = '691726389794-4boot0bt98elrqjr6rqos45dvs7bf0f7.apps.googleusercontent.com';
-
-      var API_KEY = 'AIzaSyCbJYq6i_CJzt8okRFQw4frnBtvjp4IV80';
-
-      var SCOPES = ['https://www.googleapis.com/auth/drive.metadata.readonly'];
-
-      /**
-       * Check if current user has authorized this application.
-       */
-      function checkAuth() {
-        gapi.client.setApiKey(API_KEY);
-
-        gapi.auth.authorize(
-          {
-            'client_id': CLIENT_ID,
-            'scope': SCOPES.join(' '),
-            'immediate': true
-          }, handleAuthResult);
-      }
-
-      /**
-       * Handle response from authorization server.
-       *
-       * @param {Object} authResult Authorization result.
-       */
-      function handleAuthResult(authResult) {
-        var authorizeDiv = document.getElementById('authorize-div');
-        if (authResult && !authResult.error) {
-          // Hide auth UI, then load client library.
-          authorizeDiv.style.display = 'none';
-          loadDriveApi();
-        } else {
-          // Show auth UI, allowing the user to initiate authorization by
-          // clicking authorize button.
-          authorizeDiv.style.display = 'inline';
-        }
-      }
-
-      /**
-       * Initiate auth flow in response to user clicking authorize button.
-       *
-       * @param {Event} event Button click event.
-       */
-      function handleAuthClick(event) {
-        gapi.auth.authorize(
-          {client_id: CLIENT_ID, scope: SCOPES, immediate: false},
-          handleAuthResult);
-        return false;
-      }
-
-      /**
-       * Load Drive API client library.
-       */
-      function loadDriveApi() {
-        gapi.client.load('drive', 'v2', onDriveLoadHandler);
-      }
-
-      /**
-       * Print files.
-       */
-      function onDriveLoadHandler() {
-        loadFiles('root');
-      }
-
-      function loadFiles(folderId) {
-
-        //file detail
-        //https://developers.google.com/apis-explorer/#s/drive/v2/drive.files.get?fileId=0B12c1JClvQYuUHQ1ekdqdURRcm8&_h=2&
-
-        var request = gapi.client.drive.files.list({
-          'folderId': folderId + ' in parents',
-          'maxResults': 1000,
-          'q': folderId + ' in parents and mimeType="application/vnd.google-apps.folder" or mimeType="image/jpeg"'
-        });
-
-        //application/vnd.google-apps.folder
-        //application/vnd.google-apps.photo
-        //application/vnd.google-apps.audio
-        //application/vnd.google-apps.video
-
-        request.execute(function(resp) {
-          $('#output').empty();
-
-          var files = resp.items;
-          if (files && files.length > 0) {
-            for (var i = 0; i < files.length; i++) {
-              appendPre(files[i]);
-            }
-          } else {
-            appendPre('No files found.');
-          }
-        });
-      }
-
-      /**
-       * Append a pre element to the body containing the given message
-       * as its text node.
-       *
-       * @param {string} message Text to be placed in pre element.
-       */
-      function appendPre(file) {
-        var li = $('<li><img src="' + file.iconLink + '"/>' + file.title + '</li>')
-        $('#output').append(li);
-
-        var folderId = file.id;
-
-        li.on('click', function(evt) {
-          loadFiles(folderId);
-        });
-      }
-
-    </script>
-
-    
-    <script src="https://code.jquery.com/jquery-1.11.3.min.js"></script>
-    <script src="https://apis.google.com/js/client.js?onload=checkAuth"></script>
+    <meta charset="utf-8">
+    <!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1"><![endif]-->
+    <title>Google Drive</title>
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <meta name="robots" content="index, follow">
+    <meta name="author" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1">
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="css/style.css">
+    <!--[if lt IE 8]><link rel="stylesheet" href="css/ie.css"><![endif]-->
+    <link rel="stylesheet" href="css/print.css" media="print">
+    <script src="js/modernizr.js"></script>
   </head>
-  <body>
-    <div id="authorize-div" style="display: none">
-      <span>Authorize access to Drive API</span>
-      <!--Button for the user to click to initiate auth sequence -->
-      <button id="authorize-button" onclick="handleAuthClick(event)">
-        Authorize
-      </button>
+  <body class="video-clip-page non-fixed">
+    <div id="app">
+      
+	  <div id="uploadGoogle" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" class="modal modal-1 upload-google fade">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" data-dismiss="modal" aria-hidden="true" class="close">&times;</button>
+              <h2 class="modal-title">Google Drive</h2>
+            </div>
+            <div class="modal-body">
+              <div action="" class="form-style-1">
+                <div class="row">
+                  <div class="col-sm-10 col-sm-offset-1">
+                    <div class="row">
+                      <div data-item-id="item_image-yours_1" data-item-url="images/video/Image1.png" class="item col-xs-3">
+                        <div class="thumb"><img src="images/video/Thumb1.png" alt="" class="img-responsive"/></div>
+                      </div>
+                      <div data-item-id="item_image-yours_2" data-item-url="images/video/Image2.png" class="item col-xs-3">
+                        <div class="thumb"><img src="images/video/Thumb2.png" alt="" class="img-responsive"/></div>
+                      </div>
+                      <div data-item-id="item_image-yours_3" data-item-url="images/video/Image3.png" class="item col-xs-3">
+                        <div class="thumb"><img src="images/video/Thumb3.png" alt="" class="img-responsive"/></div>
+                      </div>
+                      <div data-item-id="item_image-yours_4" data-item-url="images/video/Image4.png" class="item col-xs-3">
+                        <div class="thumb"><img src="images/video/Thumb4.png" alt="" class="img-responsive"/></div>
+                      </div>
+                      <div data-item-id="item_image-yours_5" data-item-url="images/video/Image1.png" class="item col-xs-3">
+                        <div class="thumb"><img src="images/video/Thumb1.png" alt="" class="img-responsive"/></div>
+                      </div>
+                      <div data-item-id="item_image-yours_6" data-item-url="images/video/Image2.png" class="item col-xs-3">
+                        <div class="thumb"><img src="images/video/Thumb2.png" alt="" class="img-responsive"/></div>
+                      </div>
+                      <div data-item-id="item_image-yours_7" data-item-url="images/video/Image3.png" class="item col-xs-3">
+                        <div class="thumb"><img src="images/video/Thumb3.png" alt="" class="img-responsive"/></div>
+                      </div>
+                      <div data-item-id="item_image-yours_8" data-item-url="images/video/Image4.png" class="item col-xs-3">
+                        <div class="thumb"><img src="images/video/Thumb4.png" alt="" class="img-responsive"/></div>
+                      </div>
+                      <div data-item-id="item_image-yours_9" data-item-url="images/video/Image1.png" class="item col-xs-3">
+                        <div class="thumb"><img src="images/video/Thumb1.png" alt="" class="img-responsive"/></div>
+                      </div>
+                      <div data-item-id="item_image-yours_10" data-item-url="images/video/Image2.png" class="item col-xs-3">
+                        <div class="thumb"><img src="images/video/Thumb2.png" alt="" class="img-responsive"/></div>
+                      </div>
+                      <div data-item-id="item_image-yours_11" data-item-url="images/video/Image3.png" class="item col-xs-3">
+                        <div class="thumb"><img src="images/video/Thumb3.png" alt="" class="img-responsive"/></div>
+                      </div>
+                      <div data-item-id="item_image-yours_12" data-item-url="images/video/Image4.png" class="item col-xs-3">
+                        <div class="thumb"><img src="images/video/Thumb4.png" alt="" class="img-responsive"/></div>
+                      </div>
+                      <div data-item-id="item_image-yours_13" data-item-url="images/video/Image1.png" class="item col-xs-3">
+                        <div class="thumb"><img src="images/video/Thumb1.png" alt="" class="img-responsive"/></div>
+                      </div>
+                      <div data-item-id="item_image-yours_14" data-item-url="images/video/Image2.png" class="item col-xs-3">
+                        <div class="thumb"><img src="images/video/Thumb2.png" alt="" class="img-responsive"/></div>
+                      </div>
+                      <div data-item-id="item_image-yours_15" data-item-url="images/video/Image3.png" class="item col-xs-3">
+                        <div class="thumb"><img src="images/video/Thumb3.png" alt="" class="img-responsive"/></div>
+                      </div>
+                      <div data-item-id="item_image-yours_16" data-item-url="images/video/Image4.png" class="item col-xs-3">
+                        <div class="thumb"><img src="images/video/Thumb4.png" alt="" class="img-responsive"/></div>
+                      </div>
+                      <div data-item-id="item_image-yours_17" data-item-url="images/video/Image1.png" class="item col-xs-3">
+                        <div class="thumb"><img src="images/video/Thumb1.png" alt="" class="img-responsive"/></div>
+                      </div>
+                      <div data-item-id="item_image-yours_18" data-item-url="images/video/Image2.png" class="item col-xs-3">
+                        <div class="thumb"><img src="images/video/Thumb2.png" alt="" class="img-responsive"/></div>
+                      </div>
+                      <div data-item-id="item_image-yours_19" data-item-url="images/video/Image3.png" class="item col-xs-3">
+                        <div class="thumb"><img src="images/video/Thumb3.png" alt="" class="img-responsive"/></div>
+                      </div>
+                      <div data-item-id="item_image-yours_20" data-item-url="images/video/Image4.png" class="item col-xs-3">
+                        <div class="thumb"><img src="images/video/Thumb4.png" alt="" class="img-responsive"/></div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-sm-10 col-sm-offset-1">
+                    <div class="row">
+                      <div class="col-xs-6 col-xs-offset-3">
+                        <button type="submit" title="Select" class="btn-1a full">Select</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
-    <ul id="output"></ul>
+    <script src="js/l10n.js"></script>
+    <script src="js/libs.js"></script>
+    <script src="js/bootstrap.js"></script>
+    <script src="js/jquery.steps.min.js"></script>
+    <script src="js/respond.js"></script>
+    <div class="overlay hide"></div>
+    <div id="uploadGoogle" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" class="modal modal-1 upload-google fade">
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="modal-header">
+            <button type="button" data-dismiss="modal" aria-hidden="true" class="close">&times;</button>
+            <h2 class="modal-title">Từ Google Drive</h2>
+          </div>
+          <div class="modal-body">
+            <div action="" class="form-style-1">
+              <div class="row">
+                <div class="col-sm-10 col-sm-offset-1">
+                  <div class="row">
+                    <div data-item-id="item_image-yours_1" data-item-url="images/video/Image1.png" class="item col-xs-3">
+                      <div class="thumb"><img src="images/video/Thumb1.png" alt="" class="img-responsive"/></div>
+                    </div>
+                    <div data-item-id="item_image-yours_2" data-item-url="images/video/Image2.png" class="item col-xs-3">
+                      <div class="thumb"><img src="images/video/Thumb2.png" alt="" class="img-responsive"/></div>
+                    </div>
+                    <div data-item-id="item_image-yours_3" data-item-url="images/video/Image3.png" class="item col-xs-3">
+                      <div class="thumb"><img src="images/video/Thumb3.png" alt="" class="img-responsive"/></div>
+                    </div>
+                    <div data-item-id="item_image-yours_4" data-item-url="images/video/Image4.png" class="item col-xs-3">
+                      <div class="thumb"><img src="images/video/Thumb4.png" alt="" class="img-responsive"/></div>
+                    </div>
+                    <div data-item-id="item_image-yours_5" data-item-url="images/video/Image1.png" class="item col-xs-3">
+                      <div class="thumb"><img src="images/video/Thumb1.png" alt="" class="img-responsive"/></div>
+                    </div>
+                    <div data-item-id="item_image-yours_6" data-item-url="images/video/Image2.png" class="item col-xs-3">
+                      <div class="thumb"><img src="images/video/Thumb2.png" alt="" class="img-responsive"/></div>
+                    </div>
+                    <div data-item-id="item_image-yours_7" data-item-url="images/video/Image3.png" class="item col-xs-3">
+                      <div class="thumb"><img src="images/video/Thumb3.png" alt="" class="img-responsive"/></div>
+                    </div>
+                    <div data-item-id="item_image-yours_8" data-item-url="images/video/Image4.png" class="item col-xs-3">
+                      <div class="thumb"><img src="images/video/Thumb4.png" alt="" class="img-responsive"/></div>
+                    </div>
+                    <div data-item-id="item_image-yours_9" data-item-url="images/video/Image1.png" class="item col-xs-3">
+                      <div class="thumb"><img src="images/video/Thumb1.png" alt="" class="img-responsive"/></div>
+                    </div>
+                    <div data-item-id="item_image-yours_10" data-item-url="images/video/Image2.png" class="item col-xs-3">
+                      <div class="thumb"><img src="images/video/Thumb2.png" alt="" class="img-responsive"/></div>
+                    </div>
+                    <div data-item-id="item_image-yours_11" data-item-url="images/video/Image3.png" class="item col-xs-3">
+                      <div class="thumb"><img src="images/video/Thumb3.png" alt="" class="img-responsive"/></div>
+                    </div>
+                    <div data-item-id="item_image-yours_12" data-item-url="images/video/Image4.png" class="item col-xs-3">
+                      <div class="thumb"><img src="images/video/Thumb4.png" alt="" class="img-responsive"/></div>
+                    </div>
+                    <div data-item-id="item_image-yours_13" data-item-url="images/video/Image1.png" class="item col-xs-3">
+                      <div class="thumb"><img src="images/video/Thumb1.png" alt="" class="img-responsive"/></div>
+                    </div>
+                    <div data-item-id="item_image-yours_14" data-item-url="images/video/Image2.png" class="item col-xs-3">
+                      <div class="thumb"><img src="images/video/Thumb2.png" alt="" class="img-responsive"/></div>
+                    </div>
+                    <div data-item-id="item_image-yours_15" data-item-url="images/video/Image3.png" class="item col-xs-3">
+                      <div class="thumb"><img src="images/video/Thumb3.png" alt="" class="img-responsive"/></div>
+                    </div>
+                    <div data-item-id="item_image-yours_16" data-item-url="images/video/Image4.png" class="item col-xs-3">
+                      <div class="thumb"><img src="images/video/Thumb4.png" alt="" class="img-responsive"/></div>
+                    </div>
+                    <div data-item-id="item_image-yours_17" data-item-url="images/video/Image1.png" class="item col-xs-3">
+                      <div class="thumb"><img src="images/video/Thumb1.png" alt="" class="img-responsive"/></div>
+                    </div>
+                    <div data-item-id="item_image-yours_18" data-item-url="images/video/Image2.png" class="item col-xs-3">
+                      <div class="thumb"><img src="images/video/Thumb2.png" alt="" class="img-responsive"/></div>
+                    </div>
+                    <div data-item-id="item_image-yours_19" data-item-url="images/video/Image3.png" class="item col-xs-3">
+                      <div class="thumb"><img src="images/video/Thumb3.png" alt="" class="img-responsive"/></div>
+                    </div>
+                    <div data-item-id="item_image-yours_20" data-item-url="images/video/Image4.png" class="item col-xs-3">
+                      <div class="thumb"><img src="images/video/Thumb4.png" alt="" class="img-responsive"/></div>
+                    </div>
+                  </div>
+                </div>
+                <div class="col-sm-10 col-sm-offset-1">
+                  <div class="row">
+                    <div class="col-xs-6 col-xs-offset-3">
+                      <button type="submit" title="Chọn" class="btn-1a full">Chọn</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!--[if lt IE 8]><p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p><![endif]-->
+    <noscript>JavaScript is off. Please enable to view full site.</noscript>
   </body>
 </html>
