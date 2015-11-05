@@ -10,7 +10,7 @@ function onGooglClientApiLoadedHandler() {
 function GoogleDrive() {
 	this.CLIENT_ID = '691726389794-4boot0bt98elrqjr6rqos45dvs7bf0f7.apps.googleusercontent.com';
     this.API_KEY = 'AIzaSyCbJYq6i_CJzt8okRFQw4frnBtvjp4IV80';
-    this.SCOPES = ['https://www.googleapis.com/auth/drive.metadata.readonly'];
+    this.SCOPES = ['https://www.googleapis.com/auth/drive'];
 }
 
 GoogleDrive.prototype.init = function() {
