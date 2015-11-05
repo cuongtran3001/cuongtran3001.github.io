@@ -43,11 +43,14 @@ GoogleDrive.prototype.onDriveLoadHandler = function() {
 
 GoogleDrive.prototype.loadFiles = function(folderId) {
 
-	var request = gapi.client.drive.files.list({
-	  'folderId': folderId + ' in parents',
-	  'maxResults': 1000,
-	  'q': folderId + ' in parents and mimeType="application/vnd.google-apps.folder" or mimeType="image/jpeg" or mimeType="image/png"'
-	});
+	var request = gapi.client.request({
+		'path': 'drive/v2/files?q=trashed=false ' +
+				'and ( ' +
+                'mimeType contains "folder" ' +
+                'or mimeType contains "jpeg") and "' + folderId + '" in parents',
+		'method': 'GET',
+		'params': {'maxResults': 1000}
+    });
 
 	request.execute(function(resp) {
 	  var files = resp.items;
