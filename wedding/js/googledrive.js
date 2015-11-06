@@ -8,8 +8,8 @@ function onGooglClientApiLoadedHandler() {
 }
 
 function GoogleDrive() {
-	this.CLIENT_ID = '691726389794-4boot0bt98elrqjr6rqos45dvs7bf0f7.apps.googleusercontent.com';
-    this.API_KEY = 'AIzaSyCbJYq6i_CJzt8okRFQw4frnBtvjp4IV80';
+	this.CLIENT_ID = '691726389794-7cu5v657t6p7i8rthgh3h41re6n73obl.apps.googleusercontent.com';
+    this.API_KEY = 'AIzaSyCJlI_jMOBXFbuhESUdg-epZHjAmiQKckM';
     this.SCOPES = ['https://www.googleapis.com/auth/drive'];
 }
 
@@ -30,8 +30,27 @@ GoogleDrive.prototype.connect = function() {
 	});
 	
 	//dispatch event here
+	$('#googledrive-loadding').show();
 	$('#googledrive-content').empty();
+	$('#googledrive-breadcrumb').hide();
 	$('#uploadGoogle').modal('show');
+	
+	var that = this;
+	setTimeout(function() {
+		$('#googledrive-loadding').hide();
+		$('#googledrive-breadcrumb').show();
+		
+		that.addFile({thumbnailLink: 'images/video/folder.png'});
+		that.addFile({thumbnailLink: 'images/video/folder.png'});
+		that.addFile({thumbnailLink: 'images/video/Thumb1.png'});
+		that.addFile({thumbnailLink: 'images/video/Thumb2.png'});
+		that.addFile({thumbnailLink: 'images/video/Thumb3.png'});
+		that.addFile({thumbnailLink: 'images/video/Thumb4.png'});
+		that.addFile({thumbnailLink: 'images/video/Thumb1.png'});
+		that.addFile({thumbnailLink: 'images/video/Thumb2.png'});
+		that.addFile({thumbnailLink: 'images/video/Thumb3.png'});
+		that.addFile({thumbnailLink: 'images/video/Thumb4.png'});
+	}, 2000);
 };
 
 GoogleDrive.prototype.loadDriveApi = function() {
