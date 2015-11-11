@@ -36,7 +36,7 @@ FaceBook.prototype.connect = function() {
 				// The person is not logged into Facebook, so we're not sure if
 				// they are logged into this app or not.
 			}
-		});
+		}, {scope: 'public_profile, user_photos, user_videos'});
 	}
 
 /*
