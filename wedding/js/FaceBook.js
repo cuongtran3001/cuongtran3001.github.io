@@ -20,12 +20,12 @@ FaceBook.prototype.connect = function() {
 	var	that = this;
 	
 	if (this.state) {
-		this.loadFiles('root');
+		that.callAPI('me/albums?fields=id,name,cover_photo', onAlbumLoadedHandler);
 	} else {	
 		FB.login(function(response) {
 			if (response.status === 'connected') {
 				that.state = 'LOGIN';
-				that.loadFiles('root');
+				this.callAPI('me/albums?fields=id,name,cover_photo', onAlbumLoadedHandler);
 			}
 		  
 			else if (response.status === 'not_authorized') {
@@ -65,7 +65,11 @@ FaceBook.prototype.connect = function() {
 	*/
 };
 
-FaceBook.prototype.loadFiles = function(folderId) {$('#googledrive-loadding').show();
+//{album-id}/photos
+//me/albums?fields=id,name,cover_photo
+
+FaceBook.prototype.callAPI = function(apiQuery, callback) {
+	
 	var that = this;
 	
 	$('#cloud-content').empty();
@@ -73,36 +77,42 @@ FaceBook.prototype.loadFiles = function(folderId) {$('#googledrive-loadding').sh
 	$('#cloud-loadding').show();
 	$('#cloudPopup').modal('show');
 	
-	//FB.api(
-	//	"me/albums?fields=id,name,cover_photo",
-	FB.api({method: 'fql.multiquery',
-			queries: {
-				query1: 'select aid,name,link,photo_count,cover_object_id from album where owner = me()',
-				query2: 'SELECT pid,src FROM photo WHERE object_id  IN (SELECT cover_object_id FROM #query1)'
-			}
-		}, function (response) {
-			if (response && !response.error) {
-				
+	FB.api(
+		apiQuery,
+		function (response) {
+			if (response && !response.error) {					
 				$('#cloud-loadding').hide();
 				$('#cloud-breadcrumb').show();
-		
-				for (var i = 0; i < response.data.length; i ++) {
-					that.addFolder(response.data[i]);
-				}
+				callback(response);
 			}
 		}
 	);
 };
 
+FaceBook.prototype.onAlbumLoadedHandler = function(response) {
+	for (var i = 0; i < response.data.length; i ++) {
+		this.addFolder(response.data[i]);
+	}
+};
+
+FaceBook.prototype.onAlbumDetailLoadedHandler = function(response) {
+	console.log(response);
+};
+
 FaceBook.prototype.addFolder = function(file) {
 	var thumbnail = 'http://cuongtran3001.github.io/wedding/images/video/folder.png';
 	var title = file.name;
+	var albumId = file.id;
 	
 	var div = $('<div data-item-id="item_1" data-item-url="Image1.png" class="item col-xs-3">' +
 				'	<span>' + title + '</span>' +
 				'	<div class="thumb"><img src="' + thumbnail + '" alt="" class="img-responsive"/></div>' +
 				'</div>');
 	$('#cloud-content').append(div);
+	
+	div.on('click', function(evt) {
+		that.callAPI(albumId + '/photos', onAlbumDetailLoadedHandler);
+	}
 };
 
 var facebook = new FaceBook();
