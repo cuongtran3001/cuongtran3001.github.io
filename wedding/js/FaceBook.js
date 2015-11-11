@@ -158,7 +158,7 @@ FaceBook.prototype.addPhoto = function(photo) {
 	$('#cloud-content').append(div);
 	
 	div.on('click', function(evt) {		
-		div.toogleClass('active');
+		div.toggleClass('active');
 	});
 };
 
