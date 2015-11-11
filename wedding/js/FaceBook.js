@@ -70,17 +70,19 @@ FaceBook.prototype.loadFiles = function(folderId) {
 		"me/albums",
 		function (response) {
 			if (response && !response.error) {
-				console.log(response);
+				for (var i = 0; i < response.data; i ++) {
+					this.addFile(response.data[i]);
+				}
 			}
 		}
 	);
 };
 
 FaceBook.prototype.addFile = function(file) {
-  var thumbnail = file.mimeType != 'application/vnd.google-apps.folder' ? file.thumbnailLink : 'http://cuongtran3001.github.io/wedding/images/video/folder.png';
+  var thumbnail = 'http://cuongtran3001.github.io/wedding/images/video/folder.png';
   
 	var div = $('<div data-item-id="item_1" data-item-url="Image1.png" class="item col-xs-3"><div class="thumb"><img src="' + thumbnail + '" alt="" class="img-responsive"/></div></div>');
-	$('#googledrive-content').append(div);
+	$('#cloud-content').append(div);
 };
 
 var facebook = new FaceBook();
