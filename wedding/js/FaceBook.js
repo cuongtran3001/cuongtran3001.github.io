@@ -100,6 +100,7 @@ FaceBook.prototype.onAlbumDetailLoadedHandler = function(response) {
 };
 
 FaceBook.prototype.addFolder = function(file) {
+	var that = this;
 	var thumbnail = 'http://cuongtran3001.github.io/wedding/images/video/folder.png';
 	var title = file.name;
 	var albumId = file.id;
