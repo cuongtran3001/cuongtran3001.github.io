@@ -96,14 +96,16 @@ FaceBook.prototype.onAlbumLoadedHandler = function(response) {
 };
 
 FaceBook.prototype.onAlbumDetailLoadedHandler = function(response) {
-	console.log(response);
+	for (var i = 0; i < response.data.length; i ++) {
+		this.addPhoto(response.data[i]);
+	}
 };
 
-FaceBook.prototype.addFolder = function(file) {
+FaceBook.prototype.addFolder = function(folder) {
 	var that = this;
 	var thumbnail = 'http://cuongtran3001.github.io/wedding/images/video/folder.png';
-	var title = file.name;
-	var albumId = file.id;
+	var title = folder.name;
+	var albumId = folder.id;
 	
 	var div = $('<div data-item-id="item_1" data-item-url="Image1.png" class="item col-xs-3">' +
 				'	<span>' + title + '</span>' +
@@ -113,6 +115,28 @@ FaceBook.prototype.addFolder = function(file) {
 	
 	div.on('click', function(evt) {
 		that.callAPI(albumId + '/photos?fields=id,name,images,url', function(response) { that.onAlbumDetailLoadedHandler(response) });
+	});
+};
+
+FaceBook.prototype.addPhoto = function(photo) {
+	var that = this;
+	
+	var height = 10000;
+	var thumbnail = 'http://cuongtran3001.github.io/wedding/images/video/folder.png';
+	
+	for (var i = 0; i < photo.images.length; i ++) {
+		if (photo.images[i].height < height) {
+			height = photo.images[i].height;
+			thumbnail = photo.images[i].source;
+		}
+	}
+	
+	var div = $('<div data-item-id="item_1" data-item-url="Image1.png" class="item col-xs-3">' +
+				'	<div class="thumb"><img src="' + thumbnail + '" alt="" class="img-responsive"/></div>' +
+				'</div>');
+	$('#cloud-content').append(div);
+	
+	div.on('click', function(evt) {		
 	});
 };
 
