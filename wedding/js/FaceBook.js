@@ -88,6 +88,8 @@ FaceBook.prototype.addFile = function(file) {
 	$('#googledrive-content').append(div);
 };
 
+var facebook = new FaceBook();
+
 $(document).ready(function() {
 	$('#cloud-connect').on('click', function(evt) {
 		facebook.connect();
