@@ -25,6 +25,10 @@ FaceBook.prototype.connect = function() {
 		FB.login(function(response) {
 			if (response.status === 'connected') {
 				that.state = 'LOGIN';
+				
+				$('#cloud-breadcrumb').find('.separate').hide();
+				$('#cloud-breadcrumb').find('.album').html('');
+		
 				this.callAPI('me/albums?fields=id,name,cover_photo', function(response) { that.onAlbumLoadedHandler(response) });
 			}
 		  
@@ -103,9 +107,9 @@ FaceBook.prototype.onAlbumDetailLoadedHandler = function(response) {
 
 FaceBook.prototype.addFolder = function(folder) {
 	var that = this;
-	var thumbnail = 'http://cuongtran3001.github.io/wedding/images/video/folder.png';
 	var title = folder.name;
 	var albumId = folder.id;
+	var thumbnail = 'https://graph.facebook.com/' + albumId + '/picture?type=normal';
 	
 	var div = $('<div data-item-id="item_1" data-item-url="Image1.png" class="item col-xs-3">' +
 				'	<span>' + title + '</span>' +
@@ -114,6 +118,10 @@ FaceBook.prototype.addFolder = function(folder) {
 	$('#cloud-content').append(div);
 	
 	div.on('click', function(evt) {
+	
+		$('#cloud-breadcrumb').find('.separate').show();
+		$('#cloud-breadcrumb').find('.album').html(title);
+				
 		that.callAPI(albumId + '/photos?fields=id,name,images,url', function(response) { that.onAlbumDetailLoadedHandler(response) });
 	});
 };
