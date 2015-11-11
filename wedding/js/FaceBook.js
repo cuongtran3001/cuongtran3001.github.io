@@ -67,7 +67,7 @@ FaceBook.prototype.connect = function() {
 
 FaceBook.prototype.loadFiles = function(folderId) {
 	FB.api(
-		"/me/photos",
+		"me/albums",
 		function (response) {
 			if (response && !response.error) {
 				console.log(response);
