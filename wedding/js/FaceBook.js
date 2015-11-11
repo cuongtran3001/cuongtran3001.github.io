@@ -65,7 +65,12 @@ FaceBook.prototype.connect = function() {
 	*/
 };
 
-FaceBook.prototype.loadFiles = function(folderId) {
+FaceBook.prototype.loadFiles = function(folderId) {$('#googledrive-loadding').show();
+	
+	$('#cloud-content').empty();
+	$('#cloud-breadcrumb').hide();	
+	$('#cloudPopup').modal('show');
+	
 	FB.api(
 		"me/albums",
 		function (response) {
