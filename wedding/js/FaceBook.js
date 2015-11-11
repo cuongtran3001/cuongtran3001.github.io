@@ -74,7 +74,7 @@ FaceBook.prototype.loadFiles = function(folderId) {$('#googledrive-loadding').sh
 	$('#cloudPopup').modal('show');
 	
 	FB.api(
-		"me/albums",
+		"me/albums?fields=id,name,cover_photo",
 		function (response) {
 			if (response && !response.error) {
 				
@@ -82,14 +82,14 @@ FaceBook.prototype.loadFiles = function(folderId) {$('#googledrive-loadding').sh
 				$('#cloud-breadcrumb').show();
 		
 				for (var i = 0; i < response.data.length; i ++) {
-					that.addFile(response.data[i]);
+					that.addFolder(response.data[i]);
 				}
 			}
 		}
 	);
 };
 
-FaceBook.prototype.addFile = function(file) {
+FaceBook.prototype.addFolder = function(file) {
 	var thumbnail = 'http://cuongtran3001.github.io/wedding/images/video/folder.png';
 	var title = file.name;
 	
