@@ -66,7 +66,14 @@ FaceBook.prototype.connect = function() {
 };
 
 FaceBook.prototype.loadFiles = function(folderId) {
-	console.log(folderId);
+	FB.api(
+		"/me/photos",
+		function (response) {
+			if (response && !response.error) {
+				console.log(response);
+			}
+		}
+	);
 };
 
 FaceBook.prototype.addFile = function(file) {
