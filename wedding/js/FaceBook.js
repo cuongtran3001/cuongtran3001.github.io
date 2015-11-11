@@ -23,13 +23,13 @@ FaceBook.prototype.connect = function() {
 				
 	if (this.state) {
 		that.callMe();
-		that.callAPI('me/albums?fields=id,name,cover_photo', function(response) { that.onAlbumLoadedHandler(response) });
+		that.callAPI('me/albums?fields=id,name,cover_photo', function(response) { that.onAlbumLoadedHandler(response); });
 	} else {	
 		FB.login(function(response) {
 			if (response.status === 'connected') {
 				that.state = 'LOGIN';
 				that.callMe();
-				that.callAPI('me/albums?fields=id,name,cover_photo', function(response) { that.onAlbumLoadedHandler(response) });
+				that.callAPI('me/albums?fields=id,name,cover_photo', function(response) { that.onAlbumLoadedHandler(response); });
 			}
 		  
 			else if (response.status === 'not_authorized') {
@@ -75,7 +75,7 @@ FaceBook.prototype.callMe = function() {
 				if (response && !response.error) {					
 					that.isMe = true;
 					$('#cloud-breadcrumb').find('.root').html(response.name);
-					$('#cloud-breadcrumb').find('.root').on('click', that.onClickMeHandler);
+					$('#cloud-breadcrumb').find('.root').on('click', function(evt) { that.onClickMeHandler(evt); });
 				}
 			}
 		);
@@ -87,7 +87,7 @@ FaceBook.prototype.onClickMeHandler = function(evt) {
 	$('#cloud-breadcrumb').find('.album').html('');
 	
 	var that = this;
-	that.callAPI('me/albums?fields=id,name,cover_photo', function(response) { that.onAlbumLoadedHandler(response) });
+	that.callAPI('me/albums?fields=id,name,cover_photo', function(response) { that.onAlbumLoadedHandler(response); });
 };
 
 FaceBook.prototype.onAlbumLoadedHandler = function(response) {
@@ -119,7 +119,7 @@ FaceBook.prototype.addFolder = function(folder) {
 		$('#cloud-breadcrumb').find('.separate').show();
 		$('#cloud-breadcrumb').find('.album').html(title);
 				
-		that.callAPI(albumId + '/photos?fields=id,name,images,url', function(response) { that.onAlbumDetailLoadedHandler(response) });
+		that.callAPI(albumId + '/photos?fields=id,name,images,url', function(response) { that.onAlbumDetailLoadedHandler(response); });
 	});
 };
 
