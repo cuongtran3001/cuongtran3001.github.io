@@ -17,26 +17,25 @@ FaceBook.prototype.init = function() {
 };
 
 FaceBook.prototype.connect = function() {
+	var	that = this;
 	
 	if (this.state) {
-		console.log('Logon. Can call API');
-		
+		this.loadFiles('root');
 	} else {	
 		FB.login(function(response) {
-			console.log(response);
-			
-		  if (response.status === 'connected') {
-			that.state = 'LOGIN';
-		  }
+			if (response.status === 'connected') {
+				that.state = 'LOGIN';
+				that.loadFiles('root');
+			}
 		  
-		  else if (response.status === 'not_authorized') {
-			// The person is logged into Facebook, but not your app.
-		  } 
+			else if (response.status === 'not_authorized') {
+				// The person is logged into Facebook, but not your app.
+			} 
 		  
-		  else {
-			// The person is not logged into Facebook, so we're not sure if
-			// they are logged into this app or not.
-		  }
+			else {
+				// The person is not logged into Facebook, so we're not sure if
+				// they are logged into this app or not.
+			}
 		});
 	}
 
@@ -66,19 +65,8 @@ FaceBook.prototype.connect = function() {
 	*/
 };
 
-FaceBook.prototype.loadDriveApi = function() {
-	//var that = this;
-	//gapi.client.load('drive', 'v2', function() {
-	//	that.onDriveLoadHandler();
-	//});
-};
-
-FaceBook.prototype.onDriveLoadHandler = function() {
-	//this.loadFiles('root');
-};
-
 FaceBook.prototype.loadFiles = function(folderId) {
-	
+	console.log(folderId);
 };
 
 FaceBook.prototype.addFile = function(file) {
