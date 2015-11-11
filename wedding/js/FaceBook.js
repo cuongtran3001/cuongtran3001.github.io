@@ -2,6 +2,7 @@ function FaceBook() {
 	this.SCOPES = 'public_profile, user_photos, user_videos';
 	
 	this.state = null;
+	this.isMe = false;
 }
 
 FaceBook.prototype.init = function() {
@@ -65,14 +66,28 @@ FaceBook.prototype.callAPI = function(apiQuery, callback) {
 };
 
 FaceBook.prototype.callMe = function() {
-	FB.api(
-		'me/',
-		function (response) {
-			if (response && !response.error) {					
-				$('#cloud-breadcrumb').find('.root').html(response.name);
+	var that = this;
+	
+	if (!that.isMe) {
+		FB.api(
+			'me/',
+			function (response) {
+				if (response && !response.error) {					
+					that.isMe = true;
+					$('#cloud-breadcrumb').find('.root').html(response.name);
+					$('#cloud-breadcrumb').find('.root').on('click', that.onClickMeHandler);
+				}
 			}
-		}
-	);
+		);
+	}	
+};
+
+FaceBook.prototype.onClickMeHandler = function(evt) {
+	$('#cloud-breadcrumb').find('.separate').hide();
+	$('#cloud-breadcrumb').find('.album').html('');
+	
+	var that = this;
+	that.callAPI('me/albums?fields=id,name,cover_photo', function(response) { that.onAlbumLoadedHandler(response) });
 };
 
 FaceBook.prototype.onAlbumLoadedHandler = function(response) {
