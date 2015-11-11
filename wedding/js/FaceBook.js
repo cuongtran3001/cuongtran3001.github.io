@@ -20,12 +20,12 @@ FaceBook.prototype.connect = function() {
 	var	that = this;
 	
 	if (this.state) {
-		that.callAPI('me/albums?fields=id,name,cover_photo', that.onAlbumLoadedHandler);
+		that.callAPI('me/albums?fields=id,name,cover_photo', function(response( { that.onAlbumLoadedHandler(response) })));
 	} else {	
 		FB.login(function(response) {
 			if (response.status === 'connected') {
 				that.state = 'LOGIN';
-				this.callAPI('me/albums?fields=id,name,cover_photo', that.onAlbumLoadedHandler);
+				this.callAPI('me/albums?fields=id,name,cover_photo', function(response( { that.onAlbumLoadedHandler(response) })));
 			}
 		  
 			else if (response.status === 'not_authorized') {
@@ -111,7 +111,7 @@ FaceBook.prototype.addFolder = function(file) {
 	$('#cloud-content').append(div);
 	
 	div.on('click', function(evt) {
-		that.callAPI(albumId + '/photos', that.onAlbumDetailLoadedHandler);
+		that.callAPI(albumId + '/photos', , function(response( { that.onAlbumDetailLoadedHandler(response) })));
 	});
 };
 
