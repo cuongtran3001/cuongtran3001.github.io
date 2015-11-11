@@ -90,9 +90,13 @@ FaceBook.prototype.loadFiles = function(folderId) {$('#googledrive-loadding').sh
 };
 
 FaceBook.prototype.addFile = function(file) {
-  var thumbnail = 'http://cuongtran3001.github.io/wedding/images/video/folder.png';
-  
-	var div = $('<div data-item-id="item_1" data-item-url="Image1.png" class="item col-xs-3"><div class="thumb"><img src="' + thumbnail + '" alt="" class="img-responsive"/></div></div>');
+	var thumbnail = 'http://cuongtran3001.github.io/wedding/images/video/folder.png';
+	var title = file.name;
+	
+	var div = $('<div data-item-id="item_1" data-item-url="Image1.png" class="item col-xs-3">' +
+				'	<span>' + title + '</span>' +
+				'	<div class="thumb"><img src="' + thumbnail + '" alt="" class="img-responsive"/></div>' +
+				'</div>');
 	$('#cloud-content').append(div);
 };
 
