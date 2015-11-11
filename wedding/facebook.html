@@ -6,7 +6,7 @@
   <head>
     <meta charset="utf-8">
     <!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1"><![endif]-->
-    <title>Google Drive</title>
+    <title>FaceBook</title>
     <meta name="description" content="">
     <meta name="keywords" content="">
     <meta name="robots" content="index, follow">
@@ -20,8 +20,7 @@
   </head>
   <body class="video-clip-page non-fixed">
     
-    <fb:login-button scope="public_profile,email" onlogin="checkLoginState();">
-</fb:login-button>
+    <fb:login-button scope="public_profile,email" onlogin="checkLoginState();"></fb:login-button>
     
     <div id="app">      
 	    <button id="googledrive-connect" style="height: 40px;">Connect Google Drive</button>
@@ -76,6 +75,7 @@
     <script src="http://cuongtran3001.github.io/wedding/js/bootstrap.js"></script>
     <script src="http://cuongtran3001.github.io/wedding/js/jquery.steps.min.js"></script>
     <script src="http://cuongtran3001.github.io/wedding/js/respond.js"></script>
+	<script src="http://cuongtran3001.github.io/wedding/js/FaceBook.js"></script>
 	
     <script>
       window.fbAsyncInit = function() {
@@ -94,6 +94,9 @@
          fjs.parentNode.insertBefore(js, fjs);
        }(document, 'script', 'facebook-jssdk'));
     </script>
+	
+	
+	
 	
     <div class="overlay hide"></div>
       
