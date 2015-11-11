@@ -539,8 +539,8 @@ _bmd01.draw(_source, matrix, colorTransform, compositeOperation, clipRect, smoot
 		ctx.save();
 		if (!!compositeOperation) ctx.globalCompositeOperation = compositeOperation;
 		ctx.imageSmoothingEnabled = smoothing;
-		ctx.webkitImageSmoothingEnabled = smoothing;
-		ctx.mozImageSmoothingEnabled = smoothing;
+		//ctx.webkitImageSmoothingEnabled = smoothing;
+		//ctx.mozImageSmoothingEnabled = smoothing;
 		if (!!clipRect) {
 			ctx.rect(clipRect.x, clipRect.y, clipRect.width, clipRect.height);
 			ctx.clip();

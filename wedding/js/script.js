@@ -29,12 +29,13 @@ var Site = (function($, window, undefined) {
       });
     });
   }
+  
   if($('.change-title').length){
     var replaceWith = $('<input name="temp" type="text" />'),
         connectWith = $('input[name="hiddenField"]');
-
     $('.change-title').inlineEdit(replaceWith, connectWith);
   }
+
   var limit = $('[data-multiple-select]').data('option-check');
 
   $('[data-multiple-select]').change(function() {
@@ -135,12 +136,13 @@ var Site = (function($, window, undefined) {
     $('.caption-album-short').each(function() {
         var content = $(this).html();
         if(content.length > showChar) {
-            var c = content.substr(0, showChar);
-            var h = content.substr(showChar, content.length - showChar);
-            var html = c + '<span class="moreellipses">' + ellipsestext+ '&nbsp;</span><span class="morecontent"><span>' + h + '</span>&nbsp;&nbsp;<a href="javascript:void(0)" class="morelink view", title="">' + moretext + '</a></span>';
-            $(this).html(html);
+          var c = content.substr(0, showChar);
+          var h = content.substr(showChar, content.length - showChar);
+          var html = c + '<span class="moreellipses">' + ellipsestext+ '&nbsp;</span><span class="morecontent"><span>' + h + '</span>&nbsp;&nbsp;<a href="javascript:void(0)" class="morelink view", title="">' + moretext + '</a></span>';
+          $(this).html(html);
         }
     });
+    
     $(".morelink").click(function(){
         if($(this).hasClass("less")) {
             $(this).removeClass("less");
@@ -293,17 +295,84 @@ var Site = (function($, window, undefined) {
       
       onItemSwitch:       function(){}, // Callback function when items are switches
     });
-    if(!$('.non-fixed #header').length){
+    if(!$('.non-fixed #header').length && !$('.fullheight').length){
       $('#header').addClass('original').clone().insertAfter('#header').addClass('cloned').css('position','fixed').css('top','0').css('margin-top','0').css('z-index','500').removeClass('original').hide();
       setInterval(function(){stickIt();}, 100);
       function stickIt() {
         var orgElementPos = $('.original').offset();
         orgElementTop = orgElementPos.top;
         var target = $('[data-toggle-slide]').data('target'); 
+        $.widget("custom.catAutocomplete", $.ui.autocomplete, {
+          _renderItemData: function( ul, item ) {
+            return this._renderItem( ul, item ).data( "ui-autocomplete-item", item );
+          },
+          _renderItem: function( ul, item ) {
+            return $( "<li>" )
+              // .append( $( "<a>" ).text( item.label ) )
+              .append( "<b>"+ item.alphabet + "-</b>" + item.label )
+              .appendTo( ul );
+          },
+          _renderMenu: function(ul, items) {
+            var that = this,
+              currentCategory = "";
+            ul.addClass('search-category');
+            $.each(items, function(index, item) {
+              if (item.category != currentCategory) {
+                ul.append("<li class='ui-autocomplete-category " + item.class + "-icon '><span></span><p>" + item.category + "</p></li>");
+                currentCategory = item.category;
+              }
+              // if (item) {
+              //   ul.append("<li class='item' value='" + item.value + "'><b>" + item.alphabet + "</b>-" + item.label + "</li>");
+              //   currentCategory = item.category;
+              // }
+              // console.log(item.value);
+              that._renderItemData(ul, item);
+              
+              // console.log(item.label);
+              
+            });
+          }
+        });
+
+        // Initialize autocomplete with categories
+        var xhr;
+        $('.video-style.cloned #search-form #input-search').catAutocomplete({
+            minLength: 0,
+            delay: 0,
+            source: function(request, response) {
+              var regex = new RegExp(request.term, 'i');
+              if(xhr){
+                xhr.abort();
+              }
+              xhr = $.ajax({
+                // Retrieve github user repositories list
+                url: 'data/category.json',
+                dataType: "json",
+                cache: false,
+                success: function(data) {
+                  // data.sort(function(item1, item2){
+                  //   return item1.forks > item2.forks ? 1 : -1;
+                  // });
+                  response($.map(data.temp, function(item) {
+                    if(regex.test(item.label)){
+                      return {
+                        label: item.label,
+                        category: item.category,
+                        alphabet: item.alphabet,
+                        class: item.classCategory
+                      }
+                    }
+                  }));
+                }
+              });
+            },
+        });
         $('[data-toggle-slide]').parent().on('click', function(e){
           $(target).stop(true).slideDown(300, function(){
             $(this).addClass('active');
+            
           });
+
         });
         if($(target).hasClass('active')){
           $('[data-toggle-slide]').parent().on('click', function(e){
@@ -1190,6 +1259,134 @@ jQuery(function() {
 }(window));
 
 
+var googleDrive = new GoogleDrive();
+$('#googledrive-connect').on('click', function(evt) {
+  googleDrive.connect();
+});
+
+function onGooglClientApiLoadedHandler() {
+  googleDrive.init();
+}
+
+function GoogleDrive() {
+  this.CLIENT_ID = '691726389794-4boot0bt98elrqjr6rqos45dvs7bf0f7.apps.googleusercontent.com';
+    this.API_KEY = 'AIzaSyCbJYq6i_CJzt8okRFQw4frnBtvjp4IV80';
+    this.SCOPES = ['https://www.googleapis.com/auth/drive'];
+}
+
+GoogleDrive.prototype.init = function() {
+  gapi.client.setApiKey(this.API_KEY);
+};
+
+GoogleDrive.prototype.connect = function() {
+  var that = this;
+  gapi.auth.authorize({
+        'client_id': this.CLIENT_ID,
+        'scope': this.SCOPES.join(' '),
+        'immediate': true
+    }, function(authResult) {
+    if (authResult && !authResult.error) {
+      that.loadDriveApi();
+    }
+  });
+  
+  //dispatch event here
+  $('#googledrive-loadding').show();
+  $('#googledrive-content').empty();
+  $('#googledrive-breadcrumb').hide();
+  $('#uploadGoogle').modal('show', function() {
+    setTimeout(function() {
+      var container = $('#googledrive-content');
+      container.imagesLoaded( function () {
+        container.masonry({
+          itemSelector: '.item',
+          columnWidth: '.item',
+          isAnimated:true,
+          animationOptions: {
+            duration: 500,
+            easing:'swing',
+            queue :false
+          }
+        });
+      });
+    }, 2000);
+  });
+  
+  var that = this;
+  setTimeout(function() {
+    $('#googledrive-loadding').hide();
+    $('#googledrive-breadcrumb').show();
+    that.addFile({mimeType:'application/vnd.google-apps.folder', thumbnailLink: 'images/video/folder.png'});
+    that.addFile({thumbnailLink: 'images/video/Thumb1.png'});
+    that.addFile({thumbnailLink: 'images/video/Thumb1.png'});
+    that.addFile({thumbnailLink: 'images/video/thumb413.png'});
+    that.addFile({thumbnailLink: 'images/video/Thumb3.png'});
+    that.addFile({thumbnailLink: 'images/video/Thumb41.png'});
+    that.addFile({thumbnailLink: 'images/video/Thumb1.png'});
+    that.addFile({thumbnailLink: 'images/video/Thumb48.png'});
+    that.addFile({thumbnailLink: 'images/video/Thumb3.png'});
+    that.addFile({thumbnailLink: 'images/video/Thumb42.png'});
+    that.addFile({thumbnailLink: 'images/video/Thumb1.png'});
+    that.addFile({thumbnailLink: 'images/video/Thumb2.png'});
+    that.addFile({thumbnailLink: 'images/video/Thumb3.png'});
+    var container = $('#googledrive-content');
+    container.imagesLoaded( function () {
+      container.masonry({
+        itemSelector: '.item',
+        columnWidth: '.item',
+        isAnimated:true,
+        animationOptions: {
+          duration: 500,
+          easing:'swing',
+          queue :false
+        }
+      });
+    });
+  }, 2000);
+};
+
+GoogleDrive.prototype.loadDriveApi = function() {
+  var that = this;
+  gapi.client.load('drive', 'v2', function() {
+    that.onDriveLoadHandler();
+  });
+};
+
+GoogleDrive.prototype.onDriveLoadHandler = function() {
+  this.loadFiles('root');
+};
+
+GoogleDrive.prototype.loadFiles = function(folderId) {
+  var that = this;
+  var request = gapi.client.request({
+    'path': 'drive/v2/files?q=trashed=false ' +
+        'and ( ' +
+                'mimeType contains "folder" ' +
+                'or mimeType contains "jpeg") and "' + folderId + '" in parents',
+    'method': 'GET',
+    'params': {'maxResults': 1000}
+    });
+
+  request.execute(function(resp) {
+    var files = resp.items;
+    if (files && files.length > 0) {
+    for (var i = 0; i < files.length; i++) {
+      that.addFile(files[i]);
+    }
+    }
+  });
+};
+
+GoogleDrive.prototype.addFile = function(file) {
+
+  var thumbnail = file.mimeType != 'application/vnd.google-apps.folder' ? file.thumbnailLink : 'http://cuongtran3001.github.io/wedding/images/video/folder.png';
+
+  var classfolder= file.mimeType != 'application/vnd.google-apps.folder' ? '' : ' folder-item';
+  
+  var div = $('<div data-item-id="item_1" data-item-url="Image1.png" class="item col-xs-3' + classfolder + '"><div class="thumb"><img src="' + thumbnail + '" alt="" class="img-responsive"/></div></div>');
+  $('#googledrive-content').append(div);
+};
+
 /**
  *  @name read-more
  *  @description description
@@ -1578,6 +1775,7 @@ jQuery(function() {
   });
 
 }(window.jQuery, window.App));
+
 
 /**
  *  @Accordion plugin
@@ -2120,7 +2318,7 @@ jQuery(function() {
             that.vars = {
                 blocks: $(that.options.block, that.element)
             };
-            function loadImage(evt)   {
+            function loadImage(evt){
               count ++;
               if (count === arrImage.length) {
                 win.on('resize.' + pluginName, $.proxy(setHeight, that)).trigger('resize.' + pluginName);
@@ -5286,6 +5484,71 @@ and dependencies (minified).
         'right': vars.navigationW
       }, this.settings.animateDuration * 2);
     }
+    $.widget("custom.catAutocomplete", $.ui.autocomplete, {
+      _renderItemData: function( ul, item ) {
+        return this._renderItem( ul, item ).data( "ui-autocomplete-item", item );
+      },
+      _renderItem: function( ul, item ) {
+        return $( "<li>" )
+          // .append( $( "<a>" ).text( item.label ) )
+          .append( "<b>"+ item.alphabet + "-</b>" + item.label )
+          .appendTo( ul );
+      },
+      _renderMenu: function(ul, items) {
+        var that = this,
+          currentCategory = "";
+        ul.addClass('search-category');
+        $.each(items, function(index, item) {
+          if (item.category != currentCategory) {
+            ul.append("<li class='ui-autocomplete-category " + item.class + "-icon '><span></span><p>" + item.category + "</p></li>");
+            currentCategory = item.category;
+          }
+          // if (item) {
+          //   ul.append("<li class='item' value='" + item.value + "'><b>" + item.alphabet + "</b>-" + item.label + "</li>");
+          //   currentCategory = item.category;
+          // }
+          // console.log(item.value);
+          that._renderItemData(ul, item);
+          
+          // console.log(item.label);
+          
+        });
+      }
+    });
+
+    // Initialize autocomplete with categories
+    var xhr;
+    $('.video-style.cloned #search-form-1 #input-search-1').catAutocomplete({
+        minLength: 0,
+        delay: 0,
+        source: function(request, response) {
+          var regex = new RegExp(request.term, 'i');
+          if(xhr){
+            xhr.abort();
+          }
+          xhr = $.ajax({
+            // Retrieve github user repositories list
+            url: 'data/category.json',
+            dataType: "json",
+            cache: false,
+            success: function(data) {
+              // data.sort(function(item1, item2){
+              //   return item1.forks > item2.forks ? 1 : -1;
+              // });
+              response($.map(data.temp, function(item) {
+                if(regex.test(item.label)){
+                  return {
+                    label: item.label,
+                    category: item.category,
+                    alphabet: item.alphabet,
+                    class: item.classCategory
+                  }
+                }
+              }));
+            }
+          });
+        },
+    });
   };
 
   SideNav.prototype.closeSideNav = function() {
@@ -5646,6 +5909,12 @@ and dependencies (minified).
 // }(jQuery, window));
 /* =================
  * seat.js
+    TO DO:
+   - update new code for suggestion
+   - save api
+   - share api
+   - multi email
+   - grid width + height
  * ================= */
 
 ;(function($, window, createjs, App) {
@@ -8041,13 +8310,16 @@ and dependencies (minified).
 }(jQuery, window));
 /* =================
  * video-clip.js
+  TO DO:
+  PreviewVC: seek video clip, resize video
+
  * ================= */
 
 ;(function($, window, createjs, App) {
 
   "use strict";
 
-  function TextData() {    
+  function TextData() {
     this.text = '';
     this.font = 'Arial';
     this.fontName = 'Arial';
@@ -8055,10 +8327,26 @@ and dependencies (minified).
 
     this.halign = 'center';
     this.valign = 'middle';
-    this.padding = 20;
+    this.padding = 5;
     
     this.size = 36;
     this.color = 'Magenta';
+  };
+
+  function AudioData() {
+    this.id = null;
+    this.url = null;
+    this.start = 0;
+    this.end = -1;
+    this.audioInstance = null;
+  };
+
+  function BackgroundData() {
+    this.id = null;
+    this.url = null;
+    this.time = 30;
+    this.bitmapView = null;
+    this.imageView = null;
   };
 
   function FrameData() {
@@ -8070,8 +8358,8 @@ and dependencies (minified).
     this.textEffectDuration = 5;
 
     //image data
-    this.bitmapId = '';
-    this.bitmapUrl =  '';
+    this.bitmapId = null;
+    this.bitmapUrl =  null;
     this.bitmapEffect = 'BFade';
     this.bitmapEffectClass = 'BEffect_Fade';
     this.bitmapEffectDelay = 3;
@@ -8090,13 +8378,25 @@ and dependencies (minified).
     this.audioEnd = -1;
 
     //time data
-    this.backgroundColor = 0xFFFFFF;
+    this.delayTime = 5;
     this.duration = 5;
-    this.type = '';
+
+    this.type = null;
 
     this.bitmapView = null;
     this.textView = null;
+    this.imageView = null;
+    this.videoView = null;
   };
+
+  FrameData.prototype.getDuration = function() {
+    return this.bitmapEffectDelay + this.bitmapEffectDuration + this.delayTime;
+  }
+  
+  //bug: when duplicate frame, the getDuration is not cloned
+  FrameData.prototype.clone = function() {
+    return (JSON.parse(JSON.stringify(this)));
+  }
 
   var EffectUtils = function() {
     var arrEffect = [];
@@ -8122,10 +8422,50 @@ and dependencies (minified).
             return arrEffect[key];
           }
         }
-      }
-    };
-  }();
+      },
+      
+      formatTime: function(time) {
+        var hour = Math.floor(time / 3600);
+        var strHour = (hour > 9) ? ('' + hour)  : ('0' + hour);
 
+        time = time % 3600;
+        var minute = Math.floor(time / 60);
+        var strMinute = (minute > 9) ? ('' + minute)  : ('0' + minute);
+
+        time = time % 60;
+        var second = Math.floor(time % 60);
+        var strSecond = (second > 9) ? ('' + second)  : ('0' + second);
+
+        if (hour > 0) {     
+          return strHour + ':' + strMinute + ':' + strSecond;
+        }
+        return strMinute + ':' + strSecond;
+      },
+
+      getTimeByFrame: function(arrFrame, frameIndex) {
+        var frameData;
+        var totalTime = 0;
+        for (var i = 0; i <= frameIndex; i ++) {
+          totalTime += (arrFrame[i]).getDuration();
+        }
+        return totalTime;
+      },
+
+      getBackgroundDataByTime: function(arrBG, time) {
+        var bgData;
+        var bgTime = 0;
+        for (var i = 0; i < arrBG.length; i ++) {
+          bgData = arrBG[i];
+          if (time >= bgTime && (bgTime + bgData.time) >= time) {
+            return bgData;
+          }
+          bgTime += bgData.time;
+        }
+        return null;
+      }
+    }
+  }();
+  
   //////////TEffect_Fade//////////
   function TEffect_Fade() {}
   TEffect_Fade.prototype.play = function(container, preText, text, delay, time) {
@@ -8490,11 +8830,18 @@ and dependencies (minified).
     this.curFrameText = null;
     this.curFrameEffect = null;
     this.curFrameAudio = null;
-
     this.curFrameHAlign = null;
     this.curFrameVAlign = null;
     this.curFrameStyle  = null;
 
+    this.arrBG = []
+    this.curBG = null;
+    this.curBGIndex = -1;
+
+    this.arrBGAudio = []
+    this.curBGAudio = null;
+    this.curBGAudioIndex = -1;
+    
     this.isBackground = false;
     this.isAudio = false;
 
@@ -8503,7 +8850,8 @@ and dependencies (minified).
     
     this.bitmapContainer = null;
     this.frameBitmap = null;
-    
+    this.bgContainer = null;
+    this.bgBitmap = null;
     this.frameText = null
     this.textContainer = null;
 
@@ -8517,6 +8865,8 @@ and dependencies (minified).
     this.curPanel = null;
     this.previewVC = new PreviewVC(); 
 
+    this.googleDrive = null;
+
     return this.init();
   }
 
@@ -8528,8 +8878,12 @@ and dependencies (minified).
 
     var that = this;
 
+    createjs.Sound.alternateExtensions = ["mp3", "m4a", "wav"];
+    createjs.Sound.registerPlugins([createjs.WebAudioPlugin]);
+    
     this.canvas = document.getElementById('cvsVC');
     this.stage = new createjs.Stage("cvsVC");
+    this.bgContainer = this.stage.addChild(new createjs.Container());
     this.bitmapContainer = this.stage.addChild(new createjs.Container());
     this.textContainer = this.stage.addChild(new createjs.Container());
 
@@ -8559,16 +8913,26 @@ and dependencies (minified).
       that.onClickPlayPauseHandler(this);
     });
 
+    //dropdown-menu
+    var dropDownMenuFrame = $('.dropdown-menu').find('.item');
+    dropDownMenuFrame.each(function() {
+      var item = $(this);
+      item.off('click').on('click', function(evt) {
+        that.onClickDropDownMenuHandler(item);
+      });
+    });
+
     //add new
     $('.vc-backgrounds').find('.add-more').off('click').on('click', function(evt) { that. onClickAddBackgroundHandler(evt);});
     $('.vc-audios').find('.add-more').off('click').on('click', function(evt) { that. onClickAddAudioHandler(evt);});
-    $('.vc-frames').find('.add-more-effect').off('click').on('click', function(evt) { that. onClickAddFrameHandler(evt);});    
+    $('.vc-frames').find('.add-more-effect').off('click').on('click', function(evt) { that. onClickAddFrameHandler(evt);});
     $('#vc-add-intro').find('.intro-click').off('click').on('click', function(evt) { that. onClickAddFrameHandler(evt);});
 
     $('.vc-frames').find('.add-more-effect').off('click').on('click', function(evt) { that. onClickAddFrameHandler(evt);});
     $(window).on('resize.videoResize', function(){
       $('.wrapper-video .tfooter .add-function-block .item .content').jScrollPane('reinitialise');
     }).trigger('resize.videoResize');
+    
     //menu
     var controlMenu = $('.control-menu').find('li');
     controlMenu.off('click').on('click', function(evt) {
@@ -8591,6 +8955,14 @@ and dependencies (minified).
     var imageUpload = $('#vc-image-upload').find('.vc-image-upload-local');
     imageUpload.off('click').on('click', function(evt) {
       that.browseFile(IMAGE, that.uploadFrameData);
+    });
+
+    var imageGD = $('#vc-image-upload').find('.vc-image-upload-gd');
+    imageGD.off('click').on('click', function(evt) {
+      if (!that.googleDrive) {
+        that.googleDrive = window.googleDrive;
+      }
+      that.googleDrive.connect();
     });
 
     //select image from your album
@@ -8666,16 +9038,7 @@ and dependencies (minified).
       that.onClickFontStyleHandler(this);
     });
 
-    //$('#frame-text-next').off('click').on('click', function(evt) {
-    //  that.showPanel(PANEL_IMAGE);
-    //});
-
-    //save text for current frame
-    //$('#frame-text-save').off('click').on('click', function(evt) {
-    //  that.selectFrameText();
-    //});
     /////////////////////////////////////////////////////////////////
-
     //select effect
     var imageEffect = $('#vc-add-effect').find('.item');
     imageEffect.off('click').on('click', function(evt) {
@@ -8685,7 +9048,10 @@ and dependencies (minified).
     //select audio from library
     var audioLibrary = $('#vc-audio-library').find('.item');
     audioLibrary.each(function() {
-      that.addEventsForAudioItem(this);
+      var item = $(this);
+      item.off('click').on('click', function(evt) {
+        that.selectAudio(item);
+      });
     });
 
     //select audio from local
@@ -8697,7 +9063,10 @@ and dependencies (minified).
     //select audio from your album
     var audioYours = $('#vc-audio-yours').find('.item');
     audioYours.each(function() {
-      that.addEventsForAudioItem(this);
+      var item = $(this);
+      item.off('click').on('click', function(evt) {
+        that.selectAudio(item);
+      });
     });
 
     //apply effect
@@ -8716,6 +9085,8 @@ and dependencies (minified).
 
     this.bitmapContainer.VC_WIDTH = this.textContainer.VC_WIDTH = this.canvas.width;
     this.bitmapContainer.VC_HEIGHT = this.textContainer.VC_HEIGHT = this.canvas.height;
+
+    this.previewVC.resize(this.canvas.width, this.canvas.height);
   };
 
   VideoClip.prototype.onMoveTimeHandler = function(target) {
@@ -8745,7 +9116,7 @@ and dependencies (minified).
         that.mediaSetting.find('.timeline').width(timeEnd - toX);
 
         var ts = (that.mediaSetting.find('.timeline').offset().left - left) * duration / width;
-        target.find('.text').html(that.formatTime(ts));
+        target.find('.text').html(EffectUtils.formatTime(ts));
 
       } else {
         
@@ -8759,7 +9130,7 @@ and dependencies (minified).
         that.mediaSetting.find('.timeline').width(toX - timeStart);
 
         var te = (that.mediaSetting.find('.timeline').offset().left + that.mediaSetting.find('.timeline').width() - left) * duration / width;
-        target.find('.text').html(that.formatTime(te));
+        target.find('.text').html(EffectUtils.formatTime(te));
       }
     });
 
@@ -8774,27 +9145,86 @@ and dependencies (minified).
     });
   };
 
-  VideoClip.prototype.addEventsForAudioItem = function(item) {
-    var that = this;
-    item = $(item);
-    //item.find('.play-pause').off('click').on('click', function(evt) {
-    item.off('click').on('click', function(evt) {
-      that.selectFrameAudio(item);
-    });
-    //item.find('.add-more').off('click').on('click', function(evt) {
-    //  that.selectFrameAudio(item);
-    //});
-  };
+  VideoClip.prototype.onClickDropDownMenuHandler = function(item) {
+    
+    var arrPanel = [PANEL_TEXT, PANEL_TEXT_EFFECT, PANEL_IMAGE, PANEL_VIDEO, PANEL_EFFECT, PANEL_AUDIO];
+      
+    var name = $(item).attr('class').split(' ').pop();
+    name = name.split('-').pop();
+
+    var index = arrPanel.indexOf(name);
+    if (index >= 0 && index < arrPanel.length) {
+      this.showPanel(arrPanel[index]);
+    }
+
+    else {
+      if (name == 'duplicate') {
+        this.duplicateFrame();
+      } 
+      else if (name == 'delete') {
+        this.deleteFrame();
+      }
+    }
+
+    $('.dropdown-menu').hide();
+    $(document).off('click'); 
+  }
 
   VideoClip.prototype.onClickAddBackgroundHandler = function(evt) {
-    //this.browseFile(IMAGE, this.addBackground);
-    this.isBackground = true;
-    this.displayOnlyMenu(true, PANEL_IMAGE);
+    var that = this;
+
+    var box =  $('<div class="box">' +
+                 '  <div class="img-add">' +
+                 '    <img src="" alt="">' +
+                 '  </div>' +
+                 '  <span class="time">00:30</span>' +
+                 '  <a href="javascript:void(0);" title="Delete" class="delete">' +
+                 '    <span class="fa fa-minus"></span>' +
+                 '  </a>' +
+                 '</div>');
+
+    $('.vc-backgrounds').find('.list-box').append(box);
+
+    var bgData = new BackgroundData();
+    this.arrBG.push(bgData);
+
+    box.on('click', function(evt) {
+      var target = $(evt.target);
+
+      if (target.hasClass('fa-minus')) {
+        that.deactiveBackground(box, IMAGE);
+      } else {
+        that.activeBackground(box, IMAGE);
+      }
+    });
+
+    box.click();
   };
 
   VideoClip.prototype.onClickAddAudioHandler = function(evt) {
-    this.isAudio = true;
-    this.displayOnlyMenu(true, PANEL_AUDIO);
+    var that = this;
+
+    var box = $('' +
+        '<div class="box">' +
+          '<div class="control-media"><a href="javascript:void(0);" title="Play"><span class="fa fa-play"></span></a></div>' +
+          '<div class="title"><strong>No selected audio, please choose audio</strong></div><span class="time">00:00</span><a href="javascript:void(0);" title="Delete" class="delete"><span class="fa fa-minus"></span></a>' +
+        '</div>');
+
+    $('.vc-audios').find('.list-box').append(box);
+
+    var audioData = new AudioData();
+    this.arrBGAudio.push(audioData);
+
+    box.on('click', function(evt) {
+      var target = $(evt.target);
+
+      if (target.hasClass('fa-minus')) {
+        that.deactiveBackground(box, AUDIO);
+      } else {
+        that.activeBackground(box, AUDIO);
+      }
+    });
+    box.click();
   };
 
   VideoClip.prototype.onClickAddFrameHandler = function(evt) {
@@ -8890,26 +9320,107 @@ and dependencies (minified).
     }
   };
 
-  VideoClip.prototype.addBackground = function(type, name, url) {
-    var div =  $('<div class="box"><div class="img-add"><img src="' + url + '" alt=""></div><span class="time">00:05</span><a href="javascript:void(0);" title="Delete" class="delete"><span class="fa fa-minus"></span></a></div>');
-    $('.vc-backgrounds').find('.list-box').append(div);
-  };
+  VideoClip.prototype.deactiveBackground = function(item, type) {
+    item = $(item);
 
-  VideoClip.prototype.addFrame = function(type, name, url) {
-    var listframe =  $('.vc-frames').find('.list-frame');
+    if (this.isAudio) {
+      if (item.is(this.curBGAudio)) {
+        this.loading.hide();
+        this.mediaSetting.hide();
+        this.clearAudio();
 
-    if (listframe.children().length >= 1) {
-      div = $('<div class="effect"><a href="javascript:void(0);" title="Effect">Effect</a></div>');
-      listframe.append(div);
+        if (this.curFrameAudio) {
+          this.curFrameAudio.removeClass('active');
+          this.curFrameAudio = null;
+        }
+      }
+
+      this.arrBGAudio.splice(item.index(), 1);
     }
 
-    var div =  $('<div class="frame"><div class="icon-show"><span class="fa fa-sort-desc"></span></div><div class="thumb"><img src="' + url + '" alt=""></div><div class="desc"><span class="icon-edit-text"></span><p>text here</p></div></div>');
-    listframe.append(div);
+    item.off();
+    item.remove();
+  };
 
-    var frameData = new FrameData();
-    frameData.bitmapUrl = url;
+  VideoClip.prototype.activeBackground = function(item, type) {
+    
+    item = $(item);
 
-    this.arrFrame.push(frameData);
+    if (type == AUDIO) {
+      this.isAudio = true;
+      this.displayOnlyMenu(true, PANEL_AUDIO);
+
+      if (this.curBGAudio) {
+        this.curBGAudio.removeClass('active');
+      }
+
+      this.curBGAudio = item; 
+      this.curBGAudio.addClass('active');
+      
+      this.curBGAudioIndex = this.curBGAudio.index();
+      var audioData = this.arrBGAudio[this.curBGAudioIndex];
+      
+      if (this.curFrameAudio) {
+        this.curFrameAudio.removeClass('active');
+        this.curFrameAudio.find('.add-more span').removeClass('fa fa-minus').addClass('fa fa-plus');
+        this.curFrameAudio = null;
+      }
+
+      //show current audio edit
+      var itemAudio = $('#vc-audio-library').find('div[data-item-id="'+ audioData.id + '"]');
+      if (!itemAudio.length) {
+        itemAudio = $('#vc-audio-yours').find('div[data-item-id="'+ audioData.id + '"]');
+      }
+      
+      if (itemAudio.length) {
+        this.curFrameAudio = $(itemAudio[0]);
+        this.curFrameAudio.addClass('active');
+        this.curFrameAudio.find('.add-more span').removeClass('fa fa-plus').addClass('fa fa-minus');
+
+        this.loadFrameAudio(audioData.id, audioData.url);
+      }
+    }
+
+    else if (type == IMAGE) {
+      this.isBackground = true;
+      this.displayOnlyMenu(true, PANEL_IMAGE);
+
+      if (this.curBG) {
+        this.curBG.removeClass('active');
+      }
+
+      this.curBG = item; 
+      this.curBG.addClass('active');
+      
+      this.curBGIndex = this.curBG.index();
+      var bgData = this.arrBG[this.curBGIndex];
+      
+      if (this.curFrameImage) {
+        this.curFrameImage.removeClass('active');
+        this.curFrameImage = null;
+      }
+
+      //show current image edit
+      var itemImage = $('#vc-image-library').find('div[data-item-id="'+ bgData.id + '"]');
+      if (!itemImage.length) {
+        itemImage = $('#vc-image-yours').find('div[data-item-id="'+ bgData.id + '"]');
+      }
+      
+      if (itemImage.length) {
+        this.curFrameImage = $(itemImage[0]);
+        this.curFrameImage.addClass('active');
+      }
+
+      //update here
+      this.bitmapContainer.visible = false;
+      
+      this.bgContainer.removeAllChildren();
+      this.bgContainer.visible = true;        
+      
+      if (bgData.url) {
+        this.loadBackgroundImage(bgData.url);        
+      }
+    }
   };
 
   VideoClip.prototype.uploadFrameData = function(type, name, url, actived) {
@@ -8919,8 +9430,12 @@ and dependencies (minified).
     //add to your album
     if (type == AUDIO) {
       list = $('#vc-' + type + '-yours').find('.audio-control');
-      item = $('<div data-item-id="item-' + type +'-yours_'  + (list.children().length + 1)  + '" data-item-url="' + url + '" class="item"><div class="control-media"><a href="javascript:void(0);" title="Play" class="play-pause"><span class="fa fa-play"></span></a></div><div class="title"><strong>Audio song name - upload </strong></div><a href="javascript:void(0)" title="Select" class="add-more"><span class="fa fa-plus"></span></a><span class="time">00:05</span></div>');
-      this.addEventsForAudioItem(item);
+      item = $('<div data-item-id="item-' + type +'-yours_'  + (list.children().length + 1)  + '" data-item-url="' + url + '" data-item-time="300" class="item"><div class="control-media"><a href="javascript:void(0);" title="Play" class="play-pause"><span class="fa fa-play"></span></a></div><div class="title"><strong>Audio song name - upload </strong></div><a href="javascript:void(0)" title="Select" class="add-more"><span class="fa fa-plus"></span></a><span class="time">05:00</span></div>');
+      
+      item.off('click').on('click', function(evt) {
+        that.selectAudio(item);
+      });
+
     } else {
       list = $('#vc-' + type + '-yours');
       item = $('<div data-item-id="item_' + type + '-yours_' + (list.children().length + 1) + '" data-item-url="' + url + '" class="item"><div class="thumb"><img src="http://placehold.it/150x100/?text=upload" alt="" class="img-responsive"></div></div>');
@@ -8946,29 +9461,98 @@ and dependencies (minified).
     var that = this;
 
     var listframe =  $('.vc-frames').find('.list-frame');
-    //if (listframe.children().length >= 1) {
-    //  var effect = $('<div class="effect"><a href="javascript:void(0);" title="Effect">Effect</a></div>');
-    //  listframe.append(effect);
-    //}
 
-    var frame =  $('<div class="frame"><div class="icon-show"><span class="fa fa-sort-desc"></span></div><div class="thumb"><img src="images/videoclip/default.jpg" alt=""></div><div class="desc"><span class="icon-edit-text"></span><p class="frame-text">text here</p></div></div>');
+    var frame =  $('<div class="frame">' +
+                   '  <div class="icon-effect" title="Effect"><span class="fa fa-exchange"></span></div>' +
+                   '  <div class="icon-show" title="Click to show menu"><span class="fa fa-sort-desc"></span></div>' +
+                   ' <div class="thumb" title="Click to change image or video"><img class="frame-image" src="images/videoclip/default.jpg" alt=""></div>' +
+                   '  <div class="desc"><span class="icon-edit-text" title="Click to change text effect"></span><p class="frame-text" title="Click to change frame text">text here</p></div>' +
+                   '</div>');
+
     listframe.append(frame);
+    
     listframe.closest('.wrap-list').css({
       width: listframe.find('.frame').length * 130 + 'px'
     });
 
     frame.on('click', function(evt) {
-      that.activeFrame(frame);
+      var target = $(evt.target);
+
+      //console.log(target);
+
+      if(target.hasClass('fa-exchange') || target.hasClass('icon-effect')) {
+        that.showPanel(PANEL_EFFECT);
+        that.activeFrame(frame);
+      }
+
+      else if(target.hasClass('fa-sort-desc') || target.hasClass('icon-show')) {
+        $('.dropdown-menu').show(); 
+
+        var wh = $(window).height();
+        var top = evt.pageY;
+
+        //if (top + $('.dropdown-menu').height() > wh) {
+        //  top = wh - $('.dropdown-menu').height();
+        //}
+        var dropdown =  $('.dropdown-menu');
+
+        dropdown.offset({
+          left: evt.pageX,
+          top: top
+        });
+        evt.stopImmediatePropagation();
+
+        $(document).click(function(evt) {
+          if ($(evt.target).closest('.dropdown-menu').length == 0) {
+            dropdown.hide();
+            $(document).off();
+          }
+        });  
+
+        that.activeFrame(frame);
+      }
+      
+      else if(target.hasClass('frame-image')) {
+        that.showPanel(PANEL_IMAGE);
+        that.activeFrame(frame);
+      }
+
+      else if(target.hasClass('video')) {
+        that.showPanel(PANEL_VIDEO);
+        that.activeFrame(frame);
+      }
+
+      else if(target.hasClass('frame-text')) {
+        that.showPanel(PANEL_TEXT);
+        that.activeFrame(frame);
+      }
+
+      else if(target.hasClass('icon-edit-text')) {
+        var index = frame.index();
+        if (that.arrFrame[index].text.text != '') {
+          that.showPanel(PANEL_TEXT_EFFECT);
+        } else {
+          that.showPanel(PANEL_TEXT);
+        }
+        that.activeFrame(frame);
+      } 
+
+      else {
+        that.activeFrame(frame);
+      }
     });
 
     var frameData = new FrameData();
     this.arrFrame.push(frameData);
 
+    var totalTime = EffectUtils.getTimeByFrame(this.arrFrame, this.arrFrame.length - 1);
+    $('.video-clip-time').html('Thời gian: ' + EffectUtils.formatTime(totalTime) + ' giây');
+
     return frame;
   };
 
   VideoClip.prototype.activeFrame = function(frame) {
-    
+
     if (this.curFrame) {
       this.curFrame.removeClass('active');
     }
@@ -8976,26 +9560,53 @@ and dependencies (minified).
     this.curFrame = $(frame);
     this.curFrame.addClass('active');
 
-    this.curFrameIndex = frame.index();
-    
-    //var listframe =  $('.vc-frames').find('.frame');
-    //for (var i = 0; i < listframe.length; i ++) {
-    //  if (frame.is($(listframe[i]))) {
-    //    this.curFrameIndex = i;
-    //    break;
-    //  }
-    //}
+    this.curFrameIndex = this.curFrame.index();
 
-    //active menu
-    //this.showPanel(PANEL_TEXT);
-    
     this.showCurrentFrameVideo();
   };
 
-  VideoClip.prototype.selectFrameData = function(item, type) {
-    if (this.curFrameIndex < 0 && this.curFrameIndex >= this.arrFrame.length) {
-      return;
+  VideoClip.prototype.duplicateFrame = function() {
+    var frameData = (JSON.parse(JSON.stringify(this.arrFrame[this.curFrameIndex])));
+    
+    var frame = this.addEmptyFrame();
+    frame.find('.thumb img').attr('src', this.curFrame.find('.thumb img').attr('src'));
+    
+    if (frame.type == VIDEO) {
+      frame.find('.thumb').addClass('video');
     }
+
+    this.arrFrame[this.arrFrame.length - 1] = frameData;
+
+    this.activeFrame(frame);
+  };
+
+  VideoClip.prototype.deleteFrame = function() {
+  
+    //find next or prev frame
+    var frame = this.curFrame.next();
+    frame = frame.length ? frame[0] : null;
+
+    if (frame == null) {
+      frame = this.curFrame.prev();
+      frame = frame.length ? frame[0] : null;
+    }
+
+    //delete current frame
+    this.curFrame.remove();
+    this.arrFrame.splice(this.curFrameIndex, 1)
+
+    //active next or prev frame 
+    if (frame) {
+      this.activeFrame(frame);
+    } else {
+      this.curFrame = null;
+      this.curFrameIndex = -1;
+      this.displayOnlyMenu(true, PANEL_INTRO);
+    }
+  };
+
+  VideoClip.prototype.selectFrameData = function(item, type) {
+    
 
     var itemId = $(item).data('item-id');
     var itemSrc = $(item).find('.thumb img').attr('src');
@@ -9003,15 +9614,48 @@ and dependencies (minified).
 
     //if choosing image for background then
     if (this.isBackground && type == IMAGE) {
-      
-      this.addBackground(null, null, itemUrl);
-      this.isBackground = false;
 
-      if (this.curFrame) {
-        this.showPanel(PANEL_TEXT);
-      } else {
-        this.showPanel(PANEL_INTRO);
+      if (this.curFrameImage) {
+        this.curFrameImage.removeClass('active');
+        this.curFrameImage = null;
       }
+
+      if (this.curBGIndex < 0 || this.curBGIndex >= this.arrBG.length) {
+        return;
+      }
+
+      var bgData = this.arrBG[this.curBGIndex];
+      if (bgData.id == itemId) {
+        bgData.id = null;
+        bgData.url = null;
+
+        this.curBG.find('.img-add img').attr('src', '');
+
+        this.bgContainer.removeAllChildren();
+        this.bgBitmap = null;
+      }
+
+      else {
+        bgData.id = itemId;
+        bgData.url = itemUrl;
+        
+        this.curFrameImage =  $(item);
+        this.curFrameImage.addClass('active');
+
+        //load image here
+        this.curBG.find('.img-add img').attr('src', itemSrc);
+
+        this.loadBackgroundImage(itemUrl);
+      }
+
+      //update box here
+      this.curBG.find('.img-add img').attr('src', bgData.url);
+      this.curBG.find('.time').html(EffectUtils.formatTime(bgData.time));
+      
+      return;
+    }
+
+    if (this.curFrameIndex < 0 || this.curFrameIndex >= this.arrFrame.length) {
       return;
     }
 
@@ -9033,8 +9677,10 @@ and dependencies (minified).
       this.curFrame.find('.thumb img').attr('src', 'images/videoclip/default.jpg');
       frameData.bitmapId = null;
       frameData.bitmapUrl = null;
+      frameData.type = null;
       this.curFrameImage = null;
       this.bitmapContainer.removeAllChildren();
+      this.bgContainer.visible = frameData.type != VIDEO ? true : false;
       return;
     }
 
@@ -9043,10 +9689,12 @@ and dependencies (minified).
       this.curFrame.find('.thumb').removeClass('video');
       frameData.videoId = null;
       frameData.videoUrl = null;
+      frameData.type = null;
       this.curFrameVideo = null;
       $('#video').attr('src', '');
       this.videoInstance.pause();
       this.mediaSetting.hide();
+      this.bgContainer.visible = frameData.type != VIDEO ? true : false;
       return;
     }
 
@@ -9057,6 +9705,8 @@ and dependencies (minified).
     } else {
       this.curFrameVideo = $(item);
       this.curFrameVideo.addClass('active');
+
+      //remove bitmap effect
     }
 
     //apply data here
@@ -9072,13 +9722,15 @@ and dependencies (minified).
       this.bitmapContainer.removeAllChildren();
       this.videoInstance.pause();
       $('#video').attr('src', '');
-      
+      this.bgContainer.visible = frameData.type != VIDEO ? true : false;
+
       //update image
       if (type == IMAGE) {
         frameData.bitmapId = itemId;
         frameData.bitmapUrl = itemUrl;
         frameData.videoId = null;
         frameData.videoUrl = null;
+        this.mediaSetting.hide();
         this.loadFrameImage(frameData.bitmapUrl);
       } 
 
@@ -9094,7 +9746,7 @@ and dependencies (minified).
   };
 
   VideoClip.prototype.applyFrameText = function() {
-    if (this.curFrameIndex < 0 && this.curFrameIndex >= this.arrFrame.length) {
+    if (this.curFrameIndex < 0 || this.curFrameIndex >= this.arrFrame.length) {
       return;
     }
 
@@ -9179,26 +9831,35 @@ and dependencies (minified).
       var frameData = this.arrFrame[this.curFrameIndex];
       frameData.textEffect = this.curFrameText.data('item-id');
       frameData.textEffectClass = this.curFrameText.data('item-url');
+      this.effectSetting.show();
     }
   }; 
 
   VideoClip.prototype.selectFrameImageEffect = function(item) {
-    if (this.curFrameEffect) {
-      this.curFrameEffect.removeClass('active');
-    }
-    this.curFrameEffect = $(item);
-    this.curFrameEffect.addClass('active');
 
-    if (this.curFrame) {
+    if (this.curFrameIndex < 0 || this.curFrameIndex >= this.arrFrame.length) {
+      return;
+    }
+
+    var frameData = this.arrFrame[this.curFrameIndex]; 
+    if (frameData.type == IMAGE) {
+
+      if (this.curFrameEffect) {
+        this.curFrameEffect.removeClass('active');
+      }
+      this.curFrameEffect = $(item);
+      this.curFrameEffect.addClass('active');
+
       //apply data here
-      var frameData = this.arrFrame[this.curFrameIndex];
       frameData.bitmapEffect = this.curFrameEffect.data('item-id');
       frameData.bitmapEffectClass = this.curFrameEffect.data('item-url');
+            
+      this.effectSetting.show();
     }
   };
 
   VideoClip.prototype.applyEffect = function() {
-    if (this.curFrameIndex < 0 && this.curFrameIndex >= this.arrFrame.length) {
+    if (this.curFrameIndex < 0 || this.curFrameIndex >= this.arrFrame.length) {
       return;
     }
 
@@ -9250,30 +9911,70 @@ and dependencies (minified).
     }, time * 1000);
   };
 
-  VideoClip.prototype.selectFrameAudio = function(item) {
-
-    if (this.isAudio) {
-
-      //this.isAudio = false;
-
-      return;
-    }
-
-    if (this.curFrameIndex < 0 && this.curFrameIndex >= this.arrFrame.length) {
-      return;
-    }
-
+  VideoClip.prototype.selectAudio = function(item) {
     var that = this;
-
-    if (this.curFrameAudio) {
-      this.curFrameAudio.removeClass('active');
-      this.curFrameAudio.find('.add-more span').removeClass('fa fa-minus').addClass('fa fa-plus');;
-      this.curFrameAudio = null;
-    }
-
     var itemId = $(item).data('item-id');
     var itemUrl = $(item).data('item-url');
 
+    //select audio for video clip
+    if (this.isAudio) {
+      
+      if (this.curFrameAudio) {
+        this.curFrameAudio.removeClass('active');
+        this.curFrameAudio.find('.add-more span').removeClass('fa fa-minus').addClass('fa fa-plus');
+        this.curFrameAudio = null;
+      }
+
+      if (this.curBGAudioIndex < 0 || this.curBGAudioIndex >= this.arrBGAudio.length) {
+        return;
+      }
+
+      var audioData = this.arrBGAudio[this.curBGAudioIndex];
+      if (audioData.id == itemId) {
+        audioData.id = null;
+        audioData.url = null;
+        audioData.start = 0;
+        audioData.end = -1;
+
+        that.loading.hide();
+        this.mediaSetting.hide();
+        this.clearAudio();
+      }
+
+      else {
+        audioData.id = itemId;
+        audioData.url = itemUrl;
+        audioData.start = 0;
+        audioData.end = $(item).data('item-time');
+
+        this.curFrameAudio =  $(item);
+        this.curFrameAudio.addClass('active');
+        this.curFrameAudio.find('.add-more span').removeClass('fa fa-plus').addClass('fa fa-minus');
+
+        this.mediaSetting.hide();
+        this.loadFrameAudio(itemId, itemUrl);
+      }
+
+      //update box here
+      this.curBGAudio.find('.title strong').html(audioData.id == null ? 'No selected audio, please choose audio' : this.curFrameAudio.find('.title strong').html());
+      this.curBGAudio.find('.time').html(audioData.end == -1 ? '00:00' : EffectUtils.formatTime(audioData.end - audioData.start));
+
+      return;
+    } 
+
+    //select audio for frame
+    if (this.curFrameIndex < 0 || this.curFrameIndex >= this.arrFrame.length) {
+      return;
+    }
+
+    //remove current active
+    if (this.curFrameAudio) {
+      this.curFrameAudio.removeClass('active');
+      this.curFrameAudio.find('.add-more span').removeClass('fa fa-minus').addClass('fa fa-plus');
+      this.curFrameAudio = null;
+    }
+
+    //if click on active item, then remove audio 
     var frameData = this.arrFrame[this.curFrameIndex];
     if (frameData.audioId == itemId) {
       frameData.audioId = null;
@@ -9285,31 +9986,12 @@ and dependencies (minified).
     
     this.curFrameAudio =  $(item);
     this.curFrameAudio.addClass('active');
-    this.curFrameAudio.find('.add-more span').addClass('fa fa-minus');
+    this.curFrameAudio.find('.add-more span').removeClass('fa fa-plus').addClass('fa fa-minus');
 
     frameData.audioId = itemId;
     frameData.audioUrl = itemUrl;
 
     this.loadFrameAudio(itemId, itemUrl);
-  };
-
-  VideoClip.prototype.formatTime = function(time) {
-      
-    var hour = Math.floor(time / 3600);
-    var strHour = (hour > 9) ? ('' + hour)  : ('0' + hour);
-
-    time = time % 3600;
-    var minute = Math.floor(time / 60);
-    var strMinute = (minute > 9) ? ('' + minute)  : ('0' + minute);
-
-    time = time % 60;
-    var second = Math.floor(time % 60);
-    var strSecond = (second > 9) ? ('' + second)  : ('0' + second);
-
-    if (hour > 0) {     
-      return strHour + ':' + strMinute + ':' + strSecond;
-    }
-    return strMinute + ':' + strSecond;
   };
 
   VideoClip.prototype.onClickPlayPauseHandler = function(item) {
@@ -9335,11 +10017,11 @@ and dependencies (minified).
   };
 
   VideoClip.prototype.updateMedia = function(position) {
-    this.mediaSetting.find('.position').html(this.formatTime(position));
+    this.mediaSetting.find('.position').html(EffectUtils.formatTime(position));
   };
 
   VideoClip.prototype.seekMedia = function(startTime) {
-    if (this.curFrameIndex < 0 && this.curFrameIndex >= this.arrFrame.length) {
+    if (this.curFrameIndex < 0 || this.curFrameIndex >= this.arrFrame.length) {
       return;
     }
     var frameData = this.arrFrame[this.curFrameIndex];
@@ -9388,24 +10070,30 @@ and dependencies (minified).
     $(window).on('resize', function(){
       $('#vc-add-' + name + '.active').show().children('[data-scroll-video]').jScrollPane();
     });
+    
     //hide or show effect setting
-    if (name == PANEL_EFFECT || name == PANEL_TEXT_EFFECT) {
+    if ((name == PANEL_EFFECT && this.arrFrame[this.curFrameIndex].type == IMAGE) ||
+       (name == PANEL_TEXT_EFFECT)) {
       this.effectSetting.show();
     } else {
       this.effectSetting.hide();
     }
 
     //hide media setting
-    this.mediaSetting.hide();
+    if (name == PANEL_VIDEO) {
+      this.mediaSetting.show();
+    } else {
+      this.mediaSetting.hide();
+    }
 
     //stop all sounds
-    this.clearAudio();
+    //this.clearAudio();
 
     //stop all videos
-    this.videoInstance.pause();
-    $('#video').attr('src', '');
+    //this.videoInstance.pause();
+    //$('#video').attr('src', '');
 
-    this.loading.hide();
+   //this.loading.hide();
   };
 
   VideoClip.prototype.displayOnlyMenu = function(disabled, name) {
@@ -9445,8 +10133,20 @@ and dependencies (minified).
   };
 
   VideoClip.prototype.showCurrentFrameVideo = function() {
-    if (this.curFrameIndex < 0 && this.curFrameIndex >= this.arrFrame.length) {
+    if (this.curFrameIndex < 0 || this.curFrameIndex >= this.arrFrame.length) {
       return;
+    }
+
+    this.isAudio = false;
+    if (this.curBGAudio) {
+      this.curBGAudio.removeClass('active');
+      this.curBGAudio = null;
+    }
+
+    this.isBackground = false;
+    if (this.curBG) {
+      this.curBG.removeClass('active');
+      this.curBG = null;
     }
 
     this.previewVC.clear();
@@ -9480,8 +10180,7 @@ and dependencies (minified).
     this.bitmapContainer.removeAllChildren();
     
     this.textContainer.visible = true;
-    this.textContainer.removeAllChildren();
-
+    
     //stop all videos
     this.videoInstance.pause();
     $('#video').attr('src', '');
@@ -9514,6 +10213,17 @@ and dependencies (minified).
 
     this.applyFrameText();
 
+    //show current background
+    this.bgContainer.visible = frameData.type != VIDEO ? true : false;
+    this.bgContainer.removeAllChildren();
+    if (this.bgContainer.visible) {
+      var frameTime = EffectUtils.getTimeByFrame(this.arrFrame, this.curFrame.index());
+      var bgData = EffectUtils.getBackgroundDataByTime(this.arrBG, frameTime);
+      if (bgData && bgData.url) {
+        this.loadBackgroundImage(bgData.url);
+      }
+    }
+
     //show current image edit
     if (frameData.type == IMAGE) {
       var itemImage = $('#vc-image-library').find('div[data-item-id="'+ frameData.bitmapId + '"]');
@@ -9531,8 +10241,9 @@ and dependencies (minified).
       }
     }
 
-    else if (frameData.type == VIDEO) {
-      //show current video edit
+    //show current video edit
+    if (frameData.type == VIDEO) {
+      
       var itemVideo = $('#vc-video-library').find('div[data-item-id="'+ frameData.videoId + '"]');
       if (!itemVideo.length) {
         itemVideo = $('#vc-video-yours').find('div[data-item-id="'+ frameData.videoId + '"]');
@@ -9542,7 +10253,7 @@ and dependencies (minified).
         this.curFrameVideo.addClass('active');
 
         //load frame image
-        if (frameData.videoUrl && this.curPanel == PANEL_VIDEO) {
+        if (frameData.videoUrl) {
           this.loadFrameVideo(frameData.videoUrl);
         }
       }
@@ -9609,9 +10320,41 @@ and dependencies (minified).
     image.src = url;
   };
 
+  VideoClip.prototype.loadBackgroundImage = function(url) {
+    var that = this;
+
+    this.loading.show();
+
+    var image = new Image();
+    image.onload = function(evt) {
+      that.loading.hide();
+
+      var w = image.width;
+      var h = image.height;
+      
+      //find corrected scale
+      var scale = that.bitmapContainer.VC_WIDTH / w;
+      if(h * scale > that.bitmapContainer.VC_HEIGHT) {
+        scale = that.bitmapContainer.VC_HEIGHT / h;
+      }
+
+      var translateX = (that.bitmapContainer.VC_WIDTH - scale * w)/2;
+      var translateY = (that.bitmapContainer.VC_HEIGHT - scale * h)/2;
+    
+      var matrix = new createjs.Matrix2D(scale, 0, 0, scale, translateX, translateY);
+      var bitmapData = new createjs.BitmapData(image, that.bitmapContainer.VC_WIDTH, that.bitmapContainer.VC_HEIGHT, 0x000000);
+      bitmapData.draw(image, matrix, null, null, null, true);
+    
+      that.bgContainer.removeAllChildren();
+      that.bgBitmap = that.bgContainer.addChild(new createjs.Bitmap(bitmapData.canvas));
+    };
+    image.src = url;
+  };
+
   VideoClip.prototype.clearAudio = function() {
     createjs.Sound.stop();
     createjs.Sound.removeAllSounds();
+    createjs.Sound.removeAllEventListeners();
 
     if (this.audioInstance && this.audioInstance.playProgressTimeout) {
       clearInterval(this.audioInstance.playProgressTimeout);
@@ -9622,11 +10365,10 @@ and dependencies (minified).
   VideoClip.prototype.loadFrameAudio = function(id, url) {
     var that = this;
 
+    $('.preview-setting').hide()
     this.clearAudio();
 
     //load audio if not exist
-    createjs.Sound.alternateExtensions = ["mp3", "m4a", "wav"];
-    createjs.Sound.registerPlugins([createjs.WebAudioPlugin]);
     createjs.Sound.addEventListener("fileload", onAudioLoadHandler);
     createjs.Sound.registerSound({id: id, src: url});
 
@@ -9643,8 +10385,8 @@ and dependencies (minified).
       
       that.mediaSetting.find('.play-pause').find('span').removeClass('fa-pause').addClass('fa-pause');
       that.mediaSetting.find('.time').data('duration', that.audioInstance.duration / 1000);
-      that.mediaSetting.find('.time-start .text').html(that.formatTime(0));
-      that.mediaSetting.find('.time-end .text').html(that.formatTime(that.audioInstance.duration / 1000));
+      that.mediaSetting.find('.time-start .text').html(EffectUtils.formatTime(0));
+      that.mediaSetting.find('.time-end .text').html(EffectUtils.formatTime(that.audioInstance.duration / 1000));
       
       that.audioInstance.on("complete", onAudioPlayCompleteHandler);
       that.audioInstance.playProgressTimeout = setInterval(onAudioPlayProgressHandler, 100);
@@ -9695,8 +10437,8 @@ and dependencies (minified).
 
   VideoClip.prototype.saveMediaMetaData = function(position, duration) {
 
-    this.mediaSetting.find('.position').html(this.formatTime(position));
-    this.mediaSetting.find('.duration').html(this.formatTime(duration));
+    this.mediaSetting.find('.position').html(EffectUtils.formatTime(position));
+    this.mediaSetting.find('.duration').html(EffectUtils.formatTime(duration));
 
     var left = this.mediaSetting.find('.time').offset().left;
     var width = this.mediaSetting.find('.time').width();
@@ -9706,8 +10448,8 @@ and dependencies (minified).
     this.mediaSetting.find('.timeline').width(width);
     this.mediaSetting.find('.time-start').offset({left: left - 10});
     this.mediaSetting.find('.time-end').offset({left: left + width - 10});
-    this.mediaSetting.find('.time-start .text').html(this.formatTime(position));
-    this.mediaSetting.find('.time-end .text').html(this.formatTime(duration));
+    this.mediaSetting.find('.time-start .text').html(EffectUtils.formatTime(position));
+    this.mediaSetting.find('.time-end .text').html(EffectUtils.formatTime(duration));
   };
 
   VideoClip.prototype.save = function() {
@@ -9716,17 +10458,21 @@ and dependencies (minified).
   VideoClip.prototype.preview = function() {
     this.textContainer.visible = false;
     this.bitmapContainer.visible = false;
+    this.bgContainer.visible = false;
     
     this.effectSetting.hide();
     this.mediaSetting.hide();
 
-    this.previewVC.setData(this.arrFrame, this.stage, this.bitmapContainer.VC_WIDTH, this.bitmapContainer.VC_HEIGHT);
+    this.clearAudio();
+
+    $('#video').attr('src', '');
+    
+    this.previewVC.setData(this.arrBG, this.arrBGAudio, this.arrFrame, this.stage, this.bitmapContainer.VC_WIDTH, this.bitmapContainer.VC_HEIGHT, this.loading, this.videoInstance, $('.preview-setting'));
   };
 
   VideoClip.prototype.finish = function() {
     var videoComplete = $('#videoComplete');
     videoComplete.modal('show');
-
   };
 
   //////////PreviewVC/////////////
@@ -9734,67 +10480,265 @@ and dependencies (minified).
     this.curFrame = -1;
     this.arrFrame = [];
 
+    this.arrBG = [];
+    this.arrAudio = [];
+
     this.container = new createjs.Container();
+
+    this.bgContainer = this.container.addChild(new createjs.Container());
     this.bitmapContainer = this.container.addChild(new createjs.Container());
     this.textContainer = this.container.addChild(new createjs.Container());
     
     this.VC_WIDTH = 0;
     this.VC_HEIGHT = 0;
+
+    this.loading = null;
+    this.previewSetting = null;
+    this.videoInstance = null;
+
+    this.duration = 0;
+    this.timeoutId = null;
+    this.psTimeout = null;
+
+    this.isPlaying = false;
   };
 
-  PreviewVC.prototype.setData = function(arrFrame, stage, width, height) {
-    this.arrFrame = arrFrame;
+  PreviewVC.prototype.setData = function(arrBG, arrAudio, arrFrame, stage, width, height, loading, video, previewSetting) {
     
-    this.VC_WIDTH = this.textContainer.VC_WIDTH = this.bitmapContainer.VC_WIDTH = width;
-    this.VC_HEIGHT = this.textContainer.VC_HEIGHT = this.bitmapContainer.VC_HEIGHT = height;
+    var that = this;
+
+    this.isPlaying = false;
+    this.arrBG = arrBG;
+    this.arrAudio = arrAudio;
+    this.arrFrame = arrFrame;
+    this.loading = loading;
+    this.videoInstance = video;
+    this.previewSetting = previewSetting;
+
+
+    //add events - refactor later
+    var videoClip = that.previewSetting.parent()[0];
+
+    this.previewSetting.find('.play-pause').off('click').on('click', function(evt) {
+      onPlayStopHandler(evt);
+    });
+
+    this.previewSetting.find('.time').off('click').on('click', function(evt) {
+      
+      var timeLeft = that.previewSetting.find('.time').offset().left;
+      var timeWith = that.previewSetting.find('.time').width();
+
+      var curTime = Math.floor((evt.pageX - timeLeft) * that.duration / timeWith);
+
+      that.seek(curTime);
+    });
+
+    function onPlayStopHandler(evt) {
+      that.isPlaying = !that.isPlaying;
+
+      if (that.isPlaying) {
+        that.play();
+      } else {
+        that.stop();
+      }
+    };
+
+    this.previewSetting.find('.full-screen').off('click').on('click', function(evt) {
+      $(videoClip).toggleClass('full-screen');
+
+      if ($(videoClip).hasClass('full-screen')) {
+        that.gotoFullscreen(videoClip);
+      } else {
+        that.exitFullscreen();
+      }
+    });
+
+    document.addEventListener("fullscreenchange", function(evt) { onFullScreenChange(evt);});
+    document.addEventListener("webkitfullscreenchange", function(evt) { onFullScreenChange(evt);});
+    document.addEventListener("mozfullscreenchange", function(evt) { onFullScreenChange(evt);});
+    document.addEventListener("MSFullscreenChange", function(evt) { onFullScreenChange(evt);});
+
+    function onFullScreenChange(evt) {
+      var isFullScreen = document.fullScreen || document.mozFullScreen || document.webkitIsFullScreen;
+
+      if (!isFullScreen) {
+       $(videoClip).removeClass('full-screen');
+      }
+    };
 
     this.textContainer.removeAllChildren();
     this.bitmapContainer.removeAllChildren();
     stage.addChild(this.container);
+
+    this.resize(width, height);
     
-    this.loadImage(0);
+    //duration
+    var frameData;
+    for (var i = 0; i < this.arrFrame.length; i ++) {
+      frameData = this.arrFrame[i];
+      this.duration += frameData.getDuration();
+    }
+
+    this.loadNextBackgroundImage(0);
   };
 
-  PreviewVC.prototype.loadImage = function(index) {
+  PreviewVC.prototype.gotoFullscreen = function(element) {
+    if(element.requestFullscreen) {
+      element.requestFullscreen();
+    } else if(element.mozRequestFullScreen) {
+      element.mozRequestFullScreen();
+    } else if(element.webkitRequestFullscreen) {
+      element.webkitRequestFullscreen();
+    } else if(element.msRequestFullscreen) {
+      element.msRequestFullscreen();
+    }
+  };
+  
+  PreviewVC.prototype.exitFullscreen = function() {
+    if(document.exitFullscreen) {
+      document.exitFullscreen();
+    } else if(document.mozCancelFullScreen) {
+      document.mozCancelFullScreen();
+    } else if(document.webkitExitFullscreen) {
+      document.webkitExitFullscreen();
+    }
+  };
+
+  PreviewVC.prototype.loadNextBackgroundImage = function(index) {
+
+    if (index >= this.arrBG.length) {
+      this.loadNextImage(0);
+      return;
+    }
+
+    if (this.arrBG[index].url == null) {
+      index ++;
+      this.loadNextBackgroundImage(index);
+      return;
+    }
+
+    var that = this;
+    this.loading.show();
+
+    var image = new Image();
+    image.onload = function(evt) {
+      that.arrBG[index].imageView = image;
+      
+      index ++;
+      that.loadNextBackgroundImage(index);
+    };
+    image.src = this.arrBG[index].url;
+  };
+
+  PreviewVC.prototype.loadNextImage = function(index) {
 
     if (index >= this.arrFrame.length) {
-      this.play();
+      this.loadNextAudio(0);
       return;
     }
 
     if (this.arrFrame[index].bitmapUrl == null) {
       index ++;
-      this.loadImage(index);
+      this.loadNextImage(index);
+      return;
     }
 
     var that = this;
+    this.loading.show();
 
     var image = new Image();
     image.onload = function(evt) {
-      var w = image.width;
-      var h = image.height;
+      that.arrFrame[index].imageView = image;
       
-      //find corrected scale
-      var scale = that.VC_WIDTH / w;
-      if(h * scale > that.VC_HEIGHT) {
-        scale = that.VC_HEIGHT / h;
-      }
-
-      var translateX = (that.VC_WIDTH - scale * w)/2;
-      var translateY = (that.VC_HEIGHT - scale * h)/2;
-    
-      var matrix = new createjs.Matrix2D(scale, 0, 0, scale, translateX, translateY);
-      var bitmapData = new createjs.BitmapData(image, that.VC_WIDTH, that.VC_HEIGHT, 0x000000);
-      bitmapData.draw(image, matrix, null, null, null, true);
-      
-      that.arrFrame[index].bitmapView = new createjs.Bitmap(bitmapData.canvas);
-
       index ++;
-      that.loadImage(index);
+      that.loadNextImage(index);
     };
     image.src = this.arrFrame[index].bitmapUrl;
   };
 
+  PreviewVC.prototype.loadNextAudio = function(index) {
+
+    if (index >= this.arrAudio.length) {
+      this.loadNextVideo(0);
+      return;
+    }
+
+    var that = this;
+    this.loading.show();
+
+    var audioData = this.arrAudio[index];
+
+    createjs.Sound.addEventListener("fileload", onAudioLoadHandler);
+    createjs.Sound.registerSound({id: audioData.id, src: audioData.url});
+
+    function onAudioLoadHandler(evt) {
+      createjs.Sound.removeEventListener("fileload", onAudioLoadHandler);
+
+      audioData.audioInstance = createjs.Sound.createInstance(audioData.id);
+      
+      index ++;
+      that.loadNextAudio(index);
+    };
+  };
+
+  PreviewVC.prototype.loadNextVideo = function(index) {
+    if (index >= this.arrFrame.length) {
+      this.play();
+      return;
+    }
+
+    if (this.arrFrame[index].videoUrl == null) {
+      index ++;
+      this.loadNextVideo(index);
+      return;
+    }
+
+    var that = this;
+    this.loading.show();
+
+    var queue = new createjs.LoadQueue();
+    queue.on("fileload", onFileLoadHandler);
+    //queue.on("complete", onCompleteHandler);
+    queue.loadFile({id: this.arrFrame[index].videoId, src: this.arrFrame[index].videoUrl, type: createjs.AbstractLoader.BINARY});
+    
+    function onFileLoadHandler(evt) {
+      queue.off("fileload", onFileLoadHandler);
+    //}
+    //
+    //function onCompleteHandler(evt) {
+    //  queue.off("complete", onCompleteHandler);
+
+      var blob = new Blob([evt.result], { type: "video/mp4" } );
+      var URLCreator = window.URL || window.webkitURL;
+      var objUrl = URLCreator.createObjectURL(blob);
+
+      that.arrFrame[index].videoView = objUrl;
+
+      index ++;
+      that.loadNextVideo(index);
+    }
+  }; 
+
+  PreviewVC.prototype.createBitmap = function(image) {
+    var w = image.width;
+    var h = image.height;
+    
+    //find corrected scale
+    var scale = this.VC_WIDTH / w;
+    if(h * scale > this.VC_HEIGHT) {
+      scale = this.VC_HEIGHT / h;
+    }
+
+    var translateX = (this.VC_WIDTH - scale * w)/2;
+    var translateY = (this.VC_HEIGHT - scale * h)/2;
+  
+    var matrix = new createjs.Matrix2D(scale, 0, 0, scale, translateX, translateY);
+    var bitmapData = new createjs.BitmapData(image, this.VC_WIDTH, this.VC_HEIGHT, 0x000000);
+    bitmapData.draw(image, matrix, null, null, null, true);
+
+    return new createjs.Bitmap(bitmapData.canvas);
+  };
+  
   PreviewVC.prototype.createText = function(textData, textView) {
 
     var frameText =  textView;
@@ -9831,36 +10775,81 @@ and dependencies (minified).
     return frameText;
   };
 
-  PreviewVC.prototype.nextFrame = function() {
-    this.curFrame ++;
-
-    if (this.curFrame >= this.arrFrame.length) {
+  PreviewVC.prototype.playAudio = function() {
+      this.nextAudio(0);
+  }
+  
+  PreviewVC.prototype.nextAudio = function(index) {
+    if (this.isPlaying == false) {
       return;
     }
 
-    var preFrameData;
-    if (this.curFrame > 0) {
-      preFrameData = this.arrFrame[this.curFrame - 1];
-    }
-    
-    var nexFrameData = this.arrFrame[this.curFrame];
     var that = this;
-    this.playFrame(preFrameData, nexFrameData, function() { 
-      that.nextFrame(); 
-    });
+    if (index >= 0 && index < this.arrAudio.length) {
+      var audioData = this.arrAudio[index];
+
+      audioData.audioInstance.volume = 0;
+      audioData.audioInstance.play();
+      audioData.audioInstance.on("complete", onAudioPlayCompleteHandler);
+      audioData.audioInstance.playProgressTimeout = setInterval(onAudioPlayProgressHandler, 100);
+    }
+
+    function onAudioPlayProgressHandler(evt) {
+      if (audioData.audioInstance) {
+
+        if (audioData.audioInstance.volume < 1) {
+          audioData.audioInstance.volume = audioData.audioInstance.volume += 0.03;
+        }
+
+        //start
+        //end
+      }
+    }
+
+    function onAudioPlayCompleteHandler(evt) {
+      if (audioData.audioInstance) {
+        clearInterval(audioData.audioInstance.playProgressTimeout);
+        audioData.audioInstance.removeAllEventListeners();
+      }
+      
+      index ++;
+      that.nextAudio(index);
+    }
   };
 
-  PreviewVC.prototype.playFrame = function(prev, next, onCompleteFunctionHandler) {
+  PreviewVC.prototype.nextFrame = function() {
+    if (this.isPlaying == false) {
+      return;
+    }
+
+    this.curFrame ++;
+    if (this.curFrame < this.arrFrame.length) {
+      
+      var preFrameData;
+      if (this.curFrame > 0) {
+        preFrameData = this.arrFrame[this.curFrame - 1];
+      }
+      
+      var that = this;
+      var nexFrameData = this.arrFrame[this.curFrame];
+      
+      this.playFrame(preFrameData, nexFrameData, function() { 
+        that.nextFrame(); 
+      });
+    }
+  };
+
+  PreviewVC.prototype.playFrame = function(prev, next, callback) {
+    if (this.isPlaying == false) {
+      return;
+    }
 
     //play video or play sound
     this.container.visible = true;
-    
-    //bitmap effect
-    var bitmapEffectPlugin = EffectUtils.getEffectPlugin(next.bitmapEffect);
-    if (bitmapEffectPlugin) {
-      bitmapEffectPlugin.play(this.bitmapContainer, prev ? prev.bitmapView : null, next.bitmapView, next.bitmapEffectDelay, next.bitmapEffectDuration);
-    }
+    this.bgContainer.visible = (next.type == VIDEO) ? false : true;
 
+    $(this.videoInstance).attr('src', '');
+    
     //text effect
     if (next.text.text != '') {
       next.textView = this.createText(next.text, next.textView);
@@ -9869,32 +10858,180 @@ and dependencies (minified).
       if (textEffectPlugin) {
         textEffectPlugin.play(this.textContainer, prev ? prev.textView : null, next.textView, next.textEffectDelay, next.textEffectDuration);
       }
+    } else {
+      this.textContainer.removeAllChildren();
     }
 
-    //frame duration
-    var time = next.bitmapEffectDelay + next.bitmapEffectDuration;
+    //bitmap effect
+    if (next.bitmapUrl != null) {
+      next.bitmapView = this.createBitmap(next.imageView);
+
+      var bitmapEffectPlugin = EffectUtils.getEffectPlugin(next.bitmapEffect);
+      if (bitmapEffectPlugin) {
+        bitmapEffectPlugin.play(this.bitmapContainer, prev ? prev.bitmapView : null, next.bitmapView, next.bitmapEffectDelay, next.bitmapEffectDuration); 
+      }
+    } else {
+      this.bitmapContainer.removeAllChildren();
+    }
+
+    if (next.type == VIDEO && next.videoView != null) {
+      $(this.videoInstance).attr('src', next.videoView);
+      this.videoInstance.play();
+    }
+
+    //frame duration timeout
     var timeoutId = setTimeout(function() {
       clearTimeout(timeoutId);
-      onCompleteFunctionHandler();
-    }, time * 1000);
+      callback();
+    }, next.getDuration() * 1000);
+  };
+
+  PreviewVC.prototype.playBackground = function(time) {
+    var bgData = EffectUtils.getBackgroundDataByTime(this.arrBG, time);
+
+    if (!bgData || !bgData.url) {
+      this.bgContainer.url = null;
+      this.bgContainer.removeAllChildren();
+    }
+
+    else if (this.bgContainer.url != bgData.url) {
+      this.bgContainer.url = bgData.url;
+      this.bgContainer.removeAllChildren();
+      this.bgContainer.addChild(this.createBitmap(bgData.imageView));
+    }
+  };
+
+  PreviewVC.prototype.startTime = function() {
+    var that = this;
+    var count = 0;
+
+    //background image
+    //next.bitmapView = this.createBitmap(next.imageView);
+    
+    this.previewSetting.find('.duration').html(EffectUtils.formatTime(this.duration));
+
+    this.timeoutId = setInterval(function() {
+      count += 100;
+      that.previewSetting.find('.position').html(EffectUtils.formatTime(count/1000));
+      that.previewSetting.find('.timeline').css('width', Math.floor(100 * count / (that.duration * 1000)) + '%');
+
+      //show background image here
+      that.playBackground(count / 1000);
+
+      //play background audio here
+
+      if (count >= that.duration * 1000) {
+        clearInterval(that.timeoutId);
+        that.stop();
+      } 
+    }, 100);
+  };
+
+  PreviewVC.prototype.resize = function(width, height) {
+    this.VC_WIDTH = width;
+    this.VC_HEIGHT = height;
+
+    if (this.bitmapContainer && this.textContainer) {
+      this.textContainer.VC_WIDTH = this.bitmapContainer.VC_WIDTH = width;
+      this.textContainer.VC_HEIGHT = this.bitmapContainer.VC_HEIGHT = height;
+    }
+
+    //TweenLite
+
   };
 
   PreviewVC.prototype.play = function() {
+    var that = this;
+
+    this.loading.hide();
+    this.previewSetting.show();
+    this.previewSetting.find('.play-pause span').removeClass('fa fa-play').addClass('fa fa-stop');
+
+    this.isPlaying = true;
     this.curFrame = -1;
     this.nextFrame();
+    this.playAudio();
+    this.startTime();
+
+    this.hideSetting();
+    $('.video-clip').off('mousemove').on('mousemove', function(evt) {
+      that.showSetting();
+    });
+  };
+  
+  PreviewVC.prototype.hideSetting = function() {
+    var that = this;
+    clearTimeout(that.psTimeout);
+    this.psTimeout = setTimeout(function() {
+      clearTimeout(that.psTimeout);
+      that.previewSetting.hide();
+    }, 5000);
+  };
+
+  PreviewVC.prototype.showSetting = function() {
+     clearTimeout(this.psTimeout);
+     this.previewSetting.show();
+     this.hideSetting();
   };
 
   PreviewVC.prototype.pause = function() {
 
   };
 
+  PreviewVC.prototype.stop = function() {
+    clearInterval(this.timeoutId);
+    clearTimeout(this.psTimeout);
+    $('.video-clip').off('mousemove');
+
+    this.isPlaying = false;
+    
+    this.textContainer.removeAllChildren();
+    this.bitmapContainer.removeAllChildren();
+    this.bgContainer.removeAllChildren();
+
+    this.previewSetting.find('.play-pause span').removeClass('fa fa-stop').addClass('fa fa-play');
+    this.previewSetting.find('.position').html(EffectUtils.formatTime(0));
+    this.previewSetting.find('.timeline').css('width', '0%');
+    this.previewSetting.show();
+
+    createjs.Sound.stop();
+    createjs.Sound.removeAllEventListeners();
+    this.exitFullscreen();
+  };
+
   PreviewVC.prototype.seek = function(position) {
+
+    //stop current frame
+    this.isPlaying = false;
+    
+
+    //find the frame by time
+
+    //play the new frame
+    
 
   };
 
-  PreviewVC.prototype.clear = function() {
-    this.container.visible = false;
+  PreviewVC.prototype.clear = function(clearSound) {
+    clearInterval(this.timeoutId);
+    clearTimeout(this.psTimeout);
+    $('.video-clip').off('mousemove')
 
+    this.isPlaying = false;
+    this.container.visible = false;
+    
+    this.textContainer.removeAllChildren();
+    this.bitmapContainer.removeAllChildren();
+    this.bgContainer.removeAllChildren();
+
+    if (this.previewSetting) {
+      this.previewSetting.find('.play-pause span').removeClass('fa fa-stop').addClass('fa fa-play');
+      this.previewSetting.hide();
+    }
+
+    createjs.Sound.stop();
+    createjs.Sound.removeAllSounds();
+    createjs.Sound.removeAllEventListeners();
   };
 
   /* =============== */
