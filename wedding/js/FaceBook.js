@@ -89,10 +89,7 @@ FaceBook.prototype.addFile = function(file) {
 };
 
 $(document).ready(function() {
-	var facebook = new FaceBook();
-	facebook.init();
-
-	$('#cloud-connect').on('click', function(evt) {
+	('#cloud-connect').on('click', function(evt) {
 		facebook.connect();
 	});
 });
