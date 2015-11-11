@@ -1,10 +1,3 @@
-var facebook = new FaceBook();
-facebook.init();
-
-$('#cloud-connect').on('click', function(evt) {
-	facebook.connect();
-});
-
 function FaceBook() {
 	this.CLIENT_ID = '131211991594-2l4cskeuaoa2o5m0jqdh0p79uksishnl.apps.googleusercontent.com';
     this.API_KEY = 'AIzaSyDm_hXiAoCjmg01rTc6aPSuMcZWOF8EgqU';
@@ -94,3 +87,10 @@ FaceBook.prototype.addFile = function(file) {
 	var div = $('<div data-item-id="item_1" data-item-url="Image1.png" class="item col-xs-3"><div class="thumb"><img src="' + thumbnail + '" alt="" class="img-responsive"/></div></div>');
 	$('#googledrive-content').append(div);
 };
+
+var facebook = new FaceBook();
+facebook.init();
+
+$('#cloud-connect').on('click', function(evt) {
+	facebook.connect();
+});
