@@ -1,35 +1,51 @@
 var facebook = new FaceBook();
+facebook.init();
+
 $('#cloud-connect').on('click', function(evt) {
 	facebook.connect();
 });
-
-function checkLoginState() {
-	//googleDrive.init();
-}
 
 function FaceBook() {
 	this.CLIENT_ID = '131211991594-2l4cskeuaoa2o5m0jqdh0p79uksishnl.apps.googleusercontent.com';
     this.API_KEY = 'AIzaSyDm_hXiAoCjmg01rTc6aPSuMcZWOF8EgqU';
     this.SCOPES = ['https://www.googleapis.com/auth/drive'];
+	
+	this.state = null;
 }
 
 FaceBook.prototype.init = function() {
-	//gapi.client.setApiKey(this.API_KEY);
+	var	that = this;
+	
+	FB.getLoginStatus(function(response) {
+		if (response.status === 'connected') {
+			that.state = 'LOGIN';
+		}
+    });
 };
 
 FaceBook.prototype.connect = function() {
-	FB.login(function(response) {
-		console.log(response);
+	
+	if (this.state) {
+		console.log('Logon. Can call API');
 		
-	  if (response.status === 'connected') {
-		// Logged into your app and Facebook.
-	  } else if (response.status === 'not_authorized') {
-		// The person is logged into Facebook, but not your app.
-	  } else {
-		// The person is not logged into Facebook, so we're not sure if
-		// they are logged into this app or not.
-	  }
-	});
+	} else {	
+		FB.login(function(response) {
+			console.log(response);
+			
+		  if (response.status === 'connected') {
+			that.state = 'LOGIN';
+		  }
+		  
+		  else if (response.status === 'not_authorized') {
+			// The person is logged into Facebook, but not your app.
+		  } 
+		  
+		  else {
+			// The person is not logged into Facebook, so we're not sure if
+			// they are logged into this app or not.
+		  }
+		});
+	}
 
 /*
 	var that = this;
