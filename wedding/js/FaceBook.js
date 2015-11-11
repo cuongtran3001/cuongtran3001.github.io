@@ -125,7 +125,7 @@ FaceBook.prototype.addFolder = function(folder) {
 		albumId + '/picture',
 		function (response) {
 			if (response && !response.error) {					
-				div.find('.thumb img').attributes('src', response.data.url);
+				div.find('.thumb img').attr('src', response.data.url);
 			}
 		}
 	);
