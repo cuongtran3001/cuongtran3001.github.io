@@ -81,7 +81,7 @@ FaceBook.prototype.loadFiles = function(folderId) {$('#googledrive-loadding').sh
 				$('#cloud-loadding').hide();
 				$('#cloud-breadcrumb').show();
 		
-				for (var i = 0; i < response.data; i ++) {
+				for (var i = 0; i < response.data.length; i ++) {
 					that.addFile(response.data[i]);
 				}
 			}
