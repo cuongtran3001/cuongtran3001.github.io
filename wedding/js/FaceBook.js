@@ -73,9 +73,14 @@ FaceBook.prototype.loadFiles = function(folderId) {$('#googledrive-loadding').sh
 	$('#cloud-loadding').show();
 	$('#cloudPopup').modal('show');
 	
-	FB.api(
-		"me/albums?fields=id,name,cover_photo",
-		function (response) {
+	//FB.api(
+	//	"me/albums?fields=id,name,cover_photo",
+	FB.api({method: 'fql.multiquery',
+			queries: {
+				query1: 'select aid,name,link,photo_count,cover_object_id from album where owner = me()',
+				query2: 'SELECT pid,src FROM photo WHERE object_id  IN (SELECT cover_object_id FROM #query1)'
+			}
+		}, function (response) {
 			if (response && !response.error) {
 				
 				$('#cloud-loadding').hide();
