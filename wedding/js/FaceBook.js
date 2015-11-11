@@ -112,7 +112,7 @@ FaceBook.prototype.addFolder = function(file) {
 	$('#cloud-content').append(div);
 	
 	div.on('click', function(evt) {
-		that.callAPI(albumId + '/photos', function(response) { that.onAlbumDetailLoadedHandler(response) });
+		that.callAPI(albumId + '/photos?fields=id,name,images,url', function(response) { that.onAlbumDetailLoadedHandler(response) });
 	});
 };
 
