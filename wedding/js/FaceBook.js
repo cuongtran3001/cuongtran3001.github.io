@@ -66,17 +66,23 @@ FaceBook.prototype.connect = function() {
 };
 
 FaceBook.prototype.loadFiles = function(folderId) {$('#googledrive-loadding').show();
+	var that = this;
 	
 	$('#cloud-content').empty();
 	$('#cloud-breadcrumb').hide();	
+	$('#cloud-loadding').show();
 	$('#cloudPopup').modal('show');
 	
 	FB.api(
 		"me/albums",
 		function (response) {
 			if (response && !response.error) {
+				
+				$('#cloud-loadding').hide();
+				$('#cloud-breadcrumb').show();
+		
 				for (var i = 0; i < response.data; i ++) {
-					this.addFile(response.data[i]);
+					that.addFile(response.data[i]);
 				}
 			}
 		}
