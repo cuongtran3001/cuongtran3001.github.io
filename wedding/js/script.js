@@ -767,108 +767,7 @@ var Site = (function($, window, undefined) {
         });
       },300);
     });
-    if($('#fileupload').length){
-    var url = window.location.hostname === 'blueimp.github.io' ?'//jquery-file-upload.appspot.com/' : $('.upload-form').data('uploadlink'),
-    uploadButton = $('<button type="button"/>')
-        .addClass('btn-2')
-        .prop('disabled', true)
-        .text('Processing...')
-        .on('click', function () {
-            var $this = $(this),
-                data = $this.data();
-            $this
-                .off('click')
-                .text('Abort')
-                .on('click', function () {
-                    $this.remove();
-                    data.abort();
-                });
-            data.submit().always(function () {
-                $this.remove();
-            });
-        });
-    $('#fileupload').fileupload({
-        url: url,
-        dataType: 'json',
-        autoUpload: false,
-        acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i,
-        disableImageResize: /Android(?!.*Chrome)|Opera/
-            .test(window.navigator.userAgent),
-        previewMaxWidth: 100,
-        previewMaxHeight: 100,
-        previewCrop: true
-    }).on('fileuploadadd', function (e, data) {
-        data.context = $('<div class="canvas"/>').appendTo('#files');
-        $.each(data.files, function (index, file) {
-            var node = $('<div class="inner"/>')
-                    .append($('<span/>'));
-            var error = $('<span class="text-danger"/>').text(file.error);
-            if (!index) {
-              node.append(uploadButton.clone(true).data(data));
-              setTimeout(function(){
-              if($('.fileinput-button').length){
-                $('.file-upload-custom.avatar .fileinput-button span').hide();
-              }else{
-
-              }
-            },100);
-            }
-            node.appendTo(data.context);
-        });
-    }).on('fileuploadprocessalways', function (e, data) {
-        var index = data.index,
-            file = data.files[index],
-            node = $(data.context.children()[index]);
-        if (file.preview) {
-            $('.file-upload-custom.avatar .text-danger').hide();
-            node.prepend(file.preview);
-        }
-        if (file.error) {
-            node
-                .append('<br>')
-                .append($('<span class="text-danger"/>').text(file.error));
-            $(data.context.children()[index]).addClass('error-file');
-        }
-        if (index + 1 === data.files.length) {
-            data.context.find('button')
-                .text('Upload')
-                .prop('disabled', !!data.files.error);
-        }
-        if(data.files.length){
-          // file.error.hide();
-        }
-    }).on('fileuploadprogressall', function (e, data) {
-        var progress = parseInt(data.loaded / data.total * 100, 10);
-        $('#progress').show();
-        $('#progress .progress-bar').css(
-            'width',
-            progress + '%'
-        );
-    }).on('fileuploaddone', function (e, data) {
-        $.each(data.result.files, function (index, file) {
-            if (file.url) {
-                var link = $('<a>')
-                    .attr('target', '_blank')
-                    .prop('href', file.url);
-                $(data.context.children()[index])
-                    .wrap(link);
-                $('.file-upload-custom.avatar .fileinput-button span').show();
-            } else if (file.error) {
-                var error = $('<span class="text-danger"/>').text(file.error);
-                $('.file-upload-custom.avatar .fileinput-button span').show();
-                $(data.context.children()[index])
-                    .append(error);
-                
-            }
-        });
-    }).on('fileuploadfail', function (e, data) {
-        $.each(data.files, function (index) {
-            var error = $('<span class="text-danger"/>').text('File upload failed.');
-            $(data.context.children()[index])
-                .append(error);
-        });
-    }).prop('disabled', !$.support.fileInput).parent().addClass($.support.fileInput ? undefined : 'disabled');
-    }
+    
     if($('#fileupload1').length){
     var url = window.location.hostname === 'blueimp.github.io' ?'//jquery-file-upload.appspot.com/' : $('.upload-form').data('uploadlink'),
     uploadButton = $('<button type="button"/>')
@@ -1259,19 +1158,209 @@ jQuery(function() {
 }(window));
 
 
+function FaceBook() {
+	this.SCOPES = 'public_profile, user_photos, user_videos';
+	
+	this.state = null;
+	this.isMe = false;
+}
+
+FaceBook.prototype.init = function() {
+	var	that = this;
+	
+	FB.getLoginStatus(function(response) {
+		if (response.status === 'connected') {
+			that.state = 'LOGIN';
+		}
+    });
+};
+
+FaceBook.prototype.connect = function() {
+	var	that = this;
+	
+	$('#cloud-breadcrumb').find('.separate').hide();
+	$('#cloud-breadcrumb').find('.album').html('');
+				
+	if (this.state) {
+		that.callMe();
+		that.callAPI('me/albums?fields=id,name,cover_photo', function(response) { that.onAlbumLoadedHandler(response); });
+	} else {	
+		FB.login(function(response) {
+			if (response.status === 'connected') {
+				that.state = 'LOGIN';
+				that.callMe();
+				that.callAPI('me/albums?fields=id,name,cover_photo', function(response) { that.onAlbumLoadedHandler(response); });
+			}
+		  
+			else if (response.status === 'not_authorized') {
+				// The person is logged into Facebook, but not your app.
+			} 
+		  
+			else {
+				// The person is not logged into Facebook, so we're not sure if
+				// they are logged into this app or not.
+			}
+		}, {scope: this.SCOPES});
+	}
+};
+
+FaceBook.prototype.callAPI = function(apiQuery, callback) {
+	
+	var that = this;
+	
+	$('#cloud-content').empty();
+	$('#cloud-breadcrumb').hide();	
+	$('#cloud-loadding').show();
+	
+	FB.api(
+		apiQuery,
+		function (response) {
+			if (response && !response.error) {					
+				$('#cloud-loadding').hide();
+				$('#cloud-breadcrumb').show();
+				callback(response);
+			}
+		}
+	);
+};
+
+FaceBook.prototype.callMe = function() {
+	var that = this;
+	
+	if (!that.isMe) {
+		FB.api(
+			'me/',
+			function (response) {
+				if (response && !response.error) {					
+					that.isMe = true;
+					$('#cloud-breadcrumb').find('.root').html(response.name);
+					$('#cloud-breadcrumb').find('.root').on('click', function(evt) { that.onClickMeHandler(evt); });
+					$('#cloud-breadcrumb').find('.album').on('click', function(evt) { that.onClickAlbumHandler(evt); });
+				}
+			}
+		);
+	}	
+};
+
+FaceBook.prototype.onClickMeHandler = function(evt) {
+	$('#cloud-breadcrumb').find('.separate').hide();
+	$('#cloud-breadcrumb').find('.album').html('');
+	
+	var that = this;
+	that.callAPI('me/albums?fields=id,name,cover_photo', function(response) { that.onAlbumLoadedHandler(response); });
+};
+
+FaceBook.prototype.onClickAlbumHandler = function(evt) {
+	var that = this;
+	
+	var albumId = $('#cloud-breadcrumb').find('.album').data('album-id');	
+	that.callAPI(albumId + '/photos?fields=id,name,images,url', function(response) { that.onAlbumDetailLoadedHandler(response); });
+};
+
+FaceBook.prototype.onAlbumLoadedHandler = function(response) {
+	for (var i = 0; i < response.data.length; i ++) {
+		this.addFolder(response.data[i]);
+	}
+};
+
+FaceBook.prototype.onAlbumDetailLoadedHandler = function(response) {
+	for (var i = 0; i < response.data.length; i ++) {
+		this.addPhoto(response.data[i]);
+	}
+};
+
+FaceBook.prototype.addFolder = function(folder) {
+	var that = this;
+	var title = folder.name;
+	var albumId = folder.id;
+	
+	var div = $('<div data-item-id="item_1" data-item-url="Image1.png" class="item col-xs-3">' +
+				'	<span>' + title + '</span>' +
+				'	<div class="thumb"><img src="" alt="" class="img-responsive"/></div>' +
+				'</div>');
+	$('#cloud-content').append(div);
+	
+	FB.api(
+		albumId + '/picture',
+		function (response) {
+			if (response && !response.error) {					
+				div.find('.thumb img').attr('src', response.data.url);
+			}
+		}
+	);
+		
+	div.on('click', function(evt) {	
+		$('#cloud-breadcrumb').find('.separate').show();
+		$('#cloud-breadcrumb').find('.album').html(title);
+		$('#cloud-breadcrumb').find('.album').data('album-id', albumId);
+				
+		that.callAPI(albumId + '/photos?fields=id,name,images,url', function(response) { that.onAlbumDetailLoadedHandler(response); });
+	});
+};
+
+FaceBook.prototype.addPhoto = function(photo) {
+	var that = this;
+	
+	var height = 10000;
+	var thumbnail = 'http://cuongtran3001.github.io/wedding/images/video/folder.png';
+	
+	for (var i = 0; i < photo.images.length; i ++) {
+		if (photo.images[i].height < height) {
+			height = photo.images[i].height;
+			thumbnail = photo.images[i].source;
+		}
+	}
+	
+	var div = $('<div data-item-id="item_1" data-item-url="Image1.png" class="item col-xs-3">' +
+				'	<div class="thumb"><img src="' + thumbnail + '" alt="" class="img-responsive"/></div>' +
+				'</div>');
+	$('#cloud-content').append(div);
+	
+	div.on('click', function(evt) {		
+		div.toggleClass('active');
+	});
+};
+
+var facebook = new FaceBook();
+
+//$(document).ready(function() {
+//	$('#cloud-connect').on('click', function(evt) {
+//		facebook.connect();
+//	});
+//s});
+
+window.fbAsyncInit = function() {
+	FB.init({
+	  appId      : '390145291021310',
+	  xfbml      : true,
+	  version    : 'v2.5'
+	});		
+	facebook.init();
+};
+
+(function(d, s, id){
+	 var js, fjs = d.getElementsByTagName(s)[0];
+	 if (d.getElementById(id)) {return;}
+	 js = d.createElement(s); js.id = id;
+	 js.src = "//connect.facebook.net/en_US/sdk.js";
+	 fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));
 var googleDrive = new GoogleDrive();
-$('#googledrive-connect').on('click', function(evt) {
-  googleDrive.connect();
-});
+//$('#cloud-connect').on('click', function(evt) {
+//  googleDrive.connect();
+//});
 
 function onGooglClientApiLoadedHandler() {
   googleDrive.init();
 }
 
 function GoogleDrive() {
-  this.CLIENT_ID = '691726389794-4boot0bt98elrqjr6rqos45dvs7bf0f7.apps.googleusercontent.com';
-    this.API_KEY = 'AIzaSyCbJYq6i_CJzt8okRFQw4frnBtvjp4IV80';
-    this.SCOPES = ['https://www.googleapis.com/auth/drive'];
+  this.CLIENT_ID = '691726389794-s28o1ikvvepsjclilk8e6tv1gdmua7f9.apps.googleusercontent.com';
+  this.API_KEY = 'AIzaSyBo1FC19SxyHcSgS_1qBTMzvU-xRHKF7wQ';
+  this.SCOPES = ['https://www.googleapis.com/auth/drive'];  
+  
+  this.isMe = false;
+  this.totalItem = 0;
 }
 
 GoogleDrive.prototype.init = function() {
@@ -1285,64 +1374,18 @@ GoogleDrive.prototype.connect = function() {
         'scope': this.SCOPES.join(' '),
         'immediate': true
     }, function(authResult) {
+      console.log(authResult);
+
     if (authResult && !authResult.error) {
       that.loadDriveApi();
     }
   });
   
-  //dispatch event here
-  $('#googledrive-loadding').show();
-  $('#googledrive-content').empty();
-  $('#googledrive-breadcrumb').hide();
-  $('#uploadGoogle').modal('show', function() {
-    setTimeout(function() {
-      var container = $('#googledrive-content');
-      container.imagesLoaded( function () {
-        container.masonry({
-          itemSelector: '.item',
-          columnWidth: '.item',
-          isAnimated:true,
-          animationOptions: {
-            duration: 500,
-            easing:'swing',
-            queue :false
-          }
-        });
-      });
-    }, 2000);
-  });
-  
-  var that = this;
-  setTimeout(function() {
-    $('#googledrive-loadding').hide();
-    $('#googledrive-breadcrumb').show();
-    that.addFile({mimeType:'application/vnd.google-apps.folder', thumbnailLink: 'images/video/folder.png'});
-    that.addFile({thumbnailLink: 'images/video/Thumb1.png'});
-    that.addFile({thumbnailLink: 'images/video/Thumb1.png'});
-    that.addFile({thumbnailLink: 'images/video/thumb413.png'});
-    that.addFile({thumbnailLink: 'images/video/Thumb3.png'});
-    that.addFile({thumbnailLink: 'images/video/Thumb41.png'});
-    that.addFile({thumbnailLink: 'images/video/Thumb1.png'});
-    that.addFile({thumbnailLink: 'images/video/Thumb48.png'});
-    that.addFile({thumbnailLink: 'images/video/Thumb3.png'});
-    that.addFile({thumbnailLink: 'images/video/Thumb42.png'});
-    that.addFile({thumbnailLink: 'images/video/Thumb1.png'});
-    that.addFile({thumbnailLink: 'images/video/Thumb2.png'});
-    that.addFile({thumbnailLink: 'images/video/Thumb3.png'});
-    var container = $('#googledrive-content');
-    container.imagesLoaded( function () {
-      container.masonry({
-        itemSelector: '.item',
-        columnWidth: '.item',
-        isAnimated:true,
-        animationOptions: {
-          duration: 500,
-          easing:'swing',
-          queue :false
-        }
-      });
-    });
-  }, 2000);
+  //dispatch event here 
+  $('#cloud-breadcrumb').find('.separate').hide();
+  $('#cloud-breadcrumb').hide();
+    
+  this.totalItem = 0;
 };
 
 GoogleDrive.prototype.loadDriveApi = function() {
@@ -1353,38 +1396,102 @@ GoogleDrive.prototype.loadDriveApi = function() {
 };
 
 GoogleDrive.prototype.onDriveLoadHandler = function() {
-  this.loadFiles('root');
+  var that = this;
+  var request = gapi.client.drive.about.get();
+  request.execute(function(response) {
+
+    that.isMe = true;
+    $('#cloud-breadcrumb').find('.root').html(response.name);
+    $('#cloud-breadcrumb').find('.root').data('folderId', response.rootFolderId);
+    
+    $('#cloud-breadcrumb').find('.root').on('click', function(evt) { that.onClickMeHandler(evt); });
+    $('#cloud-breadcrumb').find('.album').on('click', function(evt) { that.onClickAlbumHandler(evt); });
+    
+    that.loadFiles(response.rootFolderId);
+  });
+  
+  //this.loadFiles('root');
+};
+
+GoogleDrive.prototype.onClickMeHandler = function(evt) {
+  $('#cloud-breadcrumb').find('.separate').hide();
+  $('#cloud-breadcrumb').find('.album').html('');
+  
+  var folderId = $('#cloud-breadcrumb').find('.root').data('folderId');
+  this.loadFiles(folderId);
+};
+
+GoogleDrive.prototype.onClickAlbumHandler = function(evt) {
+  var folderId = $('#cloud-breadcrumb').find('.album').data('folderId');
+  this.loadFiles(folderId);
 };
 
 GoogleDrive.prototype.loadFiles = function(folderId) {
   var that = this;
+  
+  $('#cloud-loadding').show();  
+  $('#cloud-content').empty();
+  this.totalItem = 0;
+  $('#cloud-breadcrumb').find('.selected-item').html('Selected ' + that.totalItem + ' item');
+  
   var request = gapi.client.request({
     'path': 'drive/v2/files?q=trashed=false ' +
         'and ( ' +
                 'mimeType contains "folder" ' +
-                'or mimeType contains "jpeg") and "' + folderId + '" in parents',
+                'or mimeType contains "jpeg"' +
+                'or mimeType contains "png")' +
+                ' and "' + folderId + '" in parents',
     'method': 'GET',
-    'params': {'maxResults': 1000}
+    'params': {'maxResults': 1000, 'orderBy': 'folder'}
     });
-
+  
   request.execute(function(resp) {
+    $('#cloud-loadding').hide();
+    $('#cloud-breadcrumb').show();
+  
+    
     var files = resp.items;
     if (files && files.length > 0) {
-    for (var i = 0; i < files.length; i++) {
-      that.addFile(files[i]);
-    }
+      for (var i = 0; i < files.length; i++) {
+        that.addFile(files[i]);
+      }
     }
   });
 };
 
 GoogleDrive.prototype.addFile = function(file) {
-
-  var thumbnail = file.mimeType != 'application/vnd.google-apps.folder' ? file.thumbnailLink : 'http://cuongtran3001.github.io/wedding/images/video/folder.png';
-
-  var classfolder= file.mimeType != 'application/vnd.google-apps.folder' ? '' : ' folder-item';
+  var that = this;
   
-  var div = $('<div data-item-id="item_1" data-item-url="Image1.png" class="item col-xs-3' + classfolder + '"><div class="thumb"><img src="' + thumbnail + '" alt="" class="img-responsive"/></div></div>');
-  $('#googledrive-content').append(div);
+  var isFolder = file.mimeType != 'application/vnd.google-apps.folder' ? false : true;
+  var thumbnail = isFolder ? 'http://cuongtran3001.github.io/wedding/images/video/folder.png' : file.thumbnailLink;  
+  var title = isFolder ? file.title : '';
+  var folderId = file.id;
+  
+  var div = $('<div data-item-id="item_1" data-item-url="Image1.png" class="item col-xs-3">' +
+              '<span>' + title + '</span>' +
+              '  <div class="thumb"><img src="' + thumbnail + '" alt="" class="img-responsive"/>'+
+              '</div></div>');
+  
+  div.on('click', function(evt) {
+    if (isFolder) {
+      $('#cloud-breadcrumb').find('.separate').show();
+      $('#cloud-breadcrumb').find('.album').html(title);
+      $('#cloud-breadcrumb').find('.album').data('folderId', folderId);
+      that.loadFiles(folderId);
+    } else {
+      div.toggleClass('active');
+      
+      if (div.hasClass('active')) {
+        that.totalItem ++;
+      } else {
+        that.totalItem --;
+      }
+      $('#cloud-breadcrumb').find('.selected-item').html('Selected ' + that.totalItem + ' item');
+      
+    }
+  });
+  
+  $('#cloud-content').append(div);
 };
 
 /**
@@ -5265,6 +5372,142 @@ and dependencies (minified).
   });
 
 }(window.jQuery, window.App));
+/**
+ *  @name scroll-video
+ *  @description description
+ *  @version 1.0
+ *  @options
+ *    option
+ *  @events
+ *    event
+ *  @methods
+ *    init
+ *    publicMethod
+ *    destroy
+ */
+;(function($, window, undefined) {
+  var pluginName = 'map-lt';
+
+  function Plugin(element, options) {
+    this.element = $(element);
+    this.options = $.extend({}, $.fn[pluginName].defaults, this.element.data(), options);
+    this.init();
+  }
+
+  Plugin.prototype = {
+    init: function() {
+      var that = this,
+          ele = that.element;
+      var geocoder = new google.maps.Geocoder();
+      function geocodePosition(pos) {
+        geocoder.geocode({
+          latLng: pos
+        }, function(responses) {
+          if (responses && responses.length > 0) {
+            updateMarkerAddress(responses[0].formatted_address);
+          } else {
+            updateMarkerAddress('Cannot determine address at this location.');
+          }
+        });
+      }
+
+      function updateMarkerStatus(str) {
+        document.getElementById('markerStatus').innerHTML = str;
+      }
+
+      function updateMarkerPosition(latLng) {
+        var ltlong = [
+          latLng.lat(),
+          latLng.lng()
+        ].join(', ');
+        $('#info').attr('value', ltlong);
+      }
+
+      function updateMarkerAddress(str) {
+        document.getElementById('address').innerHTML = str;
+      }
+
+      function initialize() {
+        var latLng = new google.maps.LatLng(10.810583, 106.709145);
+        
+        var map = new google.maps.Map(document.getElementById('mapCanvas'), {
+          zoom: 11,
+          center: latLng,
+          mapTypeId: google.maps.MapTypeId.ROADMAP
+        });
+
+
+
+        var marker = new google.maps.Marker({
+          position: latLng,
+          title: 'Point',
+          map: map,
+          icon: ele.data('icon-marker') || '',
+          draggable: true
+        });
+
+        // Update current position info.
+        updateMarkerPosition(latLng);
+        geocodePosition(latLng);
+        
+        // Add dragging event listeners.
+        google.maps.event.addListener(marker, 'dragstart', function() {
+          updateMarkerAddress('Dragging...');
+        });
+        
+        google.maps.event.addListener(marker, 'drag', function() {
+          updateMarkerStatus('Dragging...');
+          updateMarkerPosition(marker.getPosition());
+        });
+        
+        google.maps.event.addListener(marker, 'dragend', function() {
+          updateMarkerStatus('Drag ended');
+          geocodePosition(marker.getPosition());
+        });
+
+        google.maps.event.addListener(map, 'click', function(event) {
+          var myLatLng = event.latLng;
+          var lat = myLatLng.lat();
+          var lng = myLatLng.lng();
+        });
+      }
+
+      // Onload handler to fire off the app.
+
+      window.google.maps.event.addDomListener(window, 'load', initialize);
+      window.google.maps.event.addDomListener(window, "resize", function() {
+        var center = map.getCenter();
+        google.maps.event.trigger(map, "resize");
+        map.setCenter(center); 
+      });
+    },
+    destroy: function() {
+      $.removeData(this.element[0], pluginName);
+    }
+  };
+
+  $.fn[pluginName] = function(options, params) {
+    return this.each(function() {
+      var instance = $.data(this, pluginName);
+      if (!instance) {
+        $.data(this, pluginName, new Plugin(this, options));
+      } else if (instance[options]) {
+        instance[options](params);
+      } else {
+        window.console && console.log(options ? options + ' method is not exists in ' + pluginName : pluginName + ' plugin has been initialized');
+      }
+    });
+  };
+
+  $.fn[pluginName].defaults = {
+  };
+
+  $(function() {
+    $('[data-' + pluginName + ']')[pluginName]();
+  });
+
+}(jQuery, window));
+
 /* =================
  * navigation/app.js
  * ================= */
@@ -8963,6 +9206,16 @@ and dependencies (minified).
         that.googleDrive = window.googleDrive;
       }
       that.googleDrive.connect();
+      $('#cloudPopup').modal('show');
+    });
+
+    var imageDB = $('#vc-image-upload').find('.vc-image-upload-db');
+    imageDB.off('click').on('click', function(evt) {
+      if (!that.facebook) {
+        that.facebook = window.facebook;
+      }
+      that.facebook.connect();
+      $('#cloudPopup').modal('show');
     });
 
     //select image from your album
@@ -9178,6 +9431,7 @@ and dependencies (minified).
                  '    <img src="" alt="">' +
                  '  </div>' +
                  '  <span class="time">00:30</span>' +
+                 '  <input type="text" class="time edit-time">' +
                  '  <a href="javascript:void(0);" title="Delete" class="delete">' +
                  '    <span class="fa fa-minus"></span>' +
                  '  </a>' +
@@ -9193,9 +9447,27 @@ and dependencies (minified).
 
       if (target.hasClass('fa-minus')) {
         that.deactiveBackground(box, IMAGE);
-      } else {
+      } 
+
+      else if (target.hasClass('time')) {
+        that.activeBackground(box, IMAGE);
+
+        box.find('.edit-time').css('display', 'block');
+        box.find('.edit-time').focus();
+      }
+      
+      else {
         that.activeBackground(box, IMAGE);
       }
+    });
+
+    box.find('.edit-time').blur(function(evt) {
+      var time = Number(box.find('.edit-time').val());
+
+      box.find('.time').html(EffectUtils.formatTime(time));
+      box.find('.edit-time').css('display', 'none');
+
+      that.arrBG[box.index()].time = time;
     });
 
     box.click();
@@ -9207,7 +9479,7 @@ and dependencies (minified).
     var box = $('' +
         '<div class="box">' +
           '<div class="control-media"><a href="javascript:void(0);" title="Play"><span class="fa fa-play"></span></a></div>' +
-          '<div class="title"><strong>No selected audio, please choose audio</strong></div><span class="time">00:00</span><a href="javascript:void(0);" title="Delete" class="delete"><span class="fa fa-minus"></span></a>' +
+          '<div class="title"><strong>No selected audio</strong></div><span class="time">00:00</span><input type="text" class="time edit-time"></input><a href="javascript:void(0);" title="Delete" class="delete"><span class="fa fa-minus"></span></a>' +
         '</div>');
 
     $('.vc-audios').find('.list-box').append(box);
@@ -9218,12 +9490,33 @@ and dependencies (minified).
     box.on('click', function(evt) {
       var target = $(evt.target);
 
+      //console.log(target);
+
       if (target.hasClass('fa-minus')) {
         that.deactiveBackground(box, AUDIO);
-      } else {
+      } 
+
+      else if (target.hasClass('time')) {
+        that.activeBackground(box, AUDIO);
+        
+        if (!that.arrBGAudio[box.index()].id) {
+          box.find('.edit-time').css('display', 'block');
+          box.find('.edit-time').focus();
+        }
+      }
+
+      else {
         that.activeBackground(box, AUDIO);
       }
     });
+
+    box.find('.edit-time').blur(function(evt) {
+      var time = Number(box.find('.edit-time').val());
+      box.find('.time').html(EffectUtils.formatTime(time));
+      box.find('.edit-time').css('display', 'none');
+      that.arrBGAudio[box.index()].time = time;
+    });
+
     box.click();
   };
 
@@ -9956,7 +10249,7 @@ and dependencies (minified).
       }
 
       //update box here
-      this.curBGAudio.find('.title strong').html(audioData.id == null ? 'No selected audio, please choose audio' : this.curFrameAudio.find('.title strong').html());
+      this.curBGAudio.find('.title strong').html(audioData.id == null ? 'No selected audio' : this.curFrameAudio.find('.title strong').html());
       this.curBGAudio.find('.time').html(audioData.end == -1 ? '00:00' : EffectUtils.formatTime(audioData.end - audioData.start));
 
       return;

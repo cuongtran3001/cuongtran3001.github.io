@@ -51,7 +51,6 @@ FaceBook.prototype.callAPI = function(apiQuery, callback) {
 	$('#cloud-content').empty();
 	$('#cloud-breadcrumb').hide();	
 	$('#cloud-loadding').show();
-	$('#cloudPopup').modal('show');
 	
 	FB.api(
 		apiQuery,
@@ -164,8 +163,25 @@ FaceBook.prototype.addPhoto = function(photo) {
 
 var facebook = new FaceBook();
 
-$(document).ready(function() {
-	$('#cloud-connect').on('click', function(evt) {
-		facebook.connect();
-	});
-});
+//$(document).ready(function() {
+//	$('#cloud-connect').on('click', function(evt) {
+//		facebook.connect();
+//	});
+//s});
+
+window.fbAsyncInit = function() {
+	FB.init({
+	  appId      : '390145291021310',
+	  xfbml      : true,
+	  version    : 'v2.5'
+	});		
+	facebook.init();
+};
+
+(function(d, s, id){
+	 var js, fjs = d.getElementsByTagName(s)[0];
+	 if (d.getElementById(id)) {return;}
+	 js = d.createElement(s); js.id = id;
+	 js.src = "//connect.facebook.net/en_US/sdk.js";
+	 fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));

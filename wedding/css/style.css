@@ -16266,6 +16266,14 @@ label.custom-fileupload input[type="file"] {
   line-height: 22px;
   color: #000000;
 }
+.map-frame {
+  width: 100%;
+  height: 245px;
+  margin-bottom: 20px;
+}
+#infoPanel #address {
+  margin-bottom: 20px;
+}
 .fixed-video {
   position: fixed;
   top: 108px;
@@ -20894,9 +20902,16 @@ label.custom-fileupload input[type="file"] {
   position: absolute;
   z-index: 1;
   right: 5px;
-  bottom: 8px;
+  bottom: 7px;
   color: #959595;
   transition: all 0.4s ease 0s;
+}
+.wrapper-video .tfooter .add-function-block .item .box .edit-time {
+  top: 1px;
+  width: 98%;
+  height: 28px;
+  text-align: right;
+  display: none;
 }
 .wrapper-video .tfooter .add-function-block .item .box .control-media {
   float: left;
@@ -21216,16 +21231,24 @@ label.custom-fileupload input[type="file"] {
 .share-block {
   margin-bottom: 20px;
 }
-.upload-google .item {
+.upload-cloud #cloud-breadcrumb {
+  margin-bottom: 20px;
+}
+.upload-cloud #cloud-breadcrumb .root,
+.upload-cloud #cloud-breadcrumb .album {
+  cursor: pointer;
+  font-weight: bold;
+}
+.upload-cloud .item {
   margin-bottom: 20px;
   overflow: hidden;
 }
-.upload-google .item .thumb {
+.upload-cloud .item .thumb {
   position: relative;
   display: block;
   overflow: hidden;
 }
-.upload-google .item .thumb img {
+.upload-cloud .item .thumb img {
   cursor: pointer;
   transition: all 0.4s ease 0s;
   -webkit-transform: scale(1);
@@ -21235,24 +21258,24 @@ label.custom-fileupload input[type="file"] {
   display: block;
   margin: 0 auto;
 }
-.upload-google .item.folder-item {
+.upload-cloud .item.folder-item {
   overflow: inherit;
 }
-.upload-google .item.folder-item .thumb {
+.upload-cloud .item.folder-item .thumb {
   overflow: inherit;
 }
-.upload-google .item.folder-item .thumb img {
+.upload-cloud .item.folder-item .thumb img {
   -webkit-animation-duration: 1s;
   animation-duration: 1s;
   -webkit-animation-fill-mode: both;
   animation-fill-mode: both;
 }
-.desktop .upload-google .item:hover .thumb img {
+.desktop .upload-cloud .item:hover .thumb img {
   -webkit-transform: scale(1.2);
       -ms-transform: scale(1.2);
           transform: scale(1.2);
 }
-.desktop .upload-google .item:hover.folder-item .thumb img {
+.desktop .upload-cloud .item:hover.folder-item .thumb img {
   -webkit-transform-origin: top center;
   -ms-transform-origin: top center;
       transform-origin: top center;
