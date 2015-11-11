@@ -17,26 +17,7 @@
     <!--[if lt IE 8]><link rel="stylesheet" href="css/ie.css"><![endif]-->
     <link rel="stylesheet" href="http://cuongtran3001.github.io/wedding/css/print.css" media="print">
     <script src="http://cuongtran3001.github.io/wedding/js/modernizr.js"></script>
-	<script>
-      window.fbAsyncInit = function() {
-        FB.init({
-          appId      : '390145291021310',
-          xfbml      : true,
-          version    : 'v2.5'
-        });
-		
-		var facebook = new FaceBook();
-		facebook.init();
-      };
-
-      (function(d, s, id){
-         var js, fjs = d.getElementsByTagName(s)[0];
-         if (d.getElementById(id)) {return;}
-         js = d.createElement(s); js.id = id;
-         js.src = "//connect.facebook.net/en_US/sdk.js";
-         fjs.parentNode.insertBefore(js, fjs);
-       }(document, 'script', 'facebook-jssdk'));
-    </script>
+	
   </head>
   <body class="video-clip-page non-fixed">
     
@@ -95,6 +76,26 @@
     <script src="http://cuongtran3001.github.io/wedding/js/respond.js"></script>
 	<script src="http://cuongtran3001.github.io/wedding/js/FaceBook.js"></script>
 	
+	<script>
+      window.fbAsyncInit = function() {
+        FB.init({
+          appId      : '390145291021310',
+          xfbml      : true,
+          version    : 'v2.5'
+        });
+		
+		var facebook = new FaceBook();
+		facebook.init();
+      };
+
+      (function(d, s, id){
+         var js, fjs = d.getElementsByTagName(s)[0];
+         if (d.getElementById(id)) {return;}
+         js = d.createElement(s); js.id = id;
+         js.src = "//connect.facebook.net/en_US/sdk.js";
+         fjs.parentNode.insertBefore(js, fjs);
+       }(document, 'script', 'facebook-jssdk'));
+    </script>
     <div class="overlay hide"></div>
       
   </body>
