@@ -1,0 +1,76 @@
+{
+  "temp":[
+    {
+      "label": "anders",
+      "alphabet": "A",
+      "category": "Album",
+      "classCategory": "album"
+    },
+    {
+      "label": "anders 12",
+      "alphabet": "B",
+      "category": "Album",
+      "classCategory": "album"
+    },
+    {
+      "label": "andreas",
+      "alphabet": "C",
+      "category": "Nghệ sỉ",
+      "classCategory": "singer"
+    },
+    {
+      "label": "andreas 21",
+      "alphabet": "D",
+      "category": "Nghệ sỉ",
+      "classCategory": "singer"
+    },
+    {
+      "label": "annhhx10",
+      "alphabet": "E",
+      "category": "Nghệ sỉ",
+      "classCategory": "singer"
+    },
+    {
+      "label": "annttop C13",
+      "alphabet": "F",
+      "category": "Bài hát",
+      "classCategory": "song"
+    },
+    {
+      "label": "andreas andersson",
+      "alphabet": "G",
+      "category": "Bài hát",
+      "classCategory": "song"
+    },
+    {
+      "label": "andreas ",
+      "alphabet": "H",
+      "category": "Bài hát",
+      "classCategory": "song"
+    },
+    {
+      "label": "andreas johnson",
+      "alphabet": "I",
+      "category": "Video",
+      "classCategory": "video"
+    },
+    {
+      "label": "andreas johnson1",
+      "alphabet": "J",
+      "category": "Video",
+      "classCategory": "video"
+    },
+    {
+      "label": "annttop",
+      "alphabet": "K",
+      "category": "Video",
+      "classCategory": "video"
+    },
+    {
+      "label": "annttop 21",
+      "alphabet": "N",
+      "category": "Video",
+      "classCategory": "video"
+    }
+  ]
+}
