@@ -7,7 +7,7 @@
   <head>
     <meta charset="utf-8">
     <!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1"><![endif]-->
-    <title>Google Drive</title>
+    <title>Video Clip Page</title>
     <meta name="description" content="">
     <meta name="keywords" content="">
     <meta name="robots" content="index, follow">
@@ -21,106 +21,949 @@
   </head>
   <body class="video-clip-page non-fixed">
     <div id="app">
-      
-	  <button id="googledrive-connect">Connect</button>
-	  
-	  <div id="uploadGoogle" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" class="modal modal-1 upload-google fade">
-        <div class="modal-dialog">
-          <div class="modal-content">
-            <div class="modal-header">
-              <button type="button" data-dismiss="modal" aria-hidden="true" class="close">&times;</button>
-              <h2 class="modal-title">Google Drive</h2>
+      <header id="header">
+        <div class="search-block hidden-sm hidden-xs">
+          <div class="container">
+            <form id="search-form" name="search-form" method="get" action="#" class="form">
+              <div class="row">
+                <div class="col-sm-6 col-sm-offset-3 text-center">
+                  <div class="form-group">
+                    <input type="text" name="input-search-head" id="input-search" value="" autocomplete="off" class="input-1" alert="" placeholder="Find an article..."/>
+                    <button type="submit" name="submit-button-head" id="submit-button-head" title="Search" class="btn submit-btn">Search</button>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div><a href="javascript:;" title="" class="fa fa-times close"></a>
+        </div>
+        <div class="middle-head hidden-sm hidden-xs">
+          <div class="container">
+            <div class="logo"><a href="index.html" title=""><img src="images/logo.png" alt=""></a></div>
+            <div class="toolbar">
+              <div class="item social-block">
+                <ul class="list-inline">
+                  <li><a href="#" title="" class="yt"><span class="fa fa-youtube"></span></a></li>
+                  <li><a href="#" title="" class="fb"><span class="fa fa-facebook"></span></a></li>
+                  <li><a href="#" title="" class="gp"><span class="fa fa-google-plus"></span></a></li>
+                </ul>
+              </div>
+              <div class="item">
+                <ul class="list-inline list">
+                  <li><a href="dangnhap.html" title="đăng nhập">đăng nhập</a></li>
+                  <li><a href="dangky.html" title="đăng ký">đăng ký</a></li>
+                </ul>
+              </div>
+              <div class="item">
+                <ul class="list-inline list">
+                  <li><a href="#" title="bạn là nhà cung cấp?">bạn là nhà cung cấp?</a></li>
+                  <li><a href="#" title="tham gia!">tham gia!</a></li>
+                </ul>
+              </div>
+              <div class="item"><a href="javascript:;" title="search" data-target=".search-block" data-toggle-slide><span class="fa fa-search"></span></a></div>
             </div>
-            <div class="modal-body">
-              <div action="" class="form-style-1">
-                <div class="row">
-                  <div class="col-sm-10 col-sm-offset-1">
-					<div id="googledrive-loadding" class="row" style="height: 100px;">
-						<div class="load-wrapp">
-							<div class="load-1">
-								<div class="line"></div>
-								<div class="line"></div>
-								<div class="line"></div>
-							</div>
-						</div>	
+          </div>
+        </div>
+        <div class="bottom-head">
+          <div class="container">
+            <div class="logo visible-sm visible-xs"><a href="index.html" title=""><img src="images/logo_mobile.png" alt=""></a></div>
+            <div class="navbar-header">
+              <button class="navbar-toggle"><span class="sr-only">Toggle navigation</span><span class="icon-bar icon-burger-1"></span><span class="icon-bar icon-burger-2"></span><span class="icon-bar icon-burger-3"></span></button>
+            </div>
+            <div id="main-nav" data-navigation>
+              <nav data-multimenu>
+                <ul class="list-inline">
+                  <li class="visible-sm visible-xs">
+                    <form id="search-form-1" name="search-form" method="get" action="#" class="form">
+                      <div class="text-center">
+                        <div class="form-group">
+                          <input type="text" name="input-search-head-1" id="input-search-1" value="" autocomplete="off" class="input-1" alert="" placeholder="Find an article..."/>
+                          <button type="submit" name="submit-button-head-1" id="submit-button-head-1" title="Search" class="btn submit-btn">Search</button>
+                        </div>
+                      </div>
+                    </form>
+                  </li>
+                  <li class="visible-sm visible-xs">
+                    <div class="social-block">
+                      <ul class="list-inline">
+                        <li><a href="#" title="" class="red"><span class="fa fa-youtube"></span></a></li>
+                        <li><a href="#" title=""><span class="fa fa-facebook"></span></a></li>
+                        <li><a href="#" title=""><span class="fa fa-google-plus"></span></a></li>
+                      </ul>
                     </div>
-                    
-					<div id="googledrive-breadcrumb" class="row">
-						BACK TO PARENT FOLDER
-					</div>
-					
-					<div id="googledrive-content" class="row">
-					<!--		
-                      <div data-item-id="item_image-yours_1" data-item-url="images/video/Image1.png" class="item col-xs-3">
-                        <div class="thumb"><img src="images/video/Thumb1.png" alt="" class="img-responsive"/></div>
+                  </li>
+                  <li class="visible-sm visible-xs">
+                    <ul class="list-inline list">
+                      <li><a href="#" title="bạn là nhà cung cấp?">bạn là nhà cung cấp?</a></li>
+                      <li><a href="#" title="tham gia!">tham gia!</a></li>
+                    </ul>
+                  </li>
+                  <li class="visible-sm visible-xs">
+                    <ul class="list-inline list">
+                      <li><a href="#" title="đăng nhập">đăng nhập</a></li>
+                      <li><a href="data/signup.html" title="đăng ký" data-toggle="modal" data-target="#myModal1">đăng ký</a></li>
+                    </ul>
+                  </li>
+                  <li><a href="#" title="lập kế hoạch">lập kế hoạch</a>
+                  </li>
+                  <li><a href="#" title="trang phục">trang phục</a>
+                  </li>
+                  <li><a href="#" title="địa điểm">địa điểm</a>
+                  </li>
+                  <li><a href="#" title="trang sức">trang sức</a>
+                  </li>
+                  <li><a href="#" title="ảnh &amp; video">ảnh & video</a>
+                  </li>
+                  <li><a href="#" title="Thiệp">Thiệp</a>
+                  </li>
+                  <li><a href="#" title="trang sức">trang sức</a>
+                  </li>
+                  <li><a href="#" title="ảnh &amp; video">ảnh & video</a>
+                  </li>
+                  <li><a href="#" title="Thiệp">Thiệp</a>
+                  </li>
+                  <li class="last"><a href="#" title="khác">khác</a>
+                    <ul class="sub-nav">
+                      <li><a href="#" title="Lorem ipsum">Lorem ipsum</a>
+                      </li>
+                      <li><a href="#" title="Lorem ipsum">Lorem ipsum</a>
+                      </li>
+                      <li><a href="#" title="Lorem ipsum">Lorem ipsum</a>
+                      </li>
+                      <li><a href="#" title="Lorem ipsum">Lorem ipsum</a>
+                        <ul class="sub-nav">
+                          <li><a href="#" title="Lorem ipsum">Lorem ipsum</a>
+                          </li>
+                          <li><a href="#" title="Lorem ipsum">Lorem ipsum</a>
+                          </li>
+                          <li><a href="#" title="Lorem ipsum">Lorem ipsum</a>
+                          </li>
+                          <li><a href="#" title="Lorem ipsum">Lorem ipsum</a>
+                            <ul class="sub-content">
+                              <li><a href="#" title="Lorem ipsum">Lorem ipsum</a>
+                              </li>
+                              <li><a href="#" title="Lorem ipsum">Lorem ipsum</a>
+                              </li>
+                              <li><a href="#" title="Lorem ipsum">Lorem ipsum</a>
+                              </li>
+                              <li><a href="#" title="Lorem ipsum">Lorem ipsum</a>
+                              </li>
+                            </ul>
+                          </li>
+                        </ul>
+                      </li>
+                      <li><a href="#" title="Lorem ipsum">Lorem ipsum</a>
+                      </li>
+                      <li><a href="#" title="Lorem ipsum">Lorem ipsum</a>
+                      </li>
+                      <li><a href="#" title="Lorem ipsum">Lorem ipsum</a>
+                      </li>
+                      <li><a href="#" title="Lorem ipsum">Lorem ipsum</a>
+                      </li>
+                    </ul>
+                  </li>
+                </ul>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </header>
+      <div class="block-3">
+        <div class="container">
+          <div class="inner">
+            <div class="title-content block-title margin-bottom-1">
+              <h2 class="title-1"><span>Tạo video cưới</span></h2>
+            </div>
+          </div>
+          <div data-videoclip="server/videoclip/test.json" data-upload-url="server/videoclip/uploadData.php" data-cloud-url="server/videoclip/getCloudData.php" data-save-url="server/videoclip/saveVideoClip.php" data-finish-url="server/videoclip/finishVideoClip.php" data-social-url="video-clip-share.html" data-share-url="server/videoclip/shareVideoClip.php" class="wrapper-video">
+            <div class="inner">
+              <div class="thead">
+                <div class="control-menu"><span class="fa fa-list-ul"></span></div>
+                <div class="name-clip">
+                  <form>
+                    <input type="hidden" name="hiddenField">
+                  </form>
+                  <h2 title="Click to change your video clip title" class="change-title">VIDEO CLIP NOTITLE</h2><span class="fa fa-pencil"></span>
+                  <h2 class="video-clip-time">Thời gian 00:00 giây</h2>
+                </div>
+                <div class="list-control">
+                  <ul class="list-inline">
+                    <li><a href="javascript:void(0);" title="Lưu" class="save-vc">Lưu</a></li>
+                    <li><a href="javascript:void(0);" title="Xem trước" class="preview-vc">Xem trước</a></li>
+                    <li><a href="javascript:void(0);" title="Hoàn thành" class="finish-vc">Hoàn thành</a></li>
+                  </ul>
+                </div>
+              </div>
+              <div data-tab-video class="tbody">
+                <div class="video-clip">
+                  <video id="video"></video>
+                  <canvas id="cvsVC"></canvas>
+                  <div class="effect-setting">
+                    <div class="form-style-1">
+                      <div class="row">
+                        <div class="col-xs-3">
+                          <label for="delay">Delay time:</label>
+                          <div class="form-group">
+                            <input id="delay" type="number" name="delay" value="0" class="input-1"><span>giây</span>
+                          </div>
+                        </div>
+                        <div class="col-xs-3">
+                          <label for="time">Effect time: </label>
+                          <div class="form-group">
+                            <input id="time" type="number" name="time" value="3" class="input-1"><span>giây</span>
+                          </div>
+                        </div>
+                        <div class="col-xs-3">
+                          <label for="next">Next time: </label>
+                          <div class="form-group">
+                            <input id="time" type="number" name="next" value="3" class="input-1"><span>giây</span>
+                          </div>
+                        </div>
+                        <div class="col-xs-3">
+                          <button type="submit" title="Xem và lưu" class="btn-1 transparent full save">Xem và lưu</button>
+                        </div>
                       </div>
-                      <div data-item-id="item_image-yours_2" data-item-url="images/video/Image2.png" class="item col-xs-3">
-                        <div class="thumb"><img src="images/video/Thumb2.png" alt="" class="img-responsive"/></div>
-                      </div>
-                      <div data-item-id="item_image-yours_3" data-item-url="images/video/Image3.png" class="item col-xs-3">
-                        <div class="thumb"><img src="images/video/Thumb3.png" alt="" class="img-responsive"/></div>
-                      </div>
-                      <div data-item-id="item_image-yours_4" data-item-url="images/video/Image4.png" class="item col-xs-3">
-                        <div class="thumb"><img src="images/video/Thumb4.png" alt="" class="img-responsive"/></div>
-                      </div>
-                      <div data-item-id="item_image-yours_5" data-item-url="images/video/Image1.png" class="item col-xs-3">
-                        <div class="thumb"><img src="images/video/Thumb1.png" alt="" class="img-responsive"/></div>
-                      </div>
-                      <div data-item-id="item_image-yours_6" data-item-url="images/video/Image2.png" class="item col-xs-3">
-                        <div class="thumb"><img src="images/video/Thumb2.png" alt="" class="img-responsive"/></div>
-                      </div>
-                      <div data-item-id="item_image-yours_7" data-item-url="images/video/Image3.png" class="item col-xs-3">
-                        <div class="thumb"><img src="images/video/Thumb3.png" alt="" class="img-responsive"/></div>
-                      </div>
-                      <div data-item-id="item_image-yours_8" data-item-url="images/video/Image4.png" class="item col-xs-3">
-                        <div class="thumb"><img src="images/video/Thumb4.png" alt="" class="img-responsive"/></div>
-                      </div>
-                      <div data-item-id="item_image-yours_9" data-item-url="images/video/Image1.png" class="item col-xs-3">
-                        <div class="thumb"><img src="images/video/Thumb1.png" alt="" class="img-responsive"/></div>
-                      </div>
-                      <div data-item-id="item_image-yours_10" data-item-url="images/video/Image2.png" class="item col-xs-3">
-                        <div class="thumb"><img src="images/video/Thumb2.png" alt="" class="img-responsive"/></div>
-                      </div>
-                      <div data-item-id="item_image-yours_11" data-item-url="images/video/Image3.png" class="item col-xs-3">
-                        <div class="thumb"><img src="images/video/Thumb3.png" alt="" class="img-responsive"/></div>
-                      </div>
-                      <div data-item-id="item_image-yours_12" data-item-url="images/video/Image4.png" class="item col-xs-3">
-                        <div class="thumb"><img src="images/video/Thumb4.png" alt="" class="img-responsive"/></div>
-                      </div>
-                      <div data-item-id="item_image-yours_13" data-item-url="images/video/Image1.png" class="item col-xs-3">
-                        <div class="thumb"><img src="images/video/Thumb1.png" alt="" class="img-responsive"/></div>
-                      </div>
-                      <div data-item-id="item_image-yours_14" data-item-url="images/video/Image2.png" class="item col-xs-3">
-                        <div class="thumb"><img src="images/video/Thumb2.png" alt="" class="img-responsive"/></div>
-                      </div>
-                      <div data-item-id="item_image-yours_15" data-item-url="images/video/Image3.png" class="item col-xs-3">
-                        <div class="thumb"><img src="images/video/Thumb3.png" alt="" class="img-responsive"/></div>
-                      </div>
-                      <div data-item-id="item_image-yours_16" data-item-url="images/video/Image4.png" class="item col-xs-3">
-                        <div class="thumb"><img src="images/video/Thumb4.png" alt="" class="img-responsive"/></div>
-                      </div>
-                      <div data-item-id="item_image-yours_17" data-item-url="images/video/Image1.png" class="item col-xs-3">
-                        <div class="thumb"><img src="images/video/Thumb1.png" alt="" class="img-responsive"/></div>
-                      </div>
-                      <div data-item-id="item_image-yours_18" data-item-url="images/video/Image2.png" class="item col-xs-3">
-                        <div class="thumb"><img src="images/video/Thumb2.png" alt="" class="img-responsive"/></div>
-                      </div>
-                      <div data-item-id="item_image-yours_19" data-item-url="images/video/Image3.png" class="item col-xs-3">
-                        <div class="thumb"><img src="images/video/Thumb3.png" alt="" class="img-responsive"/></div>
-                      </div>
-                      <div data-item-id="item_image-yours_20" data-item-url="images/video/Image4.png" class="item col-xs-3">
-                        <div class="thumb"><img src="images/video/Thumb4.png" alt="" class="img-responsive"/></div>
-                      </div>
-					-->  
                     </div>
                   </div>
-                  <div class="col-sm-10 col-sm-offset-1">
-                    <div class="row">
-                      <div class="col-xs-6">
-                        <button type="submit" title="Select" class="btn-1a full">Select</button>
+                  <div class="media-setting">
+                    <div class="col-xs-1">
+                      <div class="control-media"><a href="javascript:void(0);" title="Play" class="play-pause"><span class="fa fa-play"></span></a></div>
+                    </div>
+                    <div class="col-xs-11">
+                      <p class="position">00:00</p>
+                      <div class="box">
+                        <div class="time">
+                          <div class="timeline"></div>
+                        </div>
+                        <div class="edit"><span class="time-start"><i class="fa fa-long-arrow-up"></i><span class="text">00:00</span></span><span class="time-end"><i class="fa fa-long-arrow-up"></i><span class="text">00:00</span></span></div>
                       </div>
-					  <div class="col-xs-6">
-                        <button type="submit" title="Cancel" class="btn-1a full">Cancel</button>
+                      <p class="duration">00:00</p>
+                    </div>
+                    <!--
+                    .col-xs-1
+                      .control-media
+                        a(class="full-screen", href="javascript:void(0);", title="full screen")
+                          span.fa.fa-arrows-alt
+                          
+                    -->
+                  </div>
+                  <div class="preview-setting">
+                    <div class="col-xs-1">
+                      <div class="control-media"><a href="javascript:void(0);" title="Play" class="play-pause"><span class="fa fa-play"></span></a></div>
+                    </div>
+                    <div class="col-xs-10">
+                      <p class="position">00:00</p>
+                      <div class="box">
+                        <div class="time">
+                          <div class="timeline"></div>
+                        </div>
+                      </div>
+                      <p class="duration">00:00</p>
+                    </div>
+                    <div class="col-xs-1">
+                      <div class="control-media"><a href="javascript:void(0);" title="full screen" class="full-screen"><span class="fa fa-arrows-alt"></span></a></div>
+                    </div>
+                  </div>
+                  <div class="vc-loading-wrapp">
+                    <div class="load-wrapp">
+                      <div class="load-1">
+                        <div class="line"></div>
+                        <div class="line"></div>
+                        <div class="line"></div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div class="control-menu">
+                  <ul class="list-unstyled">
+                    <li id="vc-menu-text"><a href="javascript:void(0);" title="Text"><span class="icon-edit-text"></span></a></li>
+                    <li id="vc-menu-image"><a href="javascript:void(0);" title="Image"><span class="icon-add-img"></span></a></li>
+                    <li id="vc-menu-video"><a href="javascript:void(0);" title="Video"><span class="icon-add-video"></span></a></li>
+                    <li id="vc-menu-effect"><a href="javascript:void(0);" title="Effect"><span class="icon-effect"></span></a></li>
+                    <li id="vc-menu-audio"><a href="javascript:void(0);" title="Audio"><span class="icon-audio"></span></a></li>
+                  </ul>
+                </div>
+                <div class="multi-block">
+                  <div class="inner">
+                    <div class="scroll">
+                      <div id="vc-add-intro" class="block-tab-video active">
+                        <div data-scroll-video class="effect-list">
+                          <div class="form-style-1">
+                            <div class="col-sm-12">
+                              <h1>INTRODUCTION GOES HERE</h1><br>
+                              <label>To creat your video clip, you can:</label>
+                              <label>1.Watch the guide video first</label>
+                              <label>2.Add your video clip's background</label>
+                              <label>3.Add your video clip's audio</label>
+                              <label>4.Add your video clip's frame</label>
+                              <label>5.Add text/image/video or audio to frame</label>
+                              <label>6.Select effect for text or image of frame</label><br>
+                              <label>Or <a class="intro-click" href="javascript:void(0);">CLICK HERE</a> to start your video clip</label>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div id="vc-add-text" data-content class="block-tab-video">
+                        <div data-scroll-video class="effect-list">
+                          <div class="form-style-1">
+                            <div class="col-sm-6">
+                              <label for="frametext">Your text: </label>
+                              <div class="form-group">
+                                <textarea type="text" name="frametext" class="input-1"></textarea>
+                              </div>
+                              <div class="editor-control">
+                                <div class="row">
+                                  <div class="col-sm-6">
+                                    <label>Horizonal Align:</label>
+                                    <ul class="list-inline border halign">
+                                      <li data-align="left"><a href="javascript:void(0);" title="align-left"><span class="fa fa-align-left"></span></a></li>
+                                      <li data-align="center"><a href="javascript:void(0);" title="align-center"><span class="fa fa-align-center"></span></a></li>
+                                      <li data-align="right"><a href="javascript:void(0);" title="align-right"><span class="fa fa-align-right"></span></a></li>
+                                    </ul>
+                                  </div>
+                                  <div class="col-sm-6">
+                                    <label>Vertical Align:</label>
+                                    <ul class="list-inline border valign">
+                                      <li data-align="top"><a href="javascript:void(0);" title="align-top"><span class="icon icon-paragraph-left"></span></a></li>
+                                      <li data-align="middle"><a href="javascript:void(0);" title="align-middle"><span class="icon icon-paragraph-center"></span></a></li>
+                                      <li data-align="bottom"><a href="javascript:void(0);" title="align-bottom"><span class="icon icon-paragraph-right"></span></a></li>
+                                    </ul>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="text-effect">
+                                <label>Hiệu ứng:</label>
+                                <div class="form-group">
+                                  <label class="effect-detail">Fade (delay: 3, time: 5)</label><a title="Thay đổi" href="javascript:void(0)" class="add-more"><span class="fa fa-plus"></span></a>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="col-sm-6">
+                              <label for="font">Font: </label>
+                              <div class="form-group">
+                                <div data-select class="custom-select"><span class="text-val">Arial</span><a href="javascript:;" title="select"><i class="icon-select"></i></a>
+                                  <select id="font" name="font">
+                                    <option value="Arial">Arial</option>
+                                    <option value="Verdana">Verdana</option>
+                                    <option value="Tahoma">Tahoma</option>
+                                  </select>
+                                </div>
+                              </div>
+                            </div>
+                            <div class="col-sm-6">
+                              <label>Style:</label>
+                              <div class="form-group">
+                                <ul class="list-inline border fontstyle">
+                                  <li data-style=""><a href="javascript:void(0);" title="Normal"><span class="fa fa-font"></span></a></li>
+                                  <li data-style="bold"><a href="javascript:void(0);" title="Bold"><span class="fa fa-bold"></span></a></li>
+                                  <li data-style="italic"><a href="javascript:void(0);" title="Italic"><span class="fa fa-italic"></span></a></li>
+                                </ul>
+                              </div>
+                            </div>
+                            <div class="col-sm-6">
+                              <label for="textpadding">Border padding:</label>
+                              <div class="form-group">
+                                <input type="number" name="textpadding" id="textpadding" value="20" autocomplete="off" class="input-1" placeholder=""/>
+                              </div>
+                            </div>
+                            <div class="col-sm-6">
+                              <div class="row">
+                                <div class="col-sm-6">
+                                  <label for="textsize">Size:</label>
+                                  <div class="form-group">
+                                    <input type="number" name="textsize" id="textsize" value="36" autocomplete="off" class="input-1" placeholder=""/>
+                                  </div>
+                                </div>
+                                <div class="col-sm-6">
+                                  <label for="color">Màu:</label>
+                                  <div class="form-group">
+                                    <input type="text" name="textcolor" id="textcolor" value="Magenta" autocomplete="off" class="input-1" placeholder="" data-color="data-color"/>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                            <!--
+                            .col-xs-12.col-sm-8.col-sm-offset-2
+                              .btn-group
+                                .row
+                                  .col-xs-6
+                                    button.btn-1.full.transparent#frame-text-save(type="button", title="Lưu") Lưu
+                                  .col-xs-6
+                                    button.btn-1.full.transparent#frame-text-next(type="button", title="Tiếp tục") Tiếp tục
+                                    
+                            -->
+                          </div>
+                        </div>
+                      </div>
+                      <div id="vc-add-image" data-content class="block-tab-video">
+                        <div data-scroll-video class="effect-list">
+                          <div data-tab-video-small class="tab-video">
+                            <div data-control-small class="list-album-item">
+                              <li class="active"><a href="#vc-image-library" title="Thư viện ảnh">Thư viện ảnh</a></li>
+                              <li><a href="#vc-image-upload" title="Upload Ảnh">Upload Ảnh</a></li>
+                              <li><a href="#vc-image-yours" title="Ảnh của bạn">Ảnh của bạn</a></li>
+                            </div>
+                            <div class="content">
+                              <div id="vc-image-library" data-content-small class="tab active">
+                                <div data-item-id="item_image-library_1" data-item-url="images/video/library/large/1.jpg" class="item">
+                                  <div class="thumb"><img src="images/video/library/small/1.jpg" alt="" class="img-responsive"/></div>
+                                </div>
+                                <div data-item-id="item_image-library_2" data-item-url="images/video/library/large/2.jpg" class="item">
+                                  <div class="thumb"><img src="images/video/library/small/2.jpg" alt="" class="img-responsive"/></div>
+                                </div>
+                                <div data-item-id="item_image-library_3" data-item-url="images/video/library/large/3.jpg" class="item">
+                                  <div class="thumb"><img src="images/video/library/small/3.jpg" alt="" class="img-responsive"/></div>
+                                </div>
+                                <div data-item-id="item_image-library_4" data-item-url="images/video/library/large/4.jpg" class="item">
+                                  <div class="thumb"><img src="images/video/library/small/4.jpg" alt="" class="img-responsive"/></div>
+                                </div>
+                                <div data-item-id="item_image-library_5" data-item-url="images/video/library/large/5.jpg" class="item">
+                                  <div class="thumb"><img src="images/video/library/small/5.jpg" alt="" class="img-responsive"/></div>
+                                </div>
+                                <div data-item-id="item_image-library_6" data-item-url="images/video/library/large/6.jpg" class="item">
+                                  <div class="thumb"><img src="images/video/library/small/6.jpg" alt="" class="img-responsive"/></div>
+                                </div>
+                                <div data-item-id="item_image-library_7" data-item-url="images/video/library/large/7.jpg" class="item">
+                                  <div class="thumb"><img src="images/video/library/small/7.jpg" alt="" class="img-responsive"/></div>
+                                </div>
+                                <div data-item-id="item_image-library_8" data-item-url="images/video/library/large/8.jpg" class="item">
+                                  <div class="thumb"><img src="images/video/library/small/8.jpg" alt="" class="img-responsive"/></div>
+                                </div>
+                                <div data-item-id="item_image-library_9" data-item-url="images/video/library/large/9.jpg" class="item">
+                                  <div class="thumb"><img src="images/video/library/small/9.jpg" alt="" class="img-responsive"/></div>
+                                </div>
+                                <div data-item-id="item_image-library_10" data-item-url="images/video/library/large/10.jpg" class="item">
+                                  <div class="thumb"><img src="images/video/library/small/10.jpg" alt="" class="img-responsive"/></div>
+                                </div>
+                                <div data-item-id="item_image-library_11" data-item-url="images/video/library/large/11.jpg" class="item">
+                                  <div class="thumb"><img src="images/video/library/small/11.jpg" alt="" class="img-responsive"/></div>
+                                </div>
+                                <div data-item-id="item_image-library_12" data-item-url="images/video/library/large/12.jpg" class="item">
+                                  <div class="thumb"><img src="images/video/library/small/12.jpg" alt="" class="img-responsive"/></div>
+                                </div>
+                                <div data-item-id="item_image-library_13" data-item-url="images/video/library/large/13.jpg" class="item">
+                                  <div class="thumb"><img src="images/video/library/small/13.jpg" alt="" class="img-responsive"/></div>
+                                </div>
+                                <div data-item-id="item_image-library_14" data-item-url="images/video/library/large/14.jpg" class="item">
+                                  <div class="thumb"><img src="images/video/library/small/14.jpg" alt="" class="img-responsive"/></div>
+                                </div>
+                                <div data-item-id="item_image-library_15" data-item-url="images/video/library/large/15.jpg" class="item">
+                                  <div class="thumb"><img src="images/video/library/small/15.jpg" alt="" class="img-responsive"/></div>
+                                </div>
+                                <div data-item-id="item_image-library_16" data-item-url="images/video/library/large/16.jpg" class="item">
+                                  <div class="thumb"><img src="images/video/library/small/16.jpg" alt="" class="img-responsive"/></div>
+                                </div>
+                                <div data-item-id="item_image-library_17" data-item-url="images/video/library/large/17.jpg" class="item">
+                                  <div class="thumb"><img src="images/video/library/small/17.jpg" alt="" class="img-responsive"/></div>
+                                </div>
+                                <div data-item-id="item_image-library_18" data-item-url="images/video/library/large/18.jpg" class="item">
+                                  <div class="thumb"><img src="images/video/library/small/18.jpg" alt="" class="img-responsive"/></div>
+                                </div>
+                                <div data-item-id="item_image-library_19" data-item-url="images/video/library/large/19.jpg" class="item">
+                                  <div class="thumb"><img src="images/video/library/small/19.jpg" alt="" class="img-responsive"/></div>
+                                </div>
+                                <div data-item-id="item_image-library_20" data-item-url="images/video/library/large/20.jpg" class="item">
+                                  <div class="thumb"><img src="images/video/library/small/20.jpg" alt="" class="img-responsive"/></div>
+                                </div>
+                              </div>
+                              <div id="vc-image-upload" data-content-small class="tab">
+                                <ul class="list-inline list-upload">
+                                  <li class="active"><a href="javascript:void(0);" title="Từ máy tính" class="vc-image-upload-local"><img src="images/video/icon-1.png" alt="Từ máy tính"><span>Từ máy tính</span></a></li>
+                                  <li><a href="javascript:void(0);" title="Từ Google Drive" class="vc-image-upload-gd"><img src="images/video/icon-2.png" alt="Từ Google Drive"><span>Từ Google Drive</span></a></li>
+                                  <li><a href="javascript:void(0);" title="Từ FaceBook " class="vc-image-upload-db"><img src="images/video/icon-3.png" alt="Từ FaceBook"><span>Từ FaceBook</span></a></li>
+                                </ul>
+                              </div>
+                              <div id="vc-image-yours" data-content-small class="tab">
+                                <div data-item-id="item_image-yours_1" data-item-url="images/video/library/large/1.jpg" class="item">
+                                  <div class="thumb"><img src="images/video/library/small/1.jpg" alt="" class="img-responsive"/></div>
+                                </div>
+                                <div data-item-id="item_image-yours_2" data-item-url="images/video/library/large/2.jpg" class="item">
+                                  <div class="thumb"><img src="images/video/library/small/2.jpg" alt="" class="img-responsive"/></div>
+                                </div>
+                                <div data-item-id="item_image-yours_3" data-item-url="images/video/library/large/3.jpg" class="item">
+                                  <div class="thumb"><img src="images/video/library/small/3.jpg" alt="" class="img-responsive"/></div>
+                                </div>
+                                <div data-item-id="item_image-yours_4" data-item-url="images/video/library/large/4.jpg" class="item">
+                                  <div class="thumb"><img src="images/video/library/small/4.jpg" alt="" class="img-responsive"/></div>
+                                </div>
+                                <div data-item-id="item_image-yours_5" data-item-url="images/video/library/large/5.jpg" class="item">
+                                  <div class="thumb"><img src="images/video/library/small/5.jpg" alt="" class="img-responsive"/></div>
+                                </div>
+                                <div data-item-id="item_image-yours_6" data-item-url="images/video/library/large/6.jpg" class="item">
+                                  <div class="thumb"><img src="images/video/library/small/6.jpg" alt="" class="img-responsive"/></div>
+                                </div>
+                                <div data-item-id="item_image-yours_7" data-item-url="images/video/library/large/7.jpg" class="item">
+                                  <div class="thumb"><img src="images/video/library/small/7.jpg" alt="" class="img-responsive"/></div>
+                                </div>
+                                <div data-item-id="item_image-yours_8" data-item-url="images/video/library/large/8.jpg" class="item">
+                                  <div class="thumb"><img src="images/video/library/small/8.jpg" alt="" class="img-responsive"/></div>
+                                </div>
+                                <div data-item-id="item_image-yours_9" data-item-url="images/video/library/large/9.jpg" class="item">
+                                  <div class="thumb"><img src="images/video/library/small/9.jpg" alt="" class="img-responsive"/></div>
+                                </div>
+                                <div data-item-id="item_image-yours_10" data-item-url="images/video/library/large/10.jpg" class="item">
+                                  <div class="thumb"><img src="images/video/library/small/10.jpg" alt="" class="img-responsive"/></div>
+                                </div>
+                                <div data-item-id="item_image-yours_11" data-item-url="images/video/library/large/11.jpg" class="item">
+                                  <div class="thumb"><img src="images/video/library/small/11.jpg" alt="" class="img-responsive"/></div>
+                                </div>
+                                <div data-item-id="item_image-yours_12" data-item-url="images/video/library/large/12.jpg" class="item">
+                                  <div class="thumb"><img src="images/video/library/small/12.jpg" alt="" class="img-responsive"/></div>
+                                </div>
+                                <div data-item-id="item_image-yours_13" data-item-url="images/video/library/large/13.jpg" class="item">
+                                  <div class="thumb"><img src="images/video/library/small/13.jpg" alt="" class="img-responsive"/></div>
+                                </div>
+                                <div data-item-id="item_image-yours_14" data-item-url="images/video/library/large/14.jpg" class="item">
+                                  <div class="thumb"><img src="images/video/library/small/14.jpg" alt="" class="img-responsive"/></div>
+                                </div>
+                                <div data-item-id="item_image-yours_15" data-item-url="images/video/library/large/15.jpg" class="item">
+                                  <div class="thumb"><img src="images/video/library/small/15.jpg" alt="" class="img-responsive"/></div>
+                                </div>
+                                <div data-item-id="item_image-yours_16" data-item-url="images/video/library/large/16.jpg" class="item">
+                                  <div class="thumb"><img src="images/video/library/small/16.jpg" alt="" class="img-responsive"/></div>
+                                </div>
+                                <div data-item-id="item_image-yours_17" data-item-url="images/video/library/large/17.jpg" class="item">
+                                  <div class="thumb"><img src="images/video/library/small/17.jpg" alt="" class="img-responsive"/></div>
+                                </div>
+                                <div data-item-id="item_image-yours_18" data-item-url="images/video/library/large/18.jpg" class="item">
+                                  <div class="thumb"><img src="images/video/library/small/18.jpg" alt="" class="img-responsive"/></div>
+                                </div>
+                                <div data-item-id="item_image-yours_19" data-item-url="images/video/library/large/19.jpg" class="item">
+                                  <div class="thumb"><img src="images/video/library/small/19.jpg" alt="" class="img-responsive"/></div>
+                                </div>
+                                <div data-item-id="item_image-yours_20" data-item-url="images/video/library/large/20.jpg" class="item">
+                                  <div class="thumb"><img src="images/video/library/small/20.jpg" alt="" class="img-responsive"/></div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div id="vc-add-video" data-content class="block-tab-video">
+                        <div data-scroll-video class="effect-list">
+                          <div data-tab-video-small class="tab-video">
+                            <div data-control-small class="list-album-item">
+                              <li class="active"><a href="#vc-video-library" title="Thư viện video">Thư viện video</a></li>
+                              <li><a href="#vc-video-upload" title="Upload video">Upload video</a></li>
+                              <li><a href="#vc-video-yours" title="Video của bạn">Video của bạn</a></li>
+                            </div>
+                            <div class="content">
+                              <div id="vc-video-library" data-content-small class="tab active">
+                                <div data-item-id="item_video-library_1" data-item-url="videos/Video1.mp4" class="item">
+                                  <div class="thumb"><img src="images/video/Video1.png" alt="" class="img-responsive"/></div>
+                                </div>
+                                <div data-item-id="item_video-library_2" data-item-url="videos/Video2.mp4" class="item">
+                                  <div class="thumb"><img src="images/video/Video2.png" alt="" class="img-responsive"/></div>
+                                </div>
+                                <div data-item-id="item_video-library_3" data-item-url="videos/Video1.mp4" class="item">
+                                  <div class="thumb"><img src="images/video/Video3.png" alt="" class="img-responsive"/></div>
+                                </div>
+                                <div data-item-id="item_video-library_4" data-item-url="videos/Video2.mp4" class="item">
+                                  <div class="thumb"><img src="images/video/Video4.png" alt="" class="img-responsive"/></div>
+                                </div>
+                                <div data-item-id="item_video-library_5" data-item-url="videos/Video1.mp4" class="item">
+                                  <div class="thumb"><img src="images/video/Video1.png" alt="" class="img-responsive"/></div>
+                                </div>
+                                <div data-item-id="item_video-library_6" data-item-url="videos/Video2.mp4" class="item">
+                                  <div class="thumb"><img src="images/video/Video2.png" alt="" class="img-responsive"/></div>
+                                </div>
+                                <div data-item-id="item_video-library_7" data-item-url="videos/Video1.mp4" class="item">
+                                  <div class="thumb"><img src="images/video/Video3.png" alt="" class="img-responsive"/></div>
+                                </div>
+                                <div data-item-id="item_video-library_8" data-item-url="videos/Video2.mp4" class="item">
+                                  <div class="thumb"><img src="images/video/Video4.png" alt="" class="img-responsive"/></div>
+                                </div>
+                                <div data-item-id="item_video-library_9" data-item-url="videos/Video1.mp4" class="item">
+                                  <div class="thumb"><img src="images/video/Video1.png" alt="" class="img-responsive"/></div>
+                                </div>
+                                <div data-item-id="item_video-library_10" data-item-url="videos/Video2.mp4" class="item">
+                                  <div class="thumb"><img src="images/video/Video2.png" alt="" class="img-responsive"/></div>
+                                </div>
+                              </div>
+                              <div id="vc-video-upload" data-content-small class="tab">
+                                <ul class="list-inline list-upload">
+                                  <li class="active"><a href="javascript:void(0);" title="Từ máy tính" class="vc-video-upload-local"><img src="images/video/icon-1.png" alt="Từ máy tính"><span>Từ máy tính</span></a></li>
+                                  <li><a href="javascript:void(0);" title="Từ Google Drive" class="vc-video-upload-gd"><img src="images/video/icon-2.png" alt="Từ Google Drive"><span>Từ Google Drive</span></a></li>
+                                  <li><a href="javascript:void(0);" title="Từ FaceBook " class="vc-video-upload-db"><img src="images/video/icon-3.png" alt="Từ FaceBook"><span>Từ FaceBook</span></a></li>
+                                </ul>
+                              </div>
+                              <div id="vc-video-yours" data-content-small class="tab">
+                                <div data-item-id="item_video-yours_1" data-item-url="videos/Video1.mp4" class="item">
+                                  <div class="thumb"><img src="images/video/Video1.png" alt="" class="img-responsive"/></div>
+                                </div>
+                                <div data-item-id="item_video-yours_2" data-item-url="videos/Video2.mp4" class="item">
+                                  <div class="thumb"><img src="images/video/Video2.png" alt="" class="img-responsive"/></div>
+                                </div>
+                                <div data-item-id="item_video-yours_3" data-item-url="videos/Video1.mp4" class="item">
+                                  <div class="thumb"><img src="images/video/Video3.png" alt="" class="img-responsive"/></div>
+                                </div>
+                                <div data-item-id="item_video-yours_4" data-item-url="videos/Video2.mp4" class="item">
+                                  <div class="thumb"><img src="images/video/Video4.png" alt="" class="img-responsive"/></div>
+                                </div>
+                                <div data-item-id="item_video-yours_5" data-item-url="videos/Video1.mp4" class="item">
+                                  <div class="thumb"><img src="images/video/Video1.png" alt="" class="img-responsive"/></div>
+                                </div>
+                                <div data-item-id="item_video-yours_6" data-item-url="videos/Video2.mp4" class="item">
+                                  <div class="thumb"><img src="images/video/Video2.png" alt="" class="img-responsive"/></div>
+                                </div>
+                                <div data-item-id="item_video-yours_7" data-item-url="videos/Video1.mp4" class="item">
+                                  <div class="thumb"><img src="images/video/Video3.png" alt="" class="img-responsive"/></div>
+                                </div>
+                                <div data-item-id="item_video-yours_8" data-item-url="videos/Video2.mp4" class="item">
+                                  <div class="thumb"><img src="images/video/Video4.png" alt="" class="img-responsive"/></div>
+                                </div>
+                                <div data-item-id="item_video-yours_9" data-item-url="videos/Video1.mp4" class="item">
+                                  <div class="thumb"><img src="images/video/Video1.png" alt="" class="img-responsive"/></div>
+                                </div>
+                                <div data-item-id="item_video-yours_10" data-item-url="videos/Video2.mp4" class="item">
+                                  <div class="thumb"><img src="images/video/Video2.png" alt="" class="img-responsive"/></div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div id="vc-add-effect" data-content class="block-tab-video">
+                        <div data-scroll-video class="effect-list">
+                          <div data-item-id="BNone" data-item-url="BEffect_None" class="item">
+                            <div class="thumb"><img src="images/video/BEffect.png" alt="None" class="img-responsive"></div>
+                            <div class="desc">
+                              <h4>None</h4>
+                            </div>
+                          </div>
+                          <div data-item-id="BFade" data-item-url="BEffect_Fade" class="item">
+                            <div class="thumb"><img src="images/video/BEffect.png" alt="Fade" class="img-responsive"></div>
+                            <div class="desc">
+                              <h4>Fade</h4>
+                            </div>
+                          </div>
+                          <div data-item-id="BSlideLeft" data-item-url="BEffect_SlideLeft" class="item">
+                            <div class="thumb"><img src="images/video/BEffect.png" alt="SlideLeft" class="img-responsive"></div>
+                            <div class="desc">
+                              <h4>SlideLeft</h4>
+                            </div>
+                          </div>
+                          <div data-item-id="BSlideRight" data-item-url="BEffect_SlideRight" class="item">
+                            <div class="thumb"><img src="images/video/BEffect.png" alt="SlideRight" class="img-responsive"></div>
+                            <div class="desc">
+                              <h4>SlideRight</h4>
+                            </div>
+                          </div>
+                          <div data-item-id="BSlideUp" data-item-url="BEffect_SlideUp" class="item">
+                            <div class="thumb"><img src="images/video/BEffect.png" alt="SlideUp" class="img-responsive"></div>
+                            <div class="desc">
+                              <h4>SlideUp</h4>
+                            </div>
+                          </div>
+                          <div data-item-id="BSlideDown" data-item-url="BEffect_SlideDown" class="item">
+                            <div class="thumb"><img src="images/video/BEffect.png" alt="SlideDown" class="img-responsive"></div>
+                            <div class="desc">
+                              <h4>SlideDown</h4>
+                            </div>
+                          </div>
+                          <div data-item-id="BZoomIn" data-item-url="BEffect_ZoomIn" class="item">
+                            <div class="thumb"><img src="images/video/BEffect.png" alt="ZoomIn" class="img-responsive"></div>
+                            <div class="desc">
+                              <h4>ZoomIn</h4>
+                            </div>
+                          </div>
+                          <div data-item-id="BZoomOut" data-item-url="BEffect_ZoomOut" class="item">
+                            <div class="thumb"><img src="images/video/BEffect.png" alt="ZoomOut" class="img-responsive"></div>
+                            <div class="desc">
+                              <h4>ZoomOut</h4>
+                            </div>
+                          </div>
+                          <div data-item-id="BAlphaBars" data-item-url="BEffect_AlphaBars" class="item">
+                            <div class="thumb"><img src="images/video/BEffect.png" alt="AlphaBars" class="img-responsive"></div>
+                            <div class="desc">
+                              <h4>AlphaBars</h4>
+                            </div>
+                          </div>
+                          <div data-item-id="BSquareExplode" data-item-url="BEffect_SquareExplode" class="item">
+                            <div class="thumb"><img src="images/video/BEffect.png" alt="SquareExplode" class="img-responsive"></div>
+                            <div class="desc">
+                              <h4>SquareExplode</h4>
+                            </div>
+                          </div>
+                          <div data-item-id="BBrightSquares" data-item-url="BEffect_BrightSquares" class="item">
+                            <div class="thumb"><img src="images/video/BEffect.png" alt="BrightSquares" class="img-responsive"></div>
+                            <div class="desc">
+                              <h4>BrightSquares</h4>
+                            </div>
+                          </div>
+                          <div data-item-id="BClockWise" data-item-url="BEffect_ClockWise" class="item">
+                            <div class="thumb"><img src="images/video/BEffect.png" alt="ClockWise" class="img-responsive"></div>
+                            <div class="desc">
+                              <h4>ClockWise</h4>
+                            </div>
+                          </div>
+                          <div data-item-id="BMultiZoom" data-item-url="BEffect_MultiZoom" class="item">
+                            <div class="thumb"><img src="images/video/BEffect.png" alt="MultiZoom" class="img-responsive"></div>
+                            <div class="desc">
+                              <h4>MultiZoom</h4>
+                            </div>
+                          </div>
+                          <div data-item-id="BLeftRightMerge" data-item-url="BEffect_LeftRightMerge" class="item">
+                            <div class="thumb"><img src="images/video/BEffect.png" alt="LeftRightMerge" class="img-responsive"></div>
+                            <div class="desc">
+                              <h4>LeftRightMerge</h4>
+                            </div>
+                          </div>
+                          <div data-item-id="BUpDownMerge" data-item-url="BEffect_UpDownMerge" class="item">
+                            <div class="thumb"><img src="images/video/BEffect.png" alt="UpDownMerge" class="img-responsive"></div>
+                            <div class="desc">
+                              <h4>UpDownMerge</h4>
+                            </div>
+                          </div>
+                          <div data-item-id="BTopMerge" data-item-url="BEffect_TopMerge" class="item">
+                            <div class="thumb"><img src="images/video/BEffect.png" alt="TopMerge" class="img-responsive"></div>
+                            <div class="desc">
+                              <h4>TopMerge</h4>
+                            </div>
+                          </div>
+                          <div data-item-id="BBottomMerge" data-item-url="BEffect_BottomMerge" class="item">
+                            <div class="thumb"><img src="images/video/BEffect.png" alt="BottomMerge" class="img-responsive"></div>
+                            <div class="desc">
+                              <h4>BottomMerge        </h4>
+                            </div>
+                          </div>
+                          <div data-item-id="BHeartMask" data-item-url="BEffect_HeartMask" class="item">
+                            <div class="thumb"><img src="images/video/BEffect.png" alt="HeartMask" class="img-responsive"></div>
+                            <div class="desc">
+                              <h4>HeartMask</h4>
+                            </div>
+                          </div>
+                          <div data-item-id="BRotateLeft" data-item-url="BEffect_RotateLeft" class="item">
+                            <div class="thumb"><img src="images/video/BEffect.png" alt="RotateLeft" class="img-responsive"></div>
+                            <div class="desc">
+                              <h4>RotateLeft</h4>
+                            </div>
+                          </div>
+                          <div data-item-id="BRotateRight" data-item-url="BEffect_RotateRight" class="item">
+                            <div class="thumb"><img src="images/video/BEffect.png" alt="RotateRight" class="img-responsive"></div>
+                            <div class="desc">
+                              <h4>RotateRight                            </h4>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div id="vc-add-audio" data-content class="block-tab-video">
+                        <div data-scroll-video class="effect-list">
+                          <div data-tab-video-small class="tab-video">
+                            <div data-control-small class="list-album-item">
+                              <li class="active"><a href="#vc-audio-library" title="Thư viện audio">Thư viện audio</a></li>
+                              <li><a href="#vc-audio-upload" title="Upload audio">Upload audio</a></li>
+                              <li><a href="#vc-audio-yours" title="Audio của bạn">Audio của bạn</a></li>
+                            </div>
+                            <div class="content">
+                              <div id="vc-audio-library" data-content-small class="tab active">
+                                <div class="audio-control">
+                                  <div data-item-id="item_audio-library_1" data-item-url="audios/Audio1.mp3" data-item-time="266" class="item">
+                                    <div class="title"><strong>My heart will go on</strong></div><a href="javascript:void(0)" title="Select" class="add-more"><span class="fa fa-plus"></span></a><span class="time">04:26</span>
+                                  </div>
+                                  <div data-item-id="item_audio-library_2" data-item-url="audios/Audio2.mp3" data-item-time="206" class="item">
+                                    <div class="title"><strong>Tonight i celebrate my love for you</strong></div><a href="javascript:void(0)" title="Select" class="add-more"><span class="fa fa-plus"></span></a><span class="time">03:26</span>
+                                  </div>
+                                  <div data-item-id="item_audio-library_3" data-item-url="audios/Audio2.mp3" data-item-time="206" class="item">
+                                    <div class="title"><strong>Tonight i celebrate my love for you</strong></div><a href="javascript:void(0)" title="Select" class="add-more"><span class="fa fa-plus"></span></a><span class="time">03:26</span>
+                                  </div>
+                                  <div data-item-id="item_audio-library_4" data-item-url="audios/Audio1.mp3" data-item-time="266" class="item">
+                                    <div class="title"><strong>My heart will go on</strong></div><a href="javascript:void(0)" title="Select" class="add-more"><span class="fa fa-plus"></span></a><span class="time">04:26</span>
+                                  </div>
+                                </div>
+                              </div>
+                              <div id="vc-audio-upload" data-content-small class="tab">
+                                <ul class="list-inline list-upload">
+                                  <li class="active"><a href="javascript:void(0);" title="Từ máy tính" class="vc-audio-upload-local"><img src="images/video/icon-1.png" alt="Từ máy tính"><span>Từ máy tính</span></a></li>
+                                  <li><a href="javascript:void(0);" title="Từ Google Drive" class="vc-audio-upload-gd"><img src="images/video/icon-2.png" alt="Từ Google Drive"><span>Từ Google Drive</span></a></li>
+                                  <li><a href="javascript:void(0);" title="Từ FaceBook " class="vc-audio-upload-db"><img src="images/video/icon-3.png" alt="Từ FaceBook"><span>Từ FaceBook</span></a></li>
+                                </ul>
+                              </div>
+                              <div id="vc-audio-yours" data-content-small class="tab">
+                                <div class="audio-control">
+                                  <div data-item-id="item_audio-yours_1" data-item-url="audios/Audio1.mp3" data-item-time="300" class="item">
+                                    <div class="title"><strong>Audio song name</strong></div><a href="javascript:void(0)" title="Select" class="add-more"><span class="fa fa-plus"></span></a><span class="time">05:00</span>
+                                  </div>
+                                  <div data-item-id="item_audio-yours_2" data-item-url="audios/Audio2.mp3" data-item-time="300" class="item">
+                                    <div class="title"><strong>Audio song name</strong></div><a href="javascript:void(0)" title="Select" class="add-more"><span class="fa fa-plus"></span></a><span class="time">05:00</span>
+                                  </div>
+                                  <div data-item-id="item_audio-yours_3" data-item-url="audios/Audio1.mp3" data-item-time="300" class="item">
+                                    <div class="title"><strong>Audio song name</strong></div><a href="javascript:void(0)" title="Select" class="add-more"><span class="fa fa-plus"></span></a><span class="time">05:00</span>
+                                  </div>
+                                  <div data-item-id="item_audio-yours_4" data-item-url="audios/Audio2.mp3" data-item-time="300" class="item">
+                                    <div class="title"><strong>Audio song name</strong></div><a href="javascript:void(0)" title="Select" class="add-more"><span class="fa fa-plus"></span></a><span class="time">05:00</span>
+                                  </div>
+                                  <div data-item-id="item_audio-yours_5" data-item-url="audios/Audio1.mp3" data-item-time="300" class="item">
+                                    <div class="title"><strong>Audio song name</strong></div><a href="javascript:void(0)" title="Select" class="add-more"><span class="fa fa-plus"></span></a><span class="time">05:00</span>
+                                  </div>
+                                  <div data-item-id="item_audio-yours_6" data-item-url="audios/Audio2.mp3" data-item-time="300" class="item">
+                                    <div class="title"><strong>Audio song name</strong></div><a href="javascript:void(0)" title="Select" class="add-more"><span class="fa fa-plus"></span></a><span class="time">05:00</span>
+                                  </div>
+                                  <div data-item-id="item_audio-yours_7" data-item-url="audios/Audio1.mp3" data-item-time="300" class="item">
+                                    <div class="title"><strong>Audio song name</strong></div><a href="javascript:void(0)" title="Select" class="add-more"><span class="fa fa-plus"></span></a><span class="time">05:00</span>
+                                  </div>
+                                  <div data-item-id="item_audio-yours_8" data-item-url="audios/Audio2.mp3" data-item-time="300" class="item">
+                                    <div class="title"><strong>Audio song name</strong></div><a href="javascript:void(0)" title="Select" class="add-more"><span class="fa fa-plus"></span></a><span class="time">05:00</span>
+                                  </div>
+                                  <div data-item-id="item_audio-yours_9" data-item-url="audios/Audio1.mp3" data-item-time="300" class="item">
+                                    <div class="title"><strong>Audio song name</strong></div><a href="javascript:void(0)" title="Select" class="add-more"><span class="fa fa-plus"></span></a><span class="time">05:00</span>
+                                  </div>
+                                  <div data-item-id="item_audio-yours_10" data-item-url="audios/Audio2.mp3" data-item-time="300" class="item">
+                                    <div class="title"><strong>Audio song name</strong></div><a href="javascript:void(0)" title="Select" class="add-more"><span class="fa fa-plus"></span></a><span class="time">05:00</span>
+                                  </div>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                      <div id="vc-add-texteffect" data-content class="block-tab-video">
+                        <div data-scroll-video class="effect-list">
+                          <div data-item-id="TNone" data-item-url="TEffect_None" class="item">
+                            <div class="thumb"><img src="images/video/TEffect.png" alt="None" class="img-responsive"></div>
+                            <div class="desc">
+                              <h4>None</h4>
+                            </div>
+                          </div>
+                          <div data-item-id="TFade" data-item-url="TEffect_Fade" class="item">
+                            <div class="thumb"><img src="images/video/TEffect.png" alt="Fade" class="img-responsive"></div>
+                            <div class="desc">
+                              <h4>Fade</h4>
+                            </div>
+                          </div>
+                          <div data-item-id="TSlideLeft" data-item-url="TEffect_SlideLeft" class="item">
+                            <div class="thumb"><img src="images/video/TEffect.png" alt="SlideLeft" class="img-responsive"></div>
+                            <div class="desc">
+                              <h4>SlideLeft</h4>
+                            </div>
+                          </div>
+                          <div data-item-id="TSlideRight" data-item-url="TEffect_SlideRight" class="item">
+                            <div class="thumb"><img src="images/video/TEffect.png" alt="TSlideRight" class="img-responsive"></div>
+                            <div class="desc">
+                              <h4>SlideRight</h4>
+                            </div>
+                          </div>
+                          <div data-item-id="TSlideUp" data-item-url="TEffect_SlideUp" class="item">
+                            <div class="thumb"><img src="images/video/TEffect.png" alt="TSlideUp" class="img-responsive"></div>
+                            <div class="desc">
+                              <h4>SlideUp</h4>
+                            </div>
+                          </div>
+                          <div data-item-id="TSlideDown" data-item-url="TEffect_SlideDown" class="item">
+                            <div class="thumb"><img src="images/video/TEffect.png" alt="TSlideDown" class="img-responsive"></div>
+                            <div class="desc">
+                              <h4>SlideDown</h4>
+                            </div>
+                          </div>
+                          <div data-item-id="TFastBounceText" data-item-url="TEffect_FastBounceText" class="item">
+                            <div class="thumb"><img src="images/video/TEffect.png" alt="TFastBounceText" class="img-responsive"></div>
+                            <div class="desc">
+                              <h4>BounceText</h4>
+                            </div>
+                          </div>
+                          <div data-item-id="TStarLeft" data-item-url="TEffect_StarLeft" class="item">
+                            <div class="thumb"><img src="images/video/TEffect.png" alt="TStarLeft" class="img-responsive"></div>
+                            <div class="desc">
+                              <h4>StarLeft</h4>
+                            </div>
+                          </div>
+                          <div data-item-id="TStarRight" data-item-url="TEffect_StarRight" class="item">
+                            <div class="thumb"><img src="images/video/TEffect.png" alt="TStarRight" class="img-responsive"></div>
+                            <div class="desc">
+                              <h4>StarRight</h4>
+                            </div>
+                          </div>
+                          <div data-item-id="THeartLeft" data-item-url="TEffect_HeartLeft" class="item">
+                            <div class="thumb"><img src="images/video/TEffect.png" alt="THeartLeft" class="img-responsive"></div>
+                            <div class="desc">
+                              <h4>HeartLeft</h4>
+                            </div>
+                          </div>
+                          <div data-item-id="THeartRight" data-item-url="TEffect_HeartRight" class="item">
+                            <div class="thumb"><img src="images/video/TEffect.png" alt="THeartRight" class="img-responsive"></div>
+                            <div class="desc">
+                              <h4>HeartRight</h4>
+                            </div>
+                          </div>
+                          <div data-item-id="TCenterGo" data-item-url="TEffect_CenterGo" class="item">
+                            <div class="thumb"><img src="images/video/TEffect.png" alt="TCenterGo" class="img-responsive"></div>
+                            <div class="desc">
+                              <h4>TextCenter</h4>
+                            </div>
+                          </div>
+                          <div data-item-id="TLightLeft" data-item-url="TEffect_LightLeft" class="item">
+                            <div class="thumb"><img src="images/video/TEffect.png" alt="TLightLeft" class="img-responsive"></div>
+                            <div class="desc">
+                              <h4>LightLeft</h4>
+                            </div>
+                          </div>
+                          <div data-item-id="TLightRight" data-item-url="TEffect_LightRight" class="item">
+                            <div class="thumb"><img src="images/video/TEffect.png" alt="TLightRight" class="img-responsive"></div>
+                            <div class="desc">
+                              <h4>LightRight</h4>
+                            </div>
+                          </div>
+                          <!--
+                          .time-control
+                            label(for="time") Thời lượng hiệu ứng: 
+                            input.input-1#time(type="text", name="time", value="05")
+                            span Giây
+                            button.btn-1(type="submit", title="Lưu") Lưu
+                            
+                          -->
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="tfooter">
+                <div class="add-function-block">
+                  <div class="item vc-backgrounds">
+                    <div class="head"><span class="icon-edit-img"></span></div>
+                    <div class="content">
+                      <div class="wrap-list">
+                        <div class="list-box">
+                          <!--
+                          .box
+                            .img-add
+                              img(src="images/upload/pic-1.jpg", alt="")
+                            span.time 00:05
+                            a.delete(href="javascript:void(0);", title="Delete")
+                              span.fa.fa-minus
+                          -->
+                        </div><a href="javascript:void(0)" title="Thêm hình nền" class="add-more"><span class="fa fa-plus"></span></a>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="item vc-audios">
+                    <div class="head"><span class="icon-edit-audio"></span></div>
+                    <div class="content">
+                      <div class="wrap-list">
+                        <div class="list-box">
+                          <!--
+                          .box
+                            .control-meida
+                              a(href="javascript:void(0);", title="Play")
+                                span.fa.fa-play
+                            .title
+                              strong ten bai hat
+                            span.time 00:05
+                            a.delete(href="javascript:void(0);", title="Delete")
+                              span.fa.fa-minus
+                          -->
+                        </div><a href="javascript:void(0)" title="Thêm audio" class="add-more"><span class="fa fa-plus"></span></a>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="item vc-frames">
+                    <div class="head"><span class="icon-edit-video-img"></span></div>
+                    <div class="content">
+                      <div class="wrap-list">
+                        <div class="list-frame"></div>
+                        <div class="responsive-container add-more-effect">
+                          <div class="wrap"></div><a href="javascript:void(0);" title="Thêm khung hình" class="img-container">
+                            <div class="inner"><span class="icon-plus"></span></div></a>
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -130,17 +973,325 @@
           </div>
         </div>
       </div>
+      <footer id="footer">
+        <div class="top-footer">
+          <div class="container">
+            <div class="row">
+              <div class="col-sm-7 col-sm-offset-3">
+                <div class="toolbar">
+                  <div class="item social">
+                    <div class="title">Theo dõi VOW tại: </div>
+                    <ul class="list-inline">
+                      <li><a href="#" title="" class="yt"><span class="fa fa-youtube"></span></a></li>
+                      <li><a href="#" title="" class="fb"><span class="fa fa-facebook"></span></a></li>
+                      <li><a href="#" title="" class="gp"><span class="fa fa-google-plus"></span></a></li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="bottom-footer">
+          <div class="container">
+            <div class="content">
+              <div class="row">
+                <div class="col-sm-7 col-sm-offset-3">
+                  <div class="item"><strong>Wedding tools: </strong>
+                    <ul class="list-inline">
+                      <li><a href="#" title="Planning Tool">Planning Tool</a></li>
+                      <li><a href="#" title="Local Vendor">Local Vendor</a></li>
+                      <li><a href="#" title="News">News</a></li>
+                      <li><a href="#" title="Blogs">Blogs</a></li>
+                      <li><a href="#" title="Create your wedding site">Create your wedding site</a></li>
+                    </ul>
+                  </div>
+                  <div class="item"><strong>Categories:</strong>
+                    <ul class="list-inline">
+                      <li><a href="#" title="Gallery">Gallery</a></li>
+                      <li><a href="#" title="Video">Video</a></li>
+                      <li><a href="#" title="Real Wedding">Real Wedding</a></li>
+                    </ul>
+                  </div>
+                  <div class="item"><strong>Categories: </strong>
+                    <ul class="list-inline">
+                      <li><a href="#" title="Careers">Careers</a></li>
+                      <li><a href="#" title="Contact Us">Contact Us</a></li>
+                      <li><a href="#" title="Privacy Policy">Privacy Policy</a></li>
+                      <li><a href="#" title="Term &amp; Condition ">Term & Condition </a></li>
+                    </ul>
+                  </div>
+                  <div class="item">
+                    <form id="search-form3" name="search-form" method="get" action="#" class="form">
+                      <div class="form-group">
+                        <input type="text" name="input-search-head" id="input-search3" value="" autocomplete="off" class="input-1" alert="" placeholder="Enter your email"/>
+                        <button type="submit" name="submit-button-head3" id="submit-button-head3" title="Search" class="btn submit-btn">Search</button>
+                      </div>
+                    </form>
+                  </div>
+                  <div class="item">
+                    <p>© 2015. VOW All Rights Reserved.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </footer>
+      <div class="visible-xs visible-sm block-mobile">
+        <div data-slidermobile class="find-block">
+          <form name="" action="#" method="post" class="form-1">
+            <div data-select class="custom-select"><span class="text-val">Vendor</span><a href="javascript:;" title="select"><i class="icon-select"></i></a>
+              <select name="bw">
+                <option value="">Vendor</option>
+                <option value="item-1">item-1</option>
+                <option value="item-2">item-2</option>
+              </select>
+            </div>
+            <div data-select class="custom-select"><span class="text-val">City</span><a href="javascript:;" title="select"><i class="icon-select"></i></a>
+              <select name="bw">
+                <option value="">City</option>
+                <option value="item-1">item-1</option>
+                <option value="item-2">item-2</option>
+              </select>
+            </div>
+            <button type="submit" title="Tìm nhà cung cấp" class="btn-1">Tìm nhà cung cấp</button>
+          </form>
+        </div>
+        <div data-buttonslider class="btn-slide-content"><a href="javascript:void(0);" title="Tìm nhà cung cấp" class="btn-show">Tìm nhà cung cấp</a>
+          <div class="btn-slider"><span class="fa fa-angle-double-left"></span></div>
+        </div>
+      </div>
+      <div class="backtotop"><img src="images/icon_gototop.png" alt="BackToTop"></div>
+      <div id="myModal1" data-modal-ajax tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" class="modal modal-1 fade">
+        <div class="modal-dialog">
+          <div class="modal-content"></div>
+        </div>
+      </div>
+      <div id="detail" data-modal-ajax tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" class="modal modal-1 fade">
+        <div class="modal-dialog">
+          <div class="modal-content"></div>
+        </div>
+      </div>
+      <div id="myModal" data-modal-ajax tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" class="modal modal-album fade">
+        <div class="modal-dialog">
+          <div class="modal-content"></div>
+        </div>
+      </div>
+      <div id="listFriend" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" class="modal modal-1 fade">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" data-dismiss="modal" aria-hidden="true" class="close">&times;</button>
+              <h2 class="modal-title">Chọn danh bạ</h2>
+            </div>
+            <div class="modal-body">
+              <form action="" class="form-style-1">
+                <div class="row">
+                  <div class="col-sm-12">
+                    <div class="social-block text-center">
+                      <ul class="list-inline">
+                        <li><a href="#facebookfriend" title="Download" data-toggle="modal" data-list-friend-fb class="fb"><span class="fa fa-facebook"></span></a></li>
+                        <li><a href="#googlefriend" title="Download" data-toggle="modal" data-list-friend-gp class="gp"><span class="fa fa-google-plus"></span></a></li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="facebookfriend" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-list-modal-fb class="modal modal-1 fade">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" data-dismiss="modal" aria-hidden="true" class="close">&times;</button>
+              <h2 class="modal-title">Chọn khách mời từ Facebook</h2>
+            </div>
+            <div class="modal-body">
+              <div class="control-panel">
+                <form action="" class="form">
+                  <div class="row">
+                    <div class="col-sm-8 col-sm-offset-2">
+                      <div class="form-group style-1">
+                        <input type="text" name="input-search-head" id="input-search-02" value="" autocomplete="off" class="input-1" alert="" placeholder="Find an article..."/>
+                        <button type="submit" name="submit-button-head02" id="submit-button-head02" title="Search" class="btn-icon">Search</button>
+                      </div>
+                    </div>
+                    <div class="col-xs-12">
+                      <div class="invitation-list">
+                        <ul class="list-unstyled"></ul>
+                      </div>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="googlefriend" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-list-modal-gp class="modal modal-1 fade">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" data-dismiss="modal" aria-hidden="true" class="close">&times;</button>
+              <h2 class="modal-title">Chọn khách mời từ Google</h2>
+            </div>
+            <div class="modal-body">
+              <div class="control-panel">
+                <form action="" class="form">
+                  <div class="row">
+                    <div class="col-sm-8 col-sm-offset-2">
+                      <div class="form-group style-1">
+                        <input type="text" name="input-search-head" id="input-search-02" value="" autocomplete="off" class="input-1" alert="" placeholder="Find an article..."/>
+                        <button type="submit" name="submit-button-head02" id="submit-button-head02" title="Search" class="btn-icon">Search</button>
+                      </div>
+                    </div>
+                    <div class="col-xs-12">
+                      <div class="invitation-list">
+                        <ul class="list-unstyled">
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="videoComplete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" class="modal modal-1 fade">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" data-dismiss="modal" aria-hidden="true" class="close">&times;</button>
+              <h2 class="modal-title">Xin chúc mừng video mới đã tạo thành công !</h2>
+            </div>
+            <div class="modal-body">
+              <div action="" class="form-style-1">
+                <div class="row">
+                  <div class="col-sm-10 col-sm-offset-1">
+                    <div class="row">
+                      <div class="col-xs-12">
+                        <label for="vc-link-share">Link của bạn</label>
+                        <div class="form-group">
+                          <input type="text" name="vc-link-share" id="vc-link-share" value="" autocomplete="off" class="input-1" placeholder="" readonly="readonly"/>
+                        </div>
+                      </div>
+                      <div class="col-xs-12 share-block">
+                        <label for="vc-share">Chia sẻ Video của bạn</label>
+                        <div class="row">
+                          <div class="col-xs-6"><a href="#" name="vc-fb-share" title="Facebook" class="btn-1a blue-style full">Facebook</a></div>
+                          <div class="col-xs-6"><a href="#" name="vc-gp-share" title="Google+" class="btn-1a red-style full">Google+</a></div>
+                        </div>
+                      </div>
+                      <div class="col-xs-12">
+                        <label for="vc-title-share">Hoặc gửi Email cho bạn bè, người thân</label>
+                        <div class="form-group">
+                          <input type="email" name="vc-title-share" id="vc-title-share" value="" autocomplete="off" class="input-1" placeholder="Tiêu đề email"/>
+                        </div>
+                      </div>
+                      <div class="col-xs-12">
+                        <div class="form-group">
+                          <input type="email" name="vc-email-share" id="vc-email-share" value="" autocomplete="off" class="input-1" placeholder="Email người nhận"/>
+                        </div>
+                      </div>
+                      <div class="col-xs-12">
+                        <div class="form-group">
+                          <textarea id="vc-content-share" name="vc-content-share" placeholder="Nội dung email" class="input-1"></textarea>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-sm-10 col-sm-offset-1">
+                    <div class="row">
+                      <div class="col-xs-6">
+                        <button type="submit" name="vc-send-share" title="Gửi ngay!" class="btn-1a full">Gửi ngay!</button>
+                      </div>
+                      <div class="col-xs-6">
+                        <button type="submit" name="vc-view-share" title="Xem video" class="btn-1a full">Xem video</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="cloudPopup" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" class="modal modal-1 upload-cloud fade">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" data-dismiss="modal" aria-hidden="true" class="close">&times;</button>
+              <h2 class="modal-title">Goole Drive | FaceBook</h2>
+            </div>
+            <div class="modal-body">
+              <div id="cloud-loadding" style="height: 100px;" class="row">
+                <div class="load-wrapp">
+                  <div class="load-1">
+                    <div class="line"></div>
+                    <div class="line"></div>
+                    <div class="line"></div>
+                  </div>
+                </div>
+              </div>
+              <div id="cloud-breadcrumb" class="row">
+                <div class="col-sm-6"><span class="root"></span><span class="separate"> / </span><span class="album"></span></div>
+                <div class="col-sm-6">
+                  <p class="selected-item">           </p>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-xs-12">
+                  <div class="scroll-content">
+                    <div id="cloud-content" class="row"></div>
+                    <!--+list-1('image-yours', '20').col-xs-3
+                    -->
+                  </div>
+                </div>
+                <div class="col-sm-10 col-sm-offset-1">
+                  <div class="row">
+                    <div class="col-xs-6">
+                      <button type="submit" name="select" title="Chọn" class="btn-1a full">Chọn</button>
+                    </div>
+                    <div class="col-xs-6">
+                      <button type="submit" name="cancel" title="Hủy" class="btn-1a full">Hủy</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="dropdown-menu">
+        <div class="item dm-duplicate"><a href="javascript:void(0);" title="Duplicate"><i class="fa fa-superscript"></i><span>Duplicate</span></a></div>
+        <div class="item dm-delete"><a href="javascript:void(0);" title="Delete"><i class="fa fa-trash-o"></i><span>Delete</span></a></div>
+        <div class="item dm-text"><a href="javascript:void(0);" title="Add/Edit text"><i class="fa fa-file-text-o"></i><span>Add/Edit text</span></a></div>
+        <div class="item dm-texteffect"><a href="javascript:void(0);" title="Add/Edit text effect"><i class="fa fa-file-text-o"></i><span>Add/Edit text effect</span></a></div>
+        <div class="item dm-image"><a href="javascript:void(0);" title="Add/Edit image"><i class="fa fa-file-text"></i><span>Add/Edit image</span></a></div>
+        <div class="item dm-effect"><a href="javascript:void(0);" title="Add/Edit image effect"><i class="fa fa-exchange"></i><span>Add/Edit image effect</span></a></div>
+        <div class="item dm-audio"><a href="javascript:void(0);" title="Add/Edit audio"><i class="fa fa-music"></i><span>Add/Edit audio </span></a></div>
+        <div class="item dm-video"><a href="javascript:void(0);" title="Add/Edit video"><i class="fa fa-film"></i><span>Add/Edit video</span></a></div>
+      </div>
     </div>
-    
-	<script src="js/l10n.js"></script>
+    <script src="http://maps.googleapis.com/maps/api/js"></script>
+    <script src="js/l10n.js"></script>
     <script src="js/libs.js"></script>
+    <script src="js/easeljs-0.8.1.min.js"></script>
+    <script src="js/preloadjs-0.6.1.min.js"></script>
+    <script src="js/tweenjs-0.6.1.min.js"></script>
+    <script src="js/webgl-0.8.1.min.js"></script>
+    <script src="js/soundjs-0.6.1.min.js"></script>
+    <script src="js/BitmapData.js"></script>
+    <script src="js/script.js"></script>
     <script src="js/bootstrap.js"></script>
     <script src="js/jquery.steps.min.js"></script>
     <script src="js/respond.js"></script>
-	<script src="js/googledrive.js"></script>
-	<script src="https://apis.google.com/js/client.js?onload=onGooglClientApiLoadedHandler"></script>
-	
     <div class="overlay hide"></div>
-      
+    <!--[if lt IE 8]><p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p><![endif]-->
+    <noscript>JavaScript is off. Please enable to view full site.</noscript>
   </body>
 </html>

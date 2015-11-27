@@ -1,0 +1,615 @@
+<!DOCTYPE html>
+<!--[if IE 8]><html lang="en" class="no-js ie ie8"><![endif]-->
+<!--[if IE 9]><html lang="en" class="no-js ie ie9"><![endif]-->
+<!--[if gt IE 9]><!-->
+<html lang="en" class="no-js">
+  <!--<![endif]-->
+  <head>
+    <meta charset="utf-8">
+    <!--[if IE]><meta http-equiv="X-UA-Compatible" content="IE=edge, chrome=1"><![endif]-->
+    <title>Video Clip Share</title>
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <meta name="robots" content="index, follow">
+    <meta name="author" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1">
+    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
+    <link rel="stylesheet" href="css/style.css">
+    <!--[if lt IE 8]><link rel="stylesheet" href="css/ie.css"><![endif]-->
+    <link rel="stylesheet" href="css/print.css" media="print">
+    <script src="js/modernizr.js"></script>
+  </head>
+  <body class="video-detail page-1">
+    <div id="app">
+      <header id="header">
+        <div class="search-block hidden-sm hidden-xs">
+          <div class="container">
+            <form id="search-form" name="search-form" method="get" action="#" class="form">
+              <div class="row">
+                <div class="col-sm-6 col-sm-offset-3 text-center">
+                  <div class="form-group">
+                    <input type="text" name="input-search-head" id="input-search" value="" autocomplete="off" class="input-1" alert="" placeholder="Find an article..."/>
+                    <button type="submit" name="submit-button-head" id="submit-button-head" title="Search" class="btn submit-btn">Search</button>
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div><a href="javascript:;" title="" class="fa fa-times close"></a>
+        </div>
+        <div class="middle-head hidden-sm hidden-xs">
+          <div class="container">
+            <div class="logo"><a href="index.html" title=""><img src="images/logo.png" alt=""></a></div>
+            <div class="toolbar">
+              <div class="item social-block">
+                <ul class="list-inline">
+                  <li><a href="#" title="" class="yt"><span class="fa fa-youtube"></span></a></li>
+                  <li><a href="#" title="" class="fb"><span class="fa fa-facebook"></span></a></li>
+                  <li><a href="#" title="" class="gp"><span class="fa fa-google-plus"></span></a></li>
+                </ul>
+              </div>
+              <div class="item">
+                <ul class="list-inline list">
+                  <li><a href="dangnhap.html" title="đăng nhập">đăng nhập</a></li>
+                  <li><a href="dangky.html" title="đăng ký">đăng ký</a></li>
+                </ul>
+              </div>
+              <div class="item">
+                <ul class="list-inline list">
+                  <li><a href="#" title="bạn là nhà cung cấp?">bạn là nhà cung cấp?</a></li>
+                  <li><a href="#" title="tham gia!">tham gia!</a></li>
+                </ul>
+              </div>
+              <div class="item"><a href="javascript:;" title="search" data-target=".search-block" data-toggle-slide><span class="fa fa-search"></span></a></div>
+            </div>
+          </div>
+        </div>
+        <div class="bottom-head">
+          <div class="container">
+            <div class="logo visible-sm visible-xs"><a href="index.html" title=""><img src="images/logo_mobile.png" alt=""></a></div>
+            <div class="navbar-header">
+              <button class="navbar-toggle"><span class="sr-only">Toggle navigation</span><span class="icon-bar icon-burger-1"></span><span class="icon-bar icon-burger-2"></span><span class="icon-bar icon-burger-3"></span></button>
+            </div>
+            <div id="main-nav" data-navigation>
+              <nav data-multimenu>
+                <ul class="list-inline">
+                  <li class="visible-sm visible-xs">
+                    <form id="search-form-1" name="search-form" method="get" action="#" class="form">
+                      <div class="text-center">
+                        <div class="form-group">
+                          <input type="text" name="input-search-head-1" id="input-search-1" value="" autocomplete="off" class="input-1" alert="" placeholder="Find an article..."/>
+                          <button type="submit" name="submit-button-head-1" id="submit-button-head-1" title="Search" class="btn submit-btn">Search</button>
+                        </div>
+                      </div>
+                    </form>
+                  </li>
+                  <li class="visible-sm visible-xs">
+                    <div class="social-block">
+                      <ul class="list-inline">
+                        <li><a href="#" title="" class="red"><span class="fa fa-youtube"></span></a></li>
+                        <li><a href="#" title=""><span class="fa fa-facebook"></span></a></li>
+                        <li><a href="#" title=""><span class="fa fa-google-plus"></span></a></li>
+                      </ul>
+                    </div>
+                  </li>
+                  <li class="visible-sm visible-xs">
+                    <ul class="list-inline list">
+                      <li><a href="#" title="bạn là nhà cung cấp?">bạn là nhà cung cấp?</a></li>
+                      <li><a href="#" title="tham gia!">tham gia!</a></li>
+                    </ul>
+                  </li>
+                  <li class="visible-sm visible-xs">
+                    <ul class="list-inline list">
+                      <li><a href="#" title="đăng nhập">đăng nhập</a></li>
+                      <li><a href="data/signup.html" title="đăng ký" data-toggle="modal" data-target="#myModal1">đăng ký</a></li>
+                    </ul>
+                  </li>
+                  <li><a href="#" title="lập kế hoạch">lập kế hoạch</a>
+                  </li>
+                  <li><a href="#" title="trang phục">trang phục</a>
+                  </li>
+                  <li><a href="#" title="địa điểm">địa điểm</a>
+                  </li>
+                  <li><a href="#" title="trang sức">trang sức</a>
+                  </li>
+                  <li><a href="#" title="ảnh &amp; video">ảnh & video</a>
+                  </li>
+                  <li><a href="#" title="Thiệp">Thiệp</a>
+                  </li>
+                  <li><a href="#" title="trang sức">trang sức</a>
+                  </li>
+                  <li><a href="#" title="ảnh &amp; video">ảnh & video</a>
+                  </li>
+                  <li><a href="#" title="Thiệp">Thiệp</a>
+                  </li>
+                  <li class="last"><a href="#" title="khác">khác</a>
+                    <ul class="sub-nav">
+                      <li><a href="#" title="Lorem ipsum">Lorem ipsum</a>
+                      </li>
+                      <li><a href="#" title="Lorem ipsum">Lorem ipsum</a>
+                      </li>
+                      <li><a href="#" title="Lorem ipsum">Lorem ipsum</a>
+                      </li>
+                      <li><a href="#" title="Lorem ipsum">Lorem ipsum</a>
+                        <ul class="sub-nav">
+                          <li><a href="#" title="Lorem ipsum">Lorem ipsum</a>
+                          </li>
+                          <li><a href="#" title="Lorem ipsum">Lorem ipsum</a>
+                          </li>
+                          <li><a href="#" title="Lorem ipsum">Lorem ipsum</a>
+                          </li>
+                          <li><a href="#" title="Lorem ipsum">Lorem ipsum</a>
+                            <ul class="sub-content">
+                              <li><a href="#" title="Lorem ipsum">Lorem ipsum</a>
+                              </li>
+                              <li><a href="#" title="Lorem ipsum">Lorem ipsum</a>
+                              </li>
+                              <li><a href="#" title="Lorem ipsum">Lorem ipsum</a>
+                              </li>
+                              <li><a href="#" title="Lorem ipsum">Lorem ipsum</a>
+                              </li>
+                            </ul>
+                          </li>
+                        </ul>
+                      </li>
+                      <li><a href="#" title="Lorem ipsum">Lorem ipsum</a>
+                      </li>
+                      <li><a href="#" title="Lorem ipsum">Lorem ipsum</a>
+                      </li>
+                      <li><a href="#" title="Lorem ipsum">Lorem ipsum</a>
+                      </li>
+                      <li><a href="#" title="Lorem ipsum">Lorem ipsum</a>
+                      </li>
+                    </ul>
+                  </li>
+                </ul>
+              </nav>
+            </div>
+          </div>
+        </div>
+      </header>
+      <div class="play-video-block">
+        <div class="container">
+          <div class="row">
+            <div class="col-md-8 col-sm-12 col-md-offset-2">
+              <div class="video-detail">
+                <div class="inner">
+                  <div data-videoclip-share class="video-clip">
+                    <video id="video"></video>
+                    <canvas id="cvsVC"></canvas>
+                    <div class="preview-setting">
+                      <div class="col-xs-1">
+                        <div class="control-media"><a href="javascript:void(0);" title="Play" class="play-pause"><span class="fa fa-play"></span></a></div>
+                      </div>
+                      <div class="col-xs-10">
+                        <p class="position">00:00</p>
+                        <div class="box">
+                          <div class="time">
+                            <div class="timeline"></div>
+                          </div>
+                        </div>
+                        <p class="duration">00:00</p>
+                      </div>
+                      <div class="col-xs-1">
+                        <div class="control-media"><a href="javascript:void(0);" title="full screen" class="full-screen"><span class="fa fa-arrows-alt"></span></a></div>
+                      </div>
+                    </div>
+                    <div class="vc-loading-wrapp">
+                      <div class="load-wrapp">
+                        <div class="load-1">
+                          <div class="line"></div>
+                          <div class="line"></div>
+                          <div class="line"></div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="btn-group">
+                <div class="row">
+                  <div class="col-xs-6"><a href="#" title="Thích" class="btn-1a transparent full"><span class="fa fa-thumbs-o-up"></span><span class="text">Thích</span></a></div>
+                  <div class="col-xs-6"><a href="#" title="Chia sẻ lên Facebook" class="btn-1a blue-style full"><span class="fa fa-facebook"></span><span class="text">Chia sẻ lên Facebook</span></a></div>
+                </div>
+              </div>
+              <div class="btn-group visible-xs visible-sm">
+                <div class="row">
+                  <div class="col-xs-6"><a href="#" title="Lùi lại" class="btn-1 full"><span class="text">Lùi lại</span></a></div>
+                  <div class="col-xs-6"><a href="#" title="Kế tiếp" class="btn-1 full"><span class="text">Kế tiếp</span></a></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="block-caption-1">
+          <div class="container">
+            <div class="row">
+              <div class="col-xs-12">
+                <div class="desc">
+                  <h3>Lorem Ipsum is simply dummy text of the printing and typesetting industry.</h3>
+                  <div class="time">05:00</div>
+                  <div class="date">
+                    <ul class="list-inline">
+                      <li>
+                        <p>24/05/2015</p>
+                      </li>
+                      <li><a href="#" title="33 Lượt Xem">33 Lượt Xem</a></li>
+                      <li><a href="#" title="5 Thích">5 Thích</a></li>
+                      <li><a href="#" title="3 Chia sẻ">3 Chia sẻ</a></li>
+                    </ul>
+                  </div>
+                </div>
+                <div class="content">
+                  <p>Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.</p>
+                </div>
+                <div class="tags">
+                  <ul class="list-inline">
+                    <li><a href="#" title="Lorem Ipsum">Lorem Ipsum</a></li>
+                    <li><a href="#" title="Lorem Ipsum">Lorem Ipsum</a></li>
+                    <li><a href="#" title="Lorem Ipsum">Lorem Ipsum</a></li>
+                    <li><a href="#" title="Lorem Ipsum">Lorem Ipsum</a></li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!--
+      .block-6
+        .container
+          .row
+            .col-sm-9
+              img.img-responsive(src="images/comment-fb.jpg", alt="", style="width: 100%")
+            .col-sm-3.hidden-xs.hidden-sm.sidebar
+              .find-block
+                h3.title Tìm nhà cung cấp
+                form.form-1(name="", action="#", method="post")
+                  .custom-select(data-select)
+                    span.text-val Vendor
+                    a(href="javascript:;", title="select")
+                      i.icon-select
+                    select(name="bw")
+                      option(value="") Vendor
+                      option(value="item-1") item-1
+                      option(value="item-2") item-2
+                  .custom-select(data-select)
+                    span.text-val City
+                    a(href="javascript:;", title="select")
+                      i.icon-select
+                    select(name="bw")
+                      option(value="") City
+                      option(value="item-1") item-1
+                      option(value="item-2") item-2
+                  button.btn-1(type="submit", title="Tìm nhà cung cấp") Tìm nhà cung cấp
+              .list-videos-1
+                .title-content
+                  h2.title-1
+                    span Video xem nhiều nhất
+                +item-1("Vinmus-1-300x200")
+                +item-1("Vinmus-1-300x200")
+                +item-1("Vinmus-1-300x200")
+                +item-1("Vinmus-1-300x200")
+                +item-1("Vinmus-1-300x200")
+      -->
+      <footer id="footer">
+        <div class="top-footer">
+          <div class="container">
+            <div class="row">
+              <div class="col-sm-7 col-sm-offset-3">
+                <div class="toolbar">
+                  <div class="item social">
+                    <div class="title">Theo dõi VOW tại: </div>
+                    <ul class="list-inline">
+                      <li><a href="#" title="" class="yt"><span class="fa fa-youtube"></span></a></li>
+                      <li><a href="#" title="" class="fb"><span class="fa fa-facebook"></span></a></li>
+                      <li><a href="#" title="" class="gp"><span class="fa fa-google-plus"></span></a></li>
+                    </ul>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="bottom-footer">
+          <div class="container">
+            <div class="content">
+              <div class="row">
+                <div class="col-sm-7 col-sm-offset-3">
+                  <div class="item"><strong>Wedding tools: </strong>
+                    <ul class="list-inline">
+                      <li><a href="#" title="Planning Tool">Planning Tool</a></li>
+                      <li><a href="#" title="Local Vendor">Local Vendor</a></li>
+                      <li><a href="#" title="News">News</a></li>
+                      <li><a href="#" title="Blogs">Blogs</a></li>
+                      <li><a href="#" title="Create your wedding site">Create your wedding site</a></li>
+                    </ul>
+                  </div>
+                  <div class="item"><strong>Categories:</strong>
+                    <ul class="list-inline">
+                      <li><a href="#" title="Gallery">Gallery</a></li>
+                      <li><a href="#" title="Video">Video</a></li>
+                      <li><a href="#" title="Real Wedding">Real Wedding</a></li>
+                    </ul>
+                  </div>
+                  <div class="item"><strong>Categories: </strong>
+                    <ul class="list-inline">
+                      <li><a href="#" title="Careers">Careers</a></li>
+                      <li><a href="#" title="Contact Us">Contact Us</a></li>
+                      <li><a href="#" title="Privacy Policy">Privacy Policy</a></li>
+                      <li><a href="#" title="Term &amp; Condition ">Term & Condition </a></li>
+                    </ul>
+                  </div>
+                  <div class="item">
+                    <form id="search-form3" name="search-form" method="get" action="#" class="form">
+                      <div class="form-group">
+                        <input type="text" name="input-search-head" id="input-search3" value="" autocomplete="off" class="input-1" alert="" placeholder="Enter your email"/>
+                        <button type="submit" name="submit-button-head3" id="submit-button-head3" title="Search" class="btn submit-btn">Search</button>
+                      </div>
+                    </form>
+                  </div>
+                  <div class="item">
+                    <p>© 2015. VOW All Rights Reserved.</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </footer>
+      <div class="visible-xs visible-sm block-mobile">
+        <div data-slidermobile class="find-block">
+          <form name="" action="#" method="post" class="form-1">
+            <div data-select class="custom-select"><span class="text-val">Vendor</span><a href="javascript:;" title="select"><i class="icon-select"></i></a>
+              <select name="bw">
+                <option value="">Vendor</option>
+                <option value="item-1">item-1</option>
+                <option value="item-2">item-2</option>
+              </select>
+            </div>
+            <div data-select class="custom-select"><span class="text-val">City</span><a href="javascript:;" title="select"><i class="icon-select"></i></a>
+              <select name="bw">
+                <option value="">City</option>
+                <option value="item-1">item-1</option>
+                <option value="item-2">item-2</option>
+              </select>
+            </div>
+            <button type="submit" title="Tìm nhà cung cấp" class="btn-1">Tìm nhà cung cấp</button>
+          </form>
+        </div>
+        <div data-buttonslider class="btn-slide-content"><a href="javascript:void(0);" title="Tìm nhà cung cấp" class="btn-show">Tìm nhà cung cấp</a>
+          <div class="btn-slider"><span class="fa fa-angle-double-left"></span></div>
+        </div>
+      </div>
+      <div class="backtotop"><img src="images/icon_gototop.png" alt="BackToTop"></div>
+      <div id="myModal1" data-modal-ajax tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" class="modal modal-1 fade">
+        <div class="modal-dialog">
+          <div class="modal-content"></div>
+        </div>
+      </div>
+      <div id="detail" data-modal-ajax tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" class="modal modal-1 fade">
+        <div class="modal-dialog">
+          <div class="modal-content"></div>
+        </div>
+      </div>
+      <div id="myModal" data-modal-ajax tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" class="modal modal-album fade">
+        <div class="modal-dialog">
+          <div class="modal-content"></div>
+        </div>
+      </div>
+      <div id="listFriend" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" class="modal modal-1 fade">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" data-dismiss="modal" aria-hidden="true" class="close">&times;</button>
+              <h2 class="modal-title">Chọn danh bạ</h2>
+            </div>
+            <div class="modal-body">
+              <form action="" class="form-style-1">
+                <div class="row">
+                  <div class="col-sm-12">
+                    <div class="social-block text-center">
+                      <ul class="list-inline">
+                        <li><a href="#facebookfriend" title="Download" data-toggle="modal" data-list-friend-fb class="fb"><span class="fa fa-facebook"></span></a></li>
+                        <li><a href="#googlefriend" title="Download" data-toggle="modal" data-list-friend-gp class="gp"><span class="fa fa-google-plus"></span></a></li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="facebookfriend" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-list-modal-fb class="modal modal-1 fade">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" data-dismiss="modal" aria-hidden="true" class="close">&times;</button>
+              <h2 class="modal-title">Chọn khách mời từ Facebook</h2>
+            </div>
+            <div class="modal-body">
+              <div class="control-panel">
+                <form action="" class="form">
+                  <div class="row">
+                    <div class="col-sm-8 col-sm-offset-2">
+                      <div class="form-group style-1">
+                        <input type="text" name="input-search-head" id="input-search-02" value="" autocomplete="off" class="input-1" alert="" placeholder="Find an article..."/>
+                        <button type="submit" name="submit-button-head02" id="submit-button-head02" title="Search" class="btn-icon">Search</button>
+                      </div>
+                    </div>
+                    <div class="col-xs-12">
+                      <div class="invitation-list">
+                        <ul class="list-unstyled"></ul>
+                      </div>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="googlefriend" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" data-list-modal-gp class="modal modal-1 fade">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" data-dismiss="modal" aria-hidden="true" class="close">&times;</button>
+              <h2 class="modal-title">Chọn khách mời từ Google</h2>
+            </div>
+            <div class="modal-body">
+              <div class="control-panel">
+                <form action="" class="form">
+                  <div class="row">
+                    <div class="col-sm-8 col-sm-offset-2">
+                      <div class="form-group style-1">
+                        <input type="text" name="input-search-head" id="input-search-02" value="" autocomplete="off" class="input-1" alert="" placeholder="Find an article..."/>
+                        <button type="submit" name="submit-button-head02" id="submit-button-head02" title="Search" class="btn-icon">Search</button>
+                      </div>
+                    </div>
+                    <div class="col-xs-12">
+                      <div class="invitation-list">
+                        <ul class="list-unstyled">
+                        </ul>
+                      </div>
+                    </div>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="videoComplete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" class="modal modal-1 fade">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" data-dismiss="modal" aria-hidden="true" class="close">&times;</button>
+              <h2 class="modal-title">Xin chúc mừng video mới đã tạo thành công !</h2>
+            </div>
+            <div class="modal-body">
+              <div action="" class="form-style-1">
+                <div class="row">
+                  <div class="col-sm-10 col-sm-offset-1">
+                    <div class="row">
+                      <div class="col-xs-12">
+                        <label for="vc-link-share">Link của bạn</label>
+                        <div class="form-group">
+                          <input type="text" name="vc-link-share" id="vc-link-share" value="" autocomplete="off" class="input-1" placeholder="" readonly="readonly"/>
+                        </div>
+                      </div>
+                      <div class="col-xs-12 share-block">
+                        <label for="vc-share">Chia sẻ Video của bạn</label>
+                        <div class="row">
+                          <div class="col-xs-6"><a href="#" name="vc-fb-share" title="Facebook" class="btn-1a blue-style full">Facebook</a></div>
+                          <div class="col-xs-6"><a href="#" name="vc-gp-share" title="Google+" class="btn-1a red-style full">Google+</a></div>
+                        </div>
+                      </div>
+                      <div class="col-xs-12">
+                        <label for="vc-title-share">Hoặc gửi Email cho bạn bè, người thân</label>
+                        <div class="form-group">
+                          <input type="email" name="vc-title-share" id="vc-title-share" value="" autocomplete="off" class="input-1" placeholder="Tiêu đề email"/>
+                        </div>
+                      </div>
+                      <div class="col-xs-12">
+                        <div class="form-group">
+                          <input type="email" name="vc-email-share" id="vc-email-share" value="" autocomplete="off" class="input-1" placeholder="Email người nhận"/>
+                        </div>
+                      </div>
+                      <div class="col-xs-12">
+                        <div class="form-group">
+                          <textarea id="vc-content-share" name="vc-content-share" placeholder="Nội dung email" class="input-1"></textarea>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-sm-10 col-sm-offset-1">
+                    <div class="row">
+                      <div class="col-xs-6">
+                        <button type="submit" name="vc-send-share" title="Gửi ngay!" class="btn-1a full">Gửi ngay!</button>
+                      </div>
+                      <div class="col-xs-6">
+                        <button type="submit" name="vc-view-share" title="Xem video" class="btn-1a full">Xem video</button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div id="cloudPopup" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" class="modal modal-1 upload-cloud fade">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-header">
+              <button type="button" data-dismiss="modal" aria-hidden="true" class="close">&times;</button>
+              <h2 class="modal-title">Goole Drive | FaceBook</h2>
+            </div>
+            <div class="modal-body">
+              <div id="cloud-loadding" style="height: 100px;" class="row">
+                <div class="load-wrapp">
+                  <div class="load-1">
+                    <div class="line"></div>
+                    <div class="line"></div>
+                    <div class="line"></div>
+                  </div>
+                </div>
+              </div>
+              <div id="cloud-breadcrumb" class="row">
+                <div class="col-sm-6"><span class="root"></span><span class="separate"> / </span><span class="album"></span></div>
+                <div class="col-sm-6">
+                  <p class="selected-item">           </p>
+                </div>
+              </div>
+              <div class="row">
+                <div class="col-xs-12">
+                  <div class="scroll-content">
+                    <div id="cloud-content" class="row"></div>
+                    <!--+list-1('image-yours', '20').col-xs-3
+                    -->
+                  </div>
+                </div>
+                <div class="col-sm-10 col-sm-offset-1">
+                  <div class="row">
+                    <div class="col-xs-6">
+                      <button type="submit" name="select" title="Chọn" class="btn-1a full">Chọn</button>
+                    </div>
+                    <div class="col-xs-6">
+                      <button type="submit" name="cancel" title="Hủy" class="btn-1a full">Hủy</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="dropdown-menu">
+        <div class="item dm-duplicate"><a href="javascript:void(0);" title="Duplicate"><i class="fa fa-superscript"></i><span>Duplicate</span></a></div>
+        <div class="item dm-delete"><a href="javascript:void(0);" title="Delete"><i class="fa fa-trash-o"></i><span>Delete</span></a></div>
+        <div class="item dm-text"><a href="javascript:void(0);" title="Add/Edit text"><i class="fa fa-file-text-o"></i><span>Add/Edit text</span></a></div>
+        <div class="item dm-texteffect"><a href="javascript:void(0);" title="Add/Edit text effect"><i class="fa fa-file-text-o"></i><span>Add/Edit text effect</span></a></div>
+        <div class="item dm-image"><a href="javascript:void(0);" title="Add/Edit image"><i class="fa fa-file-text"></i><span>Add/Edit image</span></a></div>
+        <div class="item dm-effect"><a href="javascript:void(0);" title="Add/Edit image effect"><i class="fa fa-exchange"></i><span>Add/Edit image effect</span></a></div>
+        <div class="item dm-audio"><a href="javascript:void(0);" title="Add/Edit audio"><i class="fa fa-music"></i><span>Add/Edit audio </span></a></div>
+        <div class="item dm-video"><a href="javascript:void(0);" title="Add/Edit video"><i class="fa fa-film"></i><span>Add/Edit video</span></a></div>
+      </div>
+    </div>
+    <script src="http://maps.googleapis.com/maps/api/js"></script>
+    <script src="js/l10n.js"></script>
+    <script src="js/libs.js"></script>
+    <script src="js/easeljs-0.8.1.min.js"></script>
+    <script src="js/preloadjs-0.6.1.min.js"></script>
+    <script src="js/tweenjs-0.6.1.min.js"></script>
+    <script src="js/webgl-0.8.1.min.js"></script>
+    <script src="js/soundjs-0.6.1.min.js"></script>
+    <script src="js/BitmapData.js"></script>
+    <script src="js/script.js"></script>
+    <script src="js/bootstrap.js"></script>
+    <script src="js/jquery.steps.min.js"></script>
+    <script src="js/respond.js"></script>
+    <div class="overlay hide"></div>
+    <!--[if lt IE 8]><p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p><![endif]-->
+    <noscript>JavaScript is off. Please enable to view full site.</noscript>
+  </body>
+</html>

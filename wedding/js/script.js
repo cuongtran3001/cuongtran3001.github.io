@@ -6,6 +6,7 @@
 var Site = (function($, window, undefined) {
   var privateVar = 1;
   var loading = $('<div class="loading"></div>');
+
   function effectSocial() {
     $('.social-block li a').each(function(){
       $(this).addClass('animated');
@@ -16,7 +17,7 @@ var Site = (function($, window, undefined) {
             $(this).removeClass('rotateIn');
         });
       });
-    });
+    });   
 
     $('.social li a').each(function(){
       $(this).addClass('animated');
@@ -29,58 +30,64 @@ var Site = (function($, window, undefined) {
       });
     });
   }
-  
-  if($('.change-title').length){
-    var replaceWith = $('<input name="temp" type="text" />'),
-        connectWith = $('input[name="hiddenField"]');
-    $('.change-title').inlineEdit(replaceWith, connectWith);
-  }
-
   var limit = $('[data-multiple-select]').data('option-check');
 
-  $('[data-multiple-select]').change(function() {
-  }).multipleSelect({
-    placeholder: "",
-    width: '100%',
-    filter: false,
-    selectAll: false,
-    onClick: function(view) {
-      var checkboxes = $("[data-multiple-select]").next().find("input[type='checkbox']").not(":checked");
-      var selectedLen = $("[data-multiple-select]").multipleSelect('getSelects').length;
-      if (selectedLen >= limit) {
-        checkboxes.prop("disabled", true);
-      } else {
-        checkboxes.prop("disabled", false);
+  if ($('[data-multiple-select]').length) {
+    $('[data-multiple-select]').change(function() {}).multipleSelect({
+      placeholder: "",
+      width: '100%',
+      filter: false,
+      selectAll: false,
+      onClick: function(view) {
+        var checkboxes = $("[data-multiple-select]").next().find("input[type='checkbox']").not(":checked");
+        var selectedLen = $("[data-multiple-select]").multipleSelect('getSelects').length;
+        if (selectedLen >= limit) {
+          checkboxes.prop("disabled", true);
+        } else {
+          checkboxes.prop("disabled", false);
+        }
       }
-    }
-  });
-  $('.testselect2').SumoSelect({ okCancelInMulti: true });
-  $('[data-sortable]').sortable();
-  $('[data-rate]').raty({
-    numberMax : 5,
-    number    : 100,
-    starOff : '../images/un-rate-large.png',
-    starOn  : '../images/rate-large.png',
-    target : '.hint'
-  });
+    });
+  }
+
+  if ($('.testselect2').length) {
+    $('.testselect2').SumoSelect({ okCancelInMulti: true });
+  }
+  
+  if ($('[data-sortable]').length) {  
+    $('[data-sortable]').sortable();
+  }
+  
+  if ($('[data-rate]').length) {  
+    $('[data-rate]').raty({
+      numberMax : 5,
+      number    : 100,
+      starOff : '../images/un-rate-large.png',
+      starOn  : '../images/rate-large.png',
+      target : '.hint'
+    });
+  }
   var templateLoading= '<div class="wrapLoad"><div class="load-wrapp"><div class="load-1"><div class="line"></div><div class="line"></div><div class="line"></div></div></div></div>';
-  $('#app').imagesLoaded()
-  .always( function( instance ) {
-    // $('.wrapLoad').remove();
-    // console.log('all images loaded');
-  })
-  .done( function( instance ) {
-    $('.wrapLoad').remove();
-  })
-  .fail( function() {
-    $('.wrapLoad').remove();
-    // console.log('all images loaded, at least one is broken');
-  })
-  .progress( function( instance, image ) {
-    // $(image.img).before(templateLoading);
-    // var result = image.isLoaded ? 'loaded' : 'broken';
-    // console.log( 'image is ' + result + ' for ' + image.img.src );
-  });
+  if ($('#app').length && $('#app').imagesLoaded) {
+    $('#app').imagesLoaded()
+    .always( function( instance ) {
+      // $('.wrapLoad').remove();
+      // console.log('all images loaded');
+    })
+    .done( function( instance ) {
+      $('.wrapLoad').remove();
+    })
+    .fail( function() {
+      $('.wrapLoad').remove();
+      // console.log('all images loaded, at least one is broken');
+    })
+    .progress( function( instance, image ) {
+      // $(image.img).before(templateLoading);
+      // var result = image.isLoaded ? 'loaded' : 'broken';
+      // console.log( 'image is ' + result + ' for ' + image.img.src );
+    });
+  }
+    
   function loadingImg() {
     $('img').each(function(){
       var that = $(this);
@@ -104,9 +111,11 @@ var Site = (function($, window, undefined) {
           $('.play-video-block .list-videos').css({
             maxHeight: $('[data-video-frame]').height()
           });
-          $('.play-video-block .list-videos').jScrollPane({
-            showArrows: true
-          });
+          if($('.play-video-block .list-videos').length){
+            $('.play-video-block .list-videos').jScrollPane({
+              showArrows: true
+            });
+          }
         }).trigger('resize.windowI');
       }
 
@@ -118,21 +127,26 @@ var Site = (function($, window, undefined) {
     loadingImg();
   }
   function scrollPane() {
-    $('[data-loadscroll]').jscroll({
-      loadingHtml: '<img src="images/ajax-loader.gif" alt="Loading" />',
-      padding: 20,
-      nextSelector: '.data-next',
-      callback: scrollEffect
-    });
+
+    if ($('[data-loadscroll]').length) {
+      $('[data-loadscroll]').jscroll({
+        loadingHtml: '<img src="images/ajax-loader.gif" alt="Loading" />',
+        padding: 20,
+        nextSelector: '.data-next',
+        callback: scrollEffect
+      });
+    } 
   }
   function privateMethod1() {
     var showChar = $('.caption-album-short').data('text-number');
     var ellipsestext = "...";
     var moretext = $('.caption-album-short').data('text-show');
     var lesstext = $('.caption-album-short').data('text-hide');
-    $('.content-check > .inner').jScrollPane({
-      showArrows: true
-    });
+    if($('.content-check > .inner').length){
+      $('.content-check > .inner').jScrollPane({
+        showArrows: true
+      });
+    }
     $('.caption-album-short').each(function() {
         var content = $(this).html();
         if(content.length > showChar) {
@@ -184,11 +198,11 @@ var Site = (function($, window, undefined) {
         });
       }
     }).trigger('resize.windowA');
-
-    $('.list-link').jScrollPane({
-      showArrows: true
-    });
-
+    if($('.list-link').length){
+      $('.list-link').jScrollPane({
+        showArrows: true
+      });
+    }
     $('.block-img .like').each(function(e){
         $(this).on('click', function(el){
           var target = el.target;
@@ -209,27 +223,34 @@ var Site = (function($, window, undefined) {
         });
       });
     }
-    $('[data-money]').number(true);
-    $('[data-fancybox]').fancybox({
-      helpers: {
-        title: null,
-      },
-      afterLoad: function() {
-        var MOBILE = $('html').hasClass('touch');
-        var TABLET = (MOBILE && screen.width >= 768);
-        if (TABLET) {
-          $('html').addClass('fancybox-margin fancybox-lock');
+
+    if ($('[data-money]').length) {
+      $('[data-money]').number(true);
+    };
+    
+    if (('[data-fancybox]').length && $('[data-fancybox]').fancybox) {  
+      $('[data-fancybox]').fancybox({
+        helpers: {
+          title: null,
+        },
+        afterLoad: function() {
+          var MOBILE = $('html').hasClass('touch');
+          var TABLET = (MOBILE && screen.width >= 768);
+          if (TABLET) {
+            $('html').addClass('fancybox-margin fancybox-lock');
+          }
         }
-      }
-    });
+      });
+    }
+      
     $('[data-tooltip]').tooltip();
     $(window).on('resize.tabtoogle',function(){
-      if($(window).width() > 768){
-        $('[data-toggle-mobile]').addClass('style-mb').css({display: 'block'});
-      }else{
-        $('[data-toggle-mobile]').removeClass('style-mb').css({display: 'none'});
-      }
+      // if($(window).width() > 768){
+      // }else{
+      //   $('[data-toggle-mobile]').removeClass('style-mb').css({display: 'none'});
+      // }
     }).trigger('resize.tabtoogle');
+    // $('[data-toggle-mobile]').addClass('style-mb').css({display: 'block'});
     $('.toggle-list').on('click',function(){
       if($('[data-toggle-mobile]').not('.style-mb')){
         $(this).find('span').addClass('rotateIn');
@@ -280,21 +301,25 @@ var Site = (function($, window, undefined) {
     $('[data-modal-ajax]').on('hide.bs.modal', function() {
       $(this).removeData();
     });
-    $("[data-coverflow]").flipster({
-      itemContainer:      '> ul', // Container for the flippin' items.
-      itemSelector:       '> li', // Selector for children of itemContainer to flip
-      style:              'carousel', // Switch between 'coverflow' or 'carousel' display styles
-      start:              0, // Starting item. Set to 0 to start at the first, 'center' to start in the middle or the index of the item you want to start with.
-      
-      enableKeyboard:     true, // Enable left/right arrow navigation
-      enableMousewheel:   false, // Enable scrollwheel navigation (up = left, down = right)
-      enableTouch:        true, // Enable swipe navigation for touch devices
-      
-      enableNav:          false, // If true, flipster will insert an unordered list of the slides
-      enableNavButtons:   true, // If true, flipster will insert Previous / Next buttons
-      
-      onItemSwitch:       function(){}, // Callback function when items are switches
-    });
+
+    if ($("[data-coverflow]").length) {
+      $("[data-coverflow]").flipster({
+        itemContainer:      '> ul', // Container for the flippin' items.
+        itemSelector:       '> li', // Selector for children of itemContainer to flip
+        style:              'carousel', // Switch between 'coverflow' or 'carousel' display styles
+        start:              0, // Starting item. Set to 0 to start at the first, 'center' to start in the middle or the index of the item you want to start with.
+        
+        enableKeyboard:     true, // Enable left/right arrow navigation
+        enableMousewheel:   false, // Enable scrollwheel navigation (up = left, down = right)
+        enableTouch:        true, // Enable swipe navigation for touch devices
+        
+        enableNav:          false, // If true, flipster will insert an unordered list of the slides
+        enableNavButtons:   true, // If true, flipster will insert Previous / Next buttons
+        
+        onItemSwitch:       function(){}, // Callback function when items are switches
+      });
+    } 
+
     if(!$('.non-fixed #header').length && !$('.fullheight').length){
       $('#header').addClass('original').clone().insertAfter('#header').addClass('cloned').css('position','fixed').css('top','0').css('margin-top','0').css('z-index','500').removeClass('original').hide();
       setInterval(function(){stickIt();}, 100);
@@ -302,6 +327,14 @@ var Site = (function($, window, undefined) {
         var orgElementPos = $('.original').offset();
         orgElementTop = orgElementPos.top;
         var target = $('[data-toggle-slide]').data('target'); 
+        /*$('.search-category')
+              .mouseover(function(){
+                $('.ui-autocomplete-input').addClass('expand');
+              })
+              .mouseleave(function(){
+                $('.ui-autocomplete-input').removeClass('expand');
+            });*/
+          
         $.widget("custom.catAutocomplete", $.ui.autocomplete, {
           _renderItemData: function( ul, item ) {
             return this._renderItem( ul, item ).data( "ui-autocomplete-item", item );
@@ -316,11 +349,15 @@ var Site = (function($, window, undefined) {
             var that = this,
               currentCategory = "";
             ul.addClass('search-category');
+
+            
+
             $.each(items, function(index, item) {
               if (item.category != currentCategory) {
                 ul.append("<li class='ui-autocomplete-category " + item.class + "-icon '><span></span><p>" + item.category + "</p></li>");
                 currentCategory = item.category;
               }
+
               // if (item) {
               //   ul.append("<li class='item' value='" + item.value + "'><b>" + item.alphabet + "</b>-" + item.label + "</li>");
               //   currentCategory = item.category;
@@ -333,7 +370,18 @@ var Site = (function($, window, undefined) {
             });
           }
         });
-
+        $('.search-spec').click(function(e){
+          var input = $('.ui-autocomplete-input'),
+              target = $(e.target);
+          input.addClass('expand');
+        });
+        $('body').click(function(e){
+          var input = $('.ui-autocomplete-input'),
+              target = $(e.target);
+          if(!target.closest('.search-spec').length && !target.closest('.search-category').length){
+            input.removeClass('expand');
+          }
+        });
         // Initialize autocomplete with categories
         var xhr;
         $('.video-style.cloned #search-form #input-search').catAutocomplete({
@@ -397,22 +445,25 @@ var Site = (function($, window, undefined) {
           $('.cloned').hide();
           $('.original').css('visibility','visible');
         }
-
+            
       }
     }
     var container = $('[data-masonry]');
-    container.imagesLoaded( function () {
-      container.masonry({
-        itemSelector: '.item',
-        columnWidth: '.item',
-        isAnimated:true,
-        animationOptions: {
-          duration: 500,
-          easing:'swing',
-          queue :false
-        }
+    if (container.length) {
+      container.imagesLoaded( function () {
+        container.masonry({
+          itemSelector: '.item',
+          columnWidth: '.item',
+          isAnimated:true,
+          animationOptions: {
+            duration: 500,
+            easing:'swing',
+            queue :false
+          }
+        });
       });
-    });
+    }
+      
     var ajaxAblum = $('.ajaxablum');
     var urlAlbum = ajaxAblum.data('show-ajax');
     var albumAjax = function(){
@@ -495,7 +546,11 @@ var Site = (function($, window, undefined) {
         });
       });
     };
-    $('[data-check]').check();
+
+    if ($('[data-check]').length) {
+      $('[data-check]').check();
+    }
+    
     $('a[data-toggle=tab]').each(function () {
       var that = $(this);
       var tab = $(that.attr('href'));
@@ -539,7 +594,7 @@ var Site = (function($, window, undefined) {
         }else{
           $(this).hover(function(){
             if($(window).width() > 768){
-              $(this).find('.content').stop().slideDown(500);
+              // $(this).find('.content').stop().slideDown(500);
             }
             if($(this).parent().hasClass('noslider')){
               return false;
@@ -547,7 +602,7 @@ var Site = (function($, window, undefined) {
           },
           function () {
             if($(window).width() > 768){
-              $(this).find('.content').stop().slideUp(500);
+              // $(this).find('.content').stop().slideUp(500);
             }
             if($(this).parent().hasClass('noslider')){
               return false;
@@ -566,26 +621,43 @@ var Site = (function($, window, undefined) {
         $('[data-select="global"]').not('[data-select="local"]').hide();
       }
     });
-    $('.slider-dashboard').slick({
-      slidesToShow: 1,
-      slidesToScroll: 1,
-      arrows: false,
-      autoplay: true,
-      autoplaySpeed: 2000
-    });
 
-    $('[data-slider-small]').slick({
-      slidesToShow: 3,
-      slidesToScroll: 1,
-      arrows: true,
-      onAfterChange:function(slickSlider,i){
-        $('[data-slider-small] .slick-slide').removeClass('slick-current');
-        $('[data-slider-small] .slick-slide').eq(i + 3).addClass('slick-current');
-      }
-    });
+    if ($('.slider-dashboard').length) {
+      $('.slider-dashboard').slick({
+        slidesToShow: 1,
+        slidesToScroll: 1,
+        arrows: false,
+        autoplay: true,
+        autoplaySpeed: 2000
+      });
+    }
+    
+    if ($('[data-slider-small]').length) {  
+      $('[data-slider-small]').slick({
+        slidesToShow: 3,
+        slidesToScroll: 1,
+        arrows: true,
+        onAfterChange:function(slickSlider,i){
+          $('[data-slider-small] .slick-slide').removeClass('slick-current');
+          $('[data-slider-small] .slick-slide').eq(i + 3).addClass('slick-current');
+        }
+      });
+    }
+    if($('[data-show-modal]').length){
+      $('[data-show-modal]').on('shown.bs.modal', function (e) {
+        // setTimeout(function(){
+        //   if($('.invitation-list').length){
+        //     $('.invitation-list').jScrollPane({
+        //       showArrows: true
+        //     });
+        //   }
+        // },200);
+      });
+    }
     $('[data-slider-small]').find('.slick-slide').eq(3).addClass('slick-current');
     $('[data-modal-ajax]').on('show.bs.modal', function (e) {
       setTimeout(function(){
+        $('.custome-fileupload').customFile();
         $('[data-money]').number(true);
         $('[data-check]').check();
         $('[data-picker]').datepicker({
@@ -603,20 +675,27 @@ var Site = (function($, window, undefined) {
           var widthItem = $('[data-picker]').parent().width();
           $('#ui-datepicker-div').css({width: widthItem});
         },200);
+
         $(window).resize(function() {
-          $('[data-picker]').datepicker('hide');
-            $('[data-picker]').blur();
+          if ($('[data-picker]').length) {
+            $('[data-picker]').datepicker('hide');
+              $('[data-picker]').blur();
+          }    
         });
-        $('.slidershow-album .thumbnail-album').slick({
-          slidesToShow: 1,
-          slidesToScroll: 1,
-          arrows: true,
-          asNavFor: '.control-album',
-          onAfterChange:function(slickSlider,i){
-            $('.slidershow-album .control-album .slick-slide').removeClass('slick-current');
-            $('.slidershow-album .control-album .slick-slide').eq(i).addClass('slick-current');
-          }
-        });
+
+        if ($('.slidershow-album .thumbnail-album').length) {
+          $('.slidershow-album .thumbnail-album').slick({
+            slidesToShow: 1,
+            slidesToScroll: 1,
+            arrows: true,
+            asNavFor: '.control-album',
+            onAfterChange:function(slickSlider,i){
+              $('.slidershow-album .control-album .slick-slide').removeClass('slick-current');
+              $('.slidershow-album .control-album .slick-slide').eq(i).addClass('slick-current');
+            }
+          });
+        }
+          
         var jsonAddress = function(){
           var jsAddress= $('[data-autocomplete]').data('autocomplete');
           $.ajax({
@@ -653,35 +732,48 @@ var Site = (function($, window, undefined) {
           vertical: true,
           focusOnSelect: true
         });
-        $('.invitation-list').jScrollPane({
-          showArrows: true
-        });
+        if($('.invitation-list').length){
+          $('.invitation-list').jScrollPane({
+            showArrows: true
+          });
+        }
         $('.slidershow-album .control-album .slick-slide').eq(0).addClass('slick-current');
       },400);
     });
-    $('.slidershow-album .thumbnail-album').slick({
-      slidesToShow: 1,
-      slidesToScroll: 1,
-      arrows: true,
-      asNavFor: '.control-album',
-      onAfterChange:function(slickSlider,i){
-        $('.slidershow-album .control-album .slick-slide').removeClass('slick-current');
-        $('.slidershow-album .control-album .slick-slide').eq(i).addClass('slick-current');
-      }
-    });
-    $('.slidershow-album .control-album').slick({
-      slidesToShow: 8,
-      slidesToScroll: 1,
-      asNavFor: '.thumbnail-album',
-      dots: false,
-      arrows: true,
-      vertical: true,
-      focusOnSelect: true
-    });
+
+    if ($('.slidershow-album .thumbnail-album').length) {
+      $('.slidershow-album .thumbnail-album').slick({
+        slidesToShow: 1,
+        slidesToScroll: 1,
+        arrows: true,
+        asNavFor: '.control-album',
+        onAfterChange:function(slickSlider,i){
+          $('.slidershow-album .control-album .slick-slide').removeClass('slick-current');
+          $('.slidershow-album .control-album .slick-slide').eq(i).addClass('slick-current');
+        }
+      }); 
+    }
+
+    if ($('.slidershow-album .control-album').length) {
+      $('.slidershow-album .control-album').slick({
+        slidesToShow: 8,
+        slidesToScroll: 1,
+        asNavFor: '.thumbnail-album',
+        dots: false,
+        arrows: true,
+        vertical: true,
+        focusOnSelect: true
+      });
+    }
+
     $('.slidershow-album .control-album .slick-slide').eq(0).addClass('slick-current');
-    $('[data-validate]').validate({
-        errorPlacement: function errorPlacement(error, element) { element.before(error);  error.appendTo(element.parent()); },
-    });
+    
+    if ($('[data-validate]').length) {
+      $('[data-validate]').validate({
+          errorPlacement: function errorPlacement(error, element) { element.before(error);  error.appendTo(element.parent()); },
+      });
+    }
+      
     var itemList= $('.banner .slider-nav.slick-slider .slick-slide');
     if(itemList.length < 6){
       $('.banner .slider-nav .slick-track').addClass('remove-transition');
@@ -689,77 +781,89 @@ var Site = (function($, window, undefined) {
       $('.banner .slider-nav .slick-track').remove('remove-transition');
     }
     var form = $('[data-signup]');
-    form.validate({
+    if (form.length) {
+      form.validate({
         errorPlacement: function errorPlacement(error, element) { element.before(error); error.appendTo(element.parent()); },
-    });
-    $('[data-step]').steps({
-      headerTag: ".title-content",
-      bodyTag: ".item",
-      transitionEffect: "slideLeft",
-      labels: {
-        finish: "Hoàn thành",
-        next: "Tiếp tục",
-        previous: "Quay lại",
-        loading: "Loading ..."
-      },
-      onInit: function(event, currentIndex) {
-        var text = $('[data-step] .item').data('text');
-        $('.cap-change').appendTo('.modal-body .form-1');
-        $('.actions').find('a[href="#next"]').text(text);
-      },
-      onStepChanging: function (event, currentIndex, newIndex){
-        form.validate().settings.ignore = ":disabled,:hidden";
-        return form.valid();
-      },
-      onStepChanged: function (event, currentIndex, priorIndex){
-        var text = $('[data-step] .item').data('text');
-        $('[data-select]').select();
-        if(currentIndex === 0){
+      });
+    }
+    
+    if ($('[data-step]').length) {  
+      $('[data-step]').steps({
+        headerTag: ".title-content",
+        bodyTag: ".item",
+        transitionEffect: "slideLeft",
+        labels: {
+          finish: "Hoàn thành",
+          next: "Tiếp tục",
+          previous: "Quay lại",
+          loading: "Loading ..."
+        },
+        onInit: function(event, currentIndex) {
+          var text = $('[data-step] .item').data('text');
           $('.cap-change').appendTo('.modal-body .form-1');
-           $('.actions').removeClass('half');
-           $('.actions').find('a[href="#next"]').text(text);
-        }else{
-          $('.actions').addClass('half');
-          $('.modal-body .form-1 .cap-change').appendTo('#steps-uid-0-p-0 .col-sm-offset-1.col-sm-10 .row');
-           $('.actions').find('a[href="#next"]').text("Tiếp tục");
+          $('.actions').find('a[href="#next"]').text(text);
+        },
+        onStepChanging: function (event, currentIndex, newIndex){
+          form.validate().settings.ignore = ":disabled,:hidden";
+          return form.valid();
+        },
+        onStepChanged: function (event, currentIndex, priorIndex){
+          var text = $('[data-step] .item').data('text');
+          $('[data-select]').select();
+          if(currentIndex === 0){
+            $('.cap-change').appendTo('.modal-body .form-1');
+             $('.actions').removeClass('half');
+             $('.actions').find('a[href="#next"]').text(text);
+          }else{
+            $('.actions').addClass('half');
+            $('.modal-body .form-1 .cap-change').appendTo('#steps-uid-0-p-0 .col-sm-offset-1.col-sm-10 .row');
+             $('.actions').find('a[href="#next"]').text("Tiếp tục");
+          }
+        },
+        onFinishing: function (event, currentIndex){
+          if($('#steps-uid-0-p-1').hasClass('current')){
+            $('.modal-body .form-1 .cap-change').addClass('back');
+          }else{
+            $('.modal-body .form-1 .cap-change').removeClass('back');
+          }
+          form.validate().settings.ignore = ":disabled";
+          return form.valid();
+        },
+        onFinished: function (event, currentIndex){
+          var el = $(event).find('a[href="#finish"]');
+          var form = $(this);
+          form.submit();
         }
-      },
-      onFinishing: function (event, currentIndex){
-        if($('#steps-uid-0-p-1').hasClass('current')){
-          $('.modal-body .form-1 .cap-change').addClass('back');
-        }else{
-          $('.modal-body .form-1 .cap-change').removeClass('back');
-        }
-        form.validate().settings.ignore = ":disabled";
-        return form.valid();
-      },
-      onFinished: function (event, currentIndex){
-        var el = $(event).find('a[href="#finish"]');
-        var form = $(this);
-        form.submit();
-      }
-    });
+      });
+    }
+
     $('[data-step]').click(function (e) {
         var source = $(e.target);
         if(source.is("li")){
         }
     }).trigger('click.step');
 
-    $('[data-picker]').datepicker({
-      showButtonPanel: true,
-      autoSize: true,
-      dateFormat: "dd/mm/yy",
-      beforeShow: function(input, inst) {
-        setTimeout(function(){
-          var widthItem = $('[data-picker]').parent().width();
-          $('#ui-datepicker-div').css({width: widthItem});
-        },200);
-      }
-    });
+    if ($('[data-picker]').length) {
+      $('[data-picker]').datepicker({
+        showButtonPanel: true,
+        autoSize: true,
+        dateFormat: "dd/mm/yy",
+        beforeShow: function(input, inst) {
+          setTimeout(function(){
+            var widthItem = $('[data-picker]').parent().width();
+            $('#ui-datepicker-div').css({width: widthItem});
+          },200);
+        }
+      });
+    }
+
     $(window).resize(function() {
-      $('[data-picker]').datepicker('hide');
+      if ($('[data-picker]').length) {
+        $('[data-picker]').datepicker('hide');
         $('[data-picker]').blur();
+      }    
     });
+
     $('.modal-1').on('show.bs.modal', function (e) {
       setTimeout(function(){
         $('[data-validate]').validate({
@@ -767,108 +871,7 @@ var Site = (function($, window, undefined) {
         });
       },300);
     });
-    if($('#fileupload').length){
-    var url = window.location.hostname === 'blueimp.github.io' ?'//jquery-file-upload.appspot.com/' : $('.upload-form').data('uploadlink'),
-    uploadButton = $('<button type="button"/>')
-        .addClass('btn-2')
-        .prop('disabled', true)
-        .text('Processing...')
-        .on('click', function () {
-            var $this = $(this),
-                data = $this.data();
-            $this
-                .off('click')
-                .text('Abort')
-                .on('click', function () {
-                    $this.remove();
-                    data.abort();
-                });
-            data.submit().always(function () {
-                $this.remove();
-            });
-        });
-    $('#fileupload').fileupload({
-        url: url,
-        dataType: 'json',
-        autoUpload: false,
-        acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i,
-        disableImageResize: /Android(?!.*Chrome)|Opera/
-            .test(window.navigator.userAgent),
-        previewMaxWidth: 100,
-        previewMaxHeight: 100,
-        previewCrop: true
-    }).on('fileuploadadd', function (e, data) {
-        data.context = $('<div class="canvas"/>').appendTo('#files');
-        $.each(data.files, function (index, file) {
-            var node = $('<div class="inner"/>')
-                    .append($('<span/>'));
-            var error = $('<span class="text-danger"/>').text(file.error);
-            if (!index) {
-              node.append(uploadButton.clone(true).data(data));
-              setTimeout(function(){
-              if($('.fileinput-button').length){
-                $('.file-upload-custom.avatar .fileinput-button span').hide();
-              }else{
-
-              }
-            },100);
-            }
-            node.appendTo(data.context);
-        });
-    }).on('fileuploadprocessalways', function (e, data) {
-        var index = data.index,
-            file = data.files[index],
-            node = $(data.context.children()[index]);
-        if (file.preview) {
-            $('.file-upload-custom.avatar .text-danger').hide();
-            node.prepend(file.preview);
-        }
-        if (file.error) {
-            node
-                .append('<br>')
-                .append($('<span class="text-danger"/>').text(file.error));
-            $(data.context.children()[index]).addClass('error-file');
-        }
-        if (index + 1 === data.files.length) {
-            data.context.find('button')
-                .text('Upload')
-                .prop('disabled', !!data.files.error);
-        }
-        if(data.files.length){
-          // file.error.hide();
-        }
-    }).on('fileuploadprogressall', function (e, data) {
-        var progress = parseInt(data.loaded / data.total * 100, 10);
-        $('#progress').show();
-        $('#progress .progress-bar').css(
-            'width',
-            progress + '%'
-        );
-    }).on('fileuploaddone', function (e, data) {
-        $.each(data.result.files, function (index, file) {
-            if (file.url) {
-                var link = $('<a>')
-                    .attr('target', '_blank')
-                    .prop('href', file.url);
-                $(data.context.children()[index])
-                    .wrap(link);
-                $('.file-upload-custom.avatar .fileinput-button span').show();
-            } else if (file.error) {
-                var error = $('<span class="text-danger"/>').text(file.error);
-                $('.file-upload-custom.avatar .fileinput-button span').show();
-                $(data.context.children()[index])
-                    .append(error);
-                
-            }
-        });
-    }).on('fileuploadfail', function (e, data) {
-        $.each(data.files, function (index) {
-            var error = $('<span class="text-danger"/>').text('File upload failed.');
-            $(data.context.children()[index])
-                .append(error);
-        });
-    }).prop('disabled', !$.support.fileInput).parent().addClass($.support.fileInput ? undefined : 'disabled');
-    }
+    
     if($('#fileupload1').length){
     var url = window.location.hostname === 'blueimp.github.io' ?'//jquery-file-upload.appspot.com/' : $('.upload-form').data('uploadlink'),
     uploadButton = $('<button type="button"/>')
@@ -1061,7 +1064,7 @@ var Site = (function($, window, undefined) {
     $('.accordion .item').each(function(){
       var deleteBtn = $('.icon-delete', $(this)),
           that = $(this),
-          marryBlock = $('.marry-block');
+          marryBlock = $('[data-manage]');
       // $(deleteBtn).on('click', function(){
       //   that.remove();
       // });
@@ -1259,133 +1262,5841 @@ jQuery(function() {
 }(window));
 
 
-var googleDrive = new GoogleDrive();
-$('#googledrive-connect').on('click', function(evt) {
-  googleDrive.connect();
-});
 
-function onGooglClientApiLoadedHandler() {
-  googleDrive.init();
+
+function FaceBook() {
+	this.SCOPES = 'public_profile, user_photos, user_videos, user_friends';
+	
+	this.state = null;
+	this.isMe = false;
+	this.totalItem = 0;
 }
 
+FaceBook.prototype.init = function() {
+	var	that = this;
+	
+	FB.getLoginStatus(function(response) {
+		if (response.status === 'connected') {
+			that.state = 'LOGIN';
+		}
+   });
+};
+
+FaceBook.prototype.getFriends = function(evt) {
+	FB.api(
+    "me?fields=id,about,name,friends{id,name,cover,bio,about}",
+    function (response) {
+      if (response && !response.error) {
+      	var myEvent = jQuery.Event('facebook.friendselect');
+      	myEvent.friends = response.friends.data;
+        $('body').trigger(myEvent);
+      }
+    }
+	);
+};
+
+FaceBook.prototype.getListFriend = function() {
+	var that = this;
+	if (this.state) {
+		that.getFriends();
+	} else {
+		FB.login(function(response) {
+			if (response.status === 'connected') {
+				that.state = 'LOGIN';
+				that.getFriends();
+			}
+		}, {scope: this.SCOPES});
+	}	
+};
+
+FaceBook.prototype.connect = function(type) {
+	var	that = this;
+	
+	$('#cloud-breadcrumb').find('.separate').hide();
+	$('#cloud-breadcrumb').find('.album').html('');
+
+	this.totalItem = 0;
+  	$('#cloud-breadcrumb').find('.selected-item').html('Selected ' + this.totalItem + ' item');
+				
+	if (this.state) {
+		that.callMe();
+		that.callAPI('me/albums?fields=id,name,cover_photo', function(response) { that.onAlbumLoadedHandler(response); });
+	} else {	
+		FB.login(function(response) {
+			if (response.status === 'connected') {
+				that.state = 'LOGIN';
+				that.callMe();
+				that.callAPI('me/albums?fields=id,name,cover_photo', function(response) { that.onAlbumLoadedHandler(response); });
+			}
+		  
+			else if (response.status === 'not_authorized') {
+				// The person is logged into Facebook, but not your app.
+			} 
+		  
+			else {
+				// The person is not logged into Facebook, so we're not sure if
+				// they are logged into this app or not.
+			}
+		}, {scope: this.SCOPES});
+	}
+};
+
+FaceBook.prototype.callAPI = function(apiQuery, callback) {
+	
+	var that = this;
+	
+	$('#cloud-content').find('.item').off('click');
+	$('#cloud-content').empty();
+	$('#cloud-breadcrumb').hide();	
+	$('#cloud-loadding').show();
+
+	this.totalItem = 0;
+  	$('#cloud-breadcrumb').find('.selected-item').html('Selected ' + that.totalItem + ' item');
+	
+	FB.api(
+		apiQuery,
+		function (response) {
+			if (response && !response.error) {					
+				$('#cloud-loadding').hide();
+				$('#cloud-breadcrumb').show();
+				callback(response);
+			}
+		}
+	);
+};
+
+FaceBook.prototype.callMe = function() {
+	var that = this;
+	
+	if (!that.isMe) {
+		FB.api(
+			'me/',
+			function (response) {
+				if (response && !response.error) {					
+					that.isMe = true;
+					$('#cloud-breadcrumb').find('.root').html(response.name);
+					$('#cloud-breadcrumb').find('.root').on('click', function(evt) { that.onClickMeHandler(evt); });
+					$('#cloud-breadcrumb').find('.album').on('click', function(evt) { that.onClickAlbumHandler(evt); });
+				}
+			}
+		);
+	}	
+};
+
+FaceBook.prototype.onClickMeHandler = function(evt) {
+	$('#cloud-breadcrumb').find('.separate').hide();
+	$('#cloud-breadcrumb').find('.album').html('');
+	
+	var that = this;
+	that.callAPI('me/albums?fields=id,name,cover_photo', function(response) { that.onAlbumLoadedHandler(response); });
+};
+
+FaceBook.prototype.onClickAlbumHandler = function(evt) {
+	var that = this;
+	
+	var albumId = $('#cloud-breadcrumb').find('.album').data('album-id');	
+	that.callAPI(albumId + '/photos?fields=id,name,images,url', function(response) { that.onAlbumDetailLoadedHandler(response); });
+};
+
+FaceBook.prototype.onAlbumLoadedHandler = function(response) {
+	for (var i = 0; i < response.data.length; i ++) {
+		this.addFolder(response.data[i]);
+	}
+};
+
+FaceBook.prototype.onAlbumDetailLoadedHandler = function(response) {
+	for (var i = 0; i < response.data.length; i ++) {
+		this.addPhoto(response.data[i]);
+	}
+};
+
+FaceBook.prototype.addFolder = function(folder) {
+	var that = this;
+	var title = folder.name;
+	var albumId = folder.id;
+	
+	var div = $('<div data-item-url="Image1.png" class="item col-xs-3">' +
+				'	<span>' + title + '</span>' +
+				'	<div class="thumb"><img src="" alt="" class="img-responsive"/></div>' +
+				'</div>');
+	$('#cloud-content').append(div);
+	
+	FB.api(
+		albumId + '/picture',
+		function (response) {
+			if (response && !response.error) {					
+				div.find('.thumb img').attr('src', response.data.url);
+			}
+		}
+	);
+		
+	div.on('click', function(evt) {	
+		$('#cloud-breadcrumb').find('.separate').show();
+		$('#cloud-breadcrumb').find('.album').html(title);
+		$('#cloud-breadcrumb').find('.album').data('album-id', albumId);
+				
+		that.callAPI(albumId + '/photos?fields=id,name,images,url', function(response) { that.onAlbumDetailLoadedHandler(response); });
+	});
+};
+
+FaceBook.prototype.addPhoto = function(photo) {
+	var that = this;
+	
+	var heightThumbnail = 10000;
+	var thumbnail = 'images/video/folder.png';
+	
+	var heightSource = 0;
+	var source = '';
+	
+	for (var i = 0; i < photo.images.length; i ++) {
+		if (photo.images[i].height < heightThumbnail) {
+			heightThumbnail = photo.images[i].height;
+			thumbnail = photo.images[i].source;
+		}
+
+		if (photo.images[i].height > heightSource) {
+			heightSource = photo.images[i].height;
+			source = photo.images[i].source;
+		}
+	}
+	
+	var div = $('<div data-item-url="' + source + '" class="item col-xs-3">' +
+				'	<div class="thumb"><img src="' + thumbnail + '" alt="" class="img-responsive"/></div>' +
+				'</div>');
+	$('#cloud-content').append(div);
+	
+	div.on('click', function(evt) {		
+		div.toggleClass('active');
+
+		if (div.hasClass('active')) {
+	        that.totalItem ++;
+	    } else {
+	    	that.totalItem --;
+	    }
+
+		$('#cloud-breadcrumb').find('.selected-item').html('Selected ' + that.totalItem + ' item');
+	});
+};
+
+var facebook = new FaceBook();
+
+//$(document).ready(function() {
+//	$('#cloud-connect').on('click', function(evt) {
+//		facebook.connect();
+//	});
+//s});
+
+window.fbAsyncInit = function() {
+	FB.init({
+	  appId      : '390145291021310',
+	  xfbml      : true,
+	  version    : 'v2.5'
+	});		
+	facebook.init();
+};
+
+(function(d, s, id){
+	 var js, fjs = d.getElementsByTagName(s)[0];
+	 if (d.getElementById(id)) {return;}
+	 js = d.createElement(s); js.id = id;
+	 js.src = "//connect.facebook.net/en_US/sdk.js";
+	 fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));
+
 function GoogleDrive() {
-  this.CLIENT_ID = '691726389794-4boot0bt98elrqjr6rqos45dvs7bf0f7.apps.googleusercontent.com';
-    this.API_KEY = 'AIzaSyCbJYq6i_CJzt8okRFQw4frnBtvjp4IV80';
-    this.SCOPES = ['https://www.googleapis.com/auth/drive'];
+  this.CLIENT_ID = '691726389794-s28o1ikvvepsjclilk8e6tv1gdmua7f9.apps.googleusercontent.com';
+  this.API_KEY = 'AIzaSyBo1FC19SxyHcSgS_1qBTMzvU-xRHKF7wQ';
+  this.SCOPES = ['https://www.googleapis.com/auth/drive'];
+  
+  this.isMe = false;
+  this.totalItem = 0;
 }
 
 GoogleDrive.prototype.init = function() {
   gapi.client.setApiKey(this.API_KEY);
 };
 
-GoogleDrive.prototype.connect = function() {
+GoogleDrive.prototype.retry = function(api, version, scope, callback) {
   var that = this;
+  
   gapi.auth.authorize({
-        'client_id': this.CLIENT_ID,
-        'scope': this.SCOPES.join(' '),
-        'immediate': true
-    }, function(authResult) {
+    'client_id': this.CLIENT_ID,
+    'scope': scope,
+    'immediate': false
+  }, function(authResult) {
     if (authResult && !authResult.error) {
-      that.loadDriveApi();
+      that.loadApi(api, version, callback);
     }
   });
-  
-  //dispatch event here
-  $('#googledrive-loadding').show();
-  $('#googledrive-content').empty();
-  $('#googledrive-breadcrumb').hide();
-  $('#uploadGoogle').modal('show', function() {
-    setTimeout(function() {
-      var container = $('#googledrive-content');
-      container.imagesLoaded( function () {
-        container.masonry({
-          itemSelector: '.item',
-          columnWidth: '.item',
-          isAnimated:true,
-          animationOptions: {
-            duration: 500,
-            easing:'swing',
-            queue :false
-          }
-        });
-      });
-    }, 2000);
-  });
-  
-  var that = this;
-  setTimeout(function() {
-    $('#googledrive-loadding').hide();
-    $('#googledrive-breadcrumb').show();
-    that.addFile({mimeType:'application/vnd.google-apps.folder', thumbnailLink: 'images/video/folder.png'});
-    that.addFile({thumbnailLink: 'images/video/Thumb1.png'});
-    that.addFile({thumbnailLink: 'images/video/Thumb1.png'});
-    that.addFile({thumbnailLink: 'images/video/thumb413.png'});
-    that.addFile({thumbnailLink: 'images/video/Thumb3.png'});
-    that.addFile({thumbnailLink: 'images/video/Thumb41.png'});
-    that.addFile({thumbnailLink: 'images/video/Thumb1.png'});
-    that.addFile({thumbnailLink: 'images/video/Thumb48.png'});
-    that.addFile({thumbnailLink: 'images/video/Thumb3.png'});
-    that.addFile({thumbnailLink: 'images/video/Thumb42.png'});
-    that.addFile({thumbnailLink: 'images/video/Thumb1.png'});
-    that.addFile({thumbnailLink: 'images/video/Thumb2.png'});
-    that.addFile({thumbnailLink: 'images/video/Thumb3.png'});
-    var container = $('#googledrive-content');
-    container.imagesLoaded( function () {
-      container.masonry({
-        itemSelector: '.item',
-        columnWidth: '.item',
-        isAnimated:true,
-        animationOptions: {
-          duration: 500,
-          easing:'swing',
-          queue :false
-        }
-      });
-    });
-  }, 2000);
 };
 
-GoogleDrive.prototype.loadDriveApi = function() {
-  var that = this;
-  gapi.client.load('drive', 'v2', function() {
-    that.onDriveLoadHandler();
+GoogleDrive.prototype.loadApi = function(api, version, callback) {
+  gapi.client.load(api, version, function() {
+    callback();
   });
 };
 
-GoogleDrive.prototype.onDriveLoadHandler = function() {
-  this.loadFiles('root');
+GoogleDrive.prototype.connect = function(type) {
+  
+  this.totalItem = 0;
+  $('#cloud-breadcrumb').find('.separate').hide();
+  $('#cloud-breadcrumb').hide();
+  $('#cloud-breadcrumb').find('.selected-item').html('Selected ' + this.totalItem + ' item');
+  
+  $('#cloud-content').find('.item').off('click');
+  $('#cloud-content').empty();
+
+  $('#cloud-loadding').show();
+
+  var that = this;
+
+  var api = 'drive';
+  var version = 'v2';
+  var scope = 'https://www.googleapis.com/auth/drive';
+
+  gapi.auth.authorize({
+    'client_id': this.CLIENT_ID,
+    'scope': scope,
+    'immediate': true
+  }, function(authResult) {
+    if (authResult && !authResult.error) {
+    that.loadApi(api, version, function() { that.loadDrive(); } );
+    } else {
+      that.retry(api, version, scope, function() { that.loadDrive(); } );
+    }
+  });
+};
+
+GoogleDrive.prototype.loadDrive = function() {
+  var that = this;
+  var request = gapi.client.drive.about.get();
+  request.execute(function(response) {
+
+    that.isMe = true;
+    $('#cloud-breadcrumb').find('.root').html(response.name);
+    $('#cloud-breadcrumb').find('.root').data('folderId', response.rootFolderId);
+    
+    $('#cloud-breadcrumb').find('.root').on('click', function(evt) { that.onClickMeHandler(evt); });
+    $('#cloud-breadcrumb').find('.album').on('click', function(evt) { that.onClickAlbumHandler(evt); });
+    
+    that.loadFiles(response.rootFolderId);
+  });
+};
+
+GoogleDrive.prototype.onClickMeHandler = function(evt) {
+  $('#cloud-breadcrumb').find('.separate').hide();
+  $('#cloud-breadcrumb').find('.album').html('');
+  
+  var folderId = $('#cloud-breadcrumb').find('.root').data('folderId');
+  this.loadFiles(folderId);
+};
+
+GoogleDrive.prototype.onClickAlbumHandler = function(evt) {
+  var folderId = $('#cloud-breadcrumb').find('.album').data('folderId');
+  this.loadFiles(folderId);
 };
 
 GoogleDrive.prototype.loadFiles = function(folderId) {
   var that = this;
+  
+  $('#cloud-loadding').show();
+  
+  $('#cloud-content').find('.item').off('click');
+  $('#cloud-content').empty();
+
+  this.totalItem = 0;
+  $('#cloud-breadcrumb').find('.selected-item').html('Selected ' + that.totalItem + ' item');
+  
   var request = gapi.client.request({
     'path': 'drive/v2/files?q=trashed=false ' +
         'and ( ' +
                 'mimeType contains "folder" ' +
-                'or mimeType contains "jpeg") and "' + folderId + '" in parents',
+                'or mimeType contains "jpeg"' +
+                'or mimeType contains "png")' +
+                ' and "' + folderId + '" in parents',
     'method': 'GET',
-    'params': {'maxResults': 1000}
+    'params': {'maxResults': 1000, 'orderBy': 'folder'}
     });
-
+  
   request.execute(function(resp) {
+    $('#cloud-loadding').hide();
+    $('#cloud-breadcrumb').show();
+  
+    
     var files = resp.items;
     if (files && files.length > 0) {
-    for (var i = 0; i < files.length; i++) {
-      that.addFile(files[i]);
-    }
+      for (var i = 0; i < files.length; i++) {
+        that.addFile(files[i]);
+      }
     }
   });
 };
 
 GoogleDrive.prototype.addFile = function(file) {
-
-  var thumbnail = file.mimeType != 'application/vnd.google-apps.folder' ? file.thumbnailLink : 'http://cuongtran3001.github.io/wedding/images/video/folder.png';
-
-  var classfolder= file.mimeType != 'application/vnd.google-apps.folder' ? '' : ' folder-item';
+  var that = this;
   
-  var div = $('<div data-item-id="item_1" data-item-url="Image1.png" class="item col-xs-3' + classfolder + '"><div class="thumb"><img src="' + thumbnail + '" alt="" class="img-responsive"/></div></div>');
-  $('#googledrive-content').append(div);
+  var isFolder = file.mimeType != 'application/vnd.google-apps.folder' ? false : true;
+  var thumbnail = isFolder ? 'http://cuongtran3001.github.io/wedding/images/video/folder.png' : file.thumbnailLink;  
+  var title = isFolder ? file.title : '';
+  var classes = isFolder ? 'folder-item' : '';
+  var folderId = file.id;
+  var url = file.selfLink + '?alt=media';
+  
+  var div = $('<div data-item-url="' + url + '" class="item ' + classes + ' col-xs-3">' +
+              '<span>' + title + '</span>' +
+              '  <div class="thumb"><img src="' + thumbnail + '" alt="" class="img-responsive"/>'+
+              '</div></div>');
+  
+  div.on('click', function(evt) {
+    if (isFolder) {
+      $('#cloud-breadcrumb').find('.separate').show();
+      $('#cloud-breadcrumb').find('.album').html(title);
+      $('#cloud-breadcrumb').find('.album').data('folderId', folderId);
+      that.loadFiles(folderId);
+    } else {
+      div.toggleClass('active');
+      
+      if (div.hasClass('active')) {
+        that.totalItem ++;
+      } else {
+        that.totalItem --;
+      }
+      $('#cloud-breadcrumb').find('.selected-item').html('Selected ' + that.totalItem + ' item');
+      
+    }
+  });
+  
+  $('#cloud-content').append(div);
 };
+
+GoogleDrive.prototype.getListFriend = function() {
+  
+  var api = 'plus';
+  var version = 'v1';
+  var scope = 'https://www.googleapis.com/auth/plus.login';
+
+  var that = this;
+  gapi.auth.authorize({
+    'client_id': this.CLIENT_ID,
+    'scope': scope,
+    'immediate': true
+    }, function(authResult) {
+      if (authResult && !authResult.error) {
+        that.loadApi(api, version, function() { that.getFriends(); } );
+      } else {
+        that.retry(api, version, scope, function() { that.getFriends(); });
+      }
+    });
+};
+
+GoogleDrive.prototype.getFriends = function() {
+  var request = gapi.client.plus.people.list({
+     'userId': 'me',
+     'collection' : 'visible'
+  });
+  request.execute(function(resp) {
+    var myEvent = jQuery.Event('google.friendselect');
+    myEvent.friends = resp.items;
+    $('body').trigger(myEvent);
+  });
+};
+
+var googleDrive = new GoogleDrive();
+//$('#cloud-connect').on('click', function(evt) {
+//  googleDrive.getListFriend();
+//});
+
+window.onGooglClientApiLoadedHandler = function() {
+  var interval = setInterval(function() {
+    if (window['gapi'] && window['gapi']['client']) {
+      clearInterval(interval);
+      googleDrive.init();
+    }
+  }, 500);
+}
+
+(function(d, s, id){
+   var js, fjs = d.getElementsByTagName(s)[0];
+   if (d.getElementById(id)) {return;}
+   js = d.createElement(s); js.id = id;
+   js.src = "https://apis.google.com/js/client.js?onload=onGooglClientApiLoadedHandler";
+   fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'google-jssdk'));
+
+/* =================
+ * video-clip.js
+  TO DO:
+  move to variable for text
+  filter upload by image, video, audio of cloud
+
+ * ================= */
+
+;(function($, window, createjs, App) {
+
+  "use strict"; 
+
+  /* =============== */
+  /* MODULE DEFAULTS */
+  /* =============== */
+
+  var defaults = {};
+  var pluginName = 'videoclip';
+
+  var UPLOAD_URL = 'server/videoclip/uploadData.php';
+  var CLOUD_URL = 'server/videoclip/getCloudData.php';
+  var SAVE_URL = 'server/videoclip/saveVideoClip.php';
+  var FINISH_URL = 'server/videoclip/finishVideoClip.php';
+  var SHARE_URL = 'video-clip-share.html';
+  var EMAIL_URL = 'server/videoclip/shareVideoClip.php';
+  
+  var PANEL_INTRO = 'intro';
+  var PANEL_TEXT = 'text';
+  var PANEL_IMAGE = 'image';
+  var PANEL_VIDEO = 'video';
+  var PANEL_EFFECT = 'effect';
+  var PANEL_AUDIO = 'audio';
+  var PANEL_TEXT_EFFECT = 'texteffect';
+
+  var FROM_LIBRARY = 'library';
+  var FROM_UPLOAD = 'upload';
+  var FROM_YOURS = 'yours';
+
+  var bgTpl =  '<div class="box">' +
+               '  <div class="img-add">' +
+               '    <img src="{bg_image}" alt="">' +
+               '  </div>' +
+               '  <span class="time" title="Click to change showed time of background">{bg_time}</span>' +
+               '  <input type="number" class="time edit-time">' +
+               '  <a href="javascript:void(0);" title="Delete" class="delete">' +
+               '    <span class="fa fa-minus"></span>' +
+               '  </a>' +
+               '</div>';
+
+  var audioTpl = '<div class="box">' +
+                 '  <div class="title"><strong>{audio_title}</strong></div>' +
+                 '  <span class="time" title="Click to change showed time of audio">{audio_time}</span>' +
+                 '  <input type="number" class="time edit-time"></input>' +
+                 '  <a href="javascript:void(0);" title="Delete" class="delete">' +
+                 '    <span class="fa fa-minus"></span>' +
+                 '  </a>' +
+                 '</div>';
+
+  var frameTpl = '<div class="frame">' +
+                 '  <div class="thumb" title="Click to change image or video"><img class="frame-image" src="{frame_image}" alt=""></div>' +
+                 '  <div class="icon">' +
+                 '    <div class="icon-show" title="Click to show menu"><span class="fa fa-sort-desc"></span></div>' +
+                 '    <div class="icon-effect" title="Effect"><span class="fa fa-exchange"></span></div>' +
+                 '    <div class="icon-audio" title="Audio"><span class="fa fa-headphones"></span></div>' +
+                 '  </div>' +
+                 '  <div class="desc"><span class="icon-edit-text" title="Click to change text effect"></span><p class="frame-text" title="Click to change frame text">{frame_text}</p></div>' +
+                 '</div>';
+                                  
+  /* ================= */
+  /* MODULE DEFINITION */
+  /* ================= */
+
+  function VideoClip(element, options) {
+    this.element = $(element);
+    this.options = $.extend({}, $.fn[pluginName].defaults, options);
+
+    this.vcid = Math.random().toString(36).substring(12);
+
+    this.arrFrame = [];
+    this.curFrameIndex = -1;
+    this.curFrame = null;
+
+    this.curFrameImage = null;
+    this.curFrameVideo = null;
+    this.curFrameText = null;
+    this.curFrameEffect = null;
+    this.curFrameAudio = null;
+    this.curFrameHAlign = null;
+    this.curFrameVAlign = null;
+    this.curFrameStyle  = null;
+
+    this.arrBG = []
+    this.curBG = null;
+    this.curBGIndex = -1;
+
+    this.arrBGAudio = []
+    this.curBGAudio = null;
+    this.curBGAudioIndex = -1;
+    
+    this.isBackground = false;
+    this.isAudio = false;
+
+    this.canvas = null;
+    this.stage = null;
+    
+    this.bitmapContainer = null;
+    this.frameBitmap = null;
+    this.bgContainer = null;
+    this.bgBitmap = null;
+    this.frameText = null
+    this.textContainer = null;
+    this.image = null;
+
+    this.effectSetting = null;
+    this.mediaSetting = null;
+    this.loading = null;
+
+    this.audioInstance = null;
+    this.videoInstance = null;
+
+    this.curPanel = null;
+    this.previewVC = new PreviewVC(); 
+
+    this.googleDrive = null;
+    this.facebook = null;
+
+    return this.init();
+  }
+
+  /* ============== */
+  /* MODULE METHODS */
+  /* ============== */
+
+  VideoClip.prototype.init = function() {
+
+    var that = this;
+
+    UPLOAD_URL = this.element.data('upload-url');
+    CLOUD_URL = this.element.data('cloud-url');
+    SAVE_URL = this.element.data('save-url');
+    FINISH_URL = this.element.data('finish-url');
+    SHARE_URL = this.element.data('social-url');
+    EMAIL_URL = this.element.data('share-url');
+
+    this.canvas = document.getElementById('cvsVC');
+    this.stage = new createjs.Stage("cvsVC");
+    this.bgContainer = this.stage.addChild(new createjs.Container());
+    this.bitmapContainer = this.stage.addChild(new createjs.Container());
+    this.textContainer = this.stage.addChild(new createjs.Container());
+
+    createjs.Ticker.addEventListener("tick", function() { that.stage.update(); });
+    
+    $(window).on('resize', function(evt) { that.resize(); });
+    this.resize();
+
+    this.effectSetting = $('.effect-setting');
+
+    this.videoInstance = document.getElementById('video');
+
+    this.loading = $('.vc-loading-wrapp');
+      
+    //media-setting events
+    this.mediaSetting = $('.media-setting');
+
+    this.mediaSetting.find('.time-start').on('mousedown', function(evt) {
+      that.onMoveTimeHandler(this);
+    });
+
+    this.mediaSetting.find('.time-end').on('mousedown', function(evt) {
+      that.onMoveTimeHandler(this);
+    });
+
+    this.mediaSetting.find('.play-pause').off('click').on('click', function(evt) {
+      that.onClickPlayPauseHandler(this);
+    });
+
+    //dropdown-menu
+    var dropDownMenuFrame = $('.dropdown-menu').find('.item');
+    dropDownMenuFrame.each(function() {
+      var item = $(this);
+      item.off('click').on('click', function(evt) {
+        that.onClickDropDownMenuHandler(item);
+      });
+    });
+
+    this.initShare();
+
+    //add new
+    $('.vc-backgrounds').find('.add-more').off('click').on('click', function(evt) { that.addBackground(null, true);});
+    $('.vc-audios').find('.add-more').off('click').on('click', function(evt) { that.addBackgroundAudio(null, true);});
+    $('.vc-frames').find('.add-more-effect').off('click').on('click', function(evt) { that.onClickAddFrameHandler(evt);});
+    $('#vc-add-intro').find('.intro-click').off('click').on('click', function(evt) { that.onClickAddFrameHandler(evt);});
+    $('.vc-frames').find('.add-more-effect').off('click').on('click', function(evt) { that.onClickAddFrameHandler(evt);});
+    
+    //menu
+    var controlMenu = $('.control-menu').find('li');
+    controlMenu.off('click').on('click', function(evt) {
+      if (!$(this).hasClass('disabled')) {
+        that.changePanel($(this).attr('id'));
+      }
+    });
+
+    //save, preview and finish
+    var listControl = $('.list-control');
+    listControl.find('.save-vc').off('click').on('click', function(evt) { that.save();});
+    listControl.find('.preview-vc').off('click').on('click', function(evt) { that.preview();});
+    listControl.find('.finish-vc').off('click').on('click', function(evt) { that.finish();});
+
+    //select image from library
+    var imageLibrary = $('#vc-image-library').find('.item');
+    imageLibrary.off('click').on('click', function(evt) {
+      that.selectFrameData(this, FrameData.IMAGE);
+    });
+
+    //select FrameData.IMAGE from local
+    var imageUpload = $('#vc-image-upload').find('.vc-image-upload-local');
+    imageUpload.off('click').on('click', function(evt) {
+      that.browseFile(FrameData.IMAGE, that.uploadFrameData);
+    });
+
+    var imageGD = $('#vc-image-upload').find('.vc-image-upload-gd');
+    imageGD.off('click').on('click', function(evt) {
+      that.connectGoogleDrive(FrameData.IMAGE);
+    });
+
+    var imageDB = $('#vc-image-upload').find('.vc-image-upload-db');
+    imageDB.off('click').on('click', function(evt) {
+      that.connectFaceBook(FrameData.IMAGE);
+    });
+
+    //select image from your album
+    var imageYours = $('#vc-image-yours').find('.item');
+    imageYours.off('click').on('click', function(evt) {
+      that.selectFrameData(this, FrameData.IMAGE);
+    });
+
+    //select video from library
+    var videoLibrary = $('#vc-video-library').find('.item');
+    videoLibrary.off('click').on('click', function(evt) {
+      that.selectFrameData(this, FrameData.VIDEO);
+    });
+
+    //select video from local
+    var videoUpload = $('#vc-video-upload').find('.vc-video-upload-local');
+    videoUpload.off('click').on('click', function(evt) {
+      that.browseFile(FrameData.VIDEO, that.uploadFrameData);
+    });
+
+    var videoGD = $('#vc-video-upload').find('.vc-video-upload-gd');
+    videoGD.off('click').on('click', function(evt) {
+      that.connectGoogleDrive(FrameData.VIDEO);
+    });
+
+    var videoDB = $('#vc-video-upload').find('.vc-video-upload-db');
+    videoDB.off('click').on('click', function(evt) {
+      that.connectFaceBook(FrameData.VIDEO);
+    });
+
+    //select video from your album
+    var videoYours = $('#vc-video-yours').find('.item');
+    videoYours.off('click').on('click', function(evt) {
+      that.selectFrameData(this, FrameData.VIDEO);
+    });
+
+    ///vc-add-text///////////////////////////////////////////////////
+    //add text effect
+    var addTextEffect = $('#vc-add-text').find('.text-effect .add-more');
+    addTextEffect.off('click').on('click', function(evt) {
+      that.showPanel(PANEL_TEXT_EFFECT);
+    });
+
+    //select text effect
+    var textEffect = $('#vc-add-texteffect').find('.item');
+    textEffect.off('click').on('click', function(evt) {
+      that.selectFrameTextEffect(this);
+    });
+
+    $('#vc-add-text').find('textarea[name="frametext"]').bind('input propertychange', function(evt) {
+      that.applyFrameText();
+    });
+
+    $('#vc-add-text').find('input[name="textsize"]').bind('input propertychange', function(evt) {
+      that.applyFrameText();
+    });
+
+    //$('#vc-add-text').find('input[name="textcolor"]').bind('input propertychange', function(evt) {
+    //  that.applyFrameText();
+    //});
+    
+    $('#vc-add-text').find('input[name="textpadding"]').bind('input propertychange', function(evt) {
+      that.applyFrameText();
+    });
+
+    //halign event handler
+    $('#vc-add-text').find('.halign li').off('click').on('click', function(evt) {
+      that.onClickHAlignHandler(this);
+    });
+
+    //valign event handler
+    $('#vc-add-text').find('.valign li').off('click').on('click', function(evt) {
+      that.onClickVAlignHandler(this);
+    });
+
+    //valign event handler
+    $('#vc-add-text').find('.custom-select .text-val').bind('customSelectChangeEvent', function(evt) {
+      that.applyFrameText();
+    });
+
+    //valign event handler
+    $('#vc-add-text').find('.fontstyle li').off('click').on('click', function(evt) {
+      that.onClickFontStyleHandler(this);
+    });
+
+    /////////////////////////////////////////////////////////////////
+    //select effect
+    var imageEffect = $('#vc-add-effect').find('.item');
+    imageEffect.off('click').on('click', function(evt) {
+      that.selectFrameImageEffect(this);
+    });
+
+    //select audio from library
+    var audioLibrary = $('#vc-audio-library').find('.item');
+    audioLibrary.each(function() {
+      var item = $(this);
+      item.off('click').on('click', function(evt) {
+        that.selectAudio(item);
+      });
+    });
+
+    //select audio from local
+    var audioUpload = $('#vc-audio-upload').find('.vc-audio-upload-local');
+    audioUpload.off('click').on('click', function(evt) {
+      that.browseFile(FrameData.AUDIO, that.uploadFrameData);
+    });
+
+    var audioGD = $('#vc-audio-upload').find('.vc-audio-upload-gd');
+    audioGD.off('click').on('click', function(evt) {
+      that.connectGoogleDrive(FrameData.AUDIO);
+    });
+
+    var audioDB = $('#vc-audio-upload').find('.vc-audio-upload-db');
+    audioDB.off('click').on('click', function(evt) {
+      that.connectFaceBook(FrameData.AUDIO);
+    });
+
+    //select audio from your album
+    var audioYours = $('#vc-audio-yours').find('.item');
+    audioYours.each(function() {
+      var item = $(this);
+      item.off('click').on('click', function(evt) {
+        that.selectAudio(item);
+      });
+    });
+
+    //apply effect
+    var saveEffect = $('.effect-setting').find('.btn-1');
+    saveEffect.off('click').on('click', function(evt) {
+      that.applyEffect();
+    });
+
+    //jScrollPane
+    $('body').unbind('change.tab-video-small').bind('change.tab-video-small', function(evt) {
+      var active = $('.multi-block').find('.block-tab-video').filter('.active');
+      var jsp = active.find('.effect-list').data('jsp');
+      if (jsp) {
+        jsp.destroy();
+      }
+      active.find('.effect-list').jScrollPane({
+        autoReinitialise: true
+      });
+    });
+
+    if($('.change-title').length){
+      var replaceWith = $('<input name="temp" type="text" />'),
+          connectWith = $('input[name="hiddenField"]');
+      $('.change-title').inlineEdit(replaceWith, connectWith);
+    }
+
+    if ($('#textcolor').length) {
+      $("#textcolor").spectrum({
+        color: "#FF00FF",
+        showInput: true,
+        showInitial: true,
+        maxSelectionSize: 10,
+        preferredFormat: "hex",
+      });
+
+      $("#textcolor").on('move.spectrum', function(evt, tinycolor) { 
+        $('#vc-add-text').find('input[name="textcolor"]').val(tinycolor.toHexString());
+        that.applyFrameText();
+      });
+    }
+
+    var url = this.element.data('videoclip');
+    if ($.trim(url) != '') {
+      $.ajax({
+        method: "GET",
+        url: url
+      })
+      .done(function(response) {
+        that.parseData(response);
+      })
+      .fail(function(response) {
+        that.displayOnlyMenu(true, PANEL_INTRO);
+      });
+    } else {
+      this.displayOnlyMenu(true, PANEL_INTRO);
+    }
+  };
+
+  VideoClip.prototype.parseData = function(data) {
+
+    var frames = data.frames;
+    var frameData;
+    var frame;
+    for (var i = 0; i < frames.length; i ++) {
+      frameData = new FrameData();
+      frameData.parse(frames[i]);
+
+      frame = this.addEmptyFrame(frameData);
+
+      if (i == frames.length - 1) {
+        frame.click();
+        this.showPanel(PANEL_TEXT);
+      }
+    }
+
+    var backgrounds = data.backgrounds;
+    var bgData;
+    for (var i = 0; i < backgrounds.length; i ++) {
+      bgData = new BackgroundData();
+      bgData.parse(backgrounds[i]);
+      this.addBackground(bgData, false);
+    }
+
+    var audios = data.audios;
+    var audioData;
+    for (var i = 0; i < audios.length; i ++) {
+      audioData = new AudioData();
+      audioData.parse(audios[i]);
+      this.addBackgroundAudio(audioData, false);
+    }    
+  };
+
+  VideoClip.prototype.resize = function() {
+    var videoClip = $('.video-clip');
+    this.canvas.width = videoClip.width();
+    this.canvas.height = videoClip.height();
+
+    this.bitmapContainer.VC_WIDTH = this.textContainer.VC_WIDTH = this.canvas.width;
+    this.bitmapContainer.VC_HEIGHT = this.textContainer.VC_HEIGHT = this.canvas.height;
+
+    this.previewVC.resize(this.canvas.width, this.canvas.height);
+  };
+
+  VideoClip.prototype.onMoveTimeHandler = function(target) {
+    var that = this;
+    target = $(target);
+
+    var left = that.mediaSetting.find('.time').offset().left;
+    var width = that.mediaSetting.find('.time').width();
+    var duration = that.mediaSetting.find('.time').data('duration');
+
+    $(document.body).off("mousemove").on("mousemove", function(evt) {
+      if (!target) {
+        return;
+      }
+    
+      var toX = evt.pageX - 10;
+
+      if (target.hasClass('time-start')) {
+        var timeEnd = that.mediaSetting.find('.time-end').offset().left;
+  
+        toX = toX < left - 10 ? left - 10: toX;
+        toX = (toX > timeEnd) ? timeEnd : toX;
+
+        target.offset({left: toX});
+        
+        that.mediaSetting.find('.timeline').offset({left: target.offset().left + 10});
+        that.mediaSetting.find('.timeline').width(timeEnd - toX);
+
+        var ts = (that.mediaSetting.find('.timeline').offset().left - left) * duration / width;
+        target.find('.text').html(EffectUtils.formatTime(ts));
+
+        that.updateAudioData(true, ts);
+
+      } else {
+        
+        var timeStart = that.mediaSetting.find('.time-start').offset().left;
+
+        toX = (toX < timeStart) ? timeStart : toX;
+        toX = (toX > left + width - 10) ? left + width - 10 : toX;
+
+        target.offset({left: toX});
+
+        that.mediaSetting.find('.timeline').width(toX - timeStart);
+
+        var te = (that.mediaSetting.find('.timeline').offset().left + that.mediaSetting.find('.timeline').width() - left) * duration / width;
+        target.find('.text').html(EffectUtils.formatTime(te));
+
+        that.updateAudioData(false, te);
+      }
+    });
+
+    $(document.body).off("mouseup").on("mouseup", function (evt) {
+      
+      target = null;
+
+      $(document.body).off("mousemove");
+      $(document.body).off("mouseup");
+
+      that.seekMedia((that.mediaSetting.find('.timeline').offset().left - left) * duration / width);
+    });
+  };
+
+  VideoClip.prototype.onClickDropDownMenuHandler = function(item) {
+    
+    var arrPanel = [PANEL_TEXT, PANEL_TEXT_EFFECT, PANEL_IMAGE, PANEL_VIDEO, PANEL_EFFECT, PANEL_AUDIO];
+      
+    var name = $(item).attr('class').split(' ').pop();
+    name = name.split('-').pop();
+
+    var index = arrPanel.indexOf(name);
+    if (index >= 0 && index < arrPanel.length) {
+      this.showPanel(arrPanel[index]);
+    }
+
+    else {
+      if (name == 'duplicate') {
+        this.duplicateFrame();
+      } 
+      else if (name == 'delete') {
+        this.deleteFrame();
+      }
+    }
+
+    $('.dropdown-menu').hide();
+    $(document).off('click'); 
+  }
+
+  VideoClip.prototype.connectFaceBook = function(type) {
+    var that = this;
+
+    if (!this.facebook) {
+      this.facebook = window.facebook;
+    }
+    this.facebook.connect(type);
+
+    var dialog = $('#cloudPopup');
+    dialog.find('.modal-title').html('FaceBook');
+    dialog.modal('show');
+
+    var select = dialog.find("button[name='select']");
+    select.off('click').on('click', function (evt) {
+
+      var items = $('#cloud-content').find('.active');      
+      var arrUrl = [];
+      for (var i = 0; i < items.length; i ++) {
+        arrUrl.push($(items[i]).data('item-url'));
+      }
+
+      that.getCloudData(arrUrl, type, null, 0, that.uploadFrameData);
+
+      dialog.modal('hide');
+    });
+
+    var cancel = dialog.find("button[name='cancel']");
+    cancel.off('click').on('click', function (evt) {
+       dialog.modal('hide');
+    });
+  };
+
+  VideoClip.prototype.connectGoogleDrive = function(type) {
+    var that = this;
+    
+    if (!that.googleDrive) {
+      that.googleDrive = window.googleDrive;
+    }
+    that.googleDrive.connect(type);
+    
+    var dialog = $('#cloudPopup');
+    dialog.find('.modal-title').html('Google Drive');
+    dialog.modal('show');
+
+    var select = dialog.find("button[name='select']");
+    select.off('click').on('click', function (evt) {
+
+      var items = $('#cloud-content').find('.active');
+      var arrUrl = [];
+      for (var i = 0; i < items.length; i ++) {
+        arrUrl.push($(items[i]).data('item-url'));
+      }
+
+      that.getCloudData(arrUrl, type, gapi.auth.getToken().access_token, 0, that.uploadFrameData);
+
+      dialog.modal('hide');
+    });
+
+    var cancel = dialog.find("button[name='cancel']");
+    cancel.off('click').on('click', function (evt) {
+       dialog.modal('hide');
+    });
+  };
+
+  VideoClip.prototype.getCloudData = function(arrUrl, dataType, accessToken, uploadIndex, callback) {
+    var that = this;
+
+    if (uploadIndex < arrUrl.length) {
+      var formData = new FormData();
+      formData.append("url", arrUrl[uploadIndex]);
+      formData.append("type", dataType);
+      formData.append("vcid", this.vcid);
+
+      if (accessToken) {
+        formData.append("at", accessToken);
+      } 
+      
+      var ajax = new XMLHttpRequest();
+      ajax.onreadystatechange = function () {
+        if (ajax.readyState === 4 && ajax.status === 200) {
+          
+          uploadIndex = uploadIndex + 1;
+          
+          if (uploadIndex >= arrUrl.length) {
+            callback.apply(that, [dataType, '', ajax.responseText, true]);
+          } else {
+            callback.apply(that, [dataType, '', ajax.responseText, false]);
+            that.getCloudData(arrUrl, dataType, accessToken, uploadIndex, callback);
+          }
+        }
+      };
+      ajax.open("POST", CLOUD_URL);
+      ajax.send(formData);
+
+      this.loading.show();
+    }
+  };
+
+  VideoClip.prototype.addBackground = function(bgData, actived) {
+    var that = this;
+
+    var bg_image = bgData && bgData.url != null ? bgData.url : "";
+    var bg_time = bgData != null ? EffectUtils.formatTime(bgData.time) : EffectUtils.formatTime(30);
+
+    var strBG = bgTpl;
+    strBG = strBG.replace('{bg_image}', bg_image);
+    strBG = strBG.replace('{bg_time}', bg_time);
+
+    var box =  $(strBG);
+
+    var listbox  =$('.vc-backgrounds').find('.list-box');
+    listbox.append(box);
+
+    listbox.closest('.wrap-list').css({
+      width: ((listbox.find('.box').length) * 190) + 30
+    });
+    
+    var jsp = $('.vc-backgrounds').find('.content').data('jsp');
+    if (jsp) {
+      jsp.destroy();
+    }
+    $('.vc-backgrounds').find('.content').jScrollPane({
+      autoReinitialise: true
+    });
+
+    if (!bgData) {
+      bgData = new BackgroundData();
+    }
+    this.arrBG.push(bgData);
+
+    box.on('click', function(evt) {
+
+      var target = $(evt.target);
+
+      if (target.hasClass('fa-minus')) {
+        that.deactiveBackground(box, FrameData.IMAGE);
+      } 
+
+      else if (target.hasClass('time')) {
+
+        that.deactiveFrame();
+
+        if (that.curBGAudio) {
+          that.curBGAudio.removeClass('active');
+          that.curBGAudio = null;
+        }
+
+        that.activeBackground(box, FrameData.IMAGE);
+
+        box.find('.edit-time').val(that.arrBG[box.index()].time);
+        box.find('.edit-time').css('display', 'block');
+        box.find('.edit-time').focus();
+      }
+      
+      else {
+        that.deactiveFrame();
+
+        if (that.curBGAudio) {
+          that.curBGAudio.removeClass('active');
+          that.curBGAudio = null;
+        }
+
+        that.activeBackground(box, FrameData.IMAGE);
+      }
+    });
+
+    box.find('.edit-time').blur(function(evt) {
+      var time = Number(box.find('.edit-time').val());
+
+      box.find('.time').html(EffectUtils.formatTime(time));
+      box.find('.edit-time').css('display', 'none');
+
+      that.arrBG[box.index()].time = time;
+    });
+
+    if (actived) {
+      box.click();
+    }
+  };
+
+  VideoClip.prototype.addBackgroundAudio = function(audioData, actived) {
+    var that = this;
+
+    var audio_title = audioData ? audioData.title : "No selected audio";
+    var audio_time = audioData ? EffectUtils.formatTime(audioData.time) : EffectUtils.formatTime(30);
+      
+    var strAudio = audioTpl;
+    strAudio = strAudio.replace('{audio_title}', audio_title);
+    strAudio = strAudio.replace('{audio_time}', audio_time);
+
+    var box = $(strAudio);
+
+    var listbox = $('.vc-audios').find('.list-box')
+    listbox.append(box);
+
+    listbox.closest('.wrap-list').css({
+      width: ((listbox.find('.box').length) * 190) + 30
+    });
+
+    var jsp = $('.vc-audios').find('.content').data('jsp');
+    if (jsp) {
+      jsp.destroy();
+    }
+    $('.vc-audios').find('.content').jScrollPane({
+      autoReinitialise: true
+    });
+
+    if (!audioData) {
+      audioData = new AudioData();
+    }  
+    this.arrBGAudio.push(audioData);
+
+    box.on('click', function(evt) {
+
+      var target = $(evt.target);
+
+      if (target.hasClass('fa-minus')) {
+        that.deactiveBackground(box, FrameData.AUDIO);
+      } 
+
+      else if (target.hasClass('time')) {
+        that.deactiveFrame();
+      
+        if (that.curBG) {
+          that.curBG.removeClass('active');
+          that.curBG = null;
+        }
+
+        that.bitmapContainer.visible = false;
+        that.bgContainer.visible = true;
+        that.activeBackground(box, FrameData.AUDIO);
+        
+        if (!that.arrBGAudio[box.index()].id) {
+          box.find('.edit-time').css('display', 'block');
+          box.find('.edit-time').focus();
+        }
+      }
+
+      else {
+        that.deactiveFrame();
+      
+        if (that.curBG) {
+          that.curBG.removeClass('active');
+          that.curBG = null;
+        }
+
+        that.bitmapContainer.visible = false;
+        that.bgContainer.visible = true;
+        that.activeBackground(box, FrameData.AUDIO);
+      }
+    });
+
+    box.find('.edit-time').blur(function(evt) {
+      var time = Number(box.find('.edit-time').val());
+      box.find('.time').html(EffectUtils.formatTime(time));
+      box.find('.edit-time').css('display', 'none');
+      that.arrBGAudio[box.index()].time = time;
+    });
+
+    if (actived) {
+      box.click();
+    }
+  };
+
+  VideoClip.prototype.onClickAddFrameHandler = function(evt) {
+    //just hide the intro and show the panel text in the first time click on add frame
+    if (this.arrFrame.length == 0 || this.isAudio || this.isBackground)  {
+      this.isAudio = false;
+      this.isBackground = false;
+      this.showPanel(PANEL_TEXT);
+    }
+    
+    var frame = this.addEmptyFrame(null);
+    frame.click();
+  };
+
+  VideoClip.prototype.onClickHAlignHandler = function(li) {
+    if(this.curFrameHAlign) {
+      this.curFrameHAlign.removeClass('actived');
+    }
+    this.curFrameHAlign = $(li);
+    this.curFrameHAlign.addClass('actived');
+
+    this.applyFrameText();
+  };
+
+  VideoClip.prototype.onClickVAlignHandler = function(li) {
+    if(this.curFrameVAlign) {
+      this.curFrameVAlign.removeClass('actived');
+    }
+    this.curFrameVAlign = $(li);
+    this.curFrameVAlign.addClass('actived');
+
+    this.applyFrameText();
+  };
+
+  VideoClip.prototype.onClickFontStyleHandler = function(li) {
+    if(this.curFrameStyle) {
+      this.curFrameStyle.removeClass('actived');
+    }
+    this.curFrameStyle = $(li);
+    this.curFrameStyle.addClass('actived');
+
+    this.applyFrameText();
+  };
+
+  VideoClip.prototype.browseFile = function(type, callback) {
+    var that = this;
+    var file = document.createElement('input');
+    file.name = 'file';
+    file.type = 'file';
+    file.accept = type + '/*';
+    file.multiple = true;
+    $(file).on('change', function(evt) {
+      that.uploadData(evt.target.files, type, 0, callback);
+    });
+    file.click();
+  };
+
+  VideoClip.prototype.uploadData = function(files, type, count, callback) {
+    var that = this;
+
+    if (count < files.length) {
+      var name = files[count].name;
+      name = name.substr(0, name.lastIndexOf('.'));
+      
+      var formData = new FormData();
+      formData.append("file", files[count]);
+      formData.append("type", type);
+      formData.append("vcid", this.vcid);
+      
+      var ajax = new XMLHttpRequest();
+      ajax.onreadystatechange = function () {
+        if (ajax.readyState === 4 && ajax.status === 200) {
+          count = count + 1;
+          
+          if (count >= files.length) {
+            callback.apply(that, [type, name, ajax.responseText, true]);
+          } else {
+            callback.apply(that, [type, name, ajax.responseText, false]);
+            that.uploadData(files, type, count, callback);
+          }
+        }
+      };
+      ajax.open("POST", UPLOAD_URL);
+      ajax.send(formData);
+
+      this.loading.show();
+    }
+  };
+
+  VideoClip.prototype.deactiveBackground = function(item, type) {
+    item = $(item);
+
+    if (this.isAudio) {
+      if (item.is(this.curBGAudio)) {
+        this.loading.hide();
+        this.mediaSetting.hide();
+        this.clearAudio();
+
+        if (this.curFrameAudio) {
+          this.curFrameAudio.removeClass('active');
+          this.curFrameAudio = null;
+        }
+      }
+
+      this.arrBGAudio.splice(item.index(), 1);
+    }
+
+    item.off();
+    item.remove();
+  };
+
+  VideoClip.prototype.activeBackground = function(item, type) {
+
+    item = $(item);
+
+    if (type == FrameData.AUDIO) {
+      this.isAudio = true;
+      this.displayOnlyMenu(true, PANEL_AUDIO);
+
+      if (this.curBGAudio) {
+        this.curBGAudio.removeClass('active');
+      }
+
+      this.curBGAudio = item; 
+      this.curBGAudio.addClass('active');
+      
+      this.curBGAudioIndex = this.curBGAudio.index();
+      var audioData = this.arrBGAudio[this.curBGAudioIndex];
+      
+      if (this.curFrameAudio) {
+        this.curFrameAudio.removeClass('active');
+        this.curFrameAudio.find('.add-more span').removeClass('fa fa-minus').addClass('fa fa-plus');
+        this.curFrameAudio = null;
+      }
+
+      //show current audio edit
+      var itemAudio = $('#vc-audio-library').find('div[data-item-id="'+ audioData.id + '"]');
+      if (!itemAudio.length) {
+        itemAudio = $('#vc-audio-yours').find('div[data-item-id="'+ audioData.id + '"]');
+      }
+      
+      if (itemAudio.length) {
+        this.curFrameAudio = $(itemAudio[0]);
+        this.curFrameAudio.addClass('active');
+        this.curFrameAudio.find('.add-more span').removeClass('fa fa-plus').addClass('fa fa-minus');
+
+        this.loadFrameAudio(audioData.id, audioData.url);
+      }
+    }
+
+    else if (type == FrameData.IMAGE) {
+      this.isBackground = true;
+      this.displayOnlyMenu(true, PANEL_IMAGE);
+
+      if (this.curBG) {
+        this.curBG.removeClass('active');
+      }
+
+      this.curBG = item; 
+      this.curBG.addClass('active');
+      
+      this.curBGIndex = this.curBG.index();
+      var bgData = this.arrBG[this.curBGIndex];
+      
+      if (this.curFrameImage) {
+        this.curFrameImage.removeClass('active');
+        this.curFrameImage = null;
+      }
+
+      //show current image edit
+      var itemImage = $('#vc-image-library').find('div[data-item-id="'+ bgData.id + '"]');
+      if (!itemImage.length) {
+        itemImage = $('#vc-image-yours').find('div[data-item-id="'+ bgData.id + '"]');
+      }
+      
+      if (itemImage.length) {
+        this.curFrameImage = $(itemImage[0]);
+        this.curFrameImage.addClass('active');
+      }
+
+      //update here
+      this.bitmapContainer.visible = false;
+      
+      this.bgContainer.removeAllChildren();
+      this.bgContainer.visible = true;        
+      
+      if (bgData.url) {
+        this.loadBackgroundImage(bgData.url);        
+      }
+    }
+  };
+
+  VideoClip.prototype.uploadFrameData = function(type, name, url, actived) {
+    var that = this;
+    var item, list;
+    
+    //add to your album
+    if (type == FrameData.AUDIO) {
+      list = $('#vc-' + type + '-yours').find('.audio-control');
+      item = $('<div data-item-id="item-' + type +'-yours_'  + (list.children().length + 1)  + '" data-item-url="' + url + '" data-item-time="300" class="item"><div class="title"><strong>Audio song name - upload </strong></div><a href="javascript:void(0)" title="Select" class="add-more"><span class="fa fa-plus"></span></a><span class="time">05:00</span></div>');
+      
+      item.off('click').on('click', function(evt) {
+        that.selectAudio(item);
+      });
+
+    } else {
+      list = $('#vc-' + type + '-yours');
+      item = $('<div data-item-id="item_' + type + '-yours_' + (list.children().length + 1) + '" data-item-url="' + url + '" class="item"><div class="thumb"><img src="http://placehold.it/150x100/?text=upload" alt="" class="img-responsive"></div></div>');
+      
+      //add event
+      item.off('click').on('click', function(evt) {
+        that.selectFrameData(this, type);
+      });
+    }
+    list.append(item);
+
+    var jsp = $('.vc-add-' + type).find('.effect-list').data('jsp');
+    if (jsp) {
+      jsp.destroy();
+    }
+    $('.vc-add-' + type).find('.effect-list').jScrollPane({
+      autoReinitialise: true
+    });
+
+    //apply to current frame
+    if (actived) {
+      //show album tab
+      var tab = $('#vc-add-' + type).find('a[href="#vc-' + type + '-yours"]');
+      tab.click();
+      item.click();
+    }
+  };
+
+  VideoClip.prototype.initScroll = function(element) {
+    var jsp = element.data('jsp');
+    if (jsp) {
+      jsp.destroy();
+    }
+    element.jScrollPane({autoReinitialise: true});
+  };
+
+  VideoClip.prototype.addEmptyFrame = function(frameData) {
+    var that = this;
+
+    var listframe =  $('.vc-frames').find('.list-frame');
+    
+    var frame_image = frameData && frameData.bitmapUrl != null ? frameData.bitmapUrl : 'images/videoclip/default.jpg';
+    var frame_text = frameData && frameData.text.text != '' ? frameData.text.text : 'text here';
+
+    var strFrame = frameTpl;
+    strFrame = strFrame.replace('{frame_image}', frame_image);
+    strFrame = strFrame.replace('{frame_text}', frame_text);
+
+    var frame =  $(strFrame);
+
+    listframe.append(frame);
+    var newWidth = (listframe.find('.frame').length + 1 ) * (frame.width() + 24);
+
+    listframe.closest('.wrap-list').css({
+      width: newWidth + 'px'
+    });
+
+    var jsp = $('.vc-frames').find('.content').data('jsp');
+    if (jsp) {
+      jsp.destroy();
+    }
+
+    $('.vc-frames').find('.content').jScrollPane({
+      autoReinitialise: true
+    });
+
+    jsp = $('.vc-frames').find('.content').data('jsp');
+    jsp.scrollTo(newWidth, 0);
+
+    this.addFrameEvents(frame[0]);
+
+    frame.on('click', function(evt) {
+      var target = $(evt.target);
+      
+      if(target.hasClass('fa-exchange') || target.hasClass('icon-effect')) {
+        that.showPanel(PANEL_EFFECT);
+        that.activeFrame(frame);
+      }
+
+      else if(target.hasClass('fa-sort-desc') || target.hasClass('icon-show')) {
+        $('.dropdown-menu').show(); 
+
+        var wh = $(window).height();
+        var top = evt.pageY;
+
+        if (top - document.body.scrollTop + $('.dropdown-menu').height() > wh) {
+          top = wh - $('.dropdown-menu').height() + document.body.scrollTop - 20;
+        }
+        var dropdown =  $('.dropdown-menu');
+
+        dropdown.offset({
+          left: evt.pageX,
+          top: top
+        });
+        evt.stopImmediatePropagation();
+
+        $(document).click(function(evt) {
+          if ($(evt.target).closest('.dropdown-menu').length == 0) {
+            dropdown.hide();
+            $(document).off();
+          }
+        });  
+
+        that.activeFrame(frame);
+      }
+      
+      else if(target.hasClass('frame-image')) {
+        that.showPanel(PANEL_IMAGE);
+        that.activeFrame(frame);
+      }
+
+      else if(target.hasClass('video')) {
+        that.showPanel(PANEL_VIDEO);
+        that.activeFrame(frame);
+      }
+
+      else if(target.hasClass('frame-text')) {
+        that.showPanel(PANEL_TEXT);
+        that.activeFrame(frame);
+      }
+
+      else if(target.hasClass('fa-headphones')) {
+        that.showPanel(PANEL_AUDIO);
+        that.activeFrame(frame);
+      }
+
+      else if(target.hasClass('icon-edit-text')) {
+        var index = frame.index();
+        if (that.arrFrame[index].text.text != '') {
+          that.showPanel(PANEL_TEXT_EFFECT);
+        } else {
+          that.showPanel(PANEL_TEXT);
+        }
+        that.activeFrame(frame);
+      } 
+
+      else {
+        that.activeFrame(frame);
+      }
+    });
+    
+    if (!frameData)  {
+      frameData = new FrameData();
+    }
+    this.arrFrame.push(frameData);
+
+    if (frameData.type == FrameData.VIDEO) {
+      frame.find('.thumb').addClass('video');
+    }
+
+    if (!frameData.bitmapId) {
+      frame.find('.icon-effect').hide();
+    }
+
+    if (!frameData.audioId) {
+      frame.find('.icon-audio').hide();
+    }
+
+    var totalTime = EffectUtils.getTimeByFrame(this.arrFrame, this.arrFrame.length - 1);
+    $('.video-clip-time').html('Thời gian: ' + EffectUtils.formatTime(totalTime) + ' giây');
+
+    return frame;
+  };
+
+  VideoClip.prototype.addFrameEvents = function(frame) {
+    var that = this;
+    frame.setAttribute('draggable', 'true');
+    frame.addEventListener('dragstart', function(evt) { that.handleDragStart(evt); }, false);
+    frame.addEventListener('dragenter', function(evt) { that.handleDragEnter(evt); }, false);
+    frame.addEventListener('dragover', function(evt) { that.handleDragOver(evt); }, false);
+    frame.addEventListener('dragleave', function(evt) { that.handleDragLeave(evt); }, false);
+    frame.addEventListener('drop', function(evt) { that.handleDrop(evt); }, false);
+    frame.addEventListener('dragend', function(evt) { that.handleDragEnd(evt); }, false);
+  };
+
+  VideoClip.prototype.handleDragStart = function(evt) {          
+    var frame = $( evt.target).closest( ".frame" );
+
+    evt.dataTransfer.setData('text/html', frame.innerHTML);
+
+    this.activeFrame(frame);
+
+    frame.css('opacity', 0.4).addClass('moving');
+  };
+
+  VideoClip.prototype.handleDragOver = function(evt) {
+    if (evt.preventDefault) {
+      evt.preventDefault();
+    }
+    return false;
+  };
+
+  VideoClip.prototype.handleDragEnter = function(evt) {
+    var target = $( evt.target).closest( ".frame" );    
+    if (!target.hasClass('moving')) {
+      target.addClass('active');
+    }
+  };
+
+  VideoClip.prototype.handleDragLeave = function(evt) {
+    var target = $( evt.target).closest( ".frame" );
+    target.removeClass('active');
+  };
+
+  VideoClip.prototype.handleDrop = function(evt) {
+    if (evt.stopPropagation) {
+      evt.stopPropagation();
+    }
+
+    evt.dataTransfer.setData('text/html', '');
+
+    var target = $( evt.target).closest( ".frame" );
+
+    if (this.curFrame != target) {
+
+      //swap frame data
+      var temp = this.arrFrame[target.index()];
+      this.arrFrame[target.index()] = this.arrFrame[this.curFrame.index()];
+      this.arrFrame[this.curFrame.index()] = temp;
+
+      //swap frame item
+      var prev = this.curFrame.prev();
+
+      if (prev.length) {
+        if (target.index() == this.curFrame.index() - 1) {
+          target.insertAfter(this.curFrame);
+        } else {
+          this.curFrame.insertAfter(target);
+          target.insertAfter(prev);
+        }
+      } else {
+          var next = this.curFrame.next();
+          this.curFrame.insertAfter(target);
+          target.insertBefore(next);
+      }
+
+      target.removeClass('active');
+      this.activeFrame(this.curFrame);
+    }
+
+    return false;
+  };
+
+  VideoClip.prototype.handleDragEnd = function(evt) {
+   var target = $(evt.target).closest( ".frame" );
+    target.css('opacity', 1).removeClass('moving');
+  };
+
+  VideoClip.prototype.deactiveFrame = function() {
+    if (this.curFrame) {
+      this.curFrame.removeClass('active');
+      this.curFrame = null;
+    }
+  };
+
+  VideoClip.prototype.activeFrame = function(frame) {
+
+    if (this.curFrame) {
+      this.curFrame.removeClass('active');
+    }
+
+    this.curFrame = $(frame);
+    this.curFrame.addClass('active');
+
+    this.curFrameIndex = this.curFrame.index();
+
+    this.showCurrentFrameVideo();
+  };
+
+  VideoClip.prototype.duplicateFrame = function() {
+    var frameData = this.arrFrame[this.curFrameIndex].clone();
+    
+    var frame = this.addEmptyFrame(frameData);
+    frame.find('.thumb img').attr('src', this.curFrame.find('.thumb img').attr('src'));
+    
+    this.activeFrame(frame);
+  };
+
+  VideoClip.prototype.deleteFrame = function() {
+  
+    //find next or prev frame
+    var frame = this.curFrame.next();
+    frame = frame.length ? frame[0] : null;
+
+    if (frame == null) {
+      frame = this.curFrame.prev();
+      frame = frame.length ? frame[0] : null;
+    }
+
+    //delete current frame
+    this.curFrame.remove();
+    this.arrFrame.splice(this.curFrameIndex, 1);
+
+    var totalTime = EffectUtils.getTimeByFrame(this.arrFrame, this.arrFrame.length - 1);
+    $('.video-clip-time').html('Thời gian: ' + EffectUtils.formatTime(totalTime) + ' giây');
+
+    //active next or prev frame 
+    if (frame) {
+      this.activeFrame(frame);
+    } else {
+      this.curFrame = null;
+      this.curFrameIndex = -1;
+      this.displayOnlyMenu(true, PANEL_INTRO);
+    }
+  };
+
+  VideoClip.prototype.selectFrameData = function(item, type) {
+    
+    this.clearVideo();
+    this.clearAudio();
+    this.previewVC.clear();
+    
+    var itemId = $(item).data('item-id');
+    var itemSrc = $(item).find('.thumb img').attr('src');
+    var itemUrl = $(item).data('item-url');
+
+    //background data
+    if (this.isBackground && type == FrameData.IMAGE) {
+
+      if (this.curFrameImage) {
+        this.curFrameImage.removeClass('active');
+        this.curFrameImage = null;
+      }
+
+      if (this.curBGIndex < 0 || this.curBGIndex >= this.arrBG.length) {
+        return;
+      }
+
+      var bgData = this.arrBG[this.curBGIndex];
+      if (bgData.id == itemId) {
+        bgData.id = null;
+        bgData.url = null;
+
+        this.curBG.find('.img-add img').attr('src', '');
+
+        this.bgContainer.removeAllChildren();
+        this.bgBitmap = null;
+      }
+
+      else {
+        bgData.id = itemId;
+        bgData.url = itemUrl;
+        
+        this.curFrameImage =  $(item);
+        this.curFrameImage.addClass('active');
+
+        //load image here
+        this.curBG.find('.img-add img').attr('src', itemSrc);
+
+        this.loadBackgroundImage(itemUrl);
+      }
+
+      //update box here
+      this.curBG.find('.img-add img').attr('src', bgData.url);
+      this.curBG.find('.time').html(EffectUtils.formatTime(bgData.time));
+      
+      return;
+    }
+
+    //frame data
+    if (this.curFrameIndex < 0 || this.curFrameIndex >= this.arrFrame.length) {
+      return;
+    }
+
+    //reset current imag or video
+    if (this.curFrameImage) {
+      this.curFrameImage.removeClass('active');
+      this.curFrameImage = null;
+    }
+
+    if (this.curFrameVideo) {
+      this.curFrameVideo.removeClass('active');
+      this.curFrameVideo = null;
+    }
+
+    var frameData = this.arrFrame[this.curFrameIndex];
+    frameData.type = type;
+
+    if (frameData.bitmapId == itemId) {
+      this.curFrame.find('.thumb img').attr('src', 'images/videoclip/default.jpg');
+      this.curFrame.find('.icon-effect').hide();
+
+      if (this.curFrameEffect) {
+        this.curFrameEffect.removeClass('active');
+        this.curFrameEffect = null;
+      }
+
+      frameData.bitmapId = null;
+      frameData.bitmapUrl = null;
+      frameData.type = null;
+      this.curFrameImage = null;
+      this.bitmapContainer.removeAllChildren();
+      this.bgContainer.visible = frameData.type != FrameData.VIDEO ? true : false;
+      return;
+    }
+
+    if (frameData.videoId == itemId) {
+      this.curFrame.find('.thumb img').attr('src', 'images/videoclip/default.jpg');
+      this.curFrame.find('.thumb').removeClass('video');
+      frameData.videoId = null;
+      frameData.videoUrl = null;
+      frameData.type = null;
+      this.curFrameVideo = null;
+      this.clearVideo();
+      this.mediaSetting.hide();
+      this.bgContainer.visible = frameData.type != FrameData.VIDEO ? true : false;
+      return;
+    }
+
+    //set new image or video
+    if (type == FrameData.IMAGE) {
+      this.curFrameImage = $(item);
+      this.curFrameImage.addClass('active');
+    } else {
+      this.curFrameVideo = $(item);
+      this.curFrameVideo.addClass('active');
+
+      //remove bitmap effect
+    }
+
+    //apply data here
+    if (this.curFrame) {
+      this.curFrame.find('.thumb img').attr('src', itemSrc);
+      
+      if (type == FrameData.IMAGE) {
+        this.curFrame.find('.thumb').removeClass('video');
+      } else {
+        this.curFrame.find('.thumb').addClass('video');
+      }
+
+      this.bitmapContainer.removeAllChildren();
+      this.clearVideo();
+      this.bgContainer.visible = frameData.type != FrameData.VIDEO ? true : false;
+
+      //update image
+      if (type == FrameData.IMAGE) {
+        frameData.bitmapId = itemId;
+        frameData.bitmapUrl = itemUrl;
+
+        frameData.videoId = null;
+        frameData.videoUrl = null;
+        
+        //show current bitmap effect edit
+        var bitmapEffect = $('#vc-add-effect').find('div[data-item-id="'+ frameData.bitmapEffect + '"]');
+        if (bitmapEffect.length) {
+          this.curFrameEffect = $(bitmapEffect[0]);
+          this.curFrameEffect.addClass('active');
+        }
+
+        this.curFrame.find('.icon-effect').show();
+        
+        this.mediaSetting.hide();
+        this.loadFrameImage(frameData.bitmapUrl);
+      } 
+
+      else {
+        //update video
+        frameData.videoId = itemId;
+        frameData.videoUrl = itemUrl;
+
+        frameData.bitmapId = null;
+        frameData.bitmapUrl = null;
+
+        if (this.curFrameEffect) {
+          this.curFrameEffect.removeClass('active');
+          this.curFrameEffect = null;
+        }
+          
+        this.curFrame.find('.icon-effect').hide();
+
+        this.loadFrameVideo(frameData.videoUrl);
+      }
+    }
+  };
+
+  VideoClip.prototype.applyFrameText = function() {
+    if (this.curFrameIndex < 0 || this.curFrameIndex >= this.arrFrame.length) {
+      return;
+    }
+
+    var frameData = this.arrFrame[this.curFrameIndex];
+
+    if (!this.frameText) {
+      this.frameText = new createjs.Text("Text", "20px Arial", "#ff7700");
+      this.textContainer.addChild(this.frameText);
+    }
+
+    var textarea = $('#vc-add-text').find('textarea[name="frametext"]');
+    frameData.text.text = this.frameText.text = textarea.val();
+
+    var str = frameData.text.text;
+    str = str.substr(0, 12);
+    if (str.lastIndexOf(" ") != -1) {
+      str = str.substr(0, str.lastIndexOf(" "));
+    }
+    str = str + (frameData.text.text.length > 12 ? "..." : "");
+    this.curFrame.find('.frame-text').html($.trim(str) != '' ? str : 'text here');
+
+    var size = $('#vc-add-text').find('input[name="textsize"]');
+    frameData.text.size = size = Number(size.val());
+
+    var font = $('#vc-add-text').find('.custom-select .text-val').data('val');
+    frameData.text.font = font;
+    frameData.text.fontName = $('#vc-add-text').find('.custom-select .text-val').html();
+    
+    var style = this.curFrameStyle ? this.curFrameStyle.data('style') : "";
+    frameData.text.style = style;
+
+    this.frameText.font = style + ' ' + size + 'px ' + font;
+
+    var color = $('#vc-add-text').find('input[name="textcolor"]');
+    frameData.text.color = this.frameText.color = color.val();
+
+    var padding = $('#vc-add-text').find('input[name="textpadding"]');
+    frameData.text.padding = padding = Number(padding.val());
+
+    if (this.curFrameHAlign) {
+      var halign = this.curFrameHAlign.data('align');
+      this.frameText.textAlign = halign;
+      frameData.text.halign = halign;
+
+      if (halign == TextData.HA_LEFT) {
+        this.frameText.x = padding;
+      }
+      else if (halign == TextData.HA_CENTER) {
+        this.frameText.x = this.textContainer.VC_WIDTH/2;
+      }
+      else if (halign == TextData.HA_RIGHT) {
+        this.frameText.x = this.textContainer.VC_WIDTH - padding;
+      }
+    }
+
+    if (this.curFrameVAlign) {
+      var valign = this.curFrameVAlign.data('align');
+      frameData.text.valign = valign;
+
+      var textHeight = this.frameText.getBounds() ? this.frameText.getBounds().height : 0;
+      if (valign == TextData.VA_TOP) {
+        this.frameText.y = padding;
+      }
+      else if (valign == TextData.VA_MIDDLE) {
+        this.frameText.y = this.textContainer.VC_HEIGHT/2 - textHeight/2;
+      }
+      else if (valign == TextData.VA_BOTTOM) {
+        this.frameText.y = this.textContainer.VC_HEIGHT - textHeight - padding;
+      }
+    }
+  };
+
+  VideoClip.prototype.selectFrameTextEffect = function(item) {
+    if (this.curFrameText) {
+      this.curFrameText.removeClass('active');
+    }
+    this.curFrameText = $(item);
+    this.curFrameText.addClass('active');
+
+    if (this.curFrame) {
+      //apply data here
+      var frameData = this.arrFrame[this.curFrameIndex];
+      frameData.textEffect = this.curFrameText.data('item-id');
+      frameData.textEffectClass = this.curFrameText.data('item-url');
+
+      this.effectSetting.find('input[name="delay"]').val(frameData.textEffectDelay);
+      this.effectSetting.find('input[name="time"]').val(frameData.textEffectDuration);
+      this.effectSetting.find('input[name="next"]').val(frameData.textNextTime);
+
+      this.effectSetting.show();
+    }
+  }; 
+
+  VideoClip.prototype.selectFrameImageEffect = function(item) {
+
+    if (this.curFrameIndex < 0 || this.curFrameIndex >= this.arrFrame.length) {
+      return;
+    }
+
+    this.clearAudio();
+
+    var frameData = this.arrFrame[this.curFrameIndex]; 
+    if (frameData.type == FrameData.IMAGE) {
+
+      if (this.curFrameEffect) {
+        this.curFrameEffect.removeClass('active');
+      }
+      this.curFrameEffect = $(item);
+      this.curFrameEffect.addClass('active');
+      
+      //apply data here
+      frameData.bitmapEffect = this.curFrameEffect.data('item-id');
+      frameData.bitmapEffectClass = this.curFrameEffect.data('item-url');
+          
+      this.effectSetting.find('input[name="delay"]').val(frameData.bitmapEffectDelay);
+      this.effectSetting.find('input[name="time"]').val(frameData.bitmapEffectDuration);
+      this.effectSetting.find('input[name="next"]').val(frameData.bitmapNextTime);
+
+      this.effectSetting.show();
+    }
+  };
+
+  VideoClip.prototype.applyEffect = function() {
+    if (this.curFrameIndex < 0 || this.curFrameIndex >= this.arrFrame.length) {
+      return;
+    }
+    var that = this;
+
+    var delayTime = this.effectSetting.find('input[name="delay"]').val();
+    var effectTime = this.effectSetting.find('input[name="time"]').val();
+    var nextTime = this.effectSetting.find('input[name="next"]').val();
+
+    delayTime = Number(delayTime);
+    delayTime = delayTime < 0 ? 0 : delayTime;
+
+    effectTime = Number(effectTime);
+    effectTime = effectTime < 1 ? 1 : effectTime;
+    
+    nextTime = Number(nextTime);
+    nextTime = nextTime < 0 ? 0 : nextTime;
+
+    var frameData = this.arrFrame[this.curFrameIndex];
+    var prevData = this.curFrameIndex <= 0 ? null : this.arrFrame[this.curFrameIndex - 1];
+
+    //bitmap effect
+    if ($('#vc-add-effect').hasClass('active')) {
+      frameData.bitmapEffectDelay = delayTime;
+      frameData.bitmapEffectDuration = effectTime;
+      frameData.bitmapNextTime = nextTime;
+
+      //preview bitmap effect
+      var bitmapEffectPlugin = EffectUtils.getEffectPlugin(frameData.bitmapEffect);
+      if (bitmapEffectPlugin) {
+        this.bitmapContainer.removeAllChildren();
+        bitmapEffectPlugin.play(this.bitmapContainer, prevData ? prevData.bitmapView : null, this.frameBitmap, delayTime, effectTime);
+      }
+    } 
+
+    else {
+      //text effect
+      frameData.textEffectDelay = delayTime;
+      frameData.textEffectDuration = effectTime;
+      frameData.textNextTime = nextTime;
+
+      $('#vc-add-text').find('.effect-detail').html(frameData.textEffect + "(delay: " + frameData.textEffectDelay + ", time: " + frameData.textEffectDuration + ")");
+      
+      //preview text effect
+      var textEffectPlugin = EffectUtils.getEffectPlugin(frameData.textEffect);
+      if (textEffectPlugin) {
+        this.textContainer.removeAllChildren();
+        textEffectPlugin.play(this.textContainer, prevData ? prevData.textView : null, frameData);
+      }
+    }
+
+    //hide effect setting when preview and save selection
+    this.effectSetting.hide();
+
+    var timeoutId = setTimeout(function() {
+      clearTimeout(timeoutId);
+      that.effectSetting.show();
+    }, (delayTime + effectTime) * 1000);
+  };
+
+  VideoClip.prototype.selectAudio = function(item) {
+    var that = this;
+    var itemId = $(item).data('item-id');
+    var itemUrl = $(item).data('item-url');
+
+    //select audio for video clip
+    if (this.isAudio) {
+      
+      if (this.curFrameAudio) {
+        this.curFrameAudio.removeClass('active');
+        this.curFrameAudio.find('.add-more span').removeClass('fa fa-minus').addClass('fa fa-plus');
+        this.curFrameAudio = null;
+      }
+
+      if (this.curBGAudioIndex < 0 || this.curBGAudioIndex >= this.arrBGAudio.length) {
+        return;
+      }
+
+      var audioData = this.arrBGAudio[this.curBGAudioIndex];
+      if (audioData.id == itemId) {
+        audioData.id = null;
+        audioData.url = null;
+        audioData.start = 0;
+        audioData.end = -1;
+        audioData.time = -1;
+        audioData.title = "No selected audio";
+
+        that.loading.hide();
+        this.mediaSetting.hide();
+        this.clearAudio();
+      }
+
+      else {
+        audioData.id = itemId;
+        audioData.url = itemUrl;
+        audioData.start = 0;
+        audioData.end = $(item).data('item-time');
+        audioData.time = $(item).data('item-time');
+        audioData.title = $(item).find('.title strong').html();
+
+        this.curFrameAudio =  $(item);
+        this.curFrameAudio.addClass('active');
+        this.curFrameAudio.find('.add-more span').removeClass('fa fa-plus').addClass('fa fa-minus');
+
+        this.mediaSetting.hide();
+        this.loadFrameAudio(itemId, itemUrl);
+      }
+
+      //update box here
+      this.curBGAudio.find('.title strong').html(audioData.id == null ? 'No selected audio' : this.curFrameAudio.find('.title strong').html());
+      this.curBGAudio.find('.time').html(audioData.end == -1 ? '00:00' : EffectUtils.formatTime(audioData.end - audioData.start));
+
+      return;
+    } 
+
+    //select audio for frame
+    if (this.curFrameIndex < 0 || this.curFrameIndex >= this.arrFrame.length) {
+      return;
+    }
+
+    //remove current active
+    if (this.curFrameAudio) {
+      this.curFrameAudio.removeClass('active');
+      this.curFrameAudio.find('.add-more span').removeClass('fa fa-minus').addClass('fa fa-plus');
+      this.curFrameAudio = null;
+    }
+
+    //if click on active item, then remove audio 
+    var frameData = this.arrFrame[this.curFrameIndex];
+    if (frameData.audioId == itemId) {
+      frameData.audioId = null;
+      frameData.audioUrl = null;
+      this.curFrame.find('.icon-audio').hide();
+      this.clearAudio();
+      this.mediaSetting.hide();
+      return;
+    }
+    
+    this.curFrameAudio =  $(item);
+    this.curFrameAudio.addClass('active');
+    this.curFrameAudio.find('.add-more span').removeClass('fa fa-plus').addClass('fa fa-minus');
+    this.curFrame.find('.icon-audio').show();
+
+    frameData.audioId = itemId;
+    frameData.audioUrl = itemUrl;
+
+    this.clearVideo();
+
+    this.loadFrameAudio(itemId, itemUrl);
+  };
+
+  VideoClip.prototype.onClickPlayPauseHandler = function(item) {
+    item = $(item);
+    var icon = item.find('span');
+    
+    if (icon.hasClass('fa-pause')) {
+      icon.removeClass('fa-pause').addClass('fa-play');
+
+      if (this.audioInstance) {
+        this.audioInstance.resumeTime = this.audioInstance.position/1000;
+        this.audioInstance.stop();
+      } else {
+        this.videoInstance.pause();
+      }
+    }
+    else if (icon.hasClass('fa-play')) {
+      icon.removeClass('fa-play').addClass('fa-pause');
+      if (this.audioInstance) {
+        this.audioInstance.position = this.audioInstance.resumeTime * 1000;
+        this.audioInstance.play();
+      } else {
+        this.videoInstance.play();
+      }
+    }
+  };
+
+  VideoClip.prototype.updateAudioData = function(isStart, position) {
+    if (this.isAudio) {
+      var audioData = this.arrBGAudio[this.curBGAudioIndex];
+
+      if (isStart) {
+        audioData.start = position;
+      } else {
+        audioData.end = position;
+      }
+    } else {
+      var frameData = this.arrFrame[this.curFrameIndex];
+      if (isStart) {
+        if (this.audioInstance) {
+          frameData.audioStart = position;
+        } else {
+          frameData.videoStart = position;
+        }  
+      } else {
+        if (this.audioInstance) {
+          frameData.audioEnd = position;
+        } else {
+          frameData.videoEnd = position;
+        }
+      }
+    }
+  };
+
+  VideoClip.prototype.updateMedia = function(position) {
+    this.mediaSetting.find('.position').html(EffectUtils.formatTime(position));
+  };
+
+  VideoClip.prototype.seekMedia = function(startTime) {
+
+    this.mediaSetting.find('.play-pause').find('span').removeClass('fa-play').addClass('fa-pause');
+
+    //background audio
+    if (this.isAudio) {
+      if (this.curBGAudioIndex < 0 || this.curBGAudioIndex >= this.arrBGAudio.length) {
+        return;
+      }
+      var audioData = this.arrBGAudio[this.curBGAudioIndex];
+      audioData.start = startTime;
+
+      if (this.audioInstance) {
+        this.audioInstance.position = startTime * 1000;
+        this.audioInstance.play();
+      }
+
+      return;
+    }
+
+    //frame data audio
+    if (this.curFrameIndex < 0 || this.curFrameIndex >= this.arrFrame.length) {
+      return;
+    }
+    var frameData = this.arrFrame[this.curFrameIndex];
+
+    if (this.audioInstance) {
+      frameData.audioStart = startTime;
+
+      this.audioInstance.position = startTime * 1000;
+      this.audioInstance.play();
+    }
+
+    else {
+      frameData.videoStart = startTime;
+
+      this.videoInstance.currentTime = startTime;
+      this.videoInstance.play();
+    }
+  };
+
+  VideoClip.prototype.endMedia = function() {
+    this.mediaSetting.find('.play-pause').find('span').removeClass('fa-pause').addClass('fa-play');
+  };
+
+  VideoClip.prototype.changePanel = function(id) {
+    var name = id.substr(id.lastIndexOf('-') + 1, id.length);
+
+    var arrPanel = [PANEL_TEXT, PANEL_IMAGE, PANEL_VIDEO, PANEL_EFFECT, PANEL_AUDIO];
+    var index = arrPanel.indexOf(name);
+
+    this.showPanel(arrPanel[index]);
+  };
+
+  VideoClip.prototype.showPanel = function(name) {
+    this.curPanel = name;
+
+    $('.control-menu').find('li').removeClass('disabled');
+
+    //active menu    
+    if ($('#vc-menu-' + name).length) {
+      $('.control-menu').find('li').removeClass('active');
+      $('#vc-menu-' + name).addClass('active');
+    }
+
+    //hide all content
+    $('.block-tab-video').removeClass('active').hide();
+
+    //show corresponding content
+    var content = $('#vc-add-' + name);
+    content.addClass('active').show();
+
+    var jsp = content.children('[data-scroll-video]').data('jsp');
+    if (jsp) {
+      jsp.destroy();
+    }
+
+    content.children('[data-scroll-video]').jScrollPane({
+      autoReinitialise: true
+    });
+
+    //hide or show effect setting
+    if ((name == PANEL_EFFECT && this.arrFrame[this.curFrameIndex].type == FrameData.IMAGE) ||
+       (name == PANEL_TEXT_EFFECT)) {
+
+      var frameData = this.arrFrame[this.curFrameIndex];
+        
+      if (name == PANEL_TEXT_EFFECT) {
+        this.effectSetting.find('input[name="delay"]').val(frameData.textEffectDelay);
+        this.effectSetting.find('input[name="time"]').val(frameData.textEffectDuration);
+        this.effectSetting.find('input[name="next"]').val(frameData.textNextTime);        
+      } else if (name == PANEL_EFFECT) {
+        this.effectSetting.find('input[name="delay"]').val(frameData.bitmapEffectDelay);
+        this.effectSetting.find('input[name="time"]').val(frameData.bitmapEffectDuration);
+        this.effectSetting.find('input[name="next"]').val(frameData.bitmapNextTime);
+      }
+
+      this.effectSetting.show();
+    } else {
+      this.effectSetting.hide();
+    }
+
+    //hide media setting
+    if (name == PANEL_VIDEO) {
+      this.mediaSetting.show();
+    } else {
+      this.mediaSetting.hide();
+    }
+  };
+
+  VideoClip.prototype.displayOnlyMenu = function(disabled, name) {
+    
+    if (disabled) {
+      $('.control-menu').find('li').addClass('disabled');
+    } else {
+      $('.control-menu').find('li').removeClass('disabled');
+    }
+
+    //deactive all menu
+    $('.control-menu').find('li').removeClass('active');
+    this.effectSetting.hide();
+    this.mediaSetting.hide();
+
+    //stop all sounds
+    this.clearAudio();
+
+    //stop all videos
+    this.clearVideo();
+
+    this.loading.hide();
+
+      //active menu
+    if ($('#vc-menu-' + name).length) {
+      $('#vc-menu-' + name).addClass('active');
+    }
+
+    //hide all content
+    $('.block-tab-video').removeClass('active').hide();
+
+    //show corresponding content
+    var content = $('#vc-add-' + name);
+    content.addClass('active').show();
+
+    var jsp = content.children('[data-scroll-video]').data('jsp');
+    if (jsp) {
+      jsp.destroy();
+    }
+
+    content.children('[data-scroll-video]').jScrollPane({
+      autoReinitialise: true
+    });
+  };
+
+  VideoClip.prototype.showCurrentFrameVideo = function() {
+    if (this.curFrameIndex < 0 || this.curFrameIndex >= this.arrFrame.length) {
+      return;
+    }
+
+    this.isAudio = false;
+    if (this.curBGAudio) {
+      this.curBGAudio.removeClass('active');
+      this.curBGAudio = null;
+    }
+
+    this.isBackground = false;
+    if (this.curBG) {
+      this.curBG.removeClass('active');
+      this.curBG = null;
+    }
+
+    this.previewVC.clear();
+    
+    //reset all currrent
+    this.curFrameImage = null;
+    $('#vc-image-library').find('div[data-item-id]').removeClass('active');
+    $('#vc-image-yours').find('div[data-item-id]').removeClass('active');
+    
+    this.curFrameEffect = null;
+    $('#vc-add-effect').find('div[data-item-id]').removeClass('active');
+
+    this.curFrameText = null;
+    $('#vc-add-texteffect').find('div[data-item-id]').removeClass('active');
+
+    this.curFrameVideo = null;
+    $('#vc-video-library').find('div[data-item-id]').removeClass('active');
+    $('#vc-video-yours').find('div[data-item-id]').removeClass('active');
+
+    this.curFrameAudio = null;
+    $('#vc-audio-library').find('div[data-item-id]').removeClass('active');
+    $('#vc-audio-yours').find('div[data-item-id]').removeClass('active');
+
+    //stop all sounds
+    this.clearAudio();
+
+    this.mediaSetting.hide();
+
+    //remove image
+    this.bitmapContainer.visible = true;
+    this.bitmapContainer.removeAllChildren();
+    
+    this.textContainer.visible = true;
+    
+    //stop all videos
+    this.clearVideo();
+
+    //get current FrameData
+    var frameData = this.arrFrame[this.curFrameIndex];
+
+    //show current text edit
+    var panelText = $('#vc-add-text');
+    panelText.find('textarea[name="frametext"]').val(frameData.text.text);
+    panelText.find('.custom-select .text-val').data('val', frameData.text.font);
+    panelText.find('.custom-select .text-val').html(frameData.text.fontName);
+
+    panelText.find('.fontstyle').find('li[data-style]').removeClass('actived');
+    panelText.find('.halign').find('li[data-align]').removeClass('actived');
+    panelText.find('.valign').find('li[data-align]').removeClass('actived');
+    
+    this.curFrameStyle = panelText.find('.fontstyle').find('li[data-style="' + frameData.text.style + '"]');
+    this.curFrameStyle.addClass('actived');
+
+    this.curFrameHAlign = panelText.find('.halign').find('li[data-align="' + frameData.text.halign + '"]');
+    this.curFrameHAlign.addClass('actived');
+
+    this.curFrameVAlign = panelText.find('.valign').find('li[data-align="' + frameData.text.valign + '"]');
+    this.curFrameVAlign.addClass('actived');
+
+    panelText.find('input[name="textpadding"]').val(frameData.text.padding);
+    panelText.find('input[name="textsize"]').val(frameData.text.size);
+    panelText.find('input[name="textcolor"]').val(frameData.text.color);
+    panelText.find('input[name="textcolor"]').spectrum("set", frameData.text.color);
+
+    this.applyFrameText();
+
+    //show current background
+    this.bgContainer.visible = frameData.type != FrameData.VIDEO ? true : false;
+    this.bgContainer.removeAllChildren();
+    if (this.bgContainer.visible) {
+      var frameTime = EffectUtils.getTimeByFrame(this.arrFrame, this.curFrame.index());
+      var bgData = EffectUtils.getBackgroundDataByTime(this.arrBG, frameTime);
+      if (bgData && bgData.url) {
+        this.loadBackgroundImage(bgData.url);
+      }
+    }
+
+    //show current image edit
+    if (frameData.type == FrameData.IMAGE) {
+      var itemImage = $('#vc-image-library').find('div[data-item-id="'+ frameData.bitmapId + '"]');
+      if (!itemImage.length) {
+        itemImage = $('#vc-image-yours').find('div[data-item-id="'+ frameData.bitmapId + '"]');
+      }
+      if (itemImage.length) {
+        this.curFrameImage = $(itemImage[0]);
+        this.curFrameImage.addClass('active');
+
+        //load frame image
+        if (frameData.bitmapUrl) {
+          this.loadFrameImage(frameData.bitmapUrl);
+        }
+      }
+    }
+
+    //show current video edit
+    if (frameData.type == FrameData.VIDEO) {
+      
+      var itemVideo = $('#vc-video-library').find('div[data-item-id="'+ frameData.videoId + '"]');
+      if (!itemVideo.length) {
+        itemVideo = $('#vc-video-yours').find('div[data-item-id="'+ frameData.videoId + '"]');
+      }
+      if (itemVideo.length) {
+        this.curFrameVideo = $(itemVideo[0]);
+        this.curFrameVideo.addClass('active');
+
+        //load frame image
+        if (frameData.videoUrl) {
+          this.loadFrameVideo(frameData.videoUrl);
+        }
+      }
+    }
+
+    //show current text effect edit
+    var textEffect = $('#vc-add-texteffect').find('div[data-item-id="'+ frameData.textEffect + '"]');
+    if (textEffect.length) {
+      this.curFrameText = $(textEffect[0]);
+      this.curFrameText.addClass('active');
+    }
+    panelText.find('.effect-detail').html(frameData.textEffect + "(delay: " + frameData.textEffectDelay + ", time: " + frameData.textEffectDuration + ")");
+
+    //show current bitmap effect edit
+    var bitmapEffect = $('#vc-add-effect').find('div[data-item-id="'+ frameData.bitmapEffect + '"]');
+    if (bitmapEffect.length) {
+      this.curFrameEffect = $(bitmapEffect[0]);
+      this.curFrameEffect.addClass('active');
+    }
+
+    //show current audio edit
+    var itemAudio = $('#vc-audio-library').find('div[data-item-id="'+ frameData.audioId + '"]');
+      if (!itemAudio.length) {
+        itemAudio = $('#vc-audio-yours').find('div[data-item-id="'+ frameData.audioId + '"]');
+      }
+      if (itemAudio.length) {
+        this.curFrameAudio = $(itemAudio[0]);
+        this.curFrameAudio.addClass('active');
+
+        //load frame audio
+        if (frameData.audioUrl && this.curPanel == PANEL_AUDIO) {
+          this.loadFrameAudio(frameData.audioId, frameData.audioUrl);
+        }
+      }
+  };
+
+  VideoClip.prototype.loadFrameImage = function(url) {
+    var that = this;
+
+    that.loading.show();
+
+    if (that.image) {
+      $(that.image).off('load');
+    }
+    
+    that.image = new Image();
+    $(that.image).on('load', function(evt) {
+      $(that.image).off('load');
+      that.loading.hide();
+
+      var w = that.image.width;
+      var h = that.image.height;
+      
+      //find corrected scale
+      var scale = that.bitmapContainer.VC_WIDTH / w;
+      if(h * scale > that.bitmapContainer.VC_HEIGHT) {
+        scale = that.bitmapContainer.VC_HEIGHT / h;
+      }
+
+      var translateX = (that.bitmapContainer.VC_WIDTH - scale * w)/2;
+      var translateY = (that.bitmapContainer.VC_HEIGHT - scale * h)/2;
+    
+      var matrix = new createjs.Matrix2D(scale, 0, 0, scale, translateX, translateY);
+      var bitmapData = new createjs.BitmapData(that.image, that.bitmapContainer.VC_WIDTH, that.bitmapContainer.VC_HEIGHT, 0x000000);
+      bitmapData.draw(that.image, matrix, null, null, null, true);
+    
+      that.frameBitmap = that.bitmapContainer.addChild(new createjs.Bitmap(bitmapData.canvas));
+      that.bitmapContainer.visible = true;
+      that.arrFrame[that.curFrameIndex].bitmapView = that.frameBitmap;
+    });
+    that.image.src = url;
+  };
+
+  VideoClip.prototype.loadBackgroundImage = function(url) {
+    var that = this;
+
+    that.loading.show();
+
+    if (that.image) {
+      $(that.image).off('load');
+    }
+
+    that.image = new Image();
+    $(that.image).on('load', function(evt) {
+      $(that.image).off('load');
+      that.loading.hide();
+
+      var w = that.image.width;
+      var h = that.image.height;
+      
+      //find corrected scale
+      var scale = that.bitmapContainer.VC_WIDTH / w;
+      if(h * scale > that.bitmapContainer.VC_HEIGHT) {
+        scale = that.bitmapContainer.VC_HEIGHT / h;
+      }
+
+      var translateX = (that.bitmapContainer.VC_WIDTH - scale * w)/2;
+      var translateY = (that.bitmapContainer.VC_HEIGHT - scale * h)/2;
+    
+      var matrix = new createjs.Matrix2D(scale, 0, 0, scale, translateX, translateY);
+      var bitmapData = new createjs.BitmapData(that.image, that.bitmapContainer.VC_WIDTH, that.bitmapContainer.VC_HEIGHT, 0x000000);
+      bitmapData.draw(that.image, matrix, null, null, null, true);
+    
+      that.bgContainer.removeAllChildren();
+      that.bgContainer.visible = true;
+      that.bgBitmap = that.bgContainer.addChild(new createjs.Bitmap(bitmapData.canvas));
+    });
+    that.image.src = url;
+  };
+
+  VideoClip.prototype.clearAudio = function() {
+    this.loading.hide();
+
+    if (this.audioInstance && this.audioInstance.playProgressTimeout) {
+      //this.audioInstance.stop();
+      clearInterval(this.audioInstance.playProgressTimeout);
+    };
+    this.audioInstance = null;
+
+    if (createjs.Sound) {
+      createjs.Sound.stop();
+      createjs.Sound.removeAllSounds();
+      createjs.Sound.removeAllEventListeners();
+    }
+  };
+
+  VideoClip.prototype.clearVideo = function() {
+    this.videoInstance.pause();
+    $('#video').attr('src', '');
+  };
+
+  VideoClip.prototype.loadFrameAudio = function(id, url) {
+
+    var that = this;
+
+    this.previewVC.clear();
+
+    $('.preview-setting').hide();
+    this.clearAudio();
+
+    //load audio if not exist
+    createjs.Sound.alternateExtensions = ["mp3", "m4a", "wav"];
+    createjs.Sound.registerPlugins([createjs.WebAudioPlugin]);
+    createjs.Sound.addEventListener("fileload", onAudioLoadHandler);
+    createjs.Sound.registerSound({id: id, src: url});
+
+    this.loading.show();
+
+    if (this.isAudio) {
+      var audioData = this.arrBGAudio[this.curBGAudioIndex];
+    } else {
+      var frameData = this.arrFrame[this.curFrameIndex];
+    }
+
+    function onAudioLoadHandler(evt) {
+      that.loading.hide();
+
+      // Play the loaded sound
+      that.mediaSetting.show();
+      
+      that.audioInstance = createjs.Sound.play(evt.src);
+      that.saveMediaMetaData(0, that.audioInstance.duration / 1000);
+      
+      that.mediaSetting.find('.play-pause').find('span').removeClass('fa-play').addClass('fa-pause');
+      that.mediaSetting.find('.time').data('duration', that.audioInstance.duration / 1000);
+      that.mediaSetting.find('.time-start .text').html(EffectUtils.formatTime(0));
+      that.mediaSetting.find('.time-end .text').html(EffectUtils.formatTime(that.audioInstance.duration / 1000));
+      
+      that.audioInstance.on("complete", onAudioPlayCompleteHandler);
+      that.audioInstance.playProgressTimeout = setInterval(onAudioPlayProgressHandler, 100);
+    }
+
+    function onAudioPlayProgressHandler(evt) {
+      if (that.audioInstance) {
+        that.updateMedia(that.audioInstance.position/1000);
+
+        if (audioData) {
+          if (audioData.end != -1 && that.audioInstance.position/1000 >= audioData.end) {
+            that.mediaSetting.find('.play-pause').find('span').removeClass('fa-pause').addClass('fa-play');
+            
+            that.audioInstance.resumeTime = audioData.start;
+            that.audioInstance.stop();
+          }
+
+        } else {
+          if (frameData.audioEnd != -1 && that.audioInstance.position/1000 >= frameData.audioEnd) {
+            that.mediaSetting.find('.play-pause').find('span').removeClass('fa-pause').addClass('fa-play');
+            
+            that.audioInstance.resumeTime = frameData.audioStart;
+            that.audioInstance.stop();
+          }
+        }
+      }
+    }
+
+    function onAudioPlayCompleteHandler(evt) {
+      if (that.audioInstance) {
+        clearInterval(that.audioInstance.playProgressTimeout);
+      }
+      that.endMedia();
+    }
+  };
+
+  VideoClip.prototype.loadFrameVideo = function(url) {
+    var that = this;
+
+    this.loading.show();
+
+    $('#video').attr('src', url);
+    this.videoInstance.play();
+
+    this.mediaSetting.show();
+    that.mediaSetting.find('.play-pause').find('span').removeClass('fa-play').addClass('fa-pause');
+
+    var frameData = this.arrFrame[this.curFrameIndex];
+
+    $('#video').off('loadedmetadata').on('loadedmetadata', function(evt) {
+      that.loading.hide();
+      that.saveMediaMetaData(0, that.videoInstance.duration);
+
+      that.videoInstance.currentTime = frameData.videoStart;
+      that.videoInstance.play();
+    });
+
+    $('#video').off('timeupdate').on('timeupdate', function(evt) {
+      that.updateMedia(that.videoInstance.currentTime);
+
+      if (frameData.videoEnd != -1 && that.videoInstance.currentTime >= frameData.videoEnd) {
+        that.mediaSetting.find('.play-pause').find('span').removeClass('fa-pause').addClass('fa-play');
+        that.videoInstance.currentTime = frameData.videoStart;
+        that.videoInstance.pause();
+      }
+    });
+
+    $('#video').off('ended').on('ended', function(evt) {
+      that.endMedia();
+    }); 
+  };
+
+  VideoClip.prototype.saveMediaMetaData = function(position, duration) {
+
+    this.mediaSetting.find('.position').html(EffectUtils.formatTime(position));
+    this.mediaSetting.find('.duration').html(EffectUtils.formatTime(duration));
+
+    var left = this.mediaSetting.find('.time').offset().left;
+    var width = this.mediaSetting.find('.time').width();
+
+    this.mediaSetting.find('.time').data('duration', duration);
+    this.mediaSetting.find('.timeline').offset({left: left});
+    this.mediaSetting.find('.timeline').width(width);
+    this.mediaSetting.find('.time-start').offset({left: left - 10});
+    this.mediaSetting.find('.time-end').offset({left: left + width - 10});
+    this.mediaSetting.find('.time-start .text').html(EffectUtils.formatTime(position));
+    this.mediaSetting.find('.time-end .text').html(EffectUtils.formatTime(duration));
+  };
+
+  VideoClip.prototype.toJSON = function() {
+    var str = '{';
+
+    //backgrounds
+    str += '"backgrounds" : ['
+    for (var i = 0; i < this.arrBG.length; i ++) {
+      str += this.arrBG[i].toJSON();
+      if (i <= this.arrBG.length - 2) {
+        str += ', ';
+      }
+    }
+    str += '], ';
+
+    //audios
+    str += '"audios" : ['
+    for (var i = 0; i < this.arrBGAudio.length; i ++) {
+      str += this.arrBGAudio[i].toJSON();
+      if (i <= this.arrBGAudio.length - 2) {
+        str += ', ';
+      }
+    }
+    str += '], ';
+
+    //frames
+    str += '"frames" : ['
+    for (var i = 0; i < this.arrFrame.length; i ++) {
+      str += this.arrFrame[i].toJSON();
+      if (i <= this.arrFrame.length - 2) {
+        str += ', ';
+      }
+    }
+    str += ']}';
+
+    return str;
+  };
+
+  VideoClip.prototype.save = function() {
+    var str = this.toJSON();    
+    $.ajax({
+      method: "POST",
+      url: SAVE_URL,
+      data: { vcid : this.vcid, data: str }
+    })
+    .done(function( msg ) {});
+  };
+
+  VideoClip.prototype.preview = function() {
+    this.textContainer.visible = false;
+    this.bitmapContainer.visible = false;
+    this.bgContainer.visible = false;
+    
+    this.effectSetting.hide();
+    this.mediaSetting.hide();
+
+    this.clearAudio();
+    this.clearVideo();
+
+    this.previewVC.setData(this.arrBG, this.arrBGAudio, this.arrFrame, this.stage, this.bitmapContainer.VC_WIDTH, this.bitmapContainer.VC_HEIGHT, this.loading, this.videoInstance, $('.preview-setting'));
+  };
+
+  VideoClip.prototype.finish = function() {
+    
+    this.save();
+
+    var dialog = $('#videoComplete');
+    dialog.modal('show');
+
+    //test link share
+    dialog.find('input[name="vc-link-share"]').val(SHARE_URL + '?vcid=' + this.vcid);
+  };
+
+  VideoClip.prototype.initShare = function() {
+    
+    var dialog = $('#videoComplete');
+
+    //share
+    dialog.find('button[name="vc-view-share"]').on('click', function(evt) {
+      var url = $('#videoComplete').find('input[name="vc-link-share"]').val();
+      window.open(url,'_blank');
+      dialog.modal('hide');
+    });
+
+    dialog.find('a[name="vc-fb-share"]').on('click', function(evt) {
+      var url = $('#videoComplete').find('input[name="vc-link-share"]').val();
+      FB.ui({
+        method: 'share',
+        href: url,
+      }, function(response){});
+      dialog.modal('hide');
+    });
+
+    dialog.find('a[name="vc-gp-share"]').on('click', function(evt) {
+      var url = $('#videoComplete').find('input[name="vc-link-share"]').val();
+      url = 'https://plus.google.com/share?url=' + url;
+
+      var shareWindow = window.open(url,'Share on Google+','height=400,width=600');
+      shareWindow.focus();
+      
+       dialog.modal('hide');
+    });
+
+    dialog.find('button[name="vc-send-share"]').on('click', function(evt) {
+      
+      var title = dialog.find('input[name="vc-title-share"]');
+      var email = dialog.find('input[name="vc-email-share"]');
+      var content = dialog.find('textarea[name="vc-content-share"]');
+
+      if ($.trim(title.val()) == '') {
+        title.focus();
+      }
+      else if ($.trim(email.val()) == '') {
+        email.focus();
+      }
+      else if ($.trim(content.val()) == '') {
+        content.focus();
+      }
+      else {
+        $.ajax({
+          method: "POST",
+          url: EMAIL_URL,
+          data: { vcid : this.vcid, title: title.val(), email: email.val(), content: content.val() }
+        })
+        .done(function( msg ) {
+          dialog.modal('hide');
+        });
+      }
+    });
+  };
+  
+
+  /* =============== */
+  /* MODULE DATA-API */
+  /* =============== */
+
+  $.fn[pluginName] = function(options, params) {
+    return this.each(function() {
+      var instance = $.data(this, pluginName);
+      if (!instance) {
+        $.data(this, pluginName, new VideoClip(this, options));
+      } else if (instance[options]) {
+        instance[options](params);
+      } else {
+        window.console && console.log(options ? options + ' method is not exists in ' + pluginName : pluginName + ' plugin has been initialized');
+      }
+    });
+  };
+
+  $.fn[pluginName].defaults = {};
+
+  $(function() {
+    $('[data-' + pluginName + ']')[pluginName]({});
+  });
+
+}(window.jQuery, window, window.createjs, window.App));
+
+function TextData() {
+  this.text = '';
+  this.font = 'Arial';
+  this.fontName = 'Arial';
+  this.style = '';
+
+  this.halign = 'center';
+  this.valign = 'middle';
+  this.padding = 5;
+  
+  this.size = 36;
+  this.color = 'Magenta';
+};
+
+TextData.HA_LEFT    = 'left';
+TextData.HA_CENTER  = 'center';
+TextData.HA_RIGHT   = 'right';
+TextData.VA_TOP     = 'top';
+TextData.VA_MIDDLE  = 'middle';
+TextData.VA_BOTTOM  = 'bottom';  
+
+TextData.prototype.toJSON = function() {
+  return '{' + 
+    '"text": "' + this.text + '",' +
+    '"font": "' + this.font + '",' +
+    '"fontName": "' + this.fontName + '",' +
+    '"style": "' + this.style + '",' +
+    '"halign": "' + this.halign + '",' +
+    '"valign": "' + this.valign + '",' +
+    '"padding": ' + this.padding + ',' +
+    '"size": ' + this.size + ',' +
+    '"color": "' + this.color + '"' +
+  '}';
+};
+
+function AudioData() {
+  this.id = null;
+  this.url = null;
+  this.start = 0;
+  this.end = -1;
+
+  this.time = -1;
+  this.title = null;
+
+  this.audioInstance = null;
+};
+
+AudioData.prototype.parse = function(data) {
+  this.id = data.id == 'null' ? null : data.id;
+  this.url = data.url == 'null' ? null : data.url;
+  this.start = data.start;
+  this.end = data.end;
+  this.time = data.time;
+  this.title = data.title == 'null' ? null : data.title;
+};
+
+AudioData.prototype.getTime = function() {
+  if (this.end != -1) {
+    return (this.end - this.start);
+  } 
+  return this.time;
+};
+
+AudioData.prototype.toJSON = function() {
+  return '{' + 
+    '"id": "' + this.id + '",' +
+    '"url": "' + this.url + '",' +
+    '"start": ' + this.start + ',' +
+    '"end": ' + this.end + ',' +
+    '"time": ' + this.time + ',' +
+    '"title": "' + this.title + '"' +
+  '}';
+};
+
+function BackgroundData() {
+  this.id = null;
+  this.url = null;
+  this.time = 30;
+  this.bitmapView = null;
+  this.imageView = null;
+};
+
+BackgroundData.prototype.parse = function(data) {
+  this.id = data.id == 'null' ? null : data.id;
+  this.url = data.url == 'null' ? null : data.url;
+  this.time = data.time;
+};
+
+BackgroundData.prototype.toJSON = function() {
+  return '{' + 
+    '"id": "' + this.id + '",' +
+    '"url": "' + this.url + '",' +
+    '"time": ' + this.time +
+  '}';
+};
+
+function FrameData() {
+  //text data
+  this.text = new TextData();
+  this.textEffect = 'TNone';
+  this.textEffectClass = 'TEffect_None';
+  this.textEffectDelay = 5;
+  this.textEffectDuration = 5;
+  this.textNextTime = 0;
+
+  //image data
+  this.bitmapId = null;
+  this.bitmapUrl =  null;
+  this.bitmapEffect = 'BNone';
+  this.bitmapEffectClass = 'BEffect_None';
+  this.bitmapEffectDelay = 3;
+  this.bitmapEffectDuration = 5;
+  this.bitmapNextTime = 5;
+
+  //video data
+  this.videoId = null;
+  this.videoUrl = null;
+  this.videoStart = 0;
+  this.videoEnd = -1
+
+  //audio data
+  this.audioId = null;
+  this.audioUrl = null;
+  this.audioStart = 0;
+  this.audioEnd = -1;
+
+  //time data
+  this.delayTime = 5;
+  this.duration = 5;
+
+  this.type = null;
+
+  this.bitmapView = null;
+  this.textView = null;
+  this.imageView = null;
+  this.videoView = null;
+  this.audioInstance = null;
+};
+
+FrameData.prototype.getDuration = function() {
+  var textTime = this.textEffectDelay + this.textEffectDuration + this.textNextTime;
+  var bitmapTime = this.bitmapEffectDelay + this.bitmapEffectDuration + this.bitmapNextTime;
+
+  return Math.max(textTime, bitmapTime);
+}
+
+//bug: when duplicate frame, the getDuration is not cloned
+FrameData.prototype.clone = function() {
+  var frameData = new FrameData();
+
+  //text data
+  frameData.text.text = this.text.text;
+  frameData.text.font = this.text.font;
+  frameData.text.fontName = this.text.fontName;
+  frameData.text.style = this.text.style;
+  frameData.text.halign = this.text.halign;
+  frameData.text.valign = this.text.valign;
+  frameData.text.padding = this.text.padding;
+  frameData.text.size = this.text.size;
+  frameData.text.color = this.text.color;
+  
+  frameData.textEffect = this.textEffect;
+  frameData.textEffectClass = this.textEffectClass;
+  frameData.textEffectDelay = this.textEffectDelay;
+  frameData.textEffectDuration = this.textEffectDuration;
+  frameData.textNextTime = this.textNextTime;
+
+  //image data
+  frameData.bitmapId = this.bitmapId;
+  frameData.bitmapUrl =  this.bitmapUrl;
+  frameData.bitmapEffect = this.bitmapEffect;
+  frameData.bitmapEffectClass = this.bitmapEffectClass;
+  frameData.bitmapEffectDelay = this.bitmapEffectDelay;
+  frameData.bitmapEffectDuration = this.bitmapEffectDuration;
+  frameData.bitmapNextTime = this.bitmapNextTime;
+  
+  //video data
+  frameData.videoId = this.videoId;
+  frameData.videoUrl = this.videoUrl;
+  frameData.videoStart = this.videoStart;
+  frameData.videoEnd = this.videoEnd;
+
+  //audio data
+  frameData.audioId = this.audioId;
+  frameData.audioUrl = this.audioUrl;
+  frameData.audioStart = this.audioStart;
+  frameData.audioEnd = this.audioEnd;
+
+  //time data
+  frameData.delayTime = this.delayTime;
+  frameData.duration = this.duration;
+
+  frameData.type = this.type;
+
+  return frameData;
+}
+
+FrameData.prototype.parse = function(data) {
+
+  //text data
+  this.text.text = data.text.text;
+  this.text.font = data.text.font;
+  this.text.fontName = data.text.fontName;
+  this.text.style = data.text.style;
+  this.text.halign = data.text.halign;
+  this.text.valign = data.text.valign;
+  this.text.padding = data.text.padding;
+  this.text.size = data.text.size;
+  this.text.color = data.text.color;
+  
+  this.textEffect = data.textEffect;
+  this.textEffectClass = data.textEffectClass;
+  this.textEffectDelay = data.textEffectDelay;
+  this.textEffectDuration = data.textEffectDuration;
+  this.textNextTime = data.textNextTime;
+
+  //image data
+  this.bitmapId = data.bitmapId == 'null' ? null : data.bitmapId;
+  this.bitmapUrl =  data.bitmapUrl == 'null' ? null : data.bitmapUrl;
+  this.bitmapEffect = data.bitmapEffect;
+  this.bitmapEffectClass = data.bitmapEffectClass;
+  this.bitmapEffectDelay = data.bitmapEffectDelay;
+  this.bitmapEffectDuration = data.bitmapEffectDuration;
+  this.bitmapNextTime = data.bitmapNextTime;
+  
+  //video data
+  this.videoId = data.videoId == 'null' ? null : data.videoId;
+  this.videoUrl = data.videoUrl == 'null' ? null : data.videoUrl;
+  this.videoStart = data.videoStart;
+  this.videoEnd = data.videoEnd;
+
+  //audio data
+  this.audioId = data.audioId == 'null' ? null : data.audioId;
+  this.audioUrl = data.audioUrl == 'null' ? null : data.audioUrl;
+  this.audioStart = data.audioStart;
+  this.audioEnd = data.audioEnd;
+
+  //time data
+  this.delayTime = data.delayTime;
+  this.duration = data.duration;
+
+  this.type = data.type;
+};
+
+FrameData.prototype.toJSON = function() {
+  return '{' + 
+    '"text": ' + this.text.toJSON()  + ',' +
+    '"textEffect":"' + this.textEffect + '",' +
+    '"textEffectClass":"' + this.textEffectClass + '",' +
+    '"textEffectDelay":' + this.textEffectDelay + ',' +
+    '"textEffectDuration":' + this.textEffectDuration + ',' +
+    '"textNextTime":' + this.textNextTime + ',' +
+    '"bitmapId":"' + this.bitmapId + '",' +
+    '"bitmapUrl":"' + this.bitmapUrl + '",' +
+    '"bitmapEffect":"' + this.bitmapEffect + '",' +
+    '"bitmapEffectClass":"' + this.bitmapEffectClass + '",' +
+    '"bitmapEffectDelay":' + this.bitmapEffectDelay + ',' +
+    '"bitmapEffectDuration":' + this.bitmapEffectDuration + ',' +
+    '"bitmapNextTime":' + this.bitmapNextTime + ',' +
+    '"videoId":"' + this.videoId + '",' +
+    '"videoUrl":"' + this.videoUrl + '",' +
+    '"videoStart":' + this.videoStart + ',' +
+    '"videoEnd":' + this.videoEnd + ',' +
+    '"audioId":"' + this.audioId + '",' +
+    '"audioUrl":"' + this.audioUrl + '",' +
+    '"audioStart":' + this.audioStart + ',' +
+    '"audioEnd":' + this.audioEnd + ',' +
+    '"delayTime":' + this.delayTime + ',' +
+    '"duration":' + this.duration + ',' +
+    '"type":"' + this.type +  '"' + 
+  '}';
+};
+
+FrameData.IMAGE = 'image';
+FrameData.AUDIO = 'audio';
+FrameData.VIDEO = 'video';
+
+function createText(container, VC_WIDTH, VC_HEIGHT, frameData) {
+  
+  var text = new createjs.Text(frameData.text.text, frameData.text.style + ' ' + frameData.text.size + 'px ' + frameData.text.font, frameData.text.color);
+  container.addChild(text);
+  
+  var halign = frameData.text.halign;
+  var padding = frameData.text.padding;
+  text.textAlign = halign;
+  
+  if (halign == TextData.HA_LEFT) {
+    text.x = padding;
+  }
+  else if (halign == TextData.HA_CENTER) {
+    text.x = VC_WIDTH/2;
+  }
+  else if (halign == TextData.HA_RIGHT) {
+    text.x = VC_WIDTH - padding;
+  }
+
+  var valign = frameData.text.valign;
+  var textHeight = text.getBounds() ? text.getBounds().height : 0;
+  if (valign == TextData.VA_TOP) {
+    text.y = padding;
+  }
+  else if (valign == TextData.VA_MIDDLE) {
+    text.y = VC_HEIGHT/2 - textHeight/2;
+  }
+  else if (valign == TextData.VA_BOTTOM) {
+    text.y = VC_HEIGHT - textHeight - padding;
+  }
+  return text;
+};
+
+function getTextPositionByHAlign(text, VC_WIDTH, textData, isToLeft) {
+  if (textData.halign == TextData.HA_LEFT) {
+    return isToLeft ? VC_WIDTH + textData.padding : -text.getBounds().width;
+  }
+  else if (textData.halign == TextData.HA_CENTER) {
+    return isToLeft ? VC_WIDTH + text.getBounds().width / 2 + textData.padding : -text.getBounds().width + textData.padding;
+  }
+  else if (textData.halign == TextData.HA_RIGHT) {
+    return isToLeft ? VC_WIDTH + textData.padding + text.getBounds().width : 0;
+  }
+  return 0;
+}
+
+function getTextPositionByVAlign(text, VC_HEIGHT, textData, isUp) {
+  if (textData.valign == TextData.VA_TOP) {
+    return isUp ? -text.getBounds().height : VC_HEIGHT;
+  }
+  else if (textData.valign == TextData.VA_MIDDLE) {
+    return isUp ? - text.getBounds().height : VC_HEIGHT;
+  }
+  else if (textData.valign == TextData.VA_BOTTOM) {
+    return isUp ? -text.getBounds().height : VC_HEIGHT;
+  }
+  return 0;
+};
+
+function getTextPositionVertical(text, VC_HEIGHT, textData) {
+  var position = 0;
+  
+  if (textData.valign == TextData.VA_TOP) {
+    position = textData.padding;
+  }
+  else if (textData.valign == TextData.VA_MIDDLE) {
+    position = VC_HEIGHT/2 - text.getBounds().height ;
+  }
+  else if (textData.valign == TextData.VA_BOTTOM) {
+    position = VC_HEIGHT - text.getBounds().height - textData.padding;
+  }
+  return position;
+}
+
+function getStartTextPositionByHAlign(text, VC_WIDTH, textData) {
+  if (textData.halign == TextData.HA_LEFT) {
+    return textData.padding;
+  }
+  else if (textData.halign == TextData.HA_CENTER) {
+    return VC_WIDTH/2 - text.getBounds().width / 2;
+  }
+  else if (textData.halign == TextData.HA_RIGHT) {
+    return VC_WIDTH - text.getBounds().width - textData.padding;
+  }
+  return 0;
+};
+
+function getStartTextPositionByVAlign(text, VC_HEIGHT, textData) {
+  if (textData.valign == TextData.VA_TOP) {
+    return textData.padding;
+  }
+  else if (textData.valign == TextData.VA_MIDDLE) {
+    return VC_HEIGHT/2 - text.getBounds().height / 2;
+  }
+  else if (textData.valign == TextData.VA_BOTTOM) {
+    return VC_HEIGHT - text.getBounds().height - textData.padding;
+  }
+  return 0;
+};
+
+////////////////////////////////////////////////////////////////////////////////////
+///////////TEXT EFFECT//////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////
+
+//////////TEffect_Fade//////////
+function TEffect_None() {
+  this.arrTween = [];
+};
+TEffect_None.prototype.play = function(container, preText, frameData) {
+  if (preText) {
+    container.removeChild(preText);
+  }
+  frameData.textView = createText(container, container.VC_WIDTH, container.VC_HEIGHT, frameData);
+};
+TEffect_None.prototype.stop = function() {
+  for (var i = 0; i < this.arrTween.length; i ++) {
+    this.arrTween[i].pause();
+  }
+};
+window.TEffect_None = TEffect_None;
+
+//////////TEffect_Fade//////////
+function TEffect_Fade() {
+  this.arrTween = [];
+};
+TEffect_Fade.prototype.play = function(container, preText, frameData) {
+
+  if (preText) {
+    preText.alpha = 1;
+    container.addChild(preText);
+    var tween = TweenLite.to(preText, 1, {alpha: 0, onComplete: function() {
+      container.removeChild(preText);
+    }});
+    this.arrTween.push(tween);
+  }
+  
+  var text = createText(container, container.VC_WIDTH, container.VC_HEIGHT, frameData);
+  text.alpha = 0;
+  container.addChild(text);
+  frameData.textView = text;
+  tween = TweenLite.to(text, frameData.textEffectDuration, {delay: frameData.textEffectDelay, alpha: 1});    
+  this.arrTween.push(tween);
+};
+TEffect_Fade.prototype.stop = function() {
+  for (var i = 0; i < this.arrTween.length; i ++) {
+    this.arrTween[i].pause();
+  }
+};
+window.TEffect_Fade = TEffect_Fade;
+
+//////////TEffect_SlideLeft//////////
+function TEffect_SlideLeft() {
+  this.arrTween = [];
+}
+TEffect_SlideLeft.prototype.play = function(container, preText, frameData) {
+  var tween;
+  if (preText) {
+    tween = TweenLite.to(preText, time, {delay: delay, x: -container.VC_WIDTH, onComplete: function() {
+      container.removeChild(preText);
+    }});
+    this.arrTween.push(tween);
+  }
+
+   var text = createText(container, container.VC_WIDTH, container.VC_HEIGHT, frameData);
+   var orgX = text.x;
+   text.x = getTextPositionByHAlign(text, container.VC_WIDTH, frameData.text, true);
+   container.addChild(text);
+   frameData.textView = text;
+  
+    tween = TweenLite.to(text, frameData.textEffectDuration, {delay: frameData.textEffectDelay, x: orgX});
+    this.arrTween.push(tween);
+};
+TEffect_SlideLeft.prototype.stop = function() {
+  for (var i = 0; i < this.arrTween.length; i ++) {
+    this.arrTween[i].pause();
+  }
+};
+window.TEffect_SlideLeft = TEffect_SlideLeft;
+
+//////////TEffect_SlideRight//////////
+function TEffect_SlideRight() {
+  this.arrTween = [];
+}
+TEffect_SlideRight.prototype.play = function(container, preText, frameData) {
+  var tween;
+  if (preText) {
+    tween = TweenLite.to(preText, time, {delay: delay, x: container.VC_WIDTH, onComplete: function() {
+      container.removeChild(preText);
+    }});
+    this.arrTween.push(tween);
+  }
+
+   var text = createText(container, container.VC_WIDTH, container.VC_HEIGHT, frameData);
+   var orgX = text.x;
+   text.x = getTextPositionByHAlign(text, container.VC_WIDTH, frameData.text, false);
+   container.addChild(text);
+   frameData.textView = text;
+  
+    tween = TweenLite.to(text, frameData.textEffectDuration, {delay: frameData.textEffectDelay, x: orgX});
+    this.arrTween.push(tween);
+};
+TEffect_SlideRight.prototype.stop = function() {
+  for (var i = 0; i < this.arrTween.length; i ++) {
+    this.arrTween[i].pause();
+  }
+};
+window.TEffect_SlideRight = TEffect_SlideRight;
+
+//////////TEffect_SlideUp//////////
+function TEffect_SlideUp() {
+  this.arrTween = [];
+}
+TEffect_SlideUp.prototype.play = function(container, preText, frameData) {
+  var tween;
+  if (preText) {
+    tween = TweenLite.to(preText, time, {delay: delay, y: container.VC_HEIGHT, onComplete: function() {
+      container.removeChild(preText);
+    }});
+    this.arrTween.push(tween);
+  }
+
+   var text = createText(container, container.VC_WIDTH, container.VC_HEIGHT, frameData);
+   var orgY = text.y;
+   text.y = getTextPositionByVAlign(text, container.VC_WIDTH, frameData.text, true);
+   container.addChild(text);
+   frameData.textView = text;
+  
+    tween = TweenLite.to(text, frameData.textEffectDuration, {delay: frameData.textEffectDelay, y: orgY});
+    this.arrTween.push(tween);
+};
+TEffect_SlideUp.prototype.stop = function() {
+  for (var i = 0; i < this.arrTween.length; i ++) {
+    this.arrTween[i].pause();
+  }
+};
+window.TEffect_SlideUp = TEffect_SlideUp;
+
+//////////TEffect_SlideDown//////////
+function TEffect_SlideDown() {
+  this.arrTween = [];
+}
+TEffect_SlideDown.prototype.play = function(container, preText, frameData) {
+  var tween;
+  if (preText) {
+    tween = TweenLite.to(preText, time, {delay: delay, y: -container.VC_HEIGHT, onComplete: function() {
+      container.removeChild(preText);
+    }});
+    this.arrTween.push(tween);
+  }
+
+   var text = createText(container, container.VC_WIDTH, container.VC_HEIGHT, frameData);
+   var orgY = text.y;
+   text.y = getTextPositionByVAlign(text, container.VC_HEIGHT, frameData.text, false);
+   container.addChild(text);
+   frameData.textView = text;
+  
+    tween = TweenLite.to(text, frameData.textEffectDuration, {delay: frameData.textEffectDelay, y: orgY});
+    this.arrTween.push(tween);
+};
+TEffect_SlideDown.prototype.stop = function() {
+  for (var i = 0; i < this.arrTween.length; i ++) {
+    this.arrTween[i].pause();
+  }
+};
+window.TEffect_SlideDown = TEffect_SlideDown;
+
+//////////TEffect_FastBounceText//////////
+function TEffect_FastBounceText() {
+  this.arrTween = [];
+};
+TEffect_FastBounceText.prototype.play = function(container, preText, frameData) {
+  if (preText) {
+    container.removeChild(preText);
+  }
+
+   var str = frameData.text.text;
+  
+   var text = createText(container, container.VC_WIDTH, container.VC_HEIGHT, frameData);
+   container.removeChild(text); 
+   frameData.textView = text;
+
+  var arrText = str.split('\n');
+  var toX = getStartTextPositionByHAlign(text, container.VC_WIDTH, frameData.text);
+  var toY = getStartTextPositionByVAlign(text, container.VC_HEIGHT, frameData.text);
+  var txt;
+  var character;
+  var tempW, tempH;
+  var blurFilter = new createjs.BlurFilter(5, 5, 5);
+  var blur = new createjs.BlurFilter(1, 1, 1);
+  var colorFilter = new createjs.ColorFilter(0, 0, 0, 1, 255, 255, 255, 0);
+  
+  for (var i = 0; i < arrText.length; i ++) {
+    character = arrText[i];
+
+    for (var j = 0; j < character.length; j ++) {
+      txt = new createjs.Text(character[j], frameData.text.style + ' ' + frameData.text.size + 'px ' + frameData.text.font, frameData.text.color);
+      txt.orgX = toX;
+      txt.orgY = toY;
+      
+      tempW = txt.getMeasuredWidth();
+      tempH = txt.getMeasuredLineHeight();        
+      toX += tempW;
+      
+      txt.scaleX = txt.scaleY = 5;        
+      txt.x = toX - tempW * 5 / 2;
+      txt.y = toY - tempH * 5 / 2;
+              
+      container.addChild(txt);
+      txt.alpha = 0;
+      tween = TweenLite.to(txt, 0.2, {alpha: 1, x: txt.orgX, y: txt.orgY, scaleX: 1, scaleY: 1, delay: 0.05 * (i + 1) * j})
+      this.arrTween.push(tween);
+    }   
+    toX = 0; 
+    toY += txt.getMeasuredLineHeight();
+  }
+};
+TEffect_FastBounceText.prototype.stop = function() {
+  for (var i = 0; i < this.arrTween.length; i ++) {
+    this.arrTween[i].pause();
+  }
+};
+window.TEffect_FastBounceText = TEffect_FastBounceText;
+
+//////////TEffect_StarLeft//////////
+function TEffect_StarLeft()  {
+  this.arrTween = [];
+};
+TEffect_StarLeft.prototype.play = function(container, preText, frameData) {
+  var tween;
+  var that = this;
+  if (preText) {
+    tween = TweenLite.to(preText, time, {delay: delay, y: -container.VC_HEIGHT, onComplete: function() {
+      container.removeChild(preText);
+    }});      
+    this.arrTween.push(tween);
+  }
+  
+  //create text and set position
+  text = createText(container, container.VC_WIDTH, container.VC_HEIGHT, frameData);
+  var orgX = text.x;
+  text.x = getTextPositionByHAlign(text, container.VC_WIDTH, frameData.text, false);
+  frameData.textView = text;
+  
+  var fromY = getTextPositionVertical(text, container.VC_HEIGHT, frameData.text);
+  tween = TweenLite.to(text, 2, {x: orgX});
+  this.arrTween.push(tween);
+  
+  var randomX, randomY;
+  var star, numOfStar = Math.ceil(container.VC_WIDTH/ 40);    
+  var row = Math.ceil(text.getBounds().height / 10) + 4;
+  
+  for(var i = 0; i < row; i ++) {
+    for(var j = 0; j < numOfStar; j ++) {
+      star = new createjs.Shape();
+      
+      star.x = Math.random() * 40 + j * 40;
+      star.y = fromY + i * 10
+      
+      star.graphics.beginFill("#FFFFFF").drawPolyStar(0, 0, 10, 5, 0.8, - 90);
+      star.scaleX = star.scaleY = Math.random();
+      container.addChild(star);
+
+      randomX = Math.random() < 0.5 ? star.x + Math.random() * 50 : star.x - Math.random() * 50;
+      randomY = Math.random() < 0.5 ? star.y + Math.random() * 50 : star.y - Math.random() * 50;
+      
+      star.alpha = 0;
+      tween = TweenLite.to(star, 0.01, {alpha: 1, delay: j * 0.05, 
+        onComplete: function(star, randomX, randomY) {     
+          var scale = Math.random();
+          var tw = TweenLite.to(star, 1, {alpha: 0, rotation: Math.random() * 360, x: randomX, y: randomY, scaleX: scale, scaleY: scale});    
+          that.arrTween.push(tw);
+        }, onCompleteParams: [star, randomX, randomY]});
+      this.arrTween.push(tween);
+    }
+  }
+};
+TEffect_StarLeft.prototype.stop = function() {
+  for (var i = 0; i < this.arrTween.length; i ++) {
+    this.arrTween[i].pause();
+  }
+};
+window.TEffect_StarLeft = TEffect_StarLeft;
+
+//////////TEffect_FadeStar//////////
+function TEffect_StarRight()  {
+  this.arrTween = [];
+};
+TEffect_StarRight.prototype.play = function(container, preText, frameData) {
+  var tween;
+  var that = this;
+  if (preText) {
+    tween = TweenLite.to(preText, time, {delay: delay, y: -container.VC_HEIGHT, onComplete: function() {
+      container.removeChild(preText);
+    }});      
+    this.arrTween.push(tween);
+  }
+  
+  //create text and set position
+  text = createText(container, container.VC_WIDTH, container.VC_HEIGHT, frameData);
+  var orgX = text.x;
+  text.x = getTextPositionByHAlign(text, container.VC_WIDTH, frameData.text, true);
+  frameData.textView = text;
+  
+  var fromY = getTextPositionVertical(text, container.VC_HEIGHT, frameData.text);
+  tween = TweenLite.to(text, 2, {x: orgX});
+  this.arrTween.push(tween);
+  
+  var randomX, randomY;
+  var star, numOfStar = Math.ceil(container.VC_WIDTH/ 40);    
+  var row = Math.ceil(text.getBounds().height / 10) + 4;
+  
+  for(var i = 0; i < row; i ++) {
+    for(var j = 0; j < numOfStar; j ++) {
+      star = new createjs.Shape();
+      
+      star.x = Math.random() * 40 + j * 40;
+      star.y = fromY + i * 10
+      
+      star.graphics.beginFill("#FFFFFF").drawPolyStar(0, 0, 10, 5, 0.8, - 90);
+      star.scaleX = star.scaleY = Math.random();
+      container.addChild(star);
+
+      randomX = Math.random() < 0.5 ? star.x + Math.random() * 50 : star.x - Math.random() * 50;
+      randomY = Math.random() < 0.5 ? star.y + Math.random() * 50 : star.y - Math.random() * 50;
+      
+      star.alpha = 0;
+      tween = TweenLite.to(star, 0.01, {alpha: 1, delay: (numOfStar - j) * 0.05, 
+        onComplete: function(star, randomX, randomY) {     
+          var scale = Math.random();
+          var tw = TweenLite.to(star, 1, {alpha: 0, rotation: Math.random() * 360, x: randomX, y: randomY, scaleX: scale, scaleY: scale});    
+          that.arrTween.push(tw);
+        }, onCompleteParams: [star, randomX, randomY]});
+      this.arrTween.push(tween);
+    }
+  }
+};
+TEffect_StarRight.prototype.stop = function() {
+  for (var i = 0; i < this.arrTween.length; i ++) {
+    this.arrTween[i].pause();
+  }
+};
+window.TEffect_StarRight = TEffect_StarRight;
+
+//////////TEffect_HeartLeft//////////
+function TEffect_HeartLeft()  {
+  this.arrTween = [];
+};
+TEffect_HeartLeft.prototype.play = function(container, preText, frameData) {
+  var tween;
+  var that = this;
+  if (preText) {
+    tween = TweenLite.to(preText, time, {delay: delay, y: -container.VC_HEIGHT, onComplete: function() {
+      container.removeChild(preText);
+    }});      
+    this.arrTween.push(tween);
+  }
+  
+  //create text and set position
+  text = createText(container, container.VC_WIDTH, container.VC_HEIGHT, frameData);
+  var orgX = text.x;
+  text.x = getTextPositionByHAlign(text, container.VC_WIDTH, frameData.text, false);
+  frameData.textView = text;
+  
+  var fromY = getTextPositionVertical(text, container.VC_HEIGHT, frameData.text);
+  tween = TweenLite.to(text, 2, {x: orgX});
+  this.arrTween.push(tween);
+  
+  var randomX, randomY;
+  var heart, numOfHeart = Math.ceil(container.VC_WIDTH/ 40);    
+  var row = Math.ceil(text.getBounds().height / 10) + 4;
+  var baseLen = 7;
+  
+  for(var i = 0; i < row; i ++) {
+    for(var j = 0; j < numOfHeart; j ++) {
+      heart = new createjs.Shape();
+      
+      heart.x = Math.random() * 40 + j * 40;
+      heart.y = fromY + i * 10
+      
+      heart.graphics.beginFill('red').moveTo(-baseLen, 0).arc(0, 0, baseLen, 0, Math.PI, false).lineTo(baseLen, 0).arc(baseLen, -baseLen, baseLen, Math.PI * 90 / 180, Math.PI * 270 / 180, true).lineTo(baseLen, -baseLen * 2).lineTo(-baseLen, -baseLen * 2).lineTo(-baseLen, 0).endFill();
+      heart.scaleX = heart.scaleY = Math.random();
+      container.addChild(heart);
+
+      randomX = Math.random() < 0.5 ? heart.x + Math.random() * 50 : heart.x - Math.random() * 50;
+      randomY = Math.random() < 0.5 ? heart.y + Math.random() * 50 : heart.y - Math.random() * 50;
+      
+      heart.alpha = 0;
+      tween = TweenLite.to(heart, 0.01, {alpha: 1, delay: j * 0.05, 
+        onComplete: function(heart, randomX, randomY) {     
+          var scale = Math.random();
+          var tw = TweenLite.to(heart, 1, {alpha: 0, rotation: Math.random() * 360, x: randomX, y: randomY, scaleX: scale, scaleY: scale});    
+          that.arrTween.push(tw);
+        }, onCompleteParams: [heart, randomX, randomY]});
+      this.arrTween.push(tween);
+    }
+  }
+};
+TEffect_HeartLeft.prototype.stop = function() {
+  for (var i = 0; i < this.arrTween.length; i ++) {
+    this.arrTween[i].pause();
+  }
+};
+window.TEffect_HeartLeft = TEffect_HeartLeft;
+
+//////////TEffect_HeartRight//////////
+function TEffect_HeartRight()  {
+  this.arrTween = [];
+};
+TEffect_HeartRight.prototype.play = function(container, preText, frameData) {
+  var tween;
+  var that = this;
+  if (preText) {
+    tween = TweenLite.to(preText, time, {delay: delay, y: -container.VC_HEIGHT, onComplete: function() {
+      container.removeChild(preText);
+    }});      
+    this.arrTween.push(tween);
+  }
+  
+  //create text and set position
+  text = createText(container, container.VC_WIDTH, container.VC_HEIGHT, frameData);
+  var orgX = text.x;
+  text.x = getTextPositionByHAlign(text, container.VC_WIDTH, frameData.text, true);
+  frameData.textView = text;
+  
+  var fromY = getTextPositionVertical(text, container.VC_HEIGHT, frameData.text);
+  tween = TweenLite.to(text, 2, {x: orgX});
+  this.arrTween.push(tween);
+  
+  var randomX, randomY;
+  var heart, numOfHeart = Math.ceil(container.VC_WIDTH/ 40);    
+  var row = Math.ceil(text.getBounds().height / 10) + 4;
+  var baseLen = 7;
+  
+  for(var i = 0; i < row; i ++) {
+    for(var j = 0; j < numOfHeart; j ++) {
+      heart = new createjs.Shape();
+      
+      heart.x = Math.random() * 40 + j * 40;
+      heart.y = fromY + i * 10
+      
+      heart.graphics.beginFill('red').moveTo(-baseLen, 0).arc(0, 0, baseLen, 0, Math.PI, false).lineTo(baseLen, 0).arc(baseLen, -baseLen, baseLen, Math.PI * 90 / 180, Math.PI * 270 / 180, true).lineTo(baseLen, -baseLen * 2).lineTo(-baseLen, -baseLen * 2).lineTo(-baseLen, 0).endFill();
+      heart.scaleX = heart.scaleY = Math.random();
+      container.addChild(heart);
+
+      randomX = Math.random() < 0.5 ? heart.x + Math.random() * 50 : heart.x - Math.random() * 50;
+      randomY = Math.random() < 0.5 ? heart.y + Math.random() * 50 : heart.y - Math.random() * 50;
+      
+      heart.alpha = 0;
+      tween = TweenLite.to(heart, 0.01, {alpha: 1, delay: (numOfHeart - j) * 0.05, 
+        onComplete: function(heart, randomX, randomY) {     
+          var scale = Math.random();
+          var tw = TweenLite.to(heart, 1, {alpha: 0, rotation: Math.random() * 360, x: randomX, y: randomY, scaleX: scale, scaleY: scale});    
+          that.arrTween.push(tw);
+        }, onCompleteParams: [heart, randomX, randomY]});
+      this.arrTween.push(tween);
+    }
+  }
+};
+TEffect_HeartRight.prototype.stop = function() {
+  for (var i = 0; i < this.arrTween.length; i ++) {
+    this.arrTween[i].pause();
+  }
+};
+window.TEffect_HeartRight = TEffect_HeartRight;
+
+//////////TEffect_CenterGo//////////
+function TEffect_CenterGo()   {
+  this.arrTween = [];
+};
+TEffect_CenterGo.prototype.play = function(container, preText, frameData) {
+  if (preText) {
+    TweenLite.to(preText, time, {delay: delay, y: -container.VC_HEIGHT, onComplete: function() {
+      container.removeChild(preText);
+    }});
+  }
+
+  text = createText(container, container.VC_WIDTH, container.VC_HEIGHT, frameData);
+  container.removeChild(text);
+  frameData.textView = text;
+  
+  var str = frameData.text.text;
+
+  var arrText = str.split('\n');
+  var toX = getStartTextPositionByHAlign(text, container.VC_WIDTH, frameData.text);
+  var toY = getStartTextPositionByVAlign(text, container.VC_HEIGHT, frameData.text);
+  var txt;
+  var character;
+  var tempW, tempH;
+  
+  for (var i = 0; i < arrText.length; i ++) {
+    character = arrText[i];
+
+    for (var j = 0; j < character.length; j ++) {
+      txt = new createjs.Text(character[j], frameData.text.style + ' ' + frameData.text.size + 'px ' + frameData.text.fontName, frameData.text.color);
+      
+      txt.orgX = toX;
+      txt.orgY = toY;
+      
+      txt.scaleX = txt.scaleY = 0;
+      
+      tempW = txt.getMeasuredWidth();
+      tempH = txt.getMeasuredLineHeight();        
+      toX += tempW;
+     
+      txt.x = container.VC_WIDTH/2;
+      txt.y = container.VC_HEIGHT/2;
+              
+      container.addChild(txt);
+
+      txt.alpha = 0;
+      TweenLite.to(txt, 0.5, {alpha: 1, x: txt.orgX, y: txt.orgY, scaleX: 1, scaleY: 1, delay: 0.03 * (i + 1) * j})
+    }   
+    toX = 0; 
+    toY += txt.getMeasuredLineHeight();
+  }
+};
+window.TEffect_CenterGo = TEffect_CenterGo;
+
+//////////TEffect_LightLeft//////////
+function TEffect_LightLeft() {
+  this.arrTween = [];
+}
+TEffect_LightLeft.prototype.play = function(container, preText, frameData) {
+  var tween;
+  if (preText) {
+    tween = TweenLite.to(preText, time, {delay: delay, y: container.VC_HEIGHT, onComplete: function() {
+      container.removeChild(preText);
+    }});
+    this.arrTween.push(tween);
+  }
+
+  var text = createText(container, container.VC_WIDTH, container.VC_HEIGHT, frameData);
+  text.alpha = 0;
+  frameData.textView = text;
+  tween = TweenLite.to(text, 0.1, {delay: frameData.textEffectDelay/2, alpha: 0.3});
+  this.arrTween.push(tween);
+
+  var textEffect = createText(container, container.VC_WIDTH, container.VC_HEIGHT, frameData);
+ 
+  var mask = new createjs.Shape();
+  mask.x = getStartTextPositionByHAlign(textEffect, container.VC_WIDTH, frameData.text);
+  mask.y = getStartTextPositionByVAlign(textEffect, container.VC_HEIGHT, frameData.text);
+  mask.graphics.beginFill('#FF00FF').drawRect(0, 0, textEffect.getBounds().width, textEffect.getBounds().height);
+  textEffect.mask = mask;
+  mask.x = mask.x - textEffect.getBounds().width;
+   
+  tween = TweenLite.to(mask, frameData.textEffectDuration, {delay: frameData.textEffectDelay, x: textEffect.x, onComplete: function() {
+    mask.x = mask.x - textEffect.getBounds().width;
+    tween.restart();  
+  }});      
+  
+  this.arrTween.push(tween);
+};
+TEffect_LightLeft.prototype.stop = function() {
+  for (var i = 0; i < this.arrTween.length; i ++) {
+    this.arrTween[i].pause();
+  }
+};
+window.TEffect_LightLeft = TEffect_LightLeft;
+
+//////////TEffect_LightRight//////////
+function TEffect_LightRight() {
+  this.arrTween = [];
+}
+TEffect_LightRight.prototype.play = function(container, preText, frameData) {
+  var tween;
+  if (preText) {
+    tween = TweenLite.to(preText, time, {delay: delay, y: container.VC_HEIGHT, onComplete: function() {
+      container.removeChild(preText);
+    }});
+    this.arrTween.push(tween);
+  }
+
+  var text = createText(container, container.VC_WIDTH, container.VC_HEIGHT, frameData);
+  text.alpha = 0;
+  frameData.textView = text;
+  tween = TweenLite.to(text, 0.1, {delay: frameData.textEffectDelay/2, alpha: 0.3});
+  this.arrTween.push(tween);
+  
+  var textEffect = createText(container, container.VC_WIDTH, container.VC_HEIGHT, frameData);
+   
+  var mask = new createjs.Shape();
+  mask.x = getStartTextPositionByHAlign(textEffect, container.VC_WIDTH, frameData.text);
+  mask.y = getStartTextPositionByVAlign(textEffect, container.VC_HEIGHT, frameData.text);
+  mask.graphics.beginFill('#FF00FF').drawRect(0, 0, textEffect.getBounds().width, textEffect.getBounds().height);
+  textEffect.mask = mask;
+  mask.x = mask.x + textEffect.getBounds().width;
+   
+  tween = TweenLite.to(mask, frameData.textEffectDuration, {delay: frameData.textEffectDelay, x: textEffect.x, onComplete: function() {
+    mask.x = mask.x + textEffect.getBounds().width;
+    tween.restart(true);  
+  }});      
+  this.arrTween.push(tween);
+};
+TEffect_LightRight.prototype.stop = function() {
+  for (var i = 0; i < this.arrTween.length; i ++) {
+    this.arrTween[i].pause();
+  }
+};
+window.TEffect_LightRight = TEffect_LightRight;
+
+////////////////////////////////////////////////////////////////////////////////////
+///////////BITMAP EFFECT////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////
+
+//////////BEffect_None//////////
+function BEffect_None() {
+  this.arrTween = [];
+}
+BEffect_None.prototype.play = function(container, prevBitmap, nextBitmap, delay, time) {
+  if (prevBitmap) {
+    container.removeChild(prevBitmap);
+  }
+  container.addChild(nextBitmap);
+};
+BEffect_None.prototype.stop = function() {
+  for (var i = 0; i < this.arrTween.length; i ++) {
+    this.arrTween[i].pause();
+  }
+};
+window.BEffect_None = BEffect_None;
+
+//////////BEffect_Fade//////////
+function BEffect_Fade() {
+  this.arrTween = [];
+};
+BEffect_Fade.prototype.play = function(container, prevBitmap, nextBitmap, delay, time) {
+  var tween;
+  if (prevBitmap) {
+    container.addChild(prevBitmap);
+    prevBitmap.alpha = 1;
+    prevBitmap.x = prevBitmap.y = 0;
+    tween = TweenLite.to(prevBitmap, time, {delay: delay, alpha: 0});
+    this.arrTween.push(tween);
+  }
+
+  container.addChild(nextBitmap);
+  nextBitmap.alpha = 0;
+  tween = TweenLite.to(nextBitmap, time, {delay: delay, alpha: 1});
+  this.arrTween.push(tween);
+};
+BEffect_Fade.prototype.stop = function() {
+  for (var i = 0; i < this.arrTween.length; i ++) {
+    this.arrTween[i].pause();
+  }
+};
+window.BEffect_Fade = BEffect_Fade;
+
+//////////BEffect_Slide//////////
+function BEffect_SlideLeft() {
+  this.arrTween = [];
+};
+BEffect_SlideLeft.prototype.play = function(container, prevBitmap, nextBitmap, delay, time) {
+  var tween;
+  if (prevBitmap) {
+    container.addChild(prevBitmap);
+    prevBitmap.x = prevBitmap.y = 0;
+    tween = TweenLite.to(prevBitmap, 1.5, {x: -container.VC_WIDTH});
+    this.arrTween.push(tween);
+  }
+
+  container.addChild(nextBitmap);
+  nextBitmap.x = container.VC_WIDTH;
+  tween = TweenLite.to(nextBitmap, 1.5, {x: 0});
+  this.arrTween.push(tween);
+}
+BEffect_SlideLeft.prototype.stop = function() {
+  for (var i = 0; i < this.arrTween.length; i ++) {
+    this.arrTween[i].pause();
+  }
+};
+window.BEffect_SlideLeft = BEffect_SlideLeft;
+
+//////////BEffect_SlideRight//////////
+function BEffect_SlideRight() {
+  this.arrTween = [];
+};
+BEffect_SlideRight.prototype.play = function(container, prevBitmap, nextBitmap, delay, time) {
+  var tween;
+  if (prevBitmap) {
+    tween = TweenLite.to(prevBitmap, 1.5, {x: container.VC_WIDTH});
+    this.arrTween.push(tween);
+  }
+
+  container.addChild(nextBitmap);
+  nextBitmap.x = -container.VC_WIDTH;
+  tween = TweenLite.to(nextBitmap, 1.5, {x: 0});
+  this.arrTween.push(tween);
+}
+BEffect_SlideRight.prototype.stop = function() {
+  for (var i = 0; i < this.arrTween.length; i ++) {
+    this.arrTween[i].pause();
+  }
+};
+window.BEffect_SlideRight = BEffect_SlideRight;
+
+//////////BEffect_SlideUp//////////
+function BEffect_SlideUp() {
+  this.arrTween = [];
+};
+BEffect_SlideUp.prototype.play = function(container, prevBitmap, nextBitmap, delay, time) {
+  var tween;
+  if (prevBitmap) {
+    tween = TweenLite.to(prevBitmap, 1.5, {y: -container.VC_HEIGHT});
+    this.arrTween.push(tween);
+  }
+
+  container.addChild(nextBitmap);
+  nextBitmap.y = container.VC_HEIGHT;
+  tween = TweenLite.to(nextBitmap, 1.5, {y: 0});
+  this.arrTween.push(tween);
+}
+BEffect_SlideUp.prototype.stop = function() {
+  for (var i = 0; i < this.arrTween.length; i ++) {
+    this.arrTween[i].pause();
+  }
+};
+window.BEffect_SlideUp = BEffect_SlideUp;
+
+//////////BEffect_SlideDown//////////
+function BEffect_SlideDown() {
+  this.arrTween = [];
+};
+BEffect_SlideDown.prototype.play = function(container, prevBitmap, nextBitmap, delay, time) {
+  var tween;
+  if (prevBitmap) {
+    tween = TweenLite.to(prevBitmap, 1.5, {y: container.VC_HEIGHT});
+    this.arrTween.push(tween);
+  }
+
+  container.addChild(nextBitmap);
+  nextBitmap.y = -container.VC_HEIGHT;
+  tween = TweenLite.to(nextBitmap, 1.5, {y: 0});
+  this.arrTween.push(tween);
+}
+BEffect_SlideDown.prototype.stop = function() {
+  for (var i = 0; i < this.arrTween.length; i ++) {
+    this.arrTween[i].pause();
+  }
+};
+window.BEffect_SlideDown = BEffect_SlideDown;
+
+//////////BEffect_ZoomIn//////////
+function BEffect_ZoomIn() {
+  this.arrTween = [];
+};
+BEffect_ZoomIn.prototype.play = function(container, prevBitmap, nextBitmap, delay, time) {
+  var tween;
+  container.addChild(nextBitmap);
+  
+  var scale = nextBitmap.scaleX;
+  nextBitmap.alpha = 0;
+
+  nextBitmap.scaleX = nextBitmap.scaleY = 0.5;
+  nextBitmap.x = 0.5 * nextBitmap.getBounds().width / 2;
+  nextBitmap.y = 0.5 * nextBitmap.getBounds().height / 2;
+  
+  tween = TweenLite.to(nextBitmap, time, {delay: delay, alpha: 1, x: 0, y :0, scaleX: scale, scaleY: scale});
+  this.arrTween.push(tween);  
+}
+BEffect_ZoomIn.prototype.stop = function() {
+  for (var i = 0; i < this.arrTween.length; i ++) {
+    this.arrTween[i].pause();
+  }
+};
+window.BEffect_ZoomIn = BEffect_ZoomIn;
+
+//////////BEffect_ZoomOut//////////
+function BEffect_ZoomOut() {
+  this.arrTween = [];
+};
+BEffect_ZoomOut.prototype.play = function(container, prevBitmap, nextBitmap, delay, time) {
+  var tween;
+  container.addChild(nextBitmap);
+  
+  var scale = nextBitmap.scaleX;
+  nextBitmap.alpha = 0;
+  nextBitmap.scaleX = nextBitmap.scaleY = 2;
+  nextBitmap.x = - nextBitmap.getBounds().width / 2;
+  nextBitmap.y = - nextBitmap.getBounds().height / 2;
+  
+  tween = TweenLite.to(nextBitmap, 3, {alpha: 1, x: 0, y :0, scaleX: scale, scaleY: scale});
+  this.arrTween.push(tween);
+}
+BEffect_ZoomOut.prototype.stop = function() {
+  for (var i = 0; i < this.arrTween.length; i ++) {
+    this.arrTween[i].pause();
+  }
+};
+window.BEffect_ZoomOut = BEffect_ZoomOut;
+
+//////////BEffect_AlphaBars//////////
+function BEffect_AlphaBars() {
+  this.arrTween = [];
+};
+BEffect_AlphaBars.prototype.play = function(container, prevBitmap, nextBitmap, delay, time) {
+  var tween;
+  //step 1: create temp bitmap with corrected size
+  var w = nextBitmap.getBounds().width;
+  var h = nextBitmap.getBounds().height;
+  
+  nextBitmap.cache(0, 0, w, h);
+  
+  var matrix = new createjs.Matrix2D(container.VC_WIDTH/ w, 0, 0, container.VC_WIDTH/ w, 0, (container.VC_HEIGHT - (container.VC_WIDTH/ w) * h)/2);      
+  var bitmapData = new createjs.BitmapData(null, container.VC_WIDTH, container.VC_HEIGHT, 0x000000);
+  bitmapData.draw(nextBitmap, matrix, null, null, null, true);
+  
+  var temp = new createjs.Container();
+  container.addChild(temp); 
+  
+  //step 2: create and show bars
+  var barWidth = 30;
+  var numOfBar = Math.ceil(container.VC_WIDTH / barWidth);
+  var bar;
+  var showTime = 0.5;
+  var delayTime = 0.03;
+  
+  for (var i = 0; i < numOfBar; i ++) {
+    bar = new createjs.Bitmap(bitmapData.canvas);
+    bar.sourceRect = new createjs.Rectangle(barWidth * i, 0, barWidth, container.VC_HEIGHT);
+    bar.x = barWidth * i;
+    bar.alpha = 0;
+    temp.addChild(bar); 
+    
+    tween = TweenLite.to(bar, showTime, {alpha: 1, delay: i < numOfBar / 2  ? delayTime * i : numOfBar * delayTime - delayTime * i, onComplete: onCompleteShowBar, onCompleteParams: [bar, i]});
+    this.arrTween.push(tween);
+  }      
+  
+  function onCompleteShowBar(bar, index) {
+    if (index == numOfBar - 1) {
+      container.addChild(new createjs.Bitmap(bitmapData.canvas));
+      temp.removeAllChildren();
+      container.removeChild(temp);
+    }
+  }      
+};
+BEffect_AlphaBars.prototype.stop = function() {
+  for (var i = 0; i < this.arrTween.length; i ++) {
+    this.arrTween[i].pause();
+  }
+};
+window.BEffect_AlphaBars = BEffect_AlphaBars;
+
+//////////BEffect_SquareExplode//////////
+function BEffect_SquareExplode() {
+  this.arrTween = [];
+};
+BEffect_SquareExplode.prototype.play = function(container, prevBitmap, nextBitmap, delay, time) {
+  var tween;
+  //step 1: create temp bitmap with corrected size
+  var w = nextBitmap.getBounds().width;
+  var h = nextBitmap.getBounds().height;
+  
+  nextBitmap.cache(0, 0, w, h);
+  
+  var matrix = new createjs.Matrix2D(container.VC_WIDTH/ w, 0, 0, container.VC_WIDTH/ w, 0, (container.VC_HEIGHT - (container.VC_WIDTH/ w) * h)/2);      
+  var bitmapData = new createjs.BitmapData(null, container.VC_WIDTH, container.VC_HEIGHT, 0x000000);
+  bitmapData.draw(nextBitmap, matrix, null, null, null, true);
+  
+  var temp = new createjs.Container();
+  container.addChild(temp); 
+  
+  //create image with mask
+  var imageMask = new createjs.Shape();
+  imageMask.graphics.drawRect(0, 0, container.VC_WIDTH, container.VC_HEIGHT);
+  imageMask.scaleX = 0;
+  temp.addChild(imageMask);
+  
+  var bitmap = new createjs.Bitmap(bitmapData.canvas);
+  bitmap.cache(0, 0, container.VC_WIDTH, container.VC_HEIGHT);
+  temp.addChild(bitmap);
+  
+  temp.mask = imageMask;
+  tween = TweenLite.to(imageMask, 2, {scaleX: 1, ease: Power2.easeOut });
+  this.arrTween.push(tween);
+  
+  //step 2: create and show bars
+  var barWidth = 40;
+  var barHeight = 40;
+  var col = Math.ceil(container.VC_HEIGHT / barHeight);
+  var row = Math.ceil(container.VC_WIDTH / barWidth);      
+  var i, j;
+  var bar;      
+  var showTime = 1;
+  var delayTime = 0.06;
+  var distance = 150;
+  var toX, toY;
+  
+  for (i = 0; i < row; i ++) {
+    for (j = 0; j < col; j ++) {
+      bar = new createjs.Bitmap(bitmapData.canvas);
+      bar.sourceRect = new createjs.Rectangle(barWidth * i, barHeight * j, barWidth, barHeight);
+      bar.x = barWidth * i;
+      bar.y = barHeight * j;
+      temp.addChild(bar); 
+      
+      toX = bar.x + (Math.random() < 0.5 ? -Math.random() * distance : Math.random() * distance);
+      toY = bar.y + (Math.random() < 0.5 ? -Math.random() * distance : Math.random() * distance);
+    
+      tween = TweenLite.to(bar, showTime, {alpha: 0, delay: delayTime * i, x: toX, y: toY, onComplete: onCompleteShowEffect, onCompleteParams: [bar]});
+      this.arrTween.push(tween);
+    }      
+  }
+  
+  function onCompleteShowEffect(bar) {
+    temp.removeChild(bar);
+  }
+};
+BEffect_SquareExplode.prototype.stop = function() {
+  for (var i = 0; i < this.arrTween.length; i ++) {
+    this.arrTween[i].pause();
+  }
+};
+window.BEffect_SquareExplode = BEffect_SquareExplode;
+
+//////////BEffect_BrightSquares//////////
+function BEffect_BrightSquares() {
+  this.arrTween = [];
+};
+BEffect_BrightSquares.prototype.play = function(container, prevBitmap, nextBitmap, delay, time) {
+  var tween;
+  //step 1: create temp bitmap with corrected size
+  var w = nextBitmap.getBounds().width;
+  var h = nextBitmap.getBounds().height;
+  
+  nextBitmap.cache(0, 0, w, h);
+  
+  var matrix = new createjs.Matrix2D(container.VC_WIDTH/ w, 0, 0, container.VC_WIDTH/ w, 0, (container.VC_HEIGHT - (container.VC_WIDTH/ w) * h)/2);      
+  var bitmapData = new createjs.BitmapData(null, container.VC_WIDTH, container.VC_HEIGHT, 0x000000);
+  bitmapData.draw(nextBitmap, matrix, null, null, null, true);
+  
+  var temp = new createjs.Container();
+  container.addChild(temp); 
+  
+  //step 2: create and show bars
+  var barWidth = 40;
+  var barHeight = 40;
+  var col = Math.ceil(container.VC_HEIGHT / barHeight);
+  var row = Math.ceil(container.VC_WIDTH / barWidth);      
+  var i, j;
+  var bar;      
+  var bitmap;
+  var bright;
+  var showTime = 0.5;
+  var delayTime = 0.01;
+  var delay;
+  
+  for (i = 0; i < row; i ++) {
+    for (j = 0; j < col; j ++) {
+      bar = new createjs.Container();
+      bar.orgX = barWidth * i;
+      bar.orgY = barHeight * j;
+      bar.x = bar.orgX + barWidth/2;
+      bar.y = bar.orgY + barHeight/2;
+      bar.scaleX = bar.scaleY = 0;
+      temp.addChild(bar); 
+      
+      bitmap = new createjs.Bitmap(bitmapData.canvas);
+      bitmap.sourceRect = new createjs.Rectangle(barWidth * i, barHeight * j, barWidth, barHeight);
+      bar.addChild(bitmap); 
+      
+      bright = new createjs.Shape();          
+      bright.graphics.beginFill('#FFFFFF').drawRect(0, 0, barWidth, barHeight).endFill();
+      bar.addChild(bright);
+      
+      delay = delayTime *  i * (col - j);                    
+      tween = TweenLite.to(bright, showTime + 0.2, {alpha: 0, delay: delay + 0.2});
+      this.arrTween.push(tween);
+      
+      tween = TweenLite.to(bar, showTime, {alpha: 1, x: bar.orgX, y: bar.orgY, scaleX: 1, scaleY: 1, delay: delay, onComplete: onCompleteShowEffect, onCompleteParams: [bar]});
+      this.arrTween.push(tween);
+    }      
+  }
+  
+  function onCompleteShowEffect(bar) {
+    //temp.removeChild(bar);
+  }
+};
+BEffect_BrightSquares.prototype.stop = function() {
+  for (var i = 0; i < this.arrTween.length; i ++) {
+    this.arrTween[i].pause();
+  }
+};
+window.BEffect_BrightSquares = BEffect_BrightSquares;
+
+//////////BEffect_ClockWise//////////
+function BEffect_ClockWise() {
+  this.arrTween = [];
+};
+BEffect_ClockWise.prototype.play = function(container, prevBitmap, nextBitmap, delay, time) {
+
+  if (prevBitmap) {
+    container.addChild(prevBitmap);
+  }
+
+  //center point
+  var circle = new createjs.Shape();
+  circle.x = container.VC_WIDTH/2;
+  circle.y = container.VC_HEIGHT/2;
+  
+  var w = nextBitmap.getBounds().width;
+  var h = nextBitmap.getBounds().height;  
+
+  nextBitmap.cache(0, 0, w, h);
+  nextBitmap.mask = circle;
+  
+  var angle = 0;  
+  var startAngle = Math.PI/180;
+  var endAngle;
+  var radius = 600;  
+  var piece = Math.ceil(60 / (time * 10)) + 2;
+  
+  var tween = TweenLite.to(circle, time, {delay: delay, ease: Expo.easeOut, alpha: 1, 
+    onStart: function() {
+      container.addChild(nextBitmap);
+    },
+    onUpdate: function() {
+      angle += piece;
+      endAngle = angle * Math.PI/180;
+      circle.graphics.clear();
+      circle.graphics.beginFill('red');
+      circle.graphics.moveTo(0, 0);
+      circle.graphics.arc(0, 0, radius, startAngle, endAngle);     
+    }
+  });
+  this.arrTween.push(tween);
+};
+BEffect_ClockWise.prototype.stop = function() {
+  for (var i = 0; i < this.arrTween.length; i ++) {
+    this.arrTween[i].pause();
+  }
+};
+window.BEffect_ClockWise = BEffect_ClockWise;
+
+//////////BEffect_MultiZoom//////////
+function BEffect_MultiZoom() {
+  this.arrTween = [];
+};
+BEffect_MultiZoom.prototype.play = function(container, prevBitmap, nextBitmap, delay, time) {
+
+  if (prevBitmap) {
+    container.addChild(prevBitmap);
+  }
+
+  var w = nextBitmap.getBounds().width;
+  var h = nextBitmap.getBounds().height;
+  
+  nextBitmap.cache(0, 0, w, h);
+  
+  var matrix = new createjs.Matrix2D(container.VC_WIDTH/ w, 0, 0, container.VC_WIDTH/ w, 0, (container.VC_HEIGHT - (container.VC_WIDTH/ w) * h)/2);      
+  var bitmapData = new createjs.BitmapData(null, container.VC_WIDTH, container.VC_HEIGHT, 0x000000);
+  bitmapData.draw(nextBitmap, matrix, null, null, null, true);
+
+  var bitmapTop = new createjs.Bitmap(bitmapData.canvas);
+  bitmapTop.scaleX = bitmapTop.scaleY = 0.3;
+  bitmapTop.x = container.VC_WIDTH/2 - 0.3 * w / 2;
+  bitmapTop.y = -0.3 * h / 2;
+  container.addChild(bitmapTop);
+
+  var bitmapBottom = new createjs.Bitmap(bitmapData.canvas);
+  bitmapBottom.scaleX = bitmapBottom.scaleY = 0.3;
+  bitmapBottom.x = container.VC_WIDTH/2 - 0.3 * w / 2;
+  bitmapBottom.y = container.VC_HEIGHT - 0.3 * h / 2;
+  container.addChild(bitmapBottom);
+
+  var bitmapLeft = new createjs.Bitmap(bitmapData.canvas);
+  bitmapLeft.scaleX = bitmapLeft.scaleY = 0.3;
+  bitmapLeft.x = - 0.3 * w / 2;
+  bitmapLeft.y = container.VC_HEIGHT/2 - 0.3 * h / 2;
+  container.addChild(bitmapLeft);
+
+  var bitmapRight = new createjs.Bitmap(bitmapData.canvas);
+  bitmapRight.scaleX = bitmapRight.scaleY = 0.3;
+  bitmapRight.x = container.VC_WIDTH - 0.3 * w / 2;
+  bitmapRight.y = container.VC_HEIGHT/2 - 0.3 * h / 2;
+  container.addChild(bitmapRight);
+
+  bitmapTop.alpha = bitmapBottom.alpha = bitmapLeft.alpha = bitmapRight.alpha = 0;
+  var tween = TweenLite.to(bitmapTop, time/2, {delay: delay, ease: Expo.easeOut, alpha: 0.3, x: container.VC_WIDTH/2 - 0.3 * w / 2, y: container.VC_HEIGHT/2 - 0.3 * h / 2,
+    onComplete: onCompleteShowEffect, onCompleteParams: [bitmapTop]
+  });
+  this.arrTween.push(tween);
+
+  tween = TweenLite.to(bitmapBottom, time/2, {delay: delay, ease: Expo.easeOut, alpha: 0.3, x: container.VC_WIDTH/2 - 0.3 * w / 2, y: container.VC_HEIGHT/2 - 0.3 * h / 2,
+    onComplete:onCompleteShowEffect, onCompleteParams: [bitmapBottom]
+  });
+  this.arrTween.push(tween);
+  
+  tween = TweenLite.to(bitmapLeft, time/2, {delay: delay, ease: Expo.easeOut, alpha: 0.3, x: container.VC_WIDTH/2 - 0.3 * w / 2, y: container.VC_HEIGHT/2 - 0.3 * h / 2,
+    onComplete: onCompleteShowEffect, onCompleteParams: [bitmapLeft]
+  });
+  this.arrTween.push(tween);
+
+  tween = TweenLite.to(bitmapRight, time/2, {delay: delay, ease: Expo.easeOut, alpha: 0.3, x: container.VC_WIDTH/2 - 0.3 * w / 2, y: container.VC_HEIGHT/2 - 0.3 * h / 2,
+    onComplete: onCompleteShowEffect, onCompleteParams: [bitmapRight]
+  });
+  this.arrTween.push(tween);
+
+  var that = this;
+  function onCompleteShowEffect(target) {
+    tween = TweenLite.to(target, time/2, {alpha: 1, scaleX: 1, scaleY: 1, x: 0, y : 0, ease: Expo.easeIn,});
+    that.arrTween.push(tween);
+  }
+  
+};
+BEffect_MultiZoom.prototype.stop = function() {
+  for (var i = 0; i < this.arrTween.length; i ++) {
+    this.arrTween[i].pause();
+  }
+};
+window.BEffect_MultiZoom = BEffect_MultiZoom;
+
+//////////BEffect_LeftRightMerge//////////
+function BEffect_LeftRightMerge() {
+  this.arrTween = [];
+};
+BEffect_LeftRightMerge.prototype.play = function(container, prevBitmap, nextBitmap, delay, time) {
+
+  if (prevBitmap) {
+    container.addChild(prevBitmap);
+  }
+
+  var w = nextBitmap.getBounds().width;
+  var h = nextBitmap.getBounds().height;
+  
+  nextBitmap.cache(0, 0, w, h);
+  
+  var matrix = new createjs.Matrix2D(container.VC_WIDTH/ w, 0, 0, container.VC_WIDTH/ w, 0, (container.VC_HEIGHT - (container.VC_WIDTH/ w) * h)/2);      
+  var bitmapData = new createjs.BitmapData(null, container.VC_WIDTH, container.VC_HEIGHT, 0x000000);
+  bitmapData.draw(nextBitmap, matrix, null, null, null, true);
+
+  var bitmapLeft = new createjs.Bitmap(bitmapData.canvas);
+  bitmapLeft.x = - w;
+  container.addChild(bitmapLeft);
+
+  var maskLeft = new createjs.Shape();
+  maskLeft.graphics.beginFill('#FF00FF').drawRect(0, 0, container.VC_WIDTH, container.VC_HEIGHT/2);
+  bitmapLeft.mask = maskLeft;
+
+  var bitmapRight = new createjs.Bitmap(bitmapData.canvas);
+  bitmapRight.x = w;
+  container.addChild(bitmapRight);
+
+  var maskRight = new createjs.Shape();
+  maskRight.graphics.beginFill('#FF00FF').drawRect(0, container.VC_HEIGHT/2, container.VC_WIDTH, container.VC_HEIGHT/2);
+  bitmapRight.mask = maskRight;
+
+  var tween = TweenLite.to(bitmapLeft, time, {delay: delay, ease: Expo.easeOut, x: 0});
+  this.arrTween.push(tween);
+
+  tween = TweenLite.to(bitmapRight, time, {delay: delay, ease: Expo.easeOut, x: 0});
+  this.arrTween.push(tween);
+};
+BEffect_LeftRightMerge.prototype.stop = function() {
+  for (var i = 0; i < this.arrTween.length; i ++) {
+    this.arrTween[i].pause();
+  }
+};
+window.BEffect_LeftRightMerge = BEffect_LeftRightMerge;
+
+//////////BEffect_UpDownMerge//////////
+function BEffect_UpDownMerge() {
+  this.arrTween = [];
+};
+BEffect_UpDownMerge.prototype.play = function(container, prevBitmap, nextBitmap, delay, time) {
+
+  if (prevBitmap) {
+    container.addChild(prevBitmap);
+  }
+
+  var w = nextBitmap.getBounds().width;
+  var h = nextBitmap.getBounds().height;
+  
+  nextBitmap.cache(0, 0, w, h);
+  
+  var matrix = new createjs.Matrix2D(container.VC_WIDTH/ w, 0, 0, container.VC_WIDTH/ w, 0, (container.VC_HEIGHT - (container.VC_WIDTH/ w) * h)/2);      
+  var bitmapData = new createjs.BitmapData(null, container.VC_WIDTH, container.VC_HEIGHT, 0x000000);
+  bitmapData.draw(nextBitmap, matrix, null, null, null, true);
+
+  var bitmapUp = new createjs.Bitmap(bitmapData.canvas);
+  bitmapUp.y = - h;
+  container.addChild(bitmapUp);
+
+  var maskUp = new createjs.Shape();
+  maskUp.graphics.beginFill('#FF00FF').drawRect(0, 0, container.VC_WIDTH/2, container.VC_HEIGHT);
+  bitmapUp.mask = maskUp;
+
+  var bitmapDown = new createjs.Bitmap(bitmapData.canvas);
+  bitmapDown.y = h;
+  container.addChild(bitmapDown);
+
+  var maskDown = new createjs.Shape();
+  maskDown.graphics.beginFill('#FF00FF').drawRect(container.VC_WIDTH/2, 0, container.VC_WIDTH/2, container.VC_HEIGHT);
+  bitmapDown.mask = maskDown;
+
+  var tween = TweenLite.to(bitmapUp, time, {delay: delay, ease: Expo.easeOut, y: 0});
+  this.arrTween.push(tween);
+
+  tween = TweenLite.to(bitmapDown, time, {delay: delay, ease: Expo.easeOut, y: 0});
+  this.arrTween.push(tween);
+};
+BEffect_UpDownMerge.prototype.stop = function() {
+  for (var i = 0; i < this.arrTween.length; i ++) {
+    this.arrTween[i].pause();
+  }
+};
+window.BEffect_UpDownMerge = BEffect_UpDownMerge;
+
+//////////BEffect_TopMerge//////////
+function BEffect_TopMerge() {
+  this.arrTween = [];
+};
+BEffect_TopMerge.prototype.play = function(container, prevBitmap, nextBitmap, delay, time) {
+  if (prevBitmap) {
+    container.addChild(prevBitmap);
+  }
+
+  var tween;
+  //step 1: create temp bitmap with corrected size
+  var w = nextBitmap.getBounds().width;
+  var h = nextBitmap.getBounds().height;
+  
+  nextBitmap.cache(0, 0, w, h);
+  
+  var matrix = new createjs.Matrix2D(container.VC_WIDTH/ w, 0, 0, container.VC_WIDTH/ w, 0, (container.VC_HEIGHT - (container.VC_WIDTH/ w) * h)/2);      
+  var bitmapData = new createjs.BitmapData(null, container.VC_WIDTH, container.VC_HEIGHT, 0x000000);
+  bitmapData.draw(nextBitmap, matrix, null, null, null, true);
+  
+  var temp = new createjs.Container();
+  container.addChild(temp); 
+  
+  //step 2: create and show bars
+  var barWidth = 40;
+  var barHeight = 40;
+  var row = Math.ceil(container.VC_HEIGHT / barHeight);
+  var col = Math.ceil(container.VC_WIDTH / barWidth);      
+  var i, j;
+  var bar;      
+  var bitmap;
+  var showTime = time / row;
+  
+  for (i = 0; i < row; i ++) {
+    for (j = 0; j < col; j ++) {
+      bitmap = new createjs.Bitmap(bitmapData.canvas);
+      bitmap.sourceRect = new createjs.Rectangle(barWidth * j, barHeight * i, barWidth, barHeight);
+      temp.addChild(bitmap); 
+      
+      bitmap.orgX = barWidth * j;
+      bitmap.orgY = barHeight * i;
+      
+      bitmap.x = container.VC_WIDTH/2;
+      bitmap.y = container.VC_HEIGHT + 100;
+      
+      tween = TweenLite.to(bitmap, showTime, {x: bitmap.orgX, y: bitmap.orgY, delay: delay + 0.03 * i, onComplete: onCompleteShowEffect, onCompleteParams: [bitmap]});
+      this.arrTween.push(tween);
+    }
+  }
+  
+  function onCompleteShowEffect(bitmap) {
+    //temp.removeChild(bar);
+  }
+};
+BEffect_TopMerge.prototype.stop = function() {
+  for (var i = 0; i < this.arrTween.length; i ++) {
+    this.arrTween[i].pause();
+  }
+};
+window.BEffect_TopMerge = BEffect_TopMerge;
+
+//////////BEffect_BottomMerge//////////
+function BEffect_BottomMerge() {
+  this.arrTween = [];
+};
+BEffect_BottomMerge.prototype.play = function(container, prevBitmap, nextBitmap, delay, time) {
+  if (prevBitmap) {
+    container.addChild(prevBitmap);
+  }
+
+  var tween;
+  //step 1: create temp bitmap with corrected size
+  var w = nextBitmap.getBounds().width;
+  var h = nextBitmap.getBounds().height;
+  
+  nextBitmap.cache(0, 0, w, h);
+  
+  var matrix = new createjs.Matrix2D(container.VC_WIDTH/ w, 0, 0, container.VC_WIDTH/ w, 0, (container.VC_HEIGHT - (container.VC_WIDTH/ w) * h)/2);      
+  var bitmapData = new createjs.BitmapData(null, container.VC_WIDTH, container.VC_HEIGHT, 0x000000);
+  bitmapData.draw(nextBitmap, matrix, null, null, null, true);
+  
+  var temp = new createjs.Container();
+  container.addChild(temp); 
+  
+  //step 2: create and show bars
+  var barWidth = 40;
+  var barHeight = 40;
+  var row = Math.ceil(container.VC_HEIGHT / barHeight);
+  var col = Math.ceil(container.VC_WIDTH / barWidth);      
+  var i, j;
+  var bar;      
+  var bitmap;
+  var showTime = time / row;
+  
+  for (i = 0; i < row; i ++) {
+    for (j = 0; j < col; j ++) {
+      bitmap = new createjs.Bitmap(bitmapData.canvas);
+      bitmap.sourceRect = new createjs.Rectangle(barWidth * j, barHeight * i, barWidth, barHeight);
+      temp.addChild(bitmap); 
+      
+      bitmap.orgX = barWidth * j;
+      bitmap.orgY = barHeight * i;
+      
+      bitmap.x = container.VC_WIDTH/2;
+      bitmap.y = -100;
+      
+      tween = TweenLite.to(bitmap, showTime, {x: bitmap.orgX, y: bitmap.orgY, delay: delay + 0.03 * (row - i), onComplete: onCompleteShowEffect, onCompleteParams: [bitmap]});
+      this.arrTween.push(tween);
+    }
+  }
+  
+  function onCompleteShowEffect(bitmap) {
+    //temp.removeChild(bar);
+  }
+};
+BEffect_BottomMerge.prototype.stop = function() {
+  for (var i = 0; i < this.arrTween.length; i ++) {
+    this.arrTween[i].pause();
+  }
+};
+window.BEffect_BottomMerge = BEffect_BottomMerge;
+
+//////////BEffect_HeartMask//////////
+function BEffect_HeartMask()  {
+  this.arrTween = [];
+};
+BEffect_HeartMask.prototype.play = function(container, prevBitmap, nextBitmap, delay, time) {
+  var tween;
+  var that = this;
+  if (prevBitmap) {
+    container.addChild(prevBitmap);
+  }
+
+  container.addChild(nextBitmap);
+
+  var baseLen = 20;
+  var heart = new createjs.Shape();
+  heart.graphics.beginFill('red').moveTo(-baseLen, 0).arc(0, 0, baseLen, 0, Math.PI, false).lineTo(baseLen, 0).arc(baseLen, -baseLen, baseLen, Math.PI * 90 / 180, Math.PI * 270 / 180, true).lineTo(baseLen, -baseLen * 2).lineTo(-baseLen, -baseLen * 2).lineTo(-baseLen, 0).endFill();
+  heart.rotation = -135;
+  heart.scaleX = heart.scaleY = 0;
+  heart.x = container.VC_WIDTH/2;
+  heart.y = container.VC_HEIGHT/2;
+  nextBitmap.mask = heart;
+
+  var tween = TweenLite.to(heart, time, {scaleX: 100, scaleY: 100, delay: delay});
+  this.arrTween.push(tween);
+
+};
+BEffect_HeartMask.prototype.stop = function() {
+  for (var i = 0; i < this.arrTween.length; i ++) {
+    this.arrTween[i].pause();
+  }
+};
+window.BEffect_HeartMask = BEffect_HeartMask;
+
+//////////BEffect_RotateLeft//////////
+function BEffect_RotateLeft()  {
+  this.arrTween = [];
+};
+BEffect_RotateLeft.prototype.play = function(container, prevBitmap, nextBitmap, delay, time) {
+  var tween;
+  var that = this;
+  if (prevBitmap) {
+    container.addChild(prevBitmap);
+    prevBitmap.x = 0;
+    prevBitmap.y = container.VC_HEIGHT;
+    prevBitmap.regX = 0;
+    prevBitmap.regY = container.VC_HEIGHT;
+    prevBitmap.rotation = 0;
+    tween = TweenLite.to(prevBitmap, time, { rotation: 90, delay: delay, ease: Expo.easeOut});
+    this.arrTween.push(tween);
+  }
+
+  container.addChild(nextBitmap);
+  nextBitmap.x = 0;  
+  nextBitmap.y = container.VC_HEIGHT;  
+  nextBitmap.regX = 0;
+  nextBitmap.regY = container.VC_HEIGHT;
+  nextBitmap.rotation = 270;
+  tween = TweenLite.to(nextBitmap, time, { rotation: 360, delay: delay, ease: Expo.easeOut});
+  this.arrTween.push(tween);
+};
+BEffect_RotateLeft.prototype.stop = function() {
+  for (var i = 0; i < this.arrTween.length; i ++) {
+    this.arrTween[i].pause();
+  }
+};
+window.BEffect_RotateLeft = BEffect_RotateLeft;
+
+//////////BEffect_RotateRight//////////
+function BEffect_RotateRight()  {
+  this.arrTween = [];
+};
+BEffect_RotateRight.prototype.play = function(container, prevBitmap, nextBitmap, delay, time) {
+  var tween;
+  var that = this;
+  if (prevBitmap) {
+    container.addChild(prevBitmap);
+    prevBitmap.x = container.VC_WIDTH;
+    prevBitmap.y = container.VC_HEIGHT;
+    prevBitmap.regX = container.VC_WIDTH;
+    prevBitmap.regY = container.VC_HEIGHT;
+    prevBitmap.rotation = 0;
+    tween = TweenLite.to(prevBitmap, time, { rotation: -90, delay: delay, ease: Expo.easeOut});
+    this.arrTween.push(tween);
+  }
+
+  container.addChild(nextBitmap);
+  nextBitmap.x = container.VC_WIDTH;
+  nextBitmap.y = container.VC_HEIGHT;
+  nextBitmap.regX = container.VC_WIDTH;
+  nextBitmap.regY = container.VC_HEIGHT;  
+  nextBitmap.rotation = 90;
+  tween = TweenLite.to(nextBitmap, time, { rotation: 0, delay: delay, ease: Expo.easeOut});
+  this.arrTween.push(tween);
+};
+BEffect_RotateRight.prototype.stop = function() {
+  for (var i = 0; i < this.arrTween.length; i ++) {
+    this.arrTween[i].pause();
+  }
+};
+window.BEffect_RotateRight = BEffect_RotateRight;
+
+////////////////////////////////////////////////////////////////////////////////////
+///////////EFFEACT UTILS////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////////
+
+var EffectUtils = function() {
+  var arrEffect = [];
+  
+  return {
+    addEffectPlugin : function(type, effect) {
+      var isExist = false;
+      for (var key in arrEffect) {
+        if (key == type) {
+          isExist = true;
+          break;
+        }
+      }
+      if (!isExist) {
+        arrEffect[type] = effect;
+      }
+      return !isExist;
+    },
+
+    getEffectPlugin : function(type) {
+      for (var key in arrEffect) {
+        if (key == type) {
+          return arrEffect[key];
+        }
+      }
+    },
+    
+    formatTime: function(time) {
+      var hour = Math.floor(time / 3600);
+      var strHour = (hour > 9) ? ('' + hour)  : ('0' + hour);
+
+      time = time % 3600;
+      var minute = Math.floor(time / 60);
+      var strMinute = (minute > 9) ? ('' + minute)  : ('0' + minute);
+
+      time = time % 60;
+      var second = Math.floor(time % 60);
+      var strSecond = (second > 9) ? ('' + second)  : ('0' + second);
+
+      if (hour > 0) {     
+        return strHour + ':' + strMinute + ':' + strSecond;
+      }
+      return strMinute + ':' + strSecond;
+    },
+
+    getTimeByFrame: function(arrFrame, frameIndex) {
+      var frameData;
+      var totalTime = 0;
+      for (var i = 0; i <= frameIndex; i ++) {
+        totalTime += (arrFrame[i]).getDuration();
+      }
+      return totalTime;
+    },
+
+    getFrameByTime: function(arrFrame, position) {
+      var frameData;
+      var time = 0;
+      for (var i = 0; i < arrFrame.length; i ++) {
+        frameData = arrFrame[i];
+        if (time + frameData.getDuration() >= position) {
+          return i;
+        }
+        time += frameData.getDuration();
+      }
+      return -1;
+    },
+
+    getStartTimeOfFrameByTime: function(arrFrame, position) {
+      var frameData;
+      var time = 0;
+      for (var i = 0; i < arrFrame.length; i ++) {
+        frameData = arrFrame[i];
+        if (time + frameData.getDuration() >= position) {
+          return time;
+        }
+        time += frameData.getDuration();
+      }
+      return -1;
+    },
+
+    getBackgroundDataByTime: function(arrBG, time) {
+      var bgData;
+      var bgTime = 0;
+      for (var i = 0; i < arrBG.length; i ++) {
+        bgData = arrBG[i];
+        if (bgTime <= time && (bgTime + bgData.time) >= time) {
+          return bgData;
+        }
+        bgTime += bgData.time;
+      }
+      return null;
+    },
+
+    getAudioDataByTime: function(arrAudio, position) {
+      var audioData;
+      var time = 0;
+      for (var i = 0; i < arrAudio.length; i ++) {
+        audioData = arrAudio[i];
+        if ((time + audioData.getTime()) >= position) {
+          return {audioData: audioData, index: i, startTime: time};
+        }
+        time += audioData.getTime();
+      }
+      return null;
+    }
+  }
+}();
+
+EffectUtils.addEffectPlugin('TNone', new window['TEffect_None']());
+EffectUtils.addEffectPlugin('TFade', new window['TEffect_Fade']());
+EffectUtils.addEffectPlugin('TSlideLeft', new window['TEffect_SlideLeft']());
+EffectUtils.addEffectPlugin('TSlideRight', new window['TEffect_SlideRight']());
+EffectUtils.addEffectPlugin('TSlideUp', new window['TEffect_SlideUp']());
+EffectUtils.addEffectPlugin('TSlideDown', new window['TEffect_SlideDown']());
+EffectUtils.addEffectPlugin('TFastBounceText', new window['TEffect_FastBounceText']());
+EffectUtils.addEffectPlugin('TStarLeft', new window['TEffect_StarLeft']());
+EffectUtils.addEffectPlugin('TStarRight', new window['TEffect_StarRight']());
+EffectUtils.addEffectPlugin('THeartLeft', new window['TEffect_HeartLeft']());
+EffectUtils.addEffectPlugin('THeartRight', new window['TEffect_HeartRight']());
+EffectUtils.addEffectPlugin('TCenterGo', new window['TEffect_CenterGo']());
+EffectUtils.addEffectPlugin('TLightLeft', new window['TEffect_LightLeft']());
+EffectUtils.addEffectPlugin('TLightRight', new window['TEffect_LightRight']());
+
+EffectUtils.addEffectPlugin('BNone', new window['BEffect_None']());
+EffectUtils.addEffectPlugin('BFade', new window['BEffect_Fade']());
+EffectUtils.addEffectPlugin('BSlideLeft', new window['BEffect_SlideLeft']());
+EffectUtils.addEffectPlugin('BSlideRight', new window['BEffect_SlideRight']());
+EffectUtils.addEffectPlugin('BSlideUp', new window['BEffect_SlideUp']());
+EffectUtils.addEffectPlugin('BSlideDown', new window['BEffect_SlideDown']());
+EffectUtils.addEffectPlugin('BZoomIn', new window['BEffect_ZoomIn']());
+EffectUtils.addEffectPlugin('BZoomOut', new window['BEffect_ZoomOut']());
+EffectUtils.addEffectPlugin('BAlphaBars', new window['BEffect_AlphaBars']());
+EffectUtils.addEffectPlugin('BSquareExplode', new window['BEffect_SquareExplode']());
+EffectUtils.addEffectPlugin('BBrightSquares', new window['BEffect_BrightSquares']());
+EffectUtils.addEffectPlugin('BClockWise', new window['BEffect_ClockWise']());
+EffectUtils.addEffectPlugin('BMultiZoom', new window['BEffect_MultiZoom']());
+EffectUtils.addEffectPlugin('BLeftRightMerge', new window['BEffect_LeftRightMerge']());
+EffectUtils.addEffectPlugin('BUpDownMerge', new window['BEffect_UpDownMerge']());
+EffectUtils.addEffectPlugin('BTopMerge', new window['BEffect_TopMerge']());
+EffectUtils.addEffectPlugin('BBottomMerge', new window['BEffect_BottomMerge']());
+EffectUtils.addEffectPlugin('BHeartMask', new window['BEffect_HeartMask']());
+EffectUtils.addEffectPlugin('BRotateLeft', new window['BEffect_RotateLeft']());
+EffectUtils.addEffectPlugin('BRotateRight', new window['BEffect_RotateRight']());
+function PreviewVC() {
+  this.curFrameIndex = -1;
+  this.arrFrame = [];
+
+  this.arrBG = [];
+  this.arrAudio = [];
+
+  this.container = new createjs.Container();
+
+  this.bgContainer = this.container.addChild(new createjs.Container());
+  this.bitmapContainer = this.container.addChild(new createjs.Container());
+  this.textContainer = this.container.addChild(new createjs.Container());
+  
+  this.VC_WIDTH = 0;
+  this.VC_HEIGHT = 0;
+
+  this.loading = null;
+  this.previewSetting = null;
+  this.videoInstance = null;
+
+  this.playedTime = 0;
+  this.duration = 0;
+  this.timeoutId = null;
+  this.psTimeout = null;
+
+  this.frameTimeoutId = null;
+  this.textEffectPlugin = null;
+  this.bitmapEffectPlugin = null;
+  this.frameAudioInstance = null;
+  this.audioInstance = null;
+
+  this.isPlaying = false;
+};
+
+PreviewVC.prototype.setData = function(arrBG, arrAudio, arrFrame, stage, width, height, loading, video, previewSetting) {
+  
+  var that = this;
+
+  this.isPlaying = false;
+  this.arrBG = arrBG;
+  this.arrAudio = arrAudio;
+  this.arrFrame = arrFrame;
+  this.loading = loading;
+  this.videoInstance = video;
+  this.previewSetting = previewSetting;
+
+  //add events - refactor later
+  var videoClip = that.previewSetting.parent()[0];
+
+  this.previewSetting.find('.play-pause').off('click').on('click', function(evt) {
+    onPlayStopHandler(evt);
+  });
+
+  this.previewSetting.find('.time').off('click').on('click', function(evt) {
+    
+    var timeLeft = that.previewSetting.find('.time').offset().left;
+    var timeWith = that.previewSetting.find('.time').width();
+
+    var curTime = Math.floor((evt.pageX - timeLeft) * that.duration / timeWith);
+
+    that.seek(curTime);
+  });
+
+  function onPlayStopHandler(evt) {
+    that.isPlaying = !that.isPlaying;
+
+    if (that.isPlaying) {
+      that.play();
+    } else {
+      that.stop();
+    }
+  };
+
+  this.previewSetting.find('.full-screen').off('click').on('click', function(evt) {
+    $(videoClip).toggleClass('full-screen');
+
+    if ($(videoClip).hasClass('full-screen')) {
+      that.gotoFullscreen(videoClip);      
+      that.resize($(videoClip).width(), $(videoClip).height());
+
+    } else {
+      that.exitFullscreen();
+    }
+  });
+
+  document.addEventListener("fullscreenchange", function(evt) { onFullScreenChange(evt);});
+  document.addEventListener("webkitfullscreenchange", function(evt) { onFullScreenChange(evt);});
+  document.addEventListener("mozfullscreenchange", function(evt) { onFullScreenChange(evt);});
+  document.addEventListener("MSFullscreenChange", function(evt) { onFullScreenChange(evt);});
+
+  function onFullScreenChange(evt) {
+    var isFullScreen = document.fullScreen || document.mozFullScreen || document.webkitIsFullScreen;
+
+    if (!isFullScreen) {
+     $(videoClip).removeClass('full-screen');
+    }
+  };
+
+  this.textContainer.removeAllChildren();
+  this.bitmapContainer.removeAllChildren();
+  stage.addChild(this.container);
+
+  this.VC_WIDTH = this.textContainer.VC_WIDTH = this.bitmapContainer.VC_WIDTH = width;
+  this.VC_HEIGHT = this.textContainer.VC_HEIGHT = this.bitmapContainer.VC_HEIGHT = height;
+  
+  //duration
+  var frameData;
+  for (var i = 0; i < this.arrFrame.length; i ++) {
+    frameData = this.arrFrame[i];
+    this.duration += frameData.getDuration();
+  }
+
+  this.loadNextBackgroundImage(0);
+};
+
+PreviewVC.prototype.gotoFullscreen = function(element) {
+  if(element.requestFullscreen) {
+    element.requestFullscreen();
+  } else if(element.mozRequestFullScreen) {
+    element.mozRequestFullScreen();
+  } else if(element.webkitRequestFullscreen) {
+    element.webkitRequestFullscreen();
+  } else if(element.msRequestFullscreen) {
+    element.msRequestFullscreen();
+  }
+};
+
+PreviewVC.prototype.exitFullscreen = function() {
+  if(document.exitFullscreen) {
+    document.exitFullscreen();
+  } else if(document.mozCancelFullScreen) {
+    document.mozCancelFullScreen();
+  } else if(document.webkitExitFullscreen) {
+    document.webkitExitFullscreen();
+  }
+};
+
+PreviewVC.prototype.loadNextBackgroundImage = function(index) {
+
+  if (index >= this.arrBG.length) {
+    this.loadNextImage(0);
+    return;
+  }
+
+  if (this.arrBG[index].url == null) {
+    index ++;
+    this.loadNextBackgroundImage(index);
+    return;
+  }
+
+  var that = this;
+  this.loading.show();
+
+  var image = new Image();
+  image.onload = function(evt) {
+    that.arrBG[index].imageView = image;
+    
+    index ++;
+    that.loadNextBackgroundImage(index);
+  };
+  image.src = this.arrBG[index].url;
+};
+
+PreviewVC.prototype.loadNextImage = function(index) {
+
+  if (index >= this.arrFrame.length) {
+    this.loadNextAudio(0);
+    return;
+  }
+
+  if (this.arrFrame[index].bitmapUrl == null) {
+    index ++;
+    this.loadNextImage(index);
+    return;
+  }
+
+  var that = this;
+  this.loading.show();
+
+  var image = new Image();
+  image.onload = function(evt) {
+    that.arrFrame[index].imageView = image;
+    
+    index ++;
+    that.loadNextImage(index);
+  };
+  image.src = this.arrFrame[index].bitmapUrl;
+};
+
+PreviewVC.prototype.loadNextAudio = function(index) {
+
+  if (index >= this.arrAudio.length) {
+    this.loadNextFrameAudio(0);
+    return;
+  }
+
+  var that = this;
+  this.loading.show();
+
+  var audioData = this.arrAudio[index];
+  if (audioData.url == null) {
+    index++;
+    that.loadNextAudio(index);
+    return;
+  }
+
+  createjs.Sound.addEventListener("fileload", onAudioLoadHandler);
+  createjs.Sound.registerSound({id: audioData.id, src: audioData.url});
+
+  function onAudioLoadHandler(evt) {
+    createjs.Sound.removeEventListener("fileload", onAudioLoadHandler);
+
+    audioData.audioInstance = createjs.Sound.createInstance(audioData.id);
+    
+    index ++;
+    that.loadNextAudio(index);
+  };
+};
+
+PreviewVC.prototype.loadNextFrameAudio = function(index) {
+
+  if (index >= this.arrFrame.length) {
+    this.loadNextVideo(0);
+    return;
+  }
+
+  var that = this;
+  this.loading.show();
+
+  var frameData = this.arrFrame[index];
+  if (frameData.audioUrl == null) {
+    index++;
+    this.loadNextFrameAudio(index);
+    return;
+  }
+
+  createjs.Sound.addEventListener("fileload", onFrameAudioLoadHandler);
+  createjs.Sound.registerSound({id: frameData.audioId, src: frameData.audioUrl});
+
+  function onFrameAudioLoadHandler(evt) {
+    createjs.Sound.removeEventListener("fileload", onFrameAudioLoadHandler);
+
+    frameData.audioInstance = createjs.Sound.createInstance(frameData.audioId);
+
+    index ++;
+    that.loadNextFrameAudio(index);
+  };
+};
+
+PreviewVC.prototype.loadNextVideo = function(index) {
+  if (index >= this.arrFrame.length) {
+    this.play();
+    return;
+  }
+
+  if (this.arrFrame[index].videoUrl == null) {
+    index ++;
+    this.loadNextVideo(index);
+    return;
+  }
+
+  var that = this;
+  this.loading.show();
+
+  var queue = new createjs.LoadQueue();
+  queue.on("fileload", onFileLoadHandler);
+  //queue.on("complete", onCompleteHandler);
+  queue.loadFile({id: this.arrFrame[index].videoId, src: this.arrFrame[index].videoUrl, type: createjs.AbstractLoader.BINARY});
+  
+  function onFileLoadHandler(evt) {
+    queue.off("fileload", onFileLoadHandler);
+  //}
+  //
+  //function onCompleteHandler(evt) {
+  //  queue.off("complete", onCompleteHandler);
+
+    var blob = new Blob([evt.result], { type: "video/mp4" } );
+    var URLCreator = window.URL || window.webkitURL;
+    var objUrl = URLCreator.createObjectURL(blob);
+
+    that.arrFrame[index].videoView = objUrl;
+
+    index ++;
+    that.loadNextVideo(index);
+  }
+}; 
+
+PreviewVC.prototype.createBitmap = function(image) {
+  var w = image.width;
+  var h = image.height;
+  
+  //find corrected scale
+  var scale = this.VC_WIDTH / w;
+  if(h * scale > this.VC_HEIGHT) {
+    scale = this.VC_HEIGHT / h;
+  }
+
+  var translateX = (this.VC_WIDTH - scale * w)/2;
+  var translateY = (this.VC_HEIGHT - scale * h)/2;
+
+  var matrix = new createjs.Matrix2D(scale, 0, 0, scale, translateX, translateY);
+  var bitmapData = new createjs.BitmapData(image, this.VC_WIDTH, this.VC_HEIGHT, 0x000000);
+  bitmapData.draw(image, matrix, null, null, null, true);
+
+  return new createjs.Bitmap(bitmapData.canvas);
+};
+
+PreviewVC.prototype.createText = function(textData, textView) {
+
+  var frameText =  textView;
+  if (!frameText) {
+    frameText = new createjs.Text("Text", "20px Arial", "#FF7700");
+  }
+
+  frameText.text = textData.text;
+  frameText.font = textData.style + ' ' + textData.size + 'px ' + textData.fontName;
+  frameText.color = textData.color;
+  frameText.textAlign = textData.halign;
+
+  if (textData.halign == TextData.HA_LEFT) {
+    frameText.x = textData.padding;
+  }
+  else if (textData.halign == TextData.HA_CENTER) {
+    frameText.x = this.VC_WIDTH/2;
+  }
+  else if (textData.halign == vHA_RIGHT) {
+    frameText.x = this.VC_WIDTH - textData.padding;
+  }
+  
+  var textHeight = frameText.getBounds() ? frameText.getBounds().height : 0;
+  if (textData.valign == TextData.VA_TOP) {
+    frameText.y = textData.padding;
+  }
+  else if (textData.valign == TextData.VA_MIDDLE) {
+    frameText.y = this.VC_HEIGHT/2 - textHeight/2;
+  }
+  else if (textData.valign == TextData.VA_BOTTOM) {
+    frameText.y = this.VC_HEIGHT - textHeight - textData.padding;
+  }
+
+  return frameText;
+};
+
+PreviewVC.prototype.playAudio = function(audioIndex, startTime) {
+    this.nextAudio(audioIndex, startTime);
+}
+
+PreviewVC.prototype.nextAudio = function(index, startTime) {
+  if (this.isPlaying == false) {
+    return;
+  }
+
+  var that = this;
+  if (index >= 0 && index < this.arrAudio.length) {
+    var audioData = this.arrAudio[index];
+
+    this.audioInstance = audioData.audioInstance;
+
+    if (!audioData.audioInstance) {
+
+      var ti = setTimeout(function() {
+        clearTimeout(ti);
+        index ++;
+        that.nextAudio(index);
+      }, startTime ? (audioData.time - startTime) * 1000 : audioData.time * 1000);
+
+      return;
+    }
+
+    audioData.audioInstance.volume = 0;
+    audioData.audioInstance.position = startTime ? startTime * 1000 : audioData.start * 1000;
+
+    audioData.audioInstance.play();
+    audioData.audioInstance.on("complete", onAudioPlayCompleteHandler);
+    audioData.audioInstance.playProgressTimeout = setInterval(onAudioPlayProgressHandler, 100);
+
+    function onAudioPlayProgressHandler(evt) {
+      if (audioData.audioInstance) {
+
+        if (audioData.audioInstance.volume < 1) {
+          audioData.audioInstance.volume = audioData.audioInstance.volume += 0.01;
+        }
+
+        if (audioData.end != -1 && audioData.end >= audioData.position/ 1000) {
+          audioData.audioInstance.stop();
+          clearInterval(audioData.audioInstance.playProgressTimeout);
+          audioData.audioInstance.removeAllEventListeners();
+          
+          index ++;
+          that.nextAudio(index);
+        }
+      }
+    }
+
+    function onAudioPlayCompleteHandler(evt) {
+      if (audioData.audioInstance) {
+        clearInterval(audioData.audioInstance.playProgressTimeout);
+        audioData.audioInstance.removeAllEventListeners();
+      }
+      
+      index ++;
+      that.nextAudio(index);
+    }
+  }
+};
+
+PreviewVC.prototype.nextFrame = function() {
+  if (this.isPlaying == false) {
+    return;
+  }
+
+  this.curFrameIndex ++;
+  if (this.curFrameIndex < this.arrFrame.length) {
+    
+    var preFrameData;
+    if (this.curFrameIndex > 0) {
+      preFrameData = this.arrFrame[this.curFrameIndex - 1];
+    }
+    
+    var that = this;
+
+    var nexFrameData = this.arrFrame[this.curFrameIndex];
+    
+    this.playFrame(preFrameData, nexFrameData, function() { 
+      that.nextFrame(); 
+    });
+  }
+};
+
+PreviewVC.prototype.playFrame = function(prev, next, callback) {
+  if (this.isPlaying == false) {
+    return;
+  }
+
+  var that = this;
+
+  //play video or play sound
+  this.container.visible = true;
+  this.bgContainer.visible = (next.type == FrameData.VIDEO) ? false : true;
+
+  //text effect
+  if (next.text.text != '') {
+    //next.textView = this.createText(next.text, next.textView);
+
+    this.textEffectPlugin = EffectUtils.getEffectPlugin(next.textEffect);
+    if (this.textEffectPlugin) {
+      this.textEffectPlugin.play(this.textContainer, prev ? prev.textView : null, next);
+    }
+  } else {
+    this.textEffectPlugin = null;
+    this.textContainer.removeAllChildren();
+  }
+
+  //bitmap effect
+  if (next.bitmapUrl != null) {
+    next.bitmapView = this.createBitmap(next.imageView);
+
+    this.bitmapEffectPlugin = EffectUtils.getEffectPlugin(next.bitmapEffect);
+    if (this.bitmapEffectPlugin) {
+      this.bitmapEffectPlugin.play(this.bitmapContainer, prev ? prev.bitmapView : null, next.bitmapView, next.bitmapEffectDelay, next.bitmapEffectDuration); 
+    }
+  } else {
+    this.bitmapEffectPlugin = null;
+    this.bitmapContainer.removeAllChildren();
+  }
+
+  //video 
+  $(this.videoInstance).attr('src', '');
+  
+  if (next.type == FrameData.VIDEO && next.videoView != null) {
+    $(this.videoInstance).attr('src', next.videoView);
+
+    $(this.videoInstance).off('timeupdate').on('timeupdate', function(evt) {
+      if (next.videoEnd != -1 && that.videoInstance.currentTime >= next.videoEnd) {
+        that.videoInstance.pause();
+      }
+    });
+
+    this.videoInstance.play();
+  }
+
+  //audio
+  if (prev && prev.audioInstance) {
+    clearInterval(prev.audioInstance.playProgressTimeout);
+    prev.audioInstance.removeAllEventListeners();
+    prev.audioInstance.stop();
+  }
+
+  if (next.audioInstance) {
+    next.audioInstance.on("complete", onAudioPlayCompleteHandler);
+    next.audioInstance.playProgressTimeout = setInterval(onAudioPlayProgressHandler, 100);
+
+    function onAudioPlayProgressHandler(evt) {
+      if (next.audioEnd != -1 && next.audioInstance.position/1000 >= next.audioEnd) {
+        clearInterval(next.audioInstance.playProgressTimeout);
+        next.audioInstance.removeAllEventListeners();
+        next.audioInstance.stop();
+      }
+    }
+
+    function onAudioPlayCompleteHandler(evt) {
+      if (next.audioInstance) {
+        clearInterval(next.audioInstance.playProgressTimeout);
+        next.audioInstance.removeAllEventListeners();
+      }
+    } 
+
+    next.audioInstance.position = next.audioStart * 1000;
+    next.audioInstance.play();
+  }  
+  this.frameAudioInstance = next.audioInstance;
+  
+  //frame duration timeout
+  this.frameTimeoutId = setTimeout(function() {
+    clearTimeout(that.frameTimeoutId);
+    callback();
+  }, next.getDuration() * 1000);
+};
+
+PreviewVC.prototype.playBackground = function(time) {
+  var bgData = EffectUtils.getBackgroundDataByTime(this.arrBG, time);
+
+  if (!bgData || !bgData.url) {
+    this.bgContainer.url = null;
+    this.bgContainer.removeAllChildren();
+  }
+
+  else if (this.bgContainer.url != bgData.url) {
+    this.bgContainer.url = bgData.url;
+    this.bgContainer.removeAllChildren();
+    this.bgContainer.addChild(this.createBitmap(bgData.imageView));
+  }
+};
+
+PreviewVC.prototype.startTime = function() {
+  var that = this;
+  
+  //background image
+  //next.bitmapView = this.createBitmap(next.imageView);
+
+  this.previewSetting.find('.duration').html(EffectUtils.formatTime(this.duration));
+
+  this.timeoutId = setInterval(function() {
+    if (!that.isPlaying) {
+      return;
+    }
+
+    that.playedTime += 100;
+    that.previewSetting.find('.position').html(EffectUtils.formatTime(that.playedTime/1000));
+    that.previewSetting.find('.timeline').css('width', Math.floor(100 * that.playedTime / (that.duration * 1000)) + '%');
+
+    //show background image here
+    that.playBackground(that.playedTime / 1000);
+
+    if (that.playedTime >= that.duration * 1000) {
+      clearInterval(that.timeoutId);
+      that.stop();
+    } 
+  }, 100);
+};
+
+PreviewVC.prototype.resize = function(width, height) {
+  this.VC_WIDTH = width;
+  this.VC_HEIGHT = height;
+
+  if (this.bitmapContainer && this.textContainer) {
+    this.textContainer.VC_WIDTH = this.bitmapContainer.VC_WIDTH = width;
+    this.textContainer.VC_HEIGHT = this.bitmapContainer.VC_HEIGHT = height;
+  }
+
+  if (this.arrFrame.length) {
+    this.seek(this.playedTime/1000);
+  } 
+};
+
+PreviewVC.prototype.play = function() {
+  var that = this;
+
+  this.loading.hide();
+  this.previewSetting.show();
+  this.previewSetting.find('.play-pause span').removeClass('fa fa-play').addClass('fa fa-stop');
+
+  this.isPlaying = true;
+  this.curFrameIndex = -1;
+  this.nextFrame();
+  this.playAudio(0);
+
+  this.playedTime = 0;
+  this.startTime();
+
+  this.hideSetting();
+  $('.video-clip').off('mousemove').on('mousemove', function(evt) {
+    that.showSetting();
+  });
+};
+
+PreviewVC.prototype.hideSetting = function() {
+  var that = this;
+  clearTimeout(that.psTimeout);
+  this.psTimeout = setTimeout(function() {
+    clearTimeout(that.psTimeout);
+    that.previewSetting.hide();
+  }, 5000);
+};
+
+PreviewVC.prototype.showSetting = function() {
+   clearTimeout(this.psTimeout);
+   this.previewSetting.show();
+   this.hideSetting();
+};
+
+PreviewVC.prototype.pause = function() {
+
+};
+
+PreviewVC.prototype.stop = function() {
+  clearInterval(this.timeoutId);
+  clearTimeout(this.psTimeout);
+  $('.video-clip').off('mousemove');
+
+  this.isPlaying = false;
+  
+  this.textContainer.removeAllChildren();
+  this.bitmapContainer.removeAllChildren();
+  this.bgContainer.removeAllChildren();
+
+  this.previewSetting.find('.play-pause span').removeClass('fa fa-stop').addClass('fa fa-play');
+  this.previewSetting.find('.position').html(EffectUtils.formatTime(0));
+  this.previewSetting.find('.timeline').css('width', '0%');
+  this.previewSetting.show();
+
+  $(this.videoInstance).attr('src', '');
+
+  if (this.curFrameIndex >=0 && this.curFrameIndex< this.arrFrame.length) {
+    var frameData = this.arrFrame[this.curFrameIndex];
+
+    if (frameData.audioInstance) {
+      clearInterval(frameData.audioInstance.playProgressTimeout);
+      frameData.audioInstance.stop();
+    }
+  }
+
+  createjs.Sound.stop();
+  createjs.Sound.removeAllEventListeners();
+  this.exitFullscreen();
+};
+
+PreviewVC.prototype.seek = function(position) {
+  var that = this;
+
+  clearInterval(this.timeoutId);
+  clearInterval(this.frameTimeoutId);
+
+  //stop current frame
+  this.isPlaying = false;
+
+  if (this.textEffectPlugin) {
+    this.textEffectPlugin.stop();
+  }
+
+  if (this.bitmapEffectPlugin) {
+    this.bitmapEffectPlugin.stop();
+  }
+
+  //video 
+  $(this.videoInstance).attr('src', '');
+  $(this.videoInstance).off('timeupdate');
+
+  this.bgContainer.url = null;
+  this.bgContainer.removeAllChildren();
+
+  this.textContainer.removeAllChildren();
+  this.bitmapContainer.removeAllChildren();
+
+  if (this.frameAudioInstance) {
+    clearInterval(this.frameAudioInstance.playProgressTimeout);
+    this.frameAudioInstance.stop();
+    this.frameAudioInstance.removeAllEventListeners();
+    this.frameAudioInstance = null;
+  }
+  
+  if (this.audioInstance) {
+    this.audioInstance.stop();
+    clearInterval(this.audioInstance.playProgressTimeout);
+    this.audioInstance.removeAllEventListeners();
+    this.audioInstance = null;
+  }
+
+  //find the frame by time and play
+  var frameIndex = EffectUtils.getFrameByTime(this.arrFrame, position);
+
+  this.isPlaying = true;
+
+  this.curFrameIndex = frameIndex - 1;
+  this.nextFrame();
+  
+  this.playedTime = EffectUtils.getStartTimeOfFrameByTime(this.arrFrame, position) * 1000;
+  
+  var obj = EffectUtils.getAudioDataByTime(this.arrAudio, this.playedTime / 1000);
+  if (obj) {
+    var startTime = this.playedTime/1000 - obj.startTime;
+    startTime = obj.audioData.start +  startTime;
+
+    this.playAudio(obj.index, startTime);
+  }
+  
+  this.startTime();
+
+  this.previewSetting.show();
+  this.previewSetting.find('.play-pause span').removeClass('fa fa-play').addClass('fa fa-stop');
+
+  this.hideSetting();
+  $('.video-clip').off('mousemove').on('mousemove', function(evt) {
+    that.showSetting();
+  });
+};
+
+PreviewVC.prototype.clear = function(clearSound) {
+  clearInterval(this.timeoutId);
+  clearInterval(this.frameTimeoutId);
+
+  //stop current frame
+  this.isPlaying = false;
+
+  if (this.textEffectPlugin) {
+    this.textEffectPlugin.stop();
+  }
+
+  if (this.bitmapEffectPlugin) {
+    this.bitmapEffectPlugin.stop();
+  }
+
+  //video 
+  $(this.videoInstance).attr('src', '');
+  $(this.videoInstance).off('timeupdate');
+
+  this.bgContainer.url = null;
+  this.bgContainer.removeAllChildren();
+
+  this.textContainer.removeAllChildren();
+  this.bitmapContainer.removeAllChildren();
+
+  if (this.frameAudioInstance) {
+    clearInterval(this.frameAudioInstance.playProgressTimeout);
+    //this.frameAudioInstance.stop();
+    this.frameAudioInstance.removeAllEventListeners();
+    this.frameAudioInstance = null;
+  }
+  
+  if (this.audioInstance) {
+    clearInterval(this.audioInstance.playProgressTimeout);
+    //this.audioInstance.stop();
+    this.audioInstance.removeAllEventListeners();
+    this.audioInstance = null;
+  }
+  
+  $('.video-clip').off('mousemove');
+
+  this.container.visible = false;
+  
+  if (this.previewSetting) {
+    this.previewSetting.find('.play-pause span').removeClass('fa fa-stop').addClass('fa fa-play');
+    this.previewSetting.hide();
+  }
+
+  if (createjs.Sound) {
+    createjs.Sound.stop();
+    createjs.Sound.removeAllSounds();
+    createjs.Sound.removeAllEventListeners();
+  }
+};
+
+/* =================
+ * VideoClipShare.js
+  TO DO:
+  
+ * ================= */
+
+;(function($, window, createjs, App) {
+
+  "use strict"; 
+
+  /* =============== */
+  /* MODULE DEFAULTS */
+  /* =============== */
+
+  var defaults = {};
+  var pluginName = 'videoclip-share';
+
+  /* ================= */
+  /* MODULE DEFINITION */
+  /* ================= */
+
+  function VideoClipShare(element, options) {
+    this.element = $(element);
+    this.options = $.extend({}, $.fn[pluginName].defaults, options);
+
+    this.arrFrame = [];
+    this.arrBG = []
+    this.arrBGAudio = []
+    
+    this.canvas = null;
+    this.stage = null;
+    
+    this.previewVC = new PreviewVC(); 
+
+    return this.init();
+  }
+
+  /* ============== */
+  /* MODULE METHODS */
+  /* ============== */
+
+  VideoClipShare.prototype.init = function() {
+
+    var that = this;
+
+    createjs.Sound.alternateExtensions = ["mp3", "m4a", "wav"];
+    createjs.Sound.registerPlugins([createjs.WebAudioPlugin]);
+    
+    this.canvas = document.getElementById('cvsVC');
+    this.stage = new createjs.Stage("cvsVC");
+    
+    createjs.Ticker.addEventListener("tick", function() { that.stage.update(); });
+    
+    $(window).on('resize', function(evt) { that.resize(); });
+    this.resize();
+
+    var vcid = this.getParameterByName('vcid');
+    var url = "http://localhost:3001/wedding/public/server/videoclip/frames/" + vcid + "/" + vcid + ".json"
+    
+    var ajax = $.ajax({
+      url: url,
+      method: "GET",
+      data: { id : '' },
+      dataType: "json"
+    });
+     
+    ajax.done(function(data) {
+      try {
+        that.parseData(data);
+      } catch(err) {}
+    });
+     
+    ajax.fail(function(jqXHR, textStatus) {
+    });
+  };
+
+  VideoClipShare.prototype.resize = function() {
+    var videoClip = $('.video-clip');
+    this.canvas.width = videoClip.width();
+    this.canvas.height = videoClip.height();
+
+    this.previewVC.resize(this.canvas.width, this.canvas.height);
+  };
+
+  VideoClipShare.prototype.getParameterByName = function(name) {
+    name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
+    var regex = new RegExp("[\\?&]" + name + "=([^&#]*)");
+    var results = regex.exec(location.search);
+    return results === null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
+  };
+
+  VideoClipShare.prototype.parseData = function(data) {
+
+    var frames = data.frames;
+    var frameData;
+    for (var i = 0; i < frames.length; i ++) {
+      frameData = new FrameData();
+      frameData.parse(frames[i]);
+      this.arrFrame.push(frameData);
+    }
+
+    var backgrounds = data.backgrounds;
+    var bgData;
+    for (var i = 0; i < backgrounds.length; i ++) {
+      bgData = new BackgroundData();
+      bgData.parse(backgrounds[i]);
+      this.arrBG.push(bgData);
+    }
+
+    var audios = data.audios;
+    var audioData;
+    for (var i = 0; i < audios.length; i ++) {
+      audioData = new AudioData();
+      audioData.parse(audios[i]);
+      this.arrBGAudio.push(audioData);
+    }
+
+    this.preview();
+  };
+
+  VideoClipShare.prototype.preview = function() {
+    this.previewVC.setData(this.arrBG, this.arrBGAudio, this.arrFrame, this.stage, this.canvas.width, this.canvas.height, $('.vc-loading-wrapp'), document.getElementById('video'), $('.preview-setting'));
+  };
+
+  /* =============== */
+  /* MODULE DATA-API */
+  /* =============== */
+
+  $.fn[pluginName] = function(options, params) {
+    return this.each(function() {
+      var instance = $.data(this, pluginName);
+      if (!instance) {
+        $.data(this, pluginName, new VideoClipShare(this, options));
+      } else if (instance[options]) {
+        instance[options](params);
+      } else {
+        window.console && console.log(options ? options + ' method is not exists in ' + pluginName : pluginName + ' plugin has been initialized');
+      }
+    });
+  };
+
+  $.fn[pluginName].defaults = {};
+
+  $(function() {
+    $('[data-' + pluginName + ']')[pluginName]({});
+  });
+
+}(window.jQuery, window, window.createjs, window.App));
 
 /**
  *  @name read-more
@@ -1909,7 +7620,7 @@ GoogleDrive.prototype.addFile = function(file) {
           checkAll = $('[data-checkall]'),
           formEl = customEl.find('input');
       var xhr;
-      var marryBlock = $('.marry-block');
+      var marryBlock = $('[data-manage]');
       customEl.tooltip();
       formEl.on('click.'+ pluginName, function(){
         var formElment = this;
@@ -1921,16 +7632,17 @@ GoogleDrive.prototype.addFile = function(file) {
         }else{
           el.removeClass('active');
         }
-        if(xhr){
-          xhr.abort();
-        }
-        xhr = $.ajax({
+        // if(xhr){
+        //   xhr.abort();
+        // }
+        $.ajax({
           url: customEl.data('url'),
           data: formEl,
           dataType: 'json',
-          success: function(res){
-            if(res.result == 1){
-              marryBlock.find('.list-unstyled').html(res.content);
+          success: function(data){
+            if(res.result === 1){
+              // alert(1);
+              marryBlock.find('.list-unstyled').html(data.content);
             }
           }
         });
@@ -2083,9 +7795,20 @@ GoogleDrive.prototype.addFile = function(file) {
           that.vars.template.append(arr.join(''));
           that.vars.content.append(that.vars.template);
         }
+        var paused = false;
         that.element.on('click.' + pluginName , function(){
           that.offsetSelect();
           that.toggle(this, true);
+          $(this).toggleClass('out');
+          
+          // if($('[data-slider-home]').length){
+          //   paused = !paused;
+          //   if(paused) {
+          //       $('[data-slider-home]').slickPause();
+          //   } else {
+          //       $('[data-slider-home]').slickPlay();
+          //   }
+          // }
         });
         that.vars.doc.on('click.' + pluginName , function(e){
           var target = $(e.target);
@@ -2149,6 +7872,7 @@ GoogleDrive.prototype.addFile = function(file) {
     toggle: function(el, isShow) {
       var that = this,
           effect = that.vars.effect;
+
       if (isShow && that.vars.content.is(':hidden')){
         switch(effect){
           case 'slide':
@@ -2174,6 +7898,16 @@ GoogleDrive.prototype.addFile = function(file) {
             that.vars.content.hide();
         }
       }
+      if($('[data-slider-home]').length){
+        // $('[data-slider-home]').slick('slickPause');
+        // $('[data-slider-home]').on('afterChange', function(event, slick, currentSlide){
+        //   if( currentSlide === 0){
+        //     $('[data-slider-home]').paused = true;
+        //     $('[data-slider-home]').slick('slickPause');
+        //     console.log('paused');
+        //   }
+        // });
+      }
     },
     offsetSelect: function() {
       var that = this,
@@ -2186,6 +7920,7 @@ GoogleDrive.prototype.addFile = function(file) {
         width: that.element.outerWidth(),
         zIndex: 10000
       });
+
       // console.log(that.element);
       // console.log(selectOffest.left);
       if(that.element.data('style') === ""){
@@ -2389,6 +8124,136 @@ GoogleDrive.prototype.addFile = function(file) {
   });
 
 }(window.jQuery, window.App));
+/**
+ *  @name cover-image
+ *  @description description
+ *  @version 1.0
+ *  @options
+ *    option
+ *  @events
+ *    event
+ *  @methods
+ *    init
+ *    publicMethod
+ *    destroy
+ */
+;(function($, window, undefined) {
+  var pluginName = 'interchange',
+      win = $(window),
+      BREAK_POINT1 = 768,
+      BREAK_POINT2 = 992,
+      width = 0;
+  function Plugin(element, options) {
+    this.element = $(element);
+    this.options = $.extend({}, $.fn[pluginName].defaults, this.element.data(), options);
+    this.init();
+  }
+
+  Plugin.prototype = {
+    init: function() {
+      var that = this,
+          ele = this.element;
+
+      that.listCover = ele.data('interchange');
+      that.vars = {
+        iscover0 : false,
+        iscover1 : false,
+        iscover2 : false
+      };
+
+      win.on('resize.' + pluginName, function(){
+        width = win.width();
+        ele.data('type') == 'background-image' ? that.initBackground(ele) : that.initImageSrc(ele);
+        if(typeof that.options.afterChangeHandle === 'function') {
+          that.options.afterChangeHandle();
+        }
+      }).trigger('resize.' + pluginName);
+    },
+
+    initBackground: function(ele){
+      var that = this,
+          vars = that.vars,
+          listCover = that.listCover;
+
+      if(width < BREAK_POINT2 && width >= BREAK_POINT1 && !vars.iscover1){
+        ele.css('backgroundImage', 'url('+ listCover[1] +')');
+        vars.iscover1 = true;
+        vars.iscover0 = false;
+        vars.iscover2 = false;
+
+      }else if(width < BREAK_POINT1 && !vars.iscover2){
+        ele.css('backgroundImage', 'url('+ listCover[2] +')');
+        vars.iscover2 = true;
+        vars.iscover1 = false;
+        vars.iscover0 = false;
+
+      }else if(width >= BREAK_POINT2 && !vars.iscover0){
+        ele.css('backgroundImage', 'url('+ listCover[0] +')');
+        vars.iscover0 = true;
+        vars.iscover1 = false;
+        vars.iscover2 = false;
+
+      }
+    },
+
+    initImageSrc: function(ele){
+      var that = this,
+          vars = that.vars,
+          listCover = that.listCover;
+
+      if(width < BREAK_POINT2 && width >= BREAK_POINT1 && !vars.iscover1){
+        ele.attr('src', listCover[1]);
+        vars.iscover1 = true;
+        vars.iscover0 = false;
+        vars.iscover2 = false;
+
+      }else if(width < BREAK_POINT1 && !that.isMobile && !vars.iscover2){
+        ele.attr('src', listCover[2]);
+        vars.iscover2 = true;
+        vars.iscover1 = false;
+        vars.iscover0 = false;
+
+      }else if(width >= BREAK_POINT2 && !vars.iscover0){
+        ele.attr('src', listCover[0]);
+        vars.iscover0 = true;
+        vars.iscover1 = false;
+        vars.iscover2 = false;
+      }
+    }
+
+  };
+
+  $.fn[pluginName] = function(options, params) {
+    return this.each(function() {
+      var instance = $.data(this, pluginName);
+      if (!instance) {
+        $.data(this, pluginName, new Plugin(this, options));
+      } else if (instance[options]) {
+        instance[options](params);
+      } else {
+        // window.console && console.log(options ? options + ' method is not exists in ' + pluginName : pluginName + ' plugin has been initialized');
+      }
+    });
+  };
+
+  $.fn[pluginName].defaults = {};
+
+  $(function() {
+    var opt = {
+      afterChangeHandle: function() {
+        $('.item.visual .image-wrap').each(function() {
+          var el = $(this);
+          window.Site.checkVertical(el.find('img')[0].src, el);
+        });
+      }
+    };
+    $('[data-' + pluginName + ']')[pluginName](opt);
+    // win.on(Site.events.AJAX_SUCCESS + '.' + pluginName, function() {
+    //   $('[data-' + pluginName + ']')[pluginName](opt);
+    // });
+  });
+
+}(jQuery, window));
  /*!
  * Buttons helper for fancyBox
  * version: 1.0.5 (Mon, 15 Oct 2012)
@@ -5265,6 +11130,396 @@ and dependencies (minified).
   });
 
 }(window.jQuery, window.App));
+/**
+ *  @Accordion plugin
+ *  @description description
+ *  @version 1.0
+ *  @options
+ *    option
+ *  @events
+ *    event
+ *  @methods
+ *    init
+ *    toggle
+ *    destroy
+ */
+;(function($, window, undefined) {
+  var pluginName = 'list-friend-gp',
+      win = $(window);
+
+  function ListFriend(element, options) {
+    this.element = $(element);
+    this.options = $.extend({}, $.fn[pluginName].defaults, options);
+    this.init();
+  }
+
+  ListFriend.prototype = {
+    init: function() {
+      var that = this;
+      var templateLoading= '<div class="wrapLoad" style="z-index: 100000"><div class="load-wrapp"><div class="load-1"><div class="line"></div><div class="line"></div><div class="line"></div></div></div></div>';
+      this.element.on('click', function(evt) {
+        
+        window.googleDrive.getListFriend();
+        $('body').bind('google.friendselect', function(evt) {
+          // console.log(1);
+          that.showFriends(evt);
+        })
+        $('body').append(templateLoading);
+        $('#googlefriend.modal').on('hidden.bs.modal', function (e) {
+          var jsp = $('#googlefriend .invitation-list').data('jsp');
+          if (jsp) {
+            jsp.destroy();
+          }
+
+        });
+      });
+    },
+    destroy: function() {
+      // $.removeData(this.element[0], pluginName);
+    },
+
+    showFriends: function(evt) {
+      var tmpl = '<li><div class="media""><div class="media-left"><img class="media-object" alt="thumb" src="{img}"></div><div class="media-body"><div class="inner"><h4 class="media-heading">{name}</h4><div class="desc"><p></p></div></div><div class="custom-checkbox pull-right" data-check="data-check" data-original-title="" title=""><label for="{id}"><span class="custom"><input type="checkbox" name="" id="{id}"></span></label></div></div></div></li>';
+      
+      var div;
+      var str;
+      if (!evt.friends) {
+        return;
+      }
+      
+      var list = $('#googlefriend .invitation-list .list-unstyled');
+      list.empty();
+      for (var i = 0; i < evt.friends.length; i++) {
+        // console.log(evt.friends[i]);
+        str = tmpl;
+        str = str.replace(new RegExp('{name}', "g"), evt.friends[i].displayName);
+        // str = str.replace(new RegExp('{cover.source}', "g"), evt.friends[i].cover.source);
+        // str = str.replace(new RegExp('{cover.bio}', "g"), evt.friends[i].cover.bio ? evt.friends[i].cover.bio : "" );
+        str = str.replace(new RegExp('{img}', "g"), evt.friends[i].image.url);
+        // str = str.replace(new RegExp('{id}', "g"), evt.friends[i].id);
+        div = $(str);
+        // getAvatar(div,evt.friends[i].id);
+        list.append(div);
+      }
+
+      var images = list.find('img');
+      var count = 0;
+      images.each(function() {
+        $(this).on('load', function() {
+          count ++;
+          if (count == images.length) {
+            $('body .wrapLoad').remove();
+            $('#listFriend').modal('hide');
+            setTimeout(function(){
+              $('body').addClass('modal-open');
+            }, 300);
+            $('[data-check]').check();
+             $('#googlefriend .invitation-list').jScrollPane({
+              showArrows: true,
+              autoReinitialise: true
+            });
+          }
+        })
+      });
+      
+      // function getAvatar(div, userId) {
+      //   FB.api (
+      //     userId + '/picture',
+      //     function(response) {
+      //       console.log(response.url);
+      //       console.log(div);
+      //       div.find('img').attr('src', response.data.url);
+      //     }
+      //   );
+      // }
+
+    }
+  };
+
+  $.fn[pluginName] = function(options, params) {
+    return this.each(function() {
+      var instance = $.data(this, pluginName);
+      if (!instance) {
+        $.data(this, pluginName, new ListFriend(this, options));
+      } else if (instance[options]) {
+        instance[options](params);
+      } else {
+        window.console && console.log(options ? options + ' method is not exists in ' + pluginName : pluginName + ' plugin has been initialized');
+      }
+    });
+  };
+
+  $.fn[pluginName].defaults = {
+
+  };
+
+  $(function() {
+    $('[data-' + pluginName + ']')[pluginName]();
+  });
+
+}(jQuery, window));
+/**
+ *  @Accordion plugin
+ *  @description description
+ *  @version 1.0
+ *  @options
+ *    option
+ *  @events
+ *    event
+ *  @methods
+ *    init
+ *    toggle
+ *    destroy
+ */
+;(function($, window, undefined) {
+  var pluginName = 'list-friend-fb',
+      win = $(window);
+
+  function ListFriend(element, options) {
+    this.element = $(element);
+    this.options = $.extend({}, $.fn[pluginName].defaults, options);
+    this.init();
+  }
+
+  ListFriend.prototype = {
+    init: function() {
+      var that = this;
+      var templateLoading= '<div class="wrapLoad" style="z-index: 100000"><div class="load-wrapp"><div class="load-1"><div class="line"></div><div class="line"></div><div class="line"></div></div></div></div>';
+      this.element.on('click', function(evt) {
+        
+        window.facebook.getListFriend();
+
+        $('body').bind('facebook.friendselect', function(evt) {
+          that.showFriends(evt);
+        });
+        $('body').append(templateLoading);
+        $('#facebookfriend.modal').on('hidden.bs.modal', function (e) {
+          var jsp = $('#facebookfriend .invitation-list').data('jsp');
+          if (jsp) {
+            jsp.destroy();
+          }
+
+        });
+      });
+    },
+    destroy: function() {
+      // $.removeData(this.element[0], pluginName);
+    },
+
+    showFriends: function(evt) {
+      var tmpl = '<li><div class="media" data-id="{userid}"><div class="media-left"><img class="media-object" alt="thumb" src=""></div><div class="media-body"><div class="inner"><h4 class="media-heading">{name}</h4><div class="desc"><p>{cover.bio}</p></div></div><div class="custom-checkbox pull-right" data-check="data-check" data-original-title="" title=""><label for="{id}"><span class="custom"><input type="checkbox" name="" id="{id}"></span></label></div></div></div></li>';
+
+      var div;
+      var str;
+      if (!evt.friends) {
+        return;
+      }
+      
+      var list = $('#facebookfriend .invitation-list .list-unstyled');
+      list.empty();
+      for (var i = 0; i < evt.friends.length; i++) {
+        // console.log(evt.friends[i].name);
+        str = tmpl;
+        str = str.replace(new RegExp('{name}', "g"), evt.friends[i].name);
+        str = str.replace(new RegExp('{cover.source}', "g"), evt.friends[i].cover.source);
+        str = str.replace(new RegExp('{cover.bio}', "g"), evt.friends[i].cover.bio ? evt.friends[i].cover.bio : "" );
+        str = str.replace(new RegExp('{userid}', "g"), evt.friends[i].id);
+        str = str.replace(new RegExp('{id}', "g"), evt.friends[i].id);
+        div = $(str);
+        getAvatar(div,evt.friends[i].id);
+        list.append(div);        
+      }
+      var images = list.find('img');
+      var count = 0;
+      images.each(function() {
+        $(this).on('load', function() {
+          count ++;
+          if (count == images.length) {
+            $('body .wrapLoad').remove();
+            $('#listFriend').modal('hide');
+            setTimeout(function(){
+              $('body').addClass('modal-open');
+            }, 300);
+            $('[data-check]').check();
+             $('#facebookfriend .invitation-list').jScrollPane({
+              showArrows: true,
+              autoReinitialise: true
+            });
+          }
+        })
+      });
+      function getAvatar(div, userId) {
+        FB.api (
+          userId + '/picture',
+          function(response) {
+            // console.log(response.url);
+            // console.log(div);
+            div.find('img').attr('src', response.data.url);
+          }
+        );
+      }
+
+    }
+  };
+
+  $.fn[pluginName] = function(options, params) {
+    return this.each(function() {
+      var instance = $.data(this, pluginName);
+      if (!instance) {
+        $.data(this, pluginName, new ListFriend(this, options));
+      } else if (instance[options]) {
+        instance[options](params);
+      } else {
+        window.console && console.log(options ? options + ' method is not exists in ' + pluginName : pluginName + ' plugin has been initialized');
+      }
+    });
+  };
+
+  $.fn[pluginName].defaults = {
+
+  };
+
+  $(function() {
+    $('[data-' + pluginName + ']')[pluginName]();
+  });
+
+}(jQuery, window));
+/**
+ *  @name scroll-video
+ *  @description description
+ *  @version 1.0
+ *  @options
+ *    option
+ *  @events
+ *    event
+ *  @methods
+ *    init
+ *    publicMethod
+ *    destroy
+ */
+;(function($, window, undefined) {
+  var pluginName = 'map-lt';
+
+  function Plugin(element, options) {
+    this.element = $(element);
+    this.options = $.extend({}, $.fn[pluginName].defaults, this.element.data(), options);
+    this.init();
+  }
+
+  Plugin.prototype = {
+    init: function() {
+      var that = this,
+          ele = that.element;
+      var geocoder = new google.maps.Geocoder();
+      function geocodePosition(pos) {
+        geocoder.geocode({
+          latLng: pos
+        }, function(responses) {
+          if (responses && responses.length > 0) {
+            updateMarkerAddress(responses[0].formatted_address);
+          } else {
+            updateMarkerAddress('Cannot determine address at this location.');
+          }
+        });
+      }
+
+      function updateMarkerStatus(str) {
+        document.getElementById('markerStatus').innerHTML = str;
+      }
+
+      function updateMarkerPosition(latLng) {
+        var ltlong = [
+          latLng.lat(),
+          latLng.lng()
+        ].join(', ');
+        $('#info').attr('value', ltlong);
+      }
+
+      function updateMarkerAddress(str) {
+        document.getElementById('address').innerHTML = str;
+      }
+
+      function initialize() {
+        var latLng = new google.maps.LatLng(10.810583, 106.709145);
+        
+        var map = new google.maps.Map(document.getElementById('mapCanvas'), {
+          zoom: 11,
+          center: latLng,
+          mapTypeId: google.maps.MapTypeId.ROADMAP
+        });
+
+
+
+        var marker = new google.maps.Marker({
+          position: latLng,
+          title: 'Point',
+          map: map,
+          icon: ele.data('icon-marker') || '',
+          draggable: true
+        });
+
+        // Update current position info.
+        updateMarkerPosition(latLng);
+        geocodePosition(latLng);
+        
+        // Add dragging event listeners.
+        google.maps.event.addListener(marker, 'dragstart', function() {
+          updateMarkerAddress('Dragging...');
+        });
+        
+        google.maps.event.addListener(marker, 'drag', function() {
+          updateMarkerStatus('Dragging...');
+          updateMarkerPosition(marker.getPosition());
+        });
+        
+        google.maps.event.addListener(marker, 'dragend', function() {
+          updateMarkerStatus('Drag ended');
+          geocodePosition(marker.getPosition());
+        });
+
+        google.maps.event.addListener(map, 'click', function(event) {
+          var myLatLng = event.latLng;
+          var lat = myLatLng.lat();
+          var lng = myLatLng.lng();
+        });
+      }
+
+      // Onload handler to fire off the app.
+
+      window.google.maps.event.addDomListener(window, 'load', initialize);
+      window.google.maps.event.addDomListener(window, "resize", function() {
+        var center = map.getCenter();
+        google.maps.event.trigger(map, "resize");
+        map.setCenter(center); 
+      });
+    },
+    destroy: function() {
+      $.removeData(this.element[0], pluginName);
+    }
+  };
+
+  $.fn[pluginName] = function(options, params) {
+    return this.each(function() {
+      var instance = $.data(this, pluginName);
+      if (!instance) {
+        $.data(this, pluginName, new Plugin(this, options));
+      } else if (instance[options]) {
+        instance[options](params);
+      } else {
+        window.console && console.log(options ? options + ' method is not exists in ' + pluginName : pluginName + ' plugin has been initialized');
+      }
+    });
+  };
+
+  $.fn[pluginName].defaults = {
+  };
+
+  $(function() {
+    $('[data-' + pluginName + ']')[pluginName]();
+  });
+
+}(jQuery, window));
+
 /* =================
  * navigation/app.js
  * ================= */
@@ -5721,20 +11976,37 @@ and dependencies (minified).
 
   Slider.prototype.init = function() {
     var slider = $(sliderShow),
-        navSlider = $(nav);
-   slider.slick({
+        navSlider = $(nav),
+        select = $('[data-slider-home]').find('.custom-select');
+    slider.slick({
       slidesToShow: 1,
       slidesToScroll: 1,
       arrows: true,
       fade: false,
       asNavFor: navSlider,
+      adaptiveHeight: true,
       autoplay: true,
       autoplaySpeed: 5000,
+      // onBeforeChange: function(slick, currentSlide, targetSlide) {
+      //   // lastSlide = $('.slick-center .menu-entry').attr('id');
+      //   console.log(slick);
+      //   console.log(currentSlide);
+      //   console.log(targetSlide);
+      // },
       onAfterChange:function(slickSlider,i){
+        // console.log(slickSlider);
         $('[data-slider-nav] .slick-slide').removeClass('slick-current');
         $('[data-slider-nav] .slick-slide').eq(i).addClass('slick-current');
-     }
-    })
+      }
+    });
+    $('.content-select').on('mouseenter', function(){
+        slider.slickPause();
+        navSlider.slickPause();
+    });
+    $('.content-select').on('mouseleave', function(){
+        slider.slickPlay();
+        navSlider.slickPlay();
+    });
     navSlider.slick({
       slidesToShow: 6,
       slidesToScroll: 1,
@@ -5744,8 +12016,21 @@ and dependencies (minified).
       autoplaySpeed: 5000,
       focusOnSelect: true
     });
-    $('[data-slider-nav] .slick-slide').eq(0).addClass('slick-current');
-    $(window).on('resize.homeslider', function(){
+    // $('[data-slider-nav] .slick-slide').eq(0).addClass('slick-current');
+    
+    // slide.slickSetOption('autoplay', false);
+    // var paused = false;
+    // $('[data-slider-home] .custom-select').on('click', function() {
+    //   paused = !paused;
+    //   if(paused) {
+    //     console.log(1);
+    //     slide.slickPause();
+    //   } else {
+    //     slide.slickPlay();
+    //   }
+    // });
+
+    $(window).on('load resize.homeslider', function(){
       if($(window).width() < 768){
         $('[data-slider-home] .slick-slide .find-block').each(function(){
           $(this).css({
@@ -5910,10 +12195,6 @@ and dependencies (minified).
 /* =================
  * seat.js
     TO DO:
-   - update new code for suggestion
-   - save api
-   - share api
-   - multi email
    - grid width + height
  * ================= */
 
@@ -7043,7 +13324,41 @@ and dependencies (minified).
   Seat.prototype.createSeat = function(numOfTable, typeOfSeat) {
 
     if (typeOfSeat == 1) {
-      this.setDefaultSeat(60, 150);
+      this.setDefaultSeat(Math.ceil(numOfTable/4) * 10 + 50, 60);
+    
+      //circle
+      var custom = this.getDefaultJsonTable('custom');
+      custom.label = 'SÂN KHẤU';
+
+      var table = this.createTable(custom, true);
+      table.setSize(50 * 20, 60);
+      table.setRotate(-90);
+      table.x = 80;
+      table.y = 30 * 20;
+      
+      var row = 0;
+      var toX = 250;
+      var toY = 200;
+
+      for (var i = 0; i < numOfTable; i ++) {
+        custom = this.getDefaultJsonTable('circle');
+        custom.label = 'BÀN TIỆC ' + (i + 1);
+        table = this.createTable(custom, false);
+        table.x = toX;
+        table.y = toY;
+        
+        toY += Number(table.tableHeight) + ((row == 1) ? 250 : 170);
+        row ++;
+        if (row >= 4) {
+          row = 0;
+          toY = 200;
+          toX += Number(table.tableWidth) + 120;
+        }
+      }
+    }
+
+    else if (typeOfSeat == 2) {
+      this.setDefaultSeat(60, Math.ceil(numOfTable/4) * 10 + 50);
     
       //circle
       var custom = this.getDefaultJsonTable('custom');
@@ -7052,11 +13367,11 @@ and dependencies (minified).
       var table = this.createTable(custom, true);
       table.setSize(50 * 20, 60);
       table.x = 30 * 20;
-      table.y = 80;
+      table.y = 100;
 
       var row = 0;
       var toX = 150;
-      var toY = 200;
+      var toY = 250;
 
       for (var i = 0; i < numOfTable; i ++) {
         custom = this.getDefaultJsonTable('circle');
@@ -7069,16 +13384,19 @@ and dependencies (minified).
         if (row >= 4) {
           row = 0;
           toX = 150;
-          toY += Number(table.tableHeight) + 100;
+          toY += Number(table.tableHeight) + 120;
         }
       }
+    }
 
+    else {
+      this.setDefaultSeat(150, 50);
     }
   };
 
   Seat.prototype.setDefaultSeat = function(gridWidth, gridHeight) {
-    $('.addsize').find('.wrap').find("input[name='Width']").val(gridWidth);
-    $('.addsize').find('.wrap').find("input[name='Length']").val(gridHeight);
+    $('.addsize').find('.wrap').find("input[name='Width']").val(gridWidth/10);
+    $('.addsize').find('.wrap').find("input[name='Length']").val(gridHeight/10);
     this.changeSize(gridWidth, gridHeight);
   };
 
@@ -7132,13 +13450,13 @@ and dependencies (minified).
     var wid = Number(wrap.find("input[name='Width']").val());
     var hei = Number(wrap.find("input[name='Length']").val());
 
-    wid = wid < 40 || isNaN(wid) ? 40 : wid;
-    hei = hei < 40 || isNaN(hei) ? 40 : hei;
+    wid = wid < 4 || isNaN(wid) ? 4 : wid;
+    hei = hei < 4 || isNaN(hei) ? 4 : hei;
 
     $('.addsize').find('.wrap').find("input[name='Width']").val(wid);
     $('.addsize').find('.wrap').find("input[name='Length']").val(hei);
 
-    this.changeSize(Number(wid), Number(hei));
+    this.changeSize(Number(wid) * 10, Number(hei) * 10);
   };
 
   Seat.prototype.onPressMoveHScrollBarHandler = function(evt) {
@@ -8202,8 +14520,10 @@ and dependencies (minified).
             control.find('li').removeClass('active');
             el.parent().addClass('active');
             $(idControl).addClass('active');
+
+            var ce = jQuery.Event("change.tab-video-small");
+            $('body').trigger( ce );
           }
-          
         });
       });
     },
@@ -8284,2811 +14604,6 @@ and dependencies (minified).
     },
     destroy: function() {
       $.removeData(this.element[0], pluginName);
-    }
-  };
-
-  $.fn[pluginName] = function(options, params) {
-    return this.each(function() {
-      var instance = $.data(this, pluginName);
-      if (!instance) {
-        $.data(this, pluginName, new Plugin(this, options));
-      } else if (instance[options]) {
-        instance[options](params);
-      } else {
-        window.console && console.log(options ? options + ' method is not exists in ' + pluginName : pluginName + ' plugin has been initialized');
-      }
-    });
-  };
-
-  $.fn[pluginName].defaults = {
-  };
-
-  $(function() {
-    $('[data-' + pluginName + ']')[pluginName]();
-  });
-
-}(jQuery, window));
-/* =================
- * video-clip.js
-  TO DO:
-  PreviewVC: seek video clip, resize video
-
- * ================= */
-
-;(function($, window, createjs, App) {
-
-  "use strict";
-
-  function TextData() {
-    this.text = '';
-    this.font = 'Arial';
-    this.fontName = 'Arial';
-    this.style = '';
-
-    this.halign = 'center';
-    this.valign = 'middle';
-    this.padding = 5;
-    
-    this.size = 36;
-    this.color = 'Magenta';
-  };
-
-  function AudioData() {
-    this.id = null;
-    this.url = null;
-    this.start = 0;
-    this.end = -1;
-    this.audioInstance = null;
-  };
-
-  function BackgroundData() {
-    this.id = null;
-    this.url = null;
-    this.time = 30;
-    this.bitmapView = null;
-    this.imageView = null;
-  };
-
-  function FrameData() {
-    //text data
-    this.text = new TextData();
-    this.textEffect = 'TFade';
-    this.textEffectClass = 'TEffect_Fade';
-    this.textEffectDelay = 5;
-    this.textEffectDuration = 5;
-
-    //image data
-    this.bitmapId = null;
-    this.bitmapUrl =  null;
-    this.bitmapEffect = 'BFade';
-    this.bitmapEffectClass = 'BEffect_Fade';
-    this.bitmapEffectDelay = 3;
-    this.bitmapEffectDuration = 5;
-
-    //video data
-    this.videoId = null;
-    this.videoUrl = null;
-    this.videoStart = 0;
-    this.videoEnd = -1
-
-    //audio data
-    this.audioId = null;
-    this.audioUrl = null;
-    this.audioStart = 0;
-    this.audioEnd = -1;
-
-    //time data
-    this.delayTime = 5;
-    this.duration = 5;
-
-    this.type = null;
-
-    this.bitmapView = null;
-    this.textView = null;
-    this.imageView = null;
-    this.videoView = null;
-  };
-
-  FrameData.prototype.getDuration = function() {
-    return this.bitmapEffectDelay + this.bitmapEffectDuration + this.delayTime;
-  }
-  
-  //bug: when duplicate frame, the getDuration is not cloned
-  FrameData.prototype.clone = function() {
-    return (JSON.parse(JSON.stringify(this)));
-  }
-
-  var EffectUtils = function() {
-    var arrEffect = [];
-    
-    return {
-      addEffectPlugin : function(type, effect) {
-        var isExist = false;
-        for (var key in arrEffect) {
-          if (key == type) {
-            isExist = true;
-            break;
-          }
-        }
-        if (!isExist) {
-          arrEffect[type] = effect;
-        }
-        return !isExist;
-      },
-
-      getEffectPlugin : function(type) {
-        for (var key in arrEffect) {
-          if (key == type) {
-            return arrEffect[key];
-          }
-        }
-      },
-      
-      formatTime: function(time) {
-        var hour = Math.floor(time / 3600);
-        var strHour = (hour > 9) ? ('' + hour)  : ('0' + hour);
-
-        time = time % 3600;
-        var minute = Math.floor(time / 60);
-        var strMinute = (minute > 9) ? ('' + minute)  : ('0' + minute);
-
-        time = time % 60;
-        var second = Math.floor(time % 60);
-        var strSecond = (second > 9) ? ('' + second)  : ('0' + second);
-
-        if (hour > 0) {     
-          return strHour + ':' + strMinute + ':' + strSecond;
-        }
-        return strMinute + ':' + strSecond;
-      },
-
-      getTimeByFrame: function(arrFrame, frameIndex) {
-        var frameData;
-        var totalTime = 0;
-        for (var i = 0; i <= frameIndex; i ++) {
-          totalTime += (arrFrame[i]).getDuration();
-        }
-        return totalTime;
-      },
-
-      getBackgroundDataByTime: function(arrBG, time) {
-        var bgData;
-        var bgTime = 0;
-        for (var i = 0; i < arrBG.length; i ++) {
-          bgData = arrBG[i];
-          if (time >= bgTime && (bgTime + bgData.time) >= time) {
-            return bgData;
-          }
-          bgTime += bgData.time;
-        }
-        return null;
-      }
-    }
-  }();
-  
-  //////////TEffect_Fade//////////
-  function TEffect_Fade() {}
-  TEffect_Fade.prototype.play = function(container, preText, text, delay, time) {
-
-    if (preText) {
-      TweenLite.to(preText, 1, {alpha: 0, onComplete: function() {
-        container.removeChild(preText);
-      }});
-    }
-
-    container.addChild(text);
-    text.alpha = 0;
-    TweenLite.to(text, time, {delay: delay, alpha: 1});
-  };
-  window.TEffect_Fade = TEffect_Fade;
-
-  //////////TEffect_SlideLeft//////////
-  function TEffect_SlideLeft() {}
-  TEffect_SlideLeft.prototype.play = function(container, preText, text, delay, time) {
-    if (preText) {
-      TweenLite.to(preText, time, {delay: delay, x: -container.VC_WIDTH, onComplete: function() {
-        container.removeChild(preText);
-      }});
-    }
-
-    container.addChild(text);
-    var orgX = text.x;
-
-    text.x = container.VC_WIDTH;
-    TweenLite.to(text, time, {delay: delay, x: orgX});
-  };
-  window.TEffect_SlideLeft = TEffect_SlideLeft;
-
-  //////////BEffect_Fade//////////
-  function BEffect_Fade() {}
-  BEffect_Fade.prototype.play = function(container, prevBitmap, nextBitmap, delay, time) {
-    container.addChild(nextBitmap);
-    nextBitmap.alpha = 0;
-    TweenLite.to(nextBitmap, time, {delay: delay, alpha: 1});
-  };
-  window.BEffect_Fade = BEffect_Fade;
-
-  //////////BEffect_Slide//////////
-  function BEffect_SlideLeft() {}
-  BEffect_SlideLeft.prototype.play = function(container, prevBitmap, nextBitmap, delay, time) {
-
-    if (prevBitmap) {
-      TweenLite.to(prevBitmap, 1.5, {x: -container.VC_WIDTH});
-    }
-
-    container.addChild(nextBitmap);
-    nextBitmap.x = container.VC_WIDTH;
-    TweenLite.to(nextBitmap, 1.5, {x: 0});
-  }
-  window.BEffect_SlideLeft = BEffect_SlideLeft;
-
-  //////////BEffect_SlideRight//////////
-  function BEffect_SlideRight() {}
-  BEffect_SlideRight.prototype.play = function(container, prevBitmap, nextBitmap, delay, time) {
-
-    if (prevBitmap) {
-      TweenLite.to(prevBitmap, 1.5, {x: container.VC_WIDTH});
-    }
-
-    container.addChild(nextBitmap);
-    nextBitmap.x = -container.VC_WIDTH;
-    TweenLite.to(nextBitmap, 1.5, {x: 0});
-  }
-  window.BEffect_SlideRight = BEffect_SlideRight;
-
-  //////////BEffect_SlideUp//////////
-  function BEffect_SlideUp() {}
-  BEffect_SlideUp.prototype.play = function(container, prevBitmap, nextBitmap, delay, time) {
-
-    if (prevBitmap) {
-      TweenLite.to(prevBitmap, 1.5, {y: -container.VC_HEIGHT});
-    }
-
-    container.addChild(nextBitmap);
-    nextBitmap.y = container.VC_HEIGHT;
-    TweenLite.to(nextBitmap, 1.5, {y: 0});
-  }
-  window.BEffect_SlideUp = BEffect_SlideUp;
-
-  //////////BEffect_SlideDown//////////
-  function BEffect_SlideDown() {}
-  BEffect_SlideDown.prototype.play = function(container, prevBitmap, nextBitmap, delay, time) {
-
-    if (prevBitmap) {
-      TweenLite.to(prevBitmap, 1.5, {y: container.VC_HEIGHT});
-    }
-
-    container.addChild(nextBitmap);
-    nextBitmap.y = -container.VC_HEIGHT;
-    TweenLite.to(nextBitmap, 1.5, {y: 0});
-  }
-  window.BEffect_SlideDown = BEffect_SlideDown;
-
-  //////////BEffect_ZoomIn//////////
-  function BEffect_ZoomIn() {}
-  BEffect_ZoomIn.prototype.play = function(container, prevBitmap, nextBitmap, delay, time) {
-   
-    container.addChild(nextBitmap);
-    
-    var scale = nextBitmap.scaleX;
-    nextBitmap.alpha = 0;
-
-    nextBitmap.scaleX = nextBitmap.scaleY = 0.5;
-    nextBitmap.x = 0.5 * nextBitmap.getBounds().width / 2;
-    nextBitmap.y = 0.5 * nextBitmap.getBounds().height / 2;
-    
-    TweenLite.to(nextBitmap, time, {delay: delay, alpha: 1, x: 0, y :0, scaleX: scale, scaleY: scale});
-  }
-  window.BEffect_ZoomIn = BEffect_ZoomIn;
-  
-//////////BEffect_ZoomOut//////////
-  function BEffect_ZoomOut() {}
-  BEffect_ZoomOut.prototype.play = function(container, prevBitmap, nextBitmap, delay, time) {
-   
-    container.addChild(nextBitmap);
-    
-    var scale = nextBitmap.scaleX;
-    nextBitmap.alpha = 0;
-    nextBitmap.scaleX = nextBitmap.scaleY = 2;
-    nextBitmap.x = - nextBitmap.getBounds().width / 2;
-    nextBitmap.y = - nextBitmap.getBounds().height / 2;
-    
-    TweenLite.to(nextBitmap, 3, {alpha: 1, x: 0, y :0, scaleX: scale, scaleY: scale});
-  }
-  window.BEffect_ZoomOut = BEffect_ZoomOut;
-  
-  //////////BEffect_AlphaBars//////////
-  function BEffect_AlphaBars() {}
-  BEffect_AlphaBars.prototype.play = function(container, prevBitmap, nextBitmap, delay, time) {
-    
-    //step 1: create temp bitmap with corrected size
-    var w = nextBitmap.getBounds().width;
-    var h = nextBitmap.getBounds().height;
-    
-    nextBitmap.cache(0, 0, w, h);
-    
-    var matrix = new createjs.Matrix2D(container.VC_WIDTH/ w, 0, 0, container.VC_WIDTH/ w, 0, (container.VC_HEIGHT - (container.VC_WIDTH/ w) * h)/2);      
-    var bitmapData = new createjs.BitmapData(null, container.VC_WIDTH, container.VC_HEIGHT, 0x000000);
-    bitmapData.draw(nextBitmap, matrix, null, null, null, true);
-    
-    var temp = new createjs.Container();
-    container.addChild(temp); 
-    
-    //step 2: create and show bars
-    var barWidth = 30;
-    var numOfBar = Math.ceil(container.VC_WIDTH / barWidth);
-    var bar;
-    var showTime = 0.5;
-    var delayTime = 0.03;
-    
-    for (var i = 0; i < numOfBar; i ++) {
-      bar = new createjs.Bitmap(bitmapData.canvas);
-      bar.sourceRect = new createjs.Rectangle(barWidth * i, 0, barWidth, container.VC_HEIGHT);
-      bar.x = barWidth * i;
-      bar.alpha = 0;
-      temp.addChild(bar); 
-      
-      TweenLite.to(bar, showTime, {alpha: 1, delay: i < numOfBar / 2  ? delayTime * i : numOfBar * delayTime - delayTime * i, onComplete: onCompleteShowBar, onCompleteParams: [bar, i]});
-    }      
-    
-    function onCompleteShowBar(bar, index) {
-      if (index == numOfBar - 1) {
-        container.addChild(new createjs.Bitmap(bitmapData.canvas));
-        temp.removeAllChildren();
-        container.removeChild(temp);
-      }
-    }      
-  };
-  window.BEffect_AlphaBars = BEffect_AlphaBars;
-  
-  //////////BEffect_SquareExplode//////////
-  function BEffect_SquareExplode() {}
-  BEffect_SquareExplode.prototype.play = function(container, prevBitmap, nextBitmap, delay, time) {
-    
-    //step 1: create temp bitmap with corrected size
-    var w = nextBitmap.getBounds().width;
-    var h = nextBitmap.getBounds().height;
-    
-    nextBitmap.cache(0, 0, w, h);
-    
-    var matrix = new createjs.Matrix2D(container.VC_WIDTH/ w, 0, 0, container.VC_WIDTH/ w, 0, (container.VC_HEIGHT - (container.VC_WIDTH/ w) * h)/2);      
-    var bitmapData = new createjs.BitmapData(null, container.VC_WIDTH, container.VC_HEIGHT, 0x000000);
-    bitmapData.draw(nextBitmap, matrix, null, null, null, true);
-    
-    var temp = new createjs.Container();
-    container.addChild(temp); 
-    
-    //create image with mask
-    var imageMask = new createjs.Shape();
-    imageMask.graphics.drawRect(0, 0, container.VC_WIDTH, container.VC_HEIGHT);
-    imageMask.scaleX = 0;
-    temp.addChild(imageMask);
-    
-    var bitmap = new createjs.Bitmap(bitmapData.canvas);
-    bitmap.cache(0, 0, container.VC_WIDTH, container.VC_HEIGHT);
-    temp.addChild(bitmap);
-    
-    temp.mask = imageMask;
-    TweenLite.to(imageMask, 2, {scaleX: 1, ease: Power2.easeOut });
-    
-    //step 2: create and show bars
-    var barWidth = 40;
-    var barHeight = 40;
-    var col = Math.ceil(container.VC_HEIGHT / barHeight);
-    var row = Math.ceil(container.VC_WIDTH / barWidth);      
-    var i, j;
-    var bar;      
-    var showTime = 1;
-    var delayTime = 0.06;
-    var distance = 150;
-    var toX, toY;
-    
-    for (i = 0; i < row; i ++) {
-      for (j = 0; j < col; j ++) {
-        bar = new createjs.Bitmap(bitmapData.canvas);
-        bar.sourceRect = new createjs.Rectangle(barWidth * i, barHeight * j, barWidth, barHeight);
-        bar.x = barWidth * i;
-        bar.y = barHeight * j;
-        temp.addChild(bar); 
-        
-        toX = bar.x + (Math.random() < 0.5 ? -Math.random() * distance : Math.random() * distance);
-        toY = bar.y + (Math.random() < 0.5 ? -Math.random() * distance : Math.random() * distance);
-      
-        TweenLite.to(bar, showTime, {alpha: 0, delay: delayTime * i, x: toX, y: toY, onComplete: onCompleteShowEffect, onCompleteParams: [bar]});
-      }      
-    }
-    
-    function onCompleteShowEffect(bar) {
-      temp.removeChild(bar);
-    }
-  };
-  window.BEffect_SquareExplode = BEffect_SquareExplode;
-
-  //////////BEffect_BrightSquares//////////
-  function BEffect_BrightSquares() {}
-  BEffect_BrightSquares.prototype.play = function(container, prevBitmap, nextBitmap, delay, time) {
-    
-    //step 1: create temp bitmap with corrected size
-    var w = nextBitmap.getBounds().width;
-    var h = nextBitmap.getBounds().height;
-    
-    nextBitmap.cache(0, 0, w, h);
-    
-    var matrix = new createjs.Matrix2D(container.VC_WIDTH/ w, 0, 0, container.VC_WIDTH/ w, 0, (container.VC_HEIGHT - (container.VC_WIDTH/ w) * h)/2);      
-    var bitmapData = new createjs.BitmapData(null, container.VC_WIDTH, container.VC_HEIGHT, 0x000000);
-    bitmapData.draw(nextBitmap, matrix, null, null, null, true);
-    
-    var temp = new createjs.Container();
-    container.addChild(temp); 
-    
-    //step 2: create and show bars
-    var barWidth = 40;
-    var barHeight = 40;
-    var col = Math.ceil(container.VC_HEIGHT / barHeight);
-    var row = Math.ceil(container.VC_WIDTH / barWidth);      
-    var i, j;
-    var bar;      
-    var bitmap;
-    var bright;
-    var showTime = 0.5;
-    var delayTime = 0.01;
-    var delay;
-    
-    for (i = 0; i < row; i ++) {
-      for (j = 0; j < col; j ++) {
-        bar = new createjs.Container();
-        bar.orgX = barWidth * i;
-        bar.orgY = barHeight * j;
-        bar.x = bar.orgX + barWidth/2;
-        bar.y = bar.orgY + barHeight/2;
-        bar.scaleX = bar.scaleY = 0;
-        temp.addChild(bar); 
-        
-        bitmap = new createjs.Bitmap(bitmapData.canvas);
-        bitmap.sourceRect = new createjs.Rectangle(barWidth * i, barHeight * j, barWidth, barHeight);
-        bar.addChild(bitmap); 
-        
-        bright = new createjs.Shape();          
-        bright.graphics.beginFill('#FFFFFF').drawRect(0, 0, barWidth, barHeight).endFill();
-        bar.addChild(bright);
-        
-        delay = delayTime *  i * (col - j);                    
-        TweenLite.to(bright, showTime + 0.2, {alpha: 0, delay: delay + 0.2});
-        
-        TweenLite.to(bar, showTime, {alpha: 1, x: bar.orgX, y: bar.orgY, scaleX: 1, scaleY: 1, delay: delay, onComplete: onCompleteShowEffect, onCompleteParams: [bar]});
-      }      
-    }
-    
-    function onCompleteShowEffect(bar) {
-      //temp.removeChild(bar);
-    }
-  };
-  window.BEffect_BrightSquares = BEffect_BrightSquares;
-
-  EffectUtils.addEffectPlugin('TFade', new window['TEffect_Fade']());
-  EffectUtils.addEffectPlugin('TSlideLeft', new window['TEffect_SlideLeft']());
-  EffectUtils.addEffectPlugin('BFade', new window['BEffect_Fade']());
-  EffectUtils.addEffectPlugin('BSlideLeft', new window['BEffect_SlideLeft']());
-  EffectUtils.addEffectPlugin('BSlideRight', new window['BEffect_SlideRight']());
-  EffectUtils.addEffectPlugin('BSlideUp', new window['BEffect_SlideUp']());
-  EffectUtils.addEffectPlugin('BSlideDown', new window['BEffect_SlideDown']());
-  EffectUtils.addEffectPlugin('BZoomIn', new window['BEffect_ZoomIn']());
-  EffectUtils.addEffectPlugin('BZoomOut', new window['BEffect_ZoomOut']());
-  EffectUtils.addEffectPlugin('BAlphaBars', new window['BEffect_AlphaBars']());
-  EffectUtils.addEffectPlugin('BSquareExplode', new window['BEffect_SquareExplode']());
-  EffectUtils.addEffectPlugin('BBrightSquares', new window['BEffect_BrightSquares']());
-
-  /* =============== */
-  /* MODULE DEFAULTS */
-  /* =============== */
-
-  var defaults = {};
-  var pluginName = 'videoclip';
-
-  var SERVER_URL = 'http://localhost:3001/wedding/public';
-
-  var IMAGE = 'image';
-  var AUDIO = 'audio';
-  var VIDEO = 'video';
-
-  var PANEL_INTRO = 'intro';
-  var PANEL_TEXT = 'text';
-  var PANEL_IMAGE = 'image';
-  var PANEL_VIDEO = 'video';
-  var PANEL_EFFECT = 'effect';
-  var PANEL_AUDIO = 'audio';
-  var PANEL_TEXT_EFFECT = 'texteffect';
-
-  var FROM_LIBRARY = 'library';
-  var FROM_UPLOAD = 'upload';
-  var FROM_YOURS = 'yours';
-
-  var HA_LEFT = 'left';
-  var HA_CENTER = 'center';
-  var HA_RIGHT = 'right';
-
-  var VA_TOP = 'top';
-  var VA_MIDDLE = 'middle';
-  var VA_BOTTOM = 'bottom';  
-
-  /* ================= */
-  /* MODULE DEFINITION */
-  /* ================= */
-
-  function VideoClip(element, options) {
-    this.element = $(element);
-    this.options = $.extend({}, $.fn[pluginName].defaults, options);
-
-    this.vcid = Math.random().toString(36).substring(12);
-
-    this.arrFrame = [];
-    this.curFrameIndex = -1;
-    this.curFrame = null;
-
-    this.curFrameImage = null;
-    this.curFrameVideo = null;
-    this.curFrameText = null;
-    this.curFrameEffect = null;
-    this.curFrameAudio = null;
-    this.curFrameHAlign = null;
-    this.curFrameVAlign = null;
-    this.curFrameStyle  = null;
-
-    this.arrBG = []
-    this.curBG = null;
-    this.curBGIndex = -1;
-
-    this.arrBGAudio = []
-    this.curBGAudio = null;
-    this.curBGAudioIndex = -1;
-    
-    this.isBackground = false;
-    this.isAudio = false;
-
-    this.canvas = null;
-    this.stage = null;
-    
-    this.bitmapContainer = null;
-    this.frameBitmap = null;
-    this.bgContainer = null;
-    this.bgBitmap = null;
-    this.frameText = null
-    this.textContainer = null;
-
-    this.effectSetting = null;
-    this.mediaSetting = null;
-    this.loading = null;
-
-    this.audioInstance = null;
-    this.videoInstance = null;
-
-    this.curPanel = null;
-    this.previewVC = new PreviewVC(); 
-
-    this.googleDrive = null;
-
-    return this.init();
-  }
-
-  /* ============== */
-  /* MODULE METHODS */
-  /* ============== */
-
-  VideoClip.prototype.init = function() {
-
-    var that = this;
-
-    createjs.Sound.alternateExtensions = ["mp3", "m4a", "wav"];
-    createjs.Sound.registerPlugins([createjs.WebAudioPlugin]);
-    
-    this.canvas = document.getElementById('cvsVC');
-    this.stage = new createjs.Stage("cvsVC");
-    this.bgContainer = this.stage.addChild(new createjs.Container());
-    this.bitmapContainer = this.stage.addChild(new createjs.Container());
-    this.textContainer = this.stage.addChild(new createjs.Container());
-
-    createjs.Ticker.addEventListener("tick", function() { that.stage.update(); });
-    
-    $(window).on('resize', function(evt) { that.resize(); });
-    this.resize();
-
-    this.effectSetting = $('.effect-setting');
-
-    this.videoInstance = document.getElementById('video');
-
-    this.loading = $('.vc-loading-wrapp');
-      
-    //media-setting events
-    this.mediaSetting = $('.media-setting');
-
-    this.mediaSetting.find('.time-start').on('mousedown', function(evt) {
-      that.onMoveTimeHandler(this);
-    });
-
-    this.mediaSetting.find('.time-end').on('mousedown', function(evt) {
-      that.onMoveTimeHandler(this);
-    });
-
-    this.mediaSetting.find('.play-pause').off('click').on('click', function(evt) {
-      that.onClickPlayPauseHandler(this);
-    });
-
-    //dropdown-menu
-    var dropDownMenuFrame = $('.dropdown-menu').find('.item');
-    dropDownMenuFrame.each(function() {
-      var item = $(this);
-      item.off('click').on('click', function(evt) {
-        that.onClickDropDownMenuHandler(item);
-      });
-    });
-
-    //add new
-    $('.vc-backgrounds').find('.add-more').off('click').on('click', function(evt) { that. onClickAddBackgroundHandler(evt);});
-    $('.vc-audios').find('.add-more').off('click').on('click', function(evt) { that. onClickAddAudioHandler(evt);});
-    $('.vc-frames').find('.add-more-effect').off('click').on('click', function(evt) { that. onClickAddFrameHandler(evt);});
-    $('#vc-add-intro').find('.intro-click').off('click').on('click', function(evt) { that. onClickAddFrameHandler(evt);});
-
-    $('.vc-frames').find('.add-more-effect').off('click').on('click', function(evt) { that. onClickAddFrameHandler(evt);});
-    $(window).on('resize.videoResize', function(){
-      $('.wrapper-video .tfooter .add-function-block .item .content').jScrollPane('reinitialise');
-    }).trigger('resize.videoResize');
-    
-    //menu
-    var controlMenu = $('.control-menu').find('li');
-    controlMenu.off('click').on('click', function(evt) {
-      that.changePanel($(this).attr('id'));
-    });
-
-    //save, preview and finish
-    var listControl = $('.list-control');
-    listControl.find('.save-vc').off('click').on('click', function(evt) { that.save();});
-    listControl.find('.preview-vc').off('click').on('click', function(evt) { that.preview();});
-    listControl.find('.finish-vc').off('click').on('click', function(evt) { that.finish();});
-
-    //select image from library
-    var imageLibrary = $('#vc-image-library').find('.item');
-    imageLibrary.off('click').on('click', function(evt) {
-      that.selectFrameData(this, IMAGE);
-    });
-
-    //select image from local
-    var imageUpload = $('#vc-image-upload').find('.vc-image-upload-local');
-    imageUpload.off('click').on('click', function(evt) {
-      that.browseFile(IMAGE, that.uploadFrameData);
-    });
-
-    var imageGD = $('#vc-image-upload').find('.vc-image-upload-gd');
-    imageGD.off('click').on('click', function(evt) {
-      if (!that.googleDrive) {
-        that.googleDrive = window.googleDrive;
-      }
-      that.googleDrive.connect();
-    });
-
-    //select image from your album
-    var imageYours = $('#vc-image-yours').find('.item');
-    imageYours.off('click').on('click', function(evt) {
-      that.selectFrameData(this, IMAGE);
-    });
-
-    //select video from library
-    var videoLibrary = $('#vc-video-library').find('.item');
-    videoLibrary.off('click').on('click', function(evt) {
-      that.selectFrameData(this, VIDEO);
-    });
-
-    //select video from local
-    var videoUpload = $('#vc-video-upload').find('.vc-video-upload-local');
-    videoUpload.off('click').on('click', function(evt) {
-      that.browseFile(VIDEO, that.uploadFrameData);
-    });
-
-    //select video from your album
-    var videoYours = $('#vc-video-yours').find('.item');
-    videoYours.off('click').on('click', function(evt) {
-      that.selectFrameData(this, VIDEO);
-    });
-
-    ///vc-add-text///////////////////////////////////////////////////
-    //add text effect
-    var addTextEffect = $('#vc-add-text').find('.text-effect .add-more');
-    addTextEffect.off('click').on('click', function(evt) {
-      that.showPanel(PANEL_TEXT_EFFECT);
-    });
-
-    //select text effect
-    var textEffect = $('#vc-add-texteffect').find('.item');
-    textEffect.off('click').on('click', function(evt) {
-      that.selectFrameTextEffect(this);
-    });
-
-    $('#vc-add-text').find('textarea[name="frametext"]').bind('input propertychange', function(evt) {
-      that.applyFrameText();
-    });
-
-    $('#vc-add-text').find('input[name="textsize"]').bind('input propertychange', function(evt) {
-      that.applyFrameText();
-    });
-
-    $('#vc-add-text').find('input[name="textcolor"]').bind('input propertychange', function(evt) {
-      that.applyFrameText();
-    });
-
-    $('#vc-add-text').find('input[name="textpadding"]').bind('input propertychange', function(evt) {
-      that.applyFrameText();
-    });
-
-    //halign event handler
-    $('#vc-add-text').find('.halign li').off('click').on('click', function(evt) {
-      that.onClickHAlignHandler(this);
-    });
-
-    //valign event handler
-    $('#vc-add-text').find('.valign li').off('click').on('click', function(evt) {
-      that.onClickVAlignHandler(this);
-    });
-
-    //valign event handler
-    $('#vc-add-text').find('.custom-select .text-val').bind('customSelectChangeEvent', function(evt) {
-      that.applyFrameText();
-    });
-
-    //valign event handler
-    $('#vc-add-text').find('.fontstyle li').off('click').on('click', function(evt) {
-      that.onClickFontStyleHandler(this);
-    });
-
-    /////////////////////////////////////////////////////////////////
-    //select effect
-    var imageEffect = $('#vc-add-effect').find('.item');
-    imageEffect.off('click').on('click', function(evt) {
-      that.selectFrameImageEffect(this);
-    });
-
-    //select audio from library
-    var audioLibrary = $('#vc-audio-library').find('.item');
-    audioLibrary.each(function() {
-      var item = $(this);
-      item.off('click').on('click', function(evt) {
-        that.selectAudio(item);
-      });
-    });
-
-    //select audio from local
-    var audioUpload = $('#vc-audio-upload').find('.vc-audio-upload-local');
-    audioUpload.off('click').on('click', function(evt) {
-      that.browseFile(AUDIO, that.uploadFrameData);
-    });
-
-    //select audio from your album
-    var audioYours = $('#vc-audio-yours').find('.item');
-    audioYours.each(function() {
-      var item = $(this);
-      item.off('click').on('click', function(evt) {
-        that.selectAudio(item);
-      });
-    });
-
-    //apply effect
-    var saveEffect = $('.effect-setting').find('.btn-1');
-    saveEffect.off('click').on('click', function(evt) {
-      that.applyEffect();
-    });
-
-    this.displayOnlyMenu(true, PANEL_INTRO);
-  };
-
-  VideoClip.prototype.resize = function() {
-    var videoClip = $('.video-clip');
-    this.canvas.width = videoClip.width();
-    this.canvas.height = videoClip.height();
-
-    this.bitmapContainer.VC_WIDTH = this.textContainer.VC_WIDTH = this.canvas.width;
-    this.bitmapContainer.VC_HEIGHT = this.textContainer.VC_HEIGHT = this.canvas.height;
-
-    this.previewVC.resize(this.canvas.width, this.canvas.height);
-  };
-
-  VideoClip.prototype.onMoveTimeHandler = function(target) {
-    var that = this;
-    target = $(target);
-
-    var left = that.mediaSetting.find('.time').offset().left;
-    var width = that.mediaSetting.find('.time').width();
-    var duration = that.mediaSetting.find('.time').data('duration');
-
-    $(document.body).off("mousemove").on("mousemove", function(evt) {
-      if (!target) {
-        return;
-      }
-    
-      var toX = evt.pageX - 10;
-
-      if (target.hasClass('time-start')) {
-        var timeEnd = that.mediaSetting.find('.time-end').offset().left;
-  
-        toX = toX < left - 10 ? left - 10: toX;
-        toX = (toX > timeEnd) ? timeEnd : toX;
-
-        target.offset({left: toX});
-        
-        that.mediaSetting.find('.timeline').offset({left: target.offset().left + 10});
-        that.mediaSetting.find('.timeline').width(timeEnd - toX);
-
-        var ts = (that.mediaSetting.find('.timeline').offset().left - left) * duration / width;
-        target.find('.text').html(EffectUtils.formatTime(ts));
-
-      } else {
-        
-        var timeStart = that.mediaSetting.find('.time-start').offset().left;
-
-        toX = (toX < timeStart) ? timeStart : toX;
-        toX = (toX > left + width - 10) ? left + width - 10 : toX;
-
-        target.offset({left: toX});
-
-        that.mediaSetting.find('.timeline').width(toX - timeStart);
-
-        var te = (that.mediaSetting.find('.timeline').offset().left + that.mediaSetting.find('.timeline').width() - left) * duration / width;
-        target.find('.text').html(EffectUtils.formatTime(te));
-      }
-    });
-
-    $(document.body).off("mouseup").on("mouseup", function (evt) {
-      
-      target = null;
-
-      $(document.body).off("mousemove");
-      $(document.body).off("mouseup");
-
-      that.seekMedia((that.mediaSetting.find('.timeline').offset().left - left) * duration / width);
-    });
-  };
-
-  VideoClip.prototype.onClickDropDownMenuHandler = function(item) {
-    
-    var arrPanel = [PANEL_TEXT, PANEL_TEXT_EFFECT, PANEL_IMAGE, PANEL_VIDEO, PANEL_EFFECT, PANEL_AUDIO];
-      
-    var name = $(item).attr('class').split(' ').pop();
-    name = name.split('-').pop();
-
-    var index = arrPanel.indexOf(name);
-    if (index >= 0 && index < arrPanel.length) {
-      this.showPanel(arrPanel[index]);
-    }
-
-    else {
-      if (name == 'duplicate') {
-        this.duplicateFrame();
-      } 
-      else if (name == 'delete') {
-        this.deleteFrame();
-      }
-    }
-
-    $('.dropdown-menu').hide();
-    $(document).off('click'); 
-  }
-
-  VideoClip.prototype.onClickAddBackgroundHandler = function(evt) {
-    var that = this;
-
-    var box =  $('<div class="box">' +
-                 '  <div class="img-add">' +
-                 '    <img src="" alt="">' +
-                 '  </div>' +
-                 '  <span class="time">00:30</span>' +
-                 '  <a href="javascript:void(0);" title="Delete" class="delete">' +
-                 '    <span class="fa fa-minus"></span>' +
-                 '  </a>' +
-                 '</div>');
-
-    $('.vc-backgrounds').find('.list-box').append(box);
-
-    var bgData = new BackgroundData();
-    this.arrBG.push(bgData);
-
-    box.on('click', function(evt) {
-      var target = $(evt.target);
-
-      if (target.hasClass('fa-minus')) {
-        that.deactiveBackground(box, IMAGE);
-      } else {
-        that.activeBackground(box, IMAGE);
-      }
-    });
-
-    box.click();
-  };
-
-  VideoClip.prototype.onClickAddAudioHandler = function(evt) {
-    var that = this;
-
-    var box = $('' +
-        '<div class="box">' +
-          '<div class="control-media"><a href="javascript:void(0);" title="Play"><span class="fa fa-play"></span></a></div>' +
-          '<div class="title"><strong>No selected audio, please choose audio</strong></div><span class="time">00:00</span><a href="javascript:void(0);" title="Delete" class="delete"><span class="fa fa-minus"></span></a>' +
-        '</div>');
-
-    $('.vc-audios').find('.list-box').append(box);
-
-    var audioData = new AudioData();
-    this.arrBGAudio.push(audioData);
-
-    box.on('click', function(evt) {
-      var target = $(evt.target);
-
-      if (target.hasClass('fa-minus')) {
-        that.deactiveBackground(box, AUDIO);
-      } else {
-        that.activeBackground(box, AUDIO);
-      }
-    });
-    box.click();
-  };
-
-  VideoClip.prototype.onClickAddFrameHandler = function(evt) {
-    //just hide the intro and show the panel text in the first time click on add frame
-    if (this.arrFrame.length == 0 || this.isAudio || this.isBackground)  {
-      this.isAudio = false;
-      this.isBackground = false;
-      this.showPanel(PANEL_TEXT);
-    }
-    
-    var frame = this.addEmptyFrame();
-    frame.click();
-    // setTimeout(function(){
-    //   $('.wrapper-video .tfooter .add-function-block .item .content').jScrollPane('reinitialise');
-    // }, 1000);
-    // $('.wrapper-video .tfooter .add-function-block .item .content').jScrollPane({
-    //   autoReinitialise: true
-    // });
-    // $('.wrapper-video .tfooter .add-function-block .item .content').jScrollPaneRemove();
-    // $('.wrapper-video .tfooter .add-function-block .item .content').jScrollPane('reinitialise');
-  };
-
-  VideoClip.prototype.onClickHAlignHandler = function(li) {
-    if(this.curFrameHAlign) {
-      this.curFrameHAlign.removeClass('actived');
-    }
-    this.curFrameHAlign = $(li);
-    this.curFrameHAlign.addClass('actived');
-
-    this.applyFrameText();
-  };
-
-  VideoClip.prototype.onClickVAlignHandler = function(li) {
-    if(this.curFrameVAlign) {
-      this.curFrameVAlign.removeClass('actived');
-    }
-    this.curFrameVAlign = $(li);
-    this.curFrameVAlign.addClass('actived');
-
-    this.applyFrameText();
-  };
-
-  VideoClip.prototype.onClickFontStyleHandler = function(li) {
-    if(this.curFrameStyle) {
-      this.curFrameStyle.removeClass('actived');
-    }
-    this.curFrameStyle = $(li);
-    this.curFrameStyle.addClass('actived');
-
-    this.applyFrameText();
-  };
-
-  VideoClip.prototype.browseFile = function(type, callback) {
-    var that = this;
-    var file = document.createElement('input');
-    file.name = 'file';
-    file.type = 'file';
-    file.accept = type + '/*';
-    file.multiple = true;
-    $(file).on('change', function(evt) {
-      that.uploadData(evt.target.files, type, 0, callback);
-    });
-    file.click();
-  };
-
-  VideoClip.prototype.uploadData = function(files, type, count, callback) {
-    var that = this;
-
-    if (count < files.length) {
-      var name = files[count].name;
-      name = name.substr(0, name.lastIndexOf('.'));
-      
-      var formData = new FormData();
-      formData.append("file", files[count]);
-      formData.append("type", type);
-      formData.append("vcid", this.vcid);
-      
-      var ajax = new XMLHttpRequest();
-      ajax.onreadystatechange = function () {
-        if (ajax.readyState === 4 && ajax.status === 200) {
-          count = count + 1;
-          
-          if (count >= files.length) {
-            callback.apply(that, [type, name, ajax.responseText, true]);
-          } else {
-            callback.apply(that, [type, name, ajax.responseText, false]);
-            that.uploadData(files, type, count, callback);
-          }
-        }
-      };
-      ajax.open("POST", SERVER_URL + "/server/videoclip/uploadData.php");
-      ajax.send(formData);
-    }
-  };
-
-  VideoClip.prototype.deactiveBackground = function(item, type) {
-    item = $(item);
-
-    if (this.isAudio) {
-      if (item.is(this.curBGAudio)) {
-        this.loading.hide();
-        this.mediaSetting.hide();
-        this.clearAudio();
-
-        if (this.curFrameAudio) {
-          this.curFrameAudio.removeClass('active');
-          this.curFrameAudio = null;
-        }
-      }
-
-      this.arrBGAudio.splice(item.index(), 1);
-    }
-
-    item.off();
-    item.remove();
-  };
-
-  VideoClip.prototype.activeBackground = function(item, type) {
-    
-    item = $(item);
-
-    if (type == AUDIO) {
-      this.isAudio = true;
-      this.displayOnlyMenu(true, PANEL_AUDIO);
-
-      if (this.curBGAudio) {
-        this.curBGAudio.removeClass('active');
-      }
-
-      this.curBGAudio = item; 
-      this.curBGAudio.addClass('active');
-      
-      this.curBGAudioIndex = this.curBGAudio.index();
-      var audioData = this.arrBGAudio[this.curBGAudioIndex];
-      
-      if (this.curFrameAudio) {
-        this.curFrameAudio.removeClass('active');
-        this.curFrameAudio.find('.add-more span').removeClass('fa fa-minus').addClass('fa fa-plus');
-        this.curFrameAudio = null;
-      }
-
-      //show current audio edit
-      var itemAudio = $('#vc-audio-library').find('div[data-item-id="'+ audioData.id + '"]');
-      if (!itemAudio.length) {
-        itemAudio = $('#vc-audio-yours').find('div[data-item-id="'+ audioData.id + '"]');
-      }
-      
-      if (itemAudio.length) {
-        this.curFrameAudio = $(itemAudio[0]);
-        this.curFrameAudio.addClass('active');
-        this.curFrameAudio.find('.add-more span').removeClass('fa fa-plus').addClass('fa fa-minus');
-
-        this.loadFrameAudio(audioData.id, audioData.url);
-      }
-    }
-
-    else if (type == IMAGE) {
-      this.isBackground = true;
-      this.displayOnlyMenu(true, PANEL_IMAGE);
-
-      if (this.curBG) {
-        this.curBG.removeClass('active');
-      }
-
-      this.curBG = item; 
-      this.curBG.addClass('active');
-      
-      this.curBGIndex = this.curBG.index();
-      var bgData = this.arrBG[this.curBGIndex];
-      
-      if (this.curFrameImage) {
-        this.curFrameImage.removeClass('active');
-        this.curFrameImage = null;
-      }
-
-      //show current image edit
-      var itemImage = $('#vc-image-library').find('div[data-item-id="'+ bgData.id + '"]');
-      if (!itemImage.length) {
-        itemImage = $('#vc-image-yours').find('div[data-item-id="'+ bgData.id + '"]');
-      }
-      
-      if (itemImage.length) {
-        this.curFrameImage = $(itemImage[0]);
-        this.curFrameImage.addClass('active');
-      }
-
-      //update here
-      this.bitmapContainer.visible = false;
-      
-      this.bgContainer.removeAllChildren();
-      this.bgContainer.visible = true;        
-      
-      if (bgData.url) {
-        this.loadBackgroundImage(bgData.url);        
-      }
-    }
-  };
-
-  VideoClip.prototype.uploadFrameData = function(type, name, url, actived) {
-    var that = this;
-    var item, list;
-    
-    //add to your album
-    if (type == AUDIO) {
-      list = $('#vc-' + type + '-yours').find('.audio-control');
-      item = $('<div data-item-id="item-' + type +'-yours_'  + (list.children().length + 1)  + '" data-item-url="' + url + '" data-item-time="300" class="item"><div class="control-media"><a href="javascript:void(0);" title="Play" class="play-pause"><span class="fa fa-play"></span></a></div><div class="title"><strong>Audio song name - upload </strong></div><a href="javascript:void(0)" title="Select" class="add-more"><span class="fa fa-plus"></span></a><span class="time">05:00</span></div>');
-      
-      item.off('click').on('click', function(evt) {
-        that.selectAudio(item);
-      });
-
-    } else {
-      list = $('#vc-' + type + '-yours');
-      item = $('<div data-item-id="item_' + type + '-yours_' + (list.children().length + 1) + '" data-item-url="' + url + '" class="item"><div class="thumb"><img src="http://placehold.it/150x100/?text=upload" alt="" class="img-responsive"></div></div>');
-      
-      //add event
-      item.off('click').on('click', function(evt) {
-        that.selectFrameData(this, type);
-      });
-    }
-    list.append(item);
-      
-    //apply to current frame
-    if (actived) {
-      //show album tab
-      var tab = $('#vc-add-' + type).find('a[href="#vc-' + type + '-yours"]');
-      tab.click();
-
-      item.click();
-    }
-  };
-
-  VideoClip.prototype.addEmptyFrame = function() {
-    var that = this;
-
-    var listframe =  $('.vc-frames').find('.list-frame');
-
-    var frame =  $('<div class="frame">' +
-                   '  <div class="icon-effect" title="Effect"><span class="fa fa-exchange"></span></div>' +
-                   '  <div class="icon-show" title="Click to show menu"><span class="fa fa-sort-desc"></span></div>' +
-                   ' <div class="thumb" title="Click to change image or video"><img class="frame-image" src="images/videoclip/default.jpg" alt=""></div>' +
-                   '  <div class="desc"><span class="icon-edit-text" title="Click to change text effect"></span><p class="frame-text" title="Click to change frame text">text here</p></div>' +
-                   '</div>');
-
-    listframe.append(frame);
-    
-    listframe.closest('.wrap-list').css({
-      width: listframe.find('.frame').length * 130 + 'px'
-    });
-
-    frame.on('click', function(evt) {
-      var target = $(evt.target);
-
-      //console.log(target);
-
-      if(target.hasClass('fa-exchange') || target.hasClass('icon-effect')) {
-        that.showPanel(PANEL_EFFECT);
-        that.activeFrame(frame);
-      }
-
-      else if(target.hasClass('fa-sort-desc') || target.hasClass('icon-show')) {
-        $('.dropdown-menu').show(); 
-
-        var wh = $(window).height();
-        var top = evt.pageY;
-
-        //if (top + $('.dropdown-menu').height() > wh) {
-        //  top = wh - $('.dropdown-menu').height();
-        //}
-        var dropdown =  $('.dropdown-menu');
-
-        dropdown.offset({
-          left: evt.pageX,
-          top: top
-        });
-        evt.stopImmediatePropagation();
-
-        $(document).click(function(evt) {
-          if ($(evt.target).closest('.dropdown-menu').length == 0) {
-            dropdown.hide();
-            $(document).off();
-          }
-        });  
-
-        that.activeFrame(frame);
-      }
-      
-      else if(target.hasClass('frame-image')) {
-        that.showPanel(PANEL_IMAGE);
-        that.activeFrame(frame);
-      }
-
-      else if(target.hasClass('video')) {
-        that.showPanel(PANEL_VIDEO);
-        that.activeFrame(frame);
-      }
-
-      else if(target.hasClass('frame-text')) {
-        that.showPanel(PANEL_TEXT);
-        that.activeFrame(frame);
-      }
-
-      else if(target.hasClass('icon-edit-text')) {
-        var index = frame.index();
-        if (that.arrFrame[index].text.text != '') {
-          that.showPanel(PANEL_TEXT_EFFECT);
-        } else {
-          that.showPanel(PANEL_TEXT);
-        }
-        that.activeFrame(frame);
-      } 
-
-      else {
-        that.activeFrame(frame);
-      }
-    });
-
-    var frameData = new FrameData();
-    this.arrFrame.push(frameData);
-
-    var totalTime = EffectUtils.getTimeByFrame(this.arrFrame, this.arrFrame.length - 1);
-    $('.video-clip-time').html('Thời gian: ' + EffectUtils.formatTime(totalTime) + ' giây');
-
-    return frame;
-  };
-
-  VideoClip.prototype.activeFrame = function(frame) {
-
-    if (this.curFrame) {
-      this.curFrame.removeClass('active');
-    }
-
-    this.curFrame = $(frame);
-    this.curFrame.addClass('active');
-
-    this.curFrameIndex = this.curFrame.index();
-
-    this.showCurrentFrameVideo();
-  };
-
-  VideoClip.prototype.duplicateFrame = function() {
-    var frameData = (JSON.parse(JSON.stringify(this.arrFrame[this.curFrameIndex])));
-    
-    var frame = this.addEmptyFrame();
-    frame.find('.thumb img').attr('src', this.curFrame.find('.thumb img').attr('src'));
-    
-    if (frame.type == VIDEO) {
-      frame.find('.thumb').addClass('video');
-    }
-
-    this.arrFrame[this.arrFrame.length - 1] = frameData;
-
-    this.activeFrame(frame);
-  };
-
-  VideoClip.prototype.deleteFrame = function() {
-  
-    //find next or prev frame
-    var frame = this.curFrame.next();
-    frame = frame.length ? frame[0] : null;
-
-    if (frame == null) {
-      frame = this.curFrame.prev();
-      frame = frame.length ? frame[0] : null;
-    }
-
-    //delete current frame
-    this.curFrame.remove();
-    this.arrFrame.splice(this.curFrameIndex, 1)
-
-    //active next or prev frame 
-    if (frame) {
-      this.activeFrame(frame);
-    } else {
-      this.curFrame = null;
-      this.curFrameIndex = -1;
-      this.displayOnlyMenu(true, PANEL_INTRO);
-    }
-  };
-
-  VideoClip.prototype.selectFrameData = function(item, type) {
-    
-
-    var itemId = $(item).data('item-id');
-    var itemSrc = $(item).find('.thumb img').attr('src');
-    var itemUrl = $(item).data('item-url');
-
-    //if choosing image for background then
-    if (this.isBackground && type == IMAGE) {
-
-      if (this.curFrameImage) {
-        this.curFrameImage.removeClass('active');
-        this.curFrameImage = null;
-      }
-
-      if (this.curBGIndex < 0 || this.curBGIndex >= this.arrBG.length) {
-        return;
-      }
-
-      var bgData = this.arrBG[this.curBGIndex];
-      if (bgData.id == itemId) {
-        bgData.id = null;
-        bgData.url = null;
-
-        this.curBG.find('.img-add img').attr('src', '');
-
-        this.bgContainer.removeAllChildren();
-        this.bgBitmap = null;
-      }
-
-      else {
-        bgData.id = itemId;
-        bgData.url = itemUrl;
-        
-        this.curFrameImage =  $(item);
-        this.curFrameImage.addClass('active');
-
-        //load image here
-        this.curBG.find('.img-add img').attr('src', itemSrc);
-
-        this.loadBackgroundImage(itemUrl);
-      }
-
-      //update box here
-      this.curBG.find('.img-add img').attr('src', bgData.url);
-      this.curBG.find('.time').html(EffectUtils.formatTime(bgData.time));
-      
-      return;
-    }
-
-    if (this.curFrameIndex < 0 || this.curFrameIndex >= this.arrFrame.length) {
-      return;
-    }
-
-    //reset current imag or video
-    if (this.curFrameImage) {
-      this.curFrameImage.removeClass('active');
-      this.curFrameImage = null;
-    }
-
-    if (this.curFrameVideo) {
-      this.curFrameVideo.removeClass('active');
-      this.curFrameVideo = null;
-    }
-
-    var frameData = this.arrFrame[this.curFrameIndex];
-    frameData.type = type;
-
-    if (frameData.bitmapId == itemId) {
-      this.curFrame.find('.thumb img').attr('src', 'images/videoclip/default.jpg');
-      frameData.bitmapId = null;
-      frameData.bitmapUrl = null;
-      frameData.type = null;
-      this.curFrameImage = null;
-      this.bitmapContainer.removeAllChildren();
-      this.bgContainer.visible = frameData.type != VIDEO ? true : false;
-      return;
-    }
-
-    if (frameData.videoId == itemId) {
-      this.curFrame.find('.thumb img').attr('src', 'images/videoclip/default.jpg');
-      this.curFrame.find('.thumb').removeClass('video');
-      frameData.videoId = null;
-      frameData.videoUrl = null;
-      frameData.type = null;
-      this.curFrameVideo = null;
-      $('#video').attr('src', '');
-      this.videoInstance.pause();
-      this.mediaSetting.hide();
-      this.bgContainer.visible = frameData.type != VIDEO ? true : false;
-      return;
-    }
-
-    //set new image or video
-    if (type == IMAGE) {
-      this.curFrameImage = $(item);
-      this.curFrameImage.addClass('active');
-    } else {
-      this.curFrameVideo = $(item);
-      this.curFrameVideo.addClass('active');
-
-      //remove bitmap effect
-    }
-
-    //apply data here
-    if (this.curFrame) {
-      this.curFrame.find('.thumb img').attr('src', itemSrc);
-      
-      if (type == IMAGE) {
-        this.curFrame.find('.thumb').removeClass('video');
-      } else {
-        this.curFrame.find('.thumb').addClass('video');
-      }
-
-      this.bitmapContainer.removeAllChildren();
-      this.videoInstance.pause();
-      $('#video').attr('src', '');
-      this.bgContainer.visible = frameData.type != VIDEO ? true : false;
-
-      //update image
-      if (type == IMAGE) {
-        frameData.bitmapId = itemId;
-        frameData.bitmapUrl = itemUrl;
-        frameData.videoId = null;
-        frameData.videoUrl = null;
-        this.mediaSetting.hide();
-        this.loadFrameImage(frameData.bitmapUrl);
-      } 
-
-      else {
-        //update video
-        frameData.videoId = itemId;
-        frameData.videoUrl = itemUrl;
-        frameData.bitmapId = null;
-        frameData.bitmapUrl = null;
-        this.loadFrameVideo(frameData.videoUrl);
-      }
-    }
-  };
-
-  VideoClip.prototype.applyFrameText = function() {
-    if (this.curFrameIndex < 0 || this.curFrameIndex >= this.arrFrame.length) {
-      return;
-    }
-
-    var frameData = this.arrFrame[this.curFrameIndex];
-
-    if (!this.frameText) {
-      this.frameText = new createjs.Text("Text", "20px Arial", "#ff7700");
-      this.textContainer.addChild(this.frameText);
-    }
-
-    var textarea = $('#vc-add-text').find('textarea[name="frametext"]');
-    frameData.text.text = this.frameText.text = textarea.val();
-
-    var str = frameData.text.text;
-    str = str.substr(0, 12);
-    if (str.lastIndexOf(" ") != -1) {
-      str = str.substr(0, str.lastIndexOf(" "));
-    }
-    str = str + (frameData.text.text.length > 12 ? "..." : "");
-    this.curFrame.find('.frame-text').html($.trim(str) != '' ? str : 'text here');
-
-    var size = $('#vc-add-text').find('input[name="textsize"]');
-    frameData.text.size = size = Number(size.val());
-
-    var font = $('#vc-add-text').find('.custom-select .text-val').data('val');
-    frameData.text.font = font;
-    frameData.text.fontName = $('#vc-add-text').find('.custom-select .text-val').html();
-    
-    var style = this.curFrameStyle ? this.curFrameStyle.data('style') : "";
-    frameData.text.style = style;
-
-    this.frameText.font = style + ' ' + size + 'px ' + font;
-
-    var color = $('#vc-add-text').find('input[name="textcolor"]');
-    frameData.text.color = this.frameText.color = color.val();
-
-    var padding = $('#vc-add-text').find('input[name="textpadding"]');
-    frameData.text.padding = padding = Number(padding.val());
-
-    if (this.curFrameHAlign) {
-      var halign = this.curFrameHAlign.data('align');
-      this.frameText.textAlign = halign;
-      frameData.text.halign = halign;
-
-      if (halign == HA_LEFT) {
-        this.frameText.x = padding;
-      }
-      else if (halign == HA_CENTER) {
-        this.frameText.x = this.textContainer.VC_WIDTH/2;
-      }
-      else if (halign == HA_RIGHT) {
-        this.frameText.x = this.textContainer.VC_WIDTH - padding;
-      }
-    }
-
-    if (this.curFrameVAlign) {
-      var valign = this.curFrameVAlign.data('align');
-      frameData.text.valign = valign;
-
-      var textHeight = this.frameText.getBounds() ? this.frameText.getBounds().height : 0;
-      if (valign == VA_TOP) {
-        this.frameText.y = padding;
-      }
-      else if (valign == VA_MIDDLE) {
-        this.frameText.y = this.textContainer.VC_HEIGHT/2 - textHeight/2;
-      }
-      else if (valign == VA_BOTTOM) {
-        this.frameText.y = this.textContainer.VC_HEIGHT - textHeight - padding;
-      }
-    }
-  };
-
-  VideoClip.prototype.selectFrameTextEffect = function(item) {
-    if (this.curFrameText) {
-      this.curFrameText.removeClass('active');
-    }
-    this.curFrameText = $(item);
-    this.curFrameText.addClass('active');
-
-    if (this.curFrame) {
-      //apply data here
-      var frameData = this.arrFrame[this.curFrameIndex];
-      frameData.textEffect = this.curFrameText.data('item-id');
-      frameData.textEffectClass = this.curFrameText.data('item-url');
-      this.effectSetting.show();
-    }
-  }; 
-
-  VideoClip.prototype.selectFrameImageEffect = function(item) {
-
-    if (this.curFrameIndex < 0 || this.curFrameIndex >= this.arrFrame.length) {
-      return;
-    }
-
-    var frameData = this.arrFrame[this.curFrameIndex]; 
-    if (frameData.type == IMAGE) {
-
-      if (this.curFrameEffect) {
-        this.curFrameEffect.removeClass('active');
-      }
-      this.curFrameEffect = $(item);
-      this.curFrameEffect.addClass('active');
-
-      //apply data here
-      frameData.bitmapEffect = this.curFrameEffect.data('item-id');
-      frameData.bitmapEffectClass = this.curFrameEffect.data('item-url');
-            
-      this.effectSetting.show();
-    }
-  };
-
-  VideoClip.prototype.applyEffect = function() {
-    if (this.curFrameIndex < 0 || this.curFrameIndex >= this.arrFrame.length) {
-      return;
-    }
-
-    var delayTime = this.effectSetting.find('input[name="delay"]').val();
-    var effectTime = this.effectSetting.find('input[name="time"]').val();
-
-    delayTime = Number(delayTime);
-    delayTime = delayTime < 0 ? 0 : delayTime;
-
-    effectTime = Number(effectTime);
-    effectTime = effectTime < 1 ? 1 : effectTime;
-    
-    var frameData = this.arrFrame[this.curFrameIndex];
-
-    //bitmap effect
-    if ($('#vc-add-effect').hasClass('active')) {
-      frameData.bitmapEffectDelay = delayTime;
-      frameData.bitmapEffectDuration = effectTime;
-
-      //preview bitmap effect
-      var bitmapEffectPlugin = EffectUtils.getEffectPlugin(frameData.bitmapEffect);
-      if (bitmapEffectPlugin) {
-        this.bitmapContainer.removeAllChildren();
-        bitmapEffectPlugin.play(this.bitmapContainer, null, this.frameBitmap, delayTime, effectTime);
-      }
-    } 
-
-    else {
-      //text effect
-      frameData.textEffectDelay = delayTime;
-      frameData.textEffectDuration = effectTime;
-
-      $('#vc-add-text').find('.effect-detail').html(frameData.textEffect + "(delay: " + frameData.textEffectDelay + ", time: " + frameData.textEffectDuration + ")");
-      
-      //preview text effect
-      var textEffectPlugin = EffectUtils.getEffectPlugin(frameData.textEffect);
-      if (textEffectPlugin) {
-        this.textContainer.removeAllChildren();
-        textEffectPlugin.play(this.textContainer, null, this.frameText, delayTime, effectTime);
-      }
-    }
-
-    this.effectSetting.hide();
-    var that = this;
-    var time = delayTime + effectTime;
-    var ti = setTimeout(function() {
-      clearTimeout(ti);
-      that.effectSetting.show();
-    }, time * 1000);
-  };
-
-  VideoClip.prototype.selectAudio = function(item) {
-    var that = this;
-    var itemId = $(item).data('item-id');
-    var itemUrl = $(item).data('item-url');
-
-    //select audio for video clip
-    if (this.isAudio) {
-      
-      if (this.curFrameAudio) {
-        this.curFrameAudio.removeClass('active');
-        this.curFrameAudio.find('.add-more span').removeClass('fa fa-minus').addClass('fa fa-plus');
-        this.curFrameAudio = null;
-      }
-
-      if (this.curBGAudioIndex < 0 || this.curBGAudioIndex >= this.arrBGAudio.length) {
-        return;
-      }
-
-      var audioData = this.arrBGAudio[this.curBGAudioIndex];
-      if (audioData.id == itemId) {
-        audioData.id = null;
-        audioData.url = null;
-        audioData.start = 0;
-        audioData.end = -1;
-
-        that.loading.hide();
-        this.mediaSetting.hide();
-        this.clearAudio();
-      }
-
-      else {
-        audioData.id = itemId;
-        audioData.url = itemUrl;
-        audioData.start = 0;
-        audioData.end = $(item).data('item-time');
-
-        this.curFrameAudio =  $(item);
-        this.curFrameAudio.addClass('active');
-        this.curFrameAudio.find('.add-more span').removeClass('fa fa-plus').addClass('fa fa-minus');
-
-        this.mediaSetting.hide();
-        this.loadFrameAudio(itemId, itemUrl);
-      }
-
-      //update box here
-      this.curBGAudio.find('.title strong').html(audioData.id == null ? 'No selected audio, please choose audio' : this.curFrameAudio.find('.title strong').html());
-      this.curBGAudio.find('.time').html(audioData.end == -1 ? '00:00' : EffectUtils.formatTime(audioData.end - audioData.start));
-
-      return;
-    } 
-
-    //select audio for frame
-    if (this.curFrameIndex < 0 || this.curFrameIndex >= this.arrFrame.length) {
-      return;
-    }
-
-    //remove current active
-    if (this.curFrameAudio) {
-      this.curFrameAudio.removeClass('active');
-      this.curFrameAudio.find('.add-more span').removeClass('fa fa-minus').addClass('fa fa-plus');
-      this.curFrameAudio = null;
-    }
-
-    //if click on active item, then remove audio 
-    var frameData = this.arrFrame[this.curFrameIndex];
-    if (frameData.audioId == itemId) {
-      frameData.audioId = null;
-      frameData.audioUrl = null;
-      this.clearAudio();
-      this.mediaSetting.hide();
-      return;
-    }
-    
-    this.curFrameAudio =  $(item);
-    this.curFrameAudio.addClass('active');
-    this.curFrameAudio.find('.add-more span').removeClass('fa fa-plus').addClass('fa fa-minus');
-
-    frameData.audioId = itemId;
-    frameData.audioUrl = itemUrl;
-
-    this.loadFrameAudio(itemId, itemUrl);
-  };
-
-  VideoClip.prototype.onClickPlayPauseHandler = function(item) {
-    item = $(item);
-    var icon = item.find('span');
-    if (icon.hasClass('fa-pause')) {
-      icon.removeClass('fa-pause').addClass('fa-play');
-
-      if (this.audioInstance) {
-        this.audioInstance.stop();
-      } else {
-        this.videoInstance.pause();
-      }
-    }
-    else if (icon.hasClass('fa-play')) {
-      icon.removeClass('fa-play').addClass('fa-pause');
-      if (this.audioInstance) {
-        this.audioInstance.play();
-      } else {
-        this.videoInstance.play();
-      }
-    }
-  };
-
-  VideoClip.prototype.updateMedia = function(position) {
-    this.mediaSetting.find('.position').html(EffectUtils.formatTime(position));
-  };
-
-  VideoClip.prototype.seekMedia = function(startTime) {
-    if (this.curFrameIndex < 0 || this.curFrameIndex >= this.arrFrame.length) {
-      return;
-    }
-    var frameData = this.arrFrame[this.curFrameIndex];
-
-    if (this.audioInstance) {
-      this.audioInstance.stop();
-      this.audioInstance.startTime = startTime;
-      this.audioInstance.play();
-    }
-
-    else {
-      this.videoInstance.currentTime = startTime;
-      this.videoInstance.play();
-    }
-  };
-
-  VideoClip.prototype.endMedia = function() {
-    this.mediaSetting.find('.play-pause').find('span').removeClass('fa-pause').addClass('fa-play');
-  };
-
-  VideoClip.prototype.changePanel = function(id) {
-    var name = id.substr(id.lastIndexOf('-') + 1, id.length);
-
-    var arrPanel = [PANEL_TEXT, PANEL_IMAGE, PANEL_VIDEO, PANEL_EFFECT, PANEL_AUDIO];
-    var index = arrPanel.indexOf(name);
-
-    this.showPanel(arrPanel[index]);
-  };
-
-  VideoClip.prototype.showPanel = function(name) {
-    this.curPanel = name;
-
-    $('.control-menu').find('li').removeClass('disabled');
-
-    //active menu    
-    if ($('#vc-menu-' + name).length) {
-      $('.control-menu').find('li').removeClass('active');
-      $('#vc-menu-' + name).addClass('active');
-    }
-
-    //hide all content
-    $('.block-tab-video').removeClass('active').hide();
-
-    //show corresponding content
-    $('#vc-add-' + name).addClass('active').show().children('[data-scroll-video]').jScrollPane();
-    $(window).on('resize', function(){
-      $('#vc-add-' + name + '.active').show().children('[data-scroll-video]').jScrollPane();
-    });
-    
-    //hide or show effect setting
-    if ((name == PANEL_EFFECT && this.arrFrame[this.curFrameIndex].type == IMAGE) ||
-       (name == PANEL_TEXT_EFFECT)) {
-      this.effectSetting.show();
-    } else {
-      this.effectSetting.hide();
-    }
-
-    //hide media setting
-    if (name == PANEL_VIDEO) {
-      this.mediaSetting.show();
-    } else {
-      this.mediaSetting.hide();
-    }
-
-    //stop all sounds
-    //this.clearAudio();
-
-    //stop all videos
-    //this.videoInstance.pause();
-    //$('#video').attr('src', '');
-
-   //this.loading.hide();
-  };
-
-  VideoClip.prototype.displayOnlyMenu = function(disabled, name) {
-    
-    if (disabled) {
-      $('.control-menu').find('li').addClass('disabled');
-    } else {
-      $('.control-menu').find('li').removeClass('disabled');
-    }
-
-    //deactive all menu
-    $('.control-menu').find('li').removeClass('active');
-    this.effectSetting.hide();
-    this.mediaSetting.hide();
-
-    //stop all sounds
-    this.clearAudio();
-
-    //stop all videos
-    this.videoInstance.pause();
-    $('#video').attr('src', '');
-
-    this.loading.hide();
-
-      //active menu
-    if ($('#vc-menu-' + name).length) {
-      $('#vc-menu-' + name).addClass('active');
-    }
-
-    //hide all content
-    $('.block-tab-video').removeClass('active').hide();
-
-    //show corresponding content
-    if ($('#vc-add-' + name).length) {
-      $('#vc-add-' + name).addClass('active').show().children('[data-scroll-video]').jScrollPane();
-    }
-  };
-
-  VideoClip.prototype.showCurrentFrameVideo = function() {
-    if (this.curFrameIndex < 0 || this.curFrameIndex >= this.arrFrame.length) {
-      return;
-    }
-
-    this.isAudio = false;
-    if (this.curBGAudio) {
-      this.curBGAudio.removeClass('active');
-      this.curBGAudio = null;
-    }
-
-    this.isBackground = false;
-    if (this.curBG) {
-      this.curBG.removeClass('active');
-      this.curBG = null;
-    }
-
-    this.previewVC.clear();
-    
-    //reset all currrent
-    this.curFrameImage = null;
-    $('#vc-image-library').find('div[data-item-id]').removeClass('active');
-    $('#vc-image-yours').find('div[data-item-id]').removeClass('active');
-    
-    this.curFrameEffect = null;
-    $('#vc-add-effect').find('div[data-item-id]').removeClass('active');
-
-    this.curFrameText = null;
-    $('#vc-add-texteffect').find('div[data-item-id]').removeClass('active');
-
-    this.curFrameVideo = null;
-    $('#vc-video-library').find('div[data-item-id]').removeClass('active');
-    $('#vc-video-yours').find('div[data-item-id]').removeClass('active');
-
-    this.curFrameAudio = null;
-    $('#vc-audio-library').find('div[data-item-id]').removeClass('active');
-    $('#vc-audio-yours').find('div[data-item-id]').removeClass('active');
-
-    //stop all sounds
-    this.clearAudio();
-
-    this.mediaSetting.hide();
-
-    //remove image
-    this.bitmapContainer.visible = true;
-    this.bitmapContainer.removeAllChildren();
-    
-    this.textContainer.visible = true;
-    
-    //stop all videos
-    this.videoInstance.pause();
-    $('#video').attr('src', '');
-
-    //get current FrameData
-    var frameData = this.arrFrame[this.curFrameIndex];
-
-    //show current text edit
-    var panelText = $('#vc-add-text');
-    panelText.find('textarea[name="frametext"]').val(frameData.text.text);
-    panelText.find('.custom-select .text-val').data('val', frameData.text.font);
-    panelText.find('.custom-select .text-val').html(frameData.text.fontName);
-
-    panelText.find('.fontstyle').find('li[data-style]').removeClass('actived');
-    panelText.find('.halign').find('li[data-align]').removeClass('actived');
-    panelText.find('.valign').find('li[data-align]').removeClass('actived');
-    
-    this.curFrameStyle = panelText.find('.fontstyle').find('li[data-style="' + frameData.text.style + '"]');
-    this.curFrameStyle.addClass('actived');
-
-    this.curFrameHAlign = panelText.find('.halign').find('li[data-align="' + frameData.text.halign + '"]');
-    this.curFrameHAlign.addClass('actived');
-
-    this.curFrameVAlign = panelText.find('.valign').find('li[data-align="' + frameData.text.valign + '"]');
-    this.curFrameVAlign.addClass('actived');
-
-    panelText.find('input[name="textpadding"]').val(frameData.text.padding);
-    panelText.find('input[name="textsize"]').val(frameData.text.size);
-    panelText.find('input[name="textcolor"]').val(frameData.text.color);
-
-    this.applyFrameText();
-
-    //show current background
-    this.bgContainer.visible = frameData.type != VIDEO ? true : false;
-    this.bgContainer.removeAllChildren();
-    if (this.bgContainer.visible) {
-      var frameTime = EffectUtils.getTimeByFrame(this.arrFrame, this.curFrame.index());
-      var bgData = EffectUtils.getBackgroundDataByTime(this.arrBG, frameTime);
-      if (bgData && bgData.url) {
-        this.loadBackgroundImage(bgData.url);
-      }
-    }
-
-    //show current image edit
-    if (frameData.type == IMAGE) {
-      var itemImage = $('#vc-image-library').find('div[data-item-id="'+ frameData.bitmapId + '"]');
-      if (!itemImage.length) {
-        itemImage = $('#vc-image-yours').find('div[data-item-id="'+ frameData.bitmapId + '"]');
-      }
-      if (itemImage.length) {
-        this.curFrameImage = $(itemImage[0]);
-        this.curFrameImage.addClass('active');
-
-        //load frame image
-        if (frameData.bitmapUrl) {
-          this.loadFrameImage(frameData.bitmapUrl);
-        }
-      }
-    }
-
-    //show current video edit
-    if (frameData.type == VIDEO) {
-      
-      var itemVideo = $('#vc-video-library').find('div[data-item-id="'+ frameData.videoId + '"]');
-      if (!itemVideo.length) {
-        itemVideo = $('#vc-video-yours').find('div[data-item-id="'+ frameData.videoId + '"]');
-      }
-      if (itemVideo.length) {
-        this.curFrameVideo = $(itemVideo[0]);
-        this.curFrameVideo.addClass('active');
-
-        //load frame image
-        if (frameData.videoUrl) {
-          this.loadFrameVideo(frameData.videoUrl);
-        }
-      }
-    }
-
-    //show current text effect edit
-    var textEffect = $('#vc-add-texteffect').find('div[data-item-id="'+ frameData.textEffect + '"]');
-    if (textEffect.length) {
-      this.curFrameText = $(textEffect[0]);
-      this.curFrameText.addClass('active');
-    }
-    panelText.find('.effect-detail').html(frameData.textEffect + "(delay: " + frameData.textEffectDelay + ", time: " + frameData.textEffectDuration + ")");
-
-    //show current bitmap effect edit
-    var bitmapEffect = $('#vc-add-effect').find('div[data-item-id="'+ frameData.bitmapEffect + '"]');
-    if (bitmapEffect.length) {
-      this.curFrameEffect = $(bitmapEffect[0]);
-      this.curFrameEffect.addClass('active');
-    }
-
-    //show current audio edit
-    var itemAudio = $('#vc-audio-library').find('div[data-item-id="'+ frameData.audioId + '"]');
-      if (!itemAudio.length) {
-        itemAudio = $('#vc-audio-yours').find('div[data-item-id="'+ frameData.audioId + '"]');
-      }
-      if (itemAudio.length) {
-        this.curFrameAudio = $(itemAudio[0]);
-        this.curFrameAudio.addClass('active');
-
-        //load frame audio
-        if (frameData.audioUrl && this.curPanel == PANEL_AUDIO) {
-          this.loadFrameAudio(frameData.audioId, frameData.audioUrl);
-        }
-      }
-  };
-
-  VideoClip.prototype.loadFrameImage = function(url) {
-    var that = this;
-
-    this.loading.show();
-
-    var image = new Image();
-    image.onload = function(evt) {
-      that.loading.hide();
-
-      var w = image.width;
-      var h = image.height;
-      
-      //find corrected scale
-      var scale = that.bitmapContainer.VC_WIDTH / w;
-      if(h * scale > that.bitmapContainer.VC_HEIGHT) {
-        scale = that.bitmapContainer.VC_HEIGHT / h;
-      }
-
-      var translateX = (that.bitmapContainer.VC_WIDTH - scale * w)/2;
-      var translateY = (that.bitmapContainer.VC_HEIGHT - scale * h)/2;
-    
-      var matrix = new createjs.Matrix2D(scale, 0, 0, scale, translateX, translateY);
-      var bitmapData = new createjs.BitmapData(image, that.bitmapContainer.VC_WIDTH, that.bitmapContainer.VC_HEIGHT, 0x000000);
-      bitmapData.draw(image, matrix, null, null, null, true);
-    
-      that.frameBitmap = that.bitmapContainer.addChild(new createjs.Bitmap(bitmapData.canvas));
-    };
-    image.src = url;
-  };
-
-  VideoClip.prototype.loadBackgroundImage = function(url) {
-    var that = this;
-
-    this.loading.show();
-
-    var image = new Image();
-    image.onload = function(evt) {
-      that.loading.hide();
-
-      var w = image.width;
-      var h = image.height;
-      
-      //find corrected scale
-      var scale = that.bitmapContainer.VC_WIDTH / w;
-      if(h * scale > that.bitmapContainer.VC_HEIGHT) {
-        scale = that.bitmapContainer.VC_HEIGHT / h;
-      }
-
-      var translateX = (that.bitmapContainer.VC_WIDTH - scale * w)/2;
-      var translateY = (that.bitmapContainer.VC_HEIGHT - scale * h)/2;
-    
-      var matrix = new createjs.Matrix2D(scale, 0, 0, scale, translateX, translateY);
-      var bitmapData = new createjs.BitmapData(image, that.bitmapContainer.VC_WIDTH, that.bitmapContainer.VC_HEIGHT, 0x000000);
-      bitmapData.draw(image, matrix, null, null, null, true);
-    
-      that.bgContainer.removeAllChildren();
-      that.bgBitmap = that.bgContainer.addChild(new createjs.Bitmap(bitmapData.canvas));
-    };
-    image.src = url;
-  };
-
-  VideoClip.prototype.clearAudio = function() {
-    createjs.Sound.stop();
-    createjs.Sound.removeAllSounds();
-    createjs.Sound.removeAllEventListeners();
-
-    if (this.audioInstance && this.audioInstance.playProgressTimeout) {
-      clearInterval(this.audioInstance.playProgressTimeout);
-    };
-    this.audioInstance = null;
-  };
-
-  VideoClip.prototype.loadFrameAudio = function(id, url) {
-    var that = this;
-
-    $('.preview-setting').hide()
-    this.clearAudio();
-
-    //load audio if not exist
-    createjs.Sound.addEventListener("fileload", onAudioLoadHandler);
-    createjs.Sound.registerSound({id: id, src: url});
-
-    this.loading.show();
-
-    function onAudioLoadHandler(evt) {
-      that.loading.hide();
-
-      // Play the loaded sound
-      that.mediaSetting.show();
-      
-      that.audioInstance = createjs.Sound.play(evt.src);
-      that.saveMediaMetaData(0, that.audioInstance.duration / 1000);
-      
-      that.mediaSetting.find('.play-pause').find('span').removeClass('fa-pause').addClass('fa-pause');
-      that.mediaSetting.find('.time').data('duration', that.audioInstance.duration / 1000);
-      that.mediaSetting.find('.time-start .text').html(EffectUtils.formatTime(0));
-      that.mediaSetting.find('.time-end .text').html(EffectUtils.formatTime(that.audioInstance.duration / 1000));
-      
-      that.audioInstance.on("complete", onAudioPlayCompleteHandler);
-      that.audioInstance.playProgressTimeout = setInterval(onAudioPlayProgressHandler, 100);
-    }
-
-    function onAudioPlayProgressHandler(evt) {
-      if (that.audioInstance) {
-        that.updateMedia(that.audioInstance.position/1000);
-      }
-    }
-
-    function onAudioPlayCompleteHandler(evt) {
-      if (that.audioInstance) {
-        clearInterval(that.audioInstance.playProgressTimeout);
-      }
-      that.endMedia();
-    }
-  };
-
-  VideoClip.prototype.loadFrameVideo = function(url) {
-    var that = this;
-
-    this.loading.show();
-
-    $('#video').attr('src', url);
-    this.videoInstance.play();
-
-    this.mediaSetting.show();
-    that.mediaSetting.find('.play-pause').find('span').removeClass('fa-pause').addClass('fa-pause');
-
-    $('#video').off('loadedmetadata').on('loadedmetadata', function(evt) {
-      that.loading.hide();
-      that.saveMediaMetaData(0, that.videoInstance.duration);
-    });
-
-    $('#video').off('canplay').on('canplay', function(evt) {
-      //enable start and end dragging here
-    });
-
-    $('#video').off('timeupdate').on('timeupdate', function(evt) {
-      that.updateMedia(that.videoInstance.currentTime);
-    });
-
-    $('#video').off('ended').on('ended', function(evt) {
-      that.endMedia();
-    }); 
-  };
-
-  VideoClip.prototype.saveMediaMetaData = function(position, duration) {
-
-    this.mediaSetting.find('.position').html(EffectUtils.formatTime(position));
-    this.mediaSetting.find('.duration').html(EffectUtils.formatTime(duration));
-
-    var left = this.mediaSetting.find('.time').offset().left;
-    var width = this.mediaSetting.find('.time').width();
-
-    this.mediaSetting.find('.time').data('duration', duration);
-    this.mediaSetting.find('.timeline').offset({left: left});
-    this.mediaSetting.find('.timeline').width(width);
-    this.mediaSetting.find('.time-start').offset({left: left - 10});
-    this.mediaSetting.find('.time-end').offset({left: left + width - 10});
-    this.mediaSetting.find('.time-start .text').html(EffectUtils.formatTime(position));
-    this.mediaSetting.find('.time-end .text').html(EffectUtils.formatTime(duration));
-  };
-
-  VideoClip.prototype.save = function() {
-  };
-
-  VideoClip.prototype.preview = function() {
-    this.textContainer.visible = false;
-    this.bitmapContainer.visible = false;
-    this.bgContainer.visible = false;
-    
-    this.effectSetting.hide();
-    this.mediaSetting.hide();
-
-    this.clearAudio();
-
-    $('#video').attr('src', '');
-    
-    this.previewVC.setData(this.arrBG, this.arrBGAudio, this.arrFrame, this.stage, this.bitmapContainer.VC_WIDTH, this.bitmapContainer.VC_HEIGHT, this.loading, this.videoInstance, $('.preview-setting'));
-  };
-
-  VideoClip.prototype.finish = function() {
-    var videoComplete = $('#videoComplete');
-    videoComplete.modal('show');
-  };
-
-  //////////PreviewVC/////////////
-  function PreviewVC() {
-    this.curFrame = -1;
-    this.arrFrame = [];
-
-    this.arrBG = [];
-    this.arrAudio = [];
-
-    this.container = new createjs.Container();
-
-    this.bgContainer = this.container.addChild(new createjs.Container());
-    this.bitmapContainer = this.container.addChild(new createjs.Container());
-    this.textContainer = this.container.addChild(new createjs.Container());
-    
-    this.VC_WIDTH = 0;
-    this.VC_HEIGHT = 0;
-
-    this.loading = null;
-    this.previewSetting = null;
-    this.videoInstance = null;
-
-    this.duration = 0;
-    this.timeoutId = null;
-    this.psTimeout = null;
-
-    this.isPlaying = false;
-  };
-
-  PreviewVC.prototype.setData = function(arrBG, arrAudio, arrFrame, stage, width, height, loading, video, previewSetting) {
-    
-    var that = this;
-
-    this.isPlaying = false;
-    this.arrBG = arrBG;
-    this.arrAudio = arrAudio;
-    this.arrFrame = arrFrame;
-    this.loading = loading;
-    this.videoInstance = video;
-    this.previewSetting = previewSetting;
-
-
-    //add events - refactor later
-    var videoClip = that.previewSetting.parent()[0];
-
-    this.previewSetting.find('.play-pause').off('click').on('click', function(evt) {
-      onPlayStopHandler(evt);
-    });
-
-    this.previewSetting.find('.time').off('click').on('click', function(evt) {
-      
-      var timeLeft = that.previewSetting.find('.time').offset().left;
-      var timeWith = that.previewSetting.find('.time').width();
-
-      var curTime = Math.floor((evt.pageX - timeLeft) * that.duration / timeWith);
-
-      that.seek(curTime);
-    });
-
-    function onPlayStopHandler(evt) {
-      that.isPlaying = !that.isPlaying;
-
-      if (that.isPlaying) {
-        that.play();
-      } else {
-        that.stop();
-      }
-    };
-
-    this.previewSetting.find('.full-screen').off('click').on('click', function(evt) {
-      $(videoClip).toggleClass('full-screen');
-
-      if ($(videoClip).hasClass('full-screen')) {
-        that.gotoFullscreen(videoClip);
-      } else {
-        that.exitFullscreen();
-      }
-    });
-
-    document.addEventListener("fullscreenchange", function(evt) { onFullScreenChange(evt);});
-    document.addEventListener("webkitfullscreenchange", function(evt) { onFullScreenChange(evt);});
-    document.addEventListener("mozfullscreenchange", function(evt) { onFullScreenChange(evt);});
-    document.addEventListener("MSFullscreenChange", function(evt) { onFullScreenChange(evt);});
-
-    function onFullScreenChange(evt) {
-      var isFullScreen = document.fullScreen || document.mozFullScreen || document.webkitIsFullScreen;
-
-      if (!isFullScreen) {
-       $(videoClip).removeClass('full-screen');
-      }
-    };
-
-    this.textContainer.removeAllChildren();
-    this.bitmapContainer.removeAllChildren();
-    stage.addChild(this.container);
-
-    this.resize(width, height);
-    
-    //duration
-    var frameData;
-    for (var i = 0; i < this.arrFrame.length; i ++) {
-      frameData = this.arrFrame[i];
-      this.duration += frameData.getDuration();
-    }
-
-    this.loadNextBackgroundImage(0);
-  };
-
-  PreviewVC.prototype.gotoFullscreen = function(element) {
-    if(element.requestFullscreen) {
-      element.requestFullscreen();
-    } else if(element.mozRequestFullScreen) {
-      element.mozRequestFullScreen();
-    } else if(element.webkitRequestFullscreen) {
-      element.webkitRequestFullscreen();
-    } else if(element.msRequestFullscreen) {
-      element.msRequestFullscreen();
-    }
-  };
-  
-  PreviewVC.prototype.exitFullscreen = function() {
-    if(document.exitFullscreen) {
-      document.exitFullscreen();
-    } else if(document.mozCancelFullScreen) {
-      document.mozCancelFullScreen();
-    } else if(document.webkitExitFullscreen) {
-      document.webkitExitFullscreen();
-    }
-  };
-
-  PreviewVC.prototype.loadNextBackgroundImage = function(index) {
-
-    if (index >= this.arrBG.length) {
-      this.loadNextImage(0);
-      return;
-    }
-
-    if (this.arrBG[index].url == null) {
-      index ++;
-      this.loadNextBackgroundImage(index);
-      return;
-    }
-
-    var that = this;
-    this.loading.show();
-
-    var image = new Image();
-    image.onload = function(evt) {
-      that.arrBG[index].imageView = image;
-      
-      index ++;
-      that.loadNextBackgroundImage(index);
-    };
-    image.src = this.arrBG[index].url;
-  };
-
-  PreviewVC.prototype.loadNextImage = function(index) {
-
-    if (index >= this.arrFrame.length) {
-      this.loadNextAudio(0);
-      return;
-    }
-
-    if (this.arrFrame[index].bitmapUrl == null) {
-      index ++;
-      this.loadNextImage(index);
-      return;
-    }
-
-    var that = this;
-    this.loading.show();
-
-    var image = new Image();
-    image.onload = function(evt) {
-      that.arrFrame[index].imageView = image;
-      
-      index ++;
-      that.loadNextImage(index);
-    };
-    image.src = this.arrFrame[index].bitmapUrl;
-  };
-
-  PreviewVC.prototype.loadNextAudio = function(index) {
-
-    if (index >= this.arrAudio.length) {
-      this.loadNextVideo(0);
-      return;
-    }
-
-    var that = this;
-    this.loading.show();
-
-    var audioData = this.arrAudio[index];
-
-    createjs.Sound.addEventListener("fileload", onAudioLoadHandler);
-    createjs.Sound.registerSound({id: audioData.id, src: audioData.url});
-
-    function onAudioLoadHandler(evt) {
-      createjs.Sound.removeEventListener("fileload", onAudioLoadHandler);
-
-      audioData.audioInstance = createjs.Sound.createInstance(audioData.id);
-      
-      index ++;
-      that.loadNextAudio(index);
-    };
-  };
-
-  PreviewVC.prototype.loadNextVideo = function(index) {
-    if (index >= this.arrFrame.length) {
-      this.play();
-      return;
-    }
-
-    if (this.arrFrame[index].videoUrl == null) {
-      index ++;
-      this.loadNextVideo(index);
-      return;
-    }
-
-    var that = this;
-    this.loading.show();
-
-    var queue = new createjs.LoadQueue();
-    queue.on("fileload", onFileLoadHandler);
-    //queue.on("complete", onCompleteHandler);
-    queue.loadFile({id: this.arrFrame[index].videoId, src: this.arrFrame[index].videoUrl, type: createjs.AbstractLoader.BINARY});
-    
-    function onFileLoadHandler(evt) {
-      queue.off("fileload", onFileLoadHandler);
-    //}
-    //
-    //function onCompleteHandler(evt) {
-    //  queue.off("complete", onCompleteHandler);
-
-      var blob = new Blob([evt.result], { type: "video/mp4" } );
-      var URLCreator = window.URL || window.webkitURL;
-      var objUrl = URLCreator.createObjectURL(blob);
-
-      that.arrFrame[index].videoView = objUrl;
-
-      index ++;
-      that.loadNextVideo(index);
-    }
-  }; 
-
-  PreviewVC.prototype.createBitmap = function(image) {
-    var w = image.width;
-    var h = image.height;
-    
-    //find corrected scale
-    var scale = this.VC_WIDTH / w;
-    if(h * scale > this.VC_HEIGHT) {
-      scale = this.VC_HEIGHT / h;
-    }
-
-    var translateX = (this.VC_WIDTH - scale * w)/2;
-    var translateY = (this.VC_HEIGHT - scale * h)/2;
-  
-    var matrix = new createjs.Matrix2D(scale, 0, 0, scale, translateX, translateY);
-    var bitmapData = new createjs.BitmapData(image, this.VC_WIDTH, this.VC_HEIGHT, 0x000000);
-    bitmapData.draw(image, matrix, null, null, null, true);
-
-    return new createjs.Bitmap(bitmapData.canvas);
-  };
-  
-  PreviewVC.prototype.createText = function(textData, textView) {
-
-    var frameText =  textView;
-    if (!frameText) {
-      frameText = new createjs.Text("Text", "20px Arial", "#FF7700");
-    }
-
-    frameText.text = textData.text;
-    frameText.font = textData.style + ' ' + textData.size + 'px ' + textData.fontName;
-    frameText.color = textData.color;
-    frameText.textAlign = textData.halign;
-
-    if (textData.halign == HA_LEFT) {
-      frameText.x = textData.padding;
-    }
-    else if (textData.halign == HA_CENTER) {
-      frameText.x = this.VC_WIDTH/2;
-    }
-    else if (textData.halign == HA_RIGHT) {
-      frameText.x = this.VC_WIDTH - textData.padding;
-    }
-    
-    var textHeight = frameText.getBounds() ? frameText.getBounds().height : 0;
-    if (textData.valign == VA_TOP) {
-      frameText.y = textData.padding;
-    }
-    else if (textData.valign == VA_MIDDLE) {
-      frameText.y = this.VC_HEIGHT/2 - textHeight/2;
-    }
-    else if (textData.valign == VA_BOTTOM) {
-      frameText.y = this.VC_HEIGHT - textHeight - textData.padding;
-    }
-
-    return frameText;
-  };
-
-  PreviewVC.prototype.playAudio = function() {
-      this.nextAudio(0);
-  }
-  
-  PreviewVC.prototype.nextAudio = function(index) {
-    if (this.isPlaying == false) {
-      return;
-    }
-
-    var that = this;
-    if (index >= 0 && index < this.arrAudio.length) {
-      var audioData = this.arrAudio[index];
-
-      audioData.audioInstance.volume = 0;
-      audioData.audioInstance.play();
-      audioData.audioInstance.on("complete", onAudioPlayCompleteHandler);
-      audioData.audioInstance.playProgressTimeout = setInterval(onAudioPlayProgressHandler, 100);
-    }
-
-    function onAudioPlayProgressHandler(evt) {
-      if (audioData.audioInstance) {
-
-        if (audioData.audioInstance.volume < 1) {
-          audioData.audioInstance.volume = audioData.audioInstance.volume += 0.03;
-        }
-
-        //start
-        //end
-      }
-    }
-
-    function onAudioPlayCompleteHandler(evt) {
-      if (audioData.audioInstance) {
-        clearInterval(audioData.audioInstance.playProgressTimeout);
-        audioData.audioInstance.removeAllEventListeners();
-      }
-      
-      index ++;
-      that.nextAudio(index);
-    }
-  };
-
-  PreviewVC.prototype.nextFrame = function() {
-    if (this.isPlaying == false) {
-      return;
-    }
-
-    this.curFrame ++;
-    if (this.curFrame < this.arrFrame.length) {
-      
-      var preFrameData;
-      if (this.curFrame > 0) {
-        preFrameData = this.arrFrame[this.curFrame - 1];
-      }
-      
-      var that = this;
-      var nexFrameData = this.arrFrame[this.curFrame];
-      
-      this.playFrame(preFrameData, nexFrameData, function() { 
-        that.nextFrame(); 
-      });
-    }
-  };
-
-  PreviewVC.prototype.playFrame = function(prev, next, callback) {
-    if (this.isPlaying == false) {
-      return;
-    }
-
-    //play video or play sound
-    this.container.visible = true;
-    this.bgContainer.visible = (next.type == VIDEO) ? false : true;
-
-    $(this.videoInstance).attr('src', '');
-    
-    //text effect
-    if (next.text.text != '') {
-      next.textView = this.createText(next.text, next.textView);
-
-      var textEffectPlugin = EffectUtils.getEffectPlugin(next.textEffect);
-      if (textEffectPlugin) {
-        textEffectPlugin.play(this.textContainer, prev ? prev.textView : null, next.textView, next.textEffectDelay, next.textEffectDuration);
-      }
-    } else {
-      this.textContainer.removeAllChildren();
-    }
-
-    //bitmap effect
-    if (next.bitmapUrl != null) {
-      next.bitmapView = this.createBitmap(next.imageView);
-
-      var bitmapEffectPlugin = EffectUtils.getEffectPlugin(next.bitmapEffect);
-      if (bitmapEffectPlugin) {
-        bitmapEffectPlugin.play(this.bitmapContainer, prev ? prev.bitmapView : null, next.bitmapView, next.bitmapEffectDelay, next.bitmapEffectDuration); 
-      }
-    } else {
-      this.bitmapContainer.removeAllChildren();
-    }
-
-    if (next.type == VIDEO && next.videoView != null) {
-      $(this.videoInstance).attr('src', next.videoView);
-      this.videoInstance.play();
-    }
-
-    //frame duration timeout
-    var timeoutId = setTimeout(function() {
-      clearTimeout(timeoutId);
-      callback();
-    }, next.getDuration() * 1000);
-  };
-
-  PreviewVC.prototype.playBackground = function(time) {
-    var bgData = EffectUtils.getBackgroundDataByTime(this.arrBG, time);
-
-    if (!bgData || !bgData.url) {
-      this.bgContainer.url = null;
-      this.bgContainer.removeAllChildren();
-    }
-
-    else if (this.bgContainer.url != bgData.url) {
-      this.bgContainer.url = bgData.url;
-      this.bgContainer.removeAllChildren();
-      this.bgContainer.addChild(this.createBitmap(bgData.imageView));
-    }
-  };
-
-  PreviewVC.prototype.startTime = function() {
-    var that = this;
-    var count = 0;
-
-    //background image
-    //next.bitmapView = this.createBitmap(next.imageView);
-    
-    this.previewSetting.find('.duration').html(EffectUtils.formatTime(this.duration));
-
-    this.timeoutId = setInterval(function() {
-      count += 100;
-      that.previewSetting.find('.position').html(EffectUtils.formatTime(count/1000));
-      that.previewSetting.find('.timeline').css('width', Math.floor(100 * count / (that.duration * 1000)) + '%');
-
-      //show background image here
-      that.playBackground(count / 1000);
-
-      //play background audio here
-
-      if (count >= that.duration * 1000) {
-        clearInterval(that.timeoutId);
-        that.stop();
-      } 
-    }, 100);
-  };
-
-  PreviewVC.prototype.resize = function(width, height) {
-    this.VC_WIDTH = width;
-    this.VC_HEIGHT = height;
-
-    if (this.bitmapContainer && this.textContainer) {
-      this.textContainer.VC_WIDTH = this.bitmapContainer.VC_WIDTH = width;
-      this.textContainer.VC_HEIGHT = this.bitmapContainer.VC_HEIGHT = height;
-    }
-
-    //TweenLite
-
-  };
-
-  PreviewVC.prototype.play = function() {
-    var that = this;
-
-    this.loading.hide();
-    this.previewSetting.show();
-    this.previewSetting.find('.play-pause span').removeClass('fa fa-play').addClass('fa fa-stop');
-
-    this.isPlaying = true;
-    this.curFrame = -1;
-    this.nextFrame();
-    this.playAudio();
-    this.startTime();
-
-    this.hideSetting();
-    $('.video-clip').off('mousemove').on('mousemove', function(evt) {
-      that.showSetting();
-    });
-  };
-  
-  PreviewVC.prototype.hideSetting = function() {
-    var that = this;
-    clearTimeout(that.psTimeout);
-    this.psTimeout = setTimeout(function() {
-      clearTimeout(that.psTimeout);
-      that.previewSetting.hide();
-    }, 5000);
-  };
-
-  PreviewVC.prototype.showSetting = function() {
-     clearTimeout(this.psTimeout);
-     this.previewSetting.show();
-     this.hideSetting();
-  };
-
-  PreviewVC.prototype.pause = function() {
-
-  };
-
-  PreviewVC.prototype.stop = function() {
-    clearInterval(this.timeoutId);
-    clearTimeout(this.psTimeout);
-    $('.video-clip').off('mousemove');
-
-    this.isPlaying = false;
-    
-    this.textContainer.removeAllChildren();
-    this.bitmapContainer.removeAllChildren();
-    this.bgContainer.removeAllChildren();
-
-    this.previewSetting.find('.play-pause span').removeClass('fa fa-stop').addClass('fa fa-play');
-    this.previewSetting.find('.position').html(EffectUtils.formatTime(0));
-    this.previewSetting.find('.timeline').css('width', '0%');
-    this.previewSetting.show();
-
-    createjs.Sound.stop();
-    createjs.Sound.removeAllEventListeners();
-    this.exitFullscreen();
-  };
-
-  PreviewVC.prototype.seek = function(position) {
-
-    //stop current frame
-    this.isPlaying = false;
-    
-
-    //find the frame by time
-
-    //play the new frame
-    
-
-  };
-
-  PreviewVC.prototype.clear = function(clearSound) {
-    clearInterval(this.timeoutId);
-    clearTimeout(this.psTimeout);
-    $('.video-clip').off('mousemove')
-
-    this.isPlaying = false;
-    this.container.visible = false;
-    
-    this.textContainer.removeAllChildren();
-    this.bitmapContainer.removeAllChildren();
-    this.bgContainer.removeAllChildren();
-
-    if (this.previewSetting) {
-      this.previewSetting.find('.play-pause span').removeClass('fa fa-stop').addClass('fa fa-play');
-      this.previewSetting.hide();
-    }
-
-    createjs.Sound.stop();
-    createjs.Sound.removeAllSounds();
-    createjs.Sound.removeAllEventListeners();
-  };
-
-  /* =============== */
-  /* MODULE DATA-API */
-  /* =============== */
-
-  $.fn[pluginName] = function(options, params) {
-    return this.each(function() {
-      var instance = $.data(this, pluginName);
-      if (!instance) {
-        $.data(this, pluginName, new VideoClip(this, options));
-      } else if (instance[options]) {
-        instance[options](params);
-      } else {
-        window.console && console.log(options ? options + ' method is not exists in ' + pluginName : pluginName + ' plugin has been initialized');
-      }
-    });
-  };
-
-  $.fn[pluginName].defaults = {};
-
-  $(function() {
-    $('[data-' + pluginName + ']')[pluginName]({});
-  });
-
-}(window.jQuery, window, window.createjs, window.App));
-
-/**
- *  @name scroll-video
- *  @description description
- *  @version 1.0
- *  @options
- *    option
- *  @events
- *    event
- *  @methods
- *    init
- *    publicMethod
- *    destroy
- */
-;(function($, window, undefined) {
-  var pluginName = 'color';
-
-  function Plugin(element, options) {
-    this.element = $(element);
-    this.options = $.extend({}, $.fn[pluginName].defaults, this.element.data(), options);
-    this.init();
-  }
-
-  Plugin.prototype = {
-    init: function() {
-      var that = this,
-          ele = that.element;
-
-      // ele.colorpicker({
-      //   displayIndicator: false
-      // });
     }
   };
 
