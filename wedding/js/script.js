@@ -2819,6 +2819,8 @@ window.onGooglClientApiLoadedHandler = function() {
     var width = that.mediaSetting.find('.time').width();
     var duration = that.mediaSetting.find('.time').data('duration');
 
+    //console.log(duration);
+
     $(document.body).off("mousemove").on("mousemove", function(evt) {
       if (!target) {
         return;
@@ -5003,7 +5005,7 @@ window.onGooglClientApiLoadedHandler = function() {
       that.mediaSetting.find('.timeline').width(toRight - toLeft);
 
       that.mediaSetting.find('.play-pause').find('span').removeClass('fa-play').addClass('fa-pause');
-      that.mediaSetting.find('.time').data('duration', audioData.getTime());
+      //that.mediaSetting.find('.time').data('duration', audioData.getTime());
       that.mediaSetting.find('.time-start .text').html(EffectUtils.formatTime(audioData.start));
       that.mediaSetting.find('.time-end .text').html(EffectUtils.formatTime(audioData.end));
       
