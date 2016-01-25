@@ -2819,8 +2819,6 @@ window.onGooglClientApiLoadedHandler = function() {
     var width = that.mediaSetting.find('.time').width();
     var duration = that.mediaSetting.find('.time').data('duration');
 
-    //console.log(duration);
-
     $(document.body).off("mousemove").on("mousemove", function(evt) {
       if (!target) {
         return;
@@ -4981,7 +4979,8 @@ window.onGooglClientApiLoadedHandler = function() {
       // Play the loaded sound
       that.mediaSetting.show();
       
-      that.audioInstance = createjs.Sound.play(evt.src);
+      that.audioInstance = createjs.Sound.createInstance(id);
+
       that.saveMediaMetaData(0, that.audioInstance.duration / 1000);
 
       var left = that.mediaSetting.find('.time').offset().left;
@@ -5009,6 +5008,9 @@ window.onGooglClientApiLoadedHandler = function() {
       that.mediaSetting.find('.time-start .text').html(EffectUtils.formatTime(audioData.start));
       that.mediaSetting.find('.time-end .text').html(EffectUtils.formatTime(audioData.end));
       
+      that.audioInstance.position = audioData.start * 1000;
+      that.audioInstance.play();
+    
       that.audioInstance.on("complete", onAudioPlayCompleteHandler);
       that.audioInstance.playProgressTimeout = setInterval(onAudioPlayProgressHandler, 100);
     }
@@ -7262,6 +7264,7 @@ function PreviewVC() {
   this.frameAudioInstance = null;
   this.audioInstance = null;
 
+  this.arrId = [];
   this.isPlaying = false;
 };
 
@@ -7276,6 +7279,7 @@ PreviewVC.prototype.setData = function(arrBG, arrAudio, arrFrame, stage, width, 
   this.loading = loading;
   this.videoInstance = video;
   this.previewSetting = previewSetting;
+  this.arrId = [];
 
   //add events - refactor later
   var videoClip = that.previewSetting.parent()[0];
@@ -7440,10 +7444,19 @@ PreviewVC.prototype.loadNextAudio = function(index) {
     return;
   }
 
+  var existIndex = this.arrId.indexOf(audioData.id);
+  if (existIndex != -1) {
+    audioData.audioInstance = this.arrAudio[existIndex].audioInstance;
+    index++;
+    that.loadNextAudio(index);
+    return;
+  }
+
   createjs.Sound.addEventListener("fileload", onAudioLoadHandler);
   createjs.Sound.registerSound({id: audioData.id, src: audioData.url});
 
   function onAudioLoadHandler(evt) {
+    that.arrId.push(audioData.id);
     createjs.Sound.removeEventListener("fileload", onAudioLoadHandler);
 
     audioData.audioInstance = createjs.Sound.createInstance(audioData.id);
@@ -7605,12 +7618,30 @@ PreviewVC.prototype.nextAudio = function(index, startTime) {
       return;
     }
 
+    var isEnd = false;
+
     function onAudioPlayProgressHandler(evt) {
       if (audioData.audioInstance) {
 
-        if (audioData.audioInstance.volume < 1) {
-          audioData.audioInstance.volume = audioData.audioInstance.volume += 0.01;
+        //volume up when start
+        if (audioData.audioInstance.volume < 1 && isEnd == false) {
+          audioData.audioInstance.volume += 0.009;
         }
+
+        //volume down when end
+        if (audioData.end == -1) {
+          if (audioData.audioInstance.position/1000 + 4 >= audioData.audioInstance.duration/1000) {
+            isEnd = true;
+            audioData.audioInstance.volume -= 0.03;
+          }
+        } else {
+          if (audioData.audioInstance.position/1000 + 4 >= audioData.end) {
+            isEnd = true;
+            audioData.audioInstance.volume -= 0.03;
+          }
+        }
+
+        //audioData.audioInstance.volume = audioData.audioInstance.volume += 0.008;
 
         if (audioData.end != -1 && audioData.end <= audioData.audioInstance.position/1000) {
           audioData.audioInstance.stop();
