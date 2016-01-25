@@ -7580,7 +7580,7 @@ PreviewVC.prototype.nextAudio = function(index, startTime) {
           audioData.audioInstance.volume = audioData.audioInstance.volume += 0.01;
         }
 
-        if (audioData.end != -1 && audioData.end >= audioData.position/ 1000) {
+        if (audioData.end != -1 && audioData.end <= audioData.audioInstance.position/1000) {
           audioData.audioInstance.stop();
           clearInterval(audioData.audioInstance.playProgressTimeout);
           audioData.audioInstance.removeAllEventListeners();
@@ -7600,13 +7600,13 @@ PreviewVC.prototype.nextAudio = function(index, startTime) {
       index ++;
       that.nextAudio(index);
     }
-  }
 
-  audioData.audioInstance.volume = 0;
-  audioData.audioInstance.position = startTime ? startTime * 1000 : audioData.start * 1000;
-  audioData.audioInstance.play();
-  audioData.audioInstance.on("complete", onAudioPlayCompleteHandler);
-  audioData.audioInstance.playProgressTimeout = setInterval(onAudioPlayProgressHandler, 100);
+    audioData.audioInstance.volume = 0;
+    audioData.audioInstance.position = startTime ? startTime * 1000 : audioData.start * 1000;
+    audioData.audioInstance.play();
+    audioData.audioInstance.on("complete", onAudioPlayCompleteHandler);
+    audioData.audioInstance.playProgressTimeout = setInterval(onAudioPlayProgressHandler, 100);
+  }
 };
 
 PreviewVC.prototype.nextFrame = function() {
