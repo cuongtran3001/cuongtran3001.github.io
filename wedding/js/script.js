@@ -2,10 +2,40 @@
  * @name Site
  * @description Define global variables and functions
  * @version 1.0
+  var images = $('#container img');
+  var count = 0;
+  for each (image in images) {
+    image.onload = function() {
+      count ++;
+      if (count == images.length) {
+        //complete
+        }
+  }
+  }
  */
 var Site = (function($, window, undefined) {
   var privateVar = 1;
   var loading = $('<div class="loading"></div>');
+  var app = $('#app'),
+      win = $(window);
+  var GlobalEvents = {
+    AJAX_SUCCESS: 'load-ajax-success'
+  };
+  var disableScrollBgd = function() {
+    var heightScreen;
+    scrollTop = win.scrollTop();
+
+    app.css({
+      'height': win.height() + scrollTop,
+      'overflow': 'hidden',
+      'margin-top': -scrollTop
+    });
+  };
+
+  var resetScrollBgd = function() {
+    app.css({'height': '', 'overflow': '', 'margin-top': ''});
+    win.scrollTop(scrollTop);
+  };
 
   function effectSocial() {
     $('.social-block li a').each(function(){
@@ -17,8 +47,7 @@ var Site = (function($, window, undefined) {
             $(this).removeClass('rotateIn');
         });
       });
-    });   
-
+    });
     $('.social li a').each(function(){
       $(this).addClass('animated');
       $(this).off('mouseover').on('mouseover',function(){
@@ -54,11 +83,11 @@ var Site = (function($, window, undefined) {
     $('.testselect2').SumoSelect({ okCancelInMulti: true });
   }
   
-  if ($('[data-sortable]').length) {  
-    $('[data-sortable]').sortable();
+  if($('[data-select-filter]').length){
+    $('[data-select-filter]').ddTableFilter();
   }
   
-  if ($('[data-rate]').length) {  
+  if ($('[data-rate]').length) {
     $('[data-rate]').raty({
       numberMax : 5,
       number    : 100,
@@ -67,7 +96,7 @@ var Site = (function($, window, undefined) {
       target : '.hint'
     });
   }
-  var templateLoading= '<div class="wrapLoad"><div class="load-wrapp"><div class="load-1"><div class="line"></div><div class="line"></div><div class="line"></div></div></div></div>';
+  var templateLoading= '<div class="wrapLoad bgd-rgba"><div class="load-wrapp"><div class="load-1"><div class="line"></div><div class="line"></div><div class="line"></div></div></div></div>';
   if ($('#app').length && $('#app').imagesLoaded) {
     $('#app').imagesLoaded()
     .always( function( instance ) {
@@ -76,18 +105,39 @@ var Site = (function($, window, undefined) {
     })
     .done( function( instance ) {
       $('.wrapLoad').remove();
+      $('#app').css({
+        'height' : '',
+        'overflow': ''
+      });
     })
     .fail( function() {
       $('.wrapLoad').remove();
+      $('#app').css({
+        'height' : '',
+        'overflow': ''
+      });
+      // console.log('all images loaded, at least one is broken');
+    })
+    .error( function() {
+      $('.wrapLoad').remove();
+      $('#app').css({
+        'height' : '',
+        'overflow': ''
+      });
       // console.log('all images loaded, at least one is broken');
     })
     .progress( function( instance, image ) {
-      // $(image.img).before(templateLoading);
+      $('#app').before(templateLoading);
+      $('#app').css({
+        'height' : $(window).height(),
+        'overflow': 'hidden'
+      });
+      $('.wrapLoad').hide();
+      $('.wrapLoad').eq(1).show();
       // var result = image.isLoaded ? 'loaded' : 'broken';
       // console.log( 'image is ' + result + ' for ' + image.img.src );
     });
   }
-    
   function loadingImg() {
     $('img').each(function(){
       var that = $(this);
@@ -125,6 +175,7 @@ var Site = (function($, window, undefined) {
   function scrollEffect(){
     effectSocial();
     loadingImg();
+    // $('[data-modal-ajax]').modal(show);
   }
   function scrollPane() {
 
@@ -171,12 +222,79 @@ var Site = (function($, window, undefined) {
     });
     var item = $('.detail-news').data('url');
     $('[data-toggleslider-1]').each(function(){
-      var that = $(this);
-      that.find('thead').off('click').on('click', function(){
-        that.find('tbody').fadeToggle();
+      var that = $(this),
+          el = that.find('.tbody');
+      that.find('.thead').off('click').on('click', function(){
+        if (that.hasClass('active')) {
+          that.removeClass('active');
+          el.fadeOut();
+        }else{
+          var before = $('[data-toggleslider-1]').filter('.active');
+          if(before.length){
+            before.removeClass('active');
+            before.children('.tbody').fadeOut();
+          }
+          that.addClass('active');
+          el.fadeIn();
+        }
       });
     });
+    if($('[data-scroll-head]').length){
+      var offset = $('[data-scroll-head]').offset().top + 100;
+      $('[data-scroll-head]').removeClass('fixed-content');
+      $(window).scroll(function() {
+        if ($(window).scrollTop() >= offset) {
+          $('[data-scroll-head]').addClass('fixed-content');
+        }else{
+          // console.log($(window).scrollTop());
+          $('[data-scroll-head]').removeClass('fixed-content');
+        }
+      });
+    }
+    var setHeightTable = function() {
+      var maxHeight = 0,
+          table = $('.table .table-cell');
+      if(!table.hasClass('full-height')){
+        table.css('height', '').each(function() {
+          maxHeight = Math.max(maxHeight, $(this).outerHeight());
+        });
+        table.css({
+          'height': maxHeight
+        });
+      }else{
+        table.not('.full-height').css('height', '').each(function() {
+          maxHeight = Math.max(maxHeight, $(this).outerHeight());
+        });
+        table.filter('.full-height').css({
+          'height': maxHeight * 2
+        });
+        table.not('.full-height').css({
+          'height': maxHeight
+        });
+      }
+    };
+    var detroyHeightTable = function() {
+      var maxHeight = 0,
+          table = $('.table .table-cell');
+      table.css('height', '').each(function() {
+        maxHeight = Math.max(maxHeight, $(this).outerHeight());
+      });
+      table.css({
+        'height': ''
+      });
+    };
     $(window).on('resize.windowA', function(){
+      if ($(window).width() > 768 ) {
+        $('[data-sortable]').sortable();
+        $('[data-sortable]').sortable('enable');
+        detroyHeightTable();
+        // $('.table.table-condensed.pink-style').removeClass('fixed');
+      }else{
+        $('[data-sortable]').sortable();
+        $('[data-sortable]').disableSelection();
+        setHeightTable();
+        $('[data-sortable]').sortable('disable');
+      }
       $('.block-bgd-full .container').css({
         'min-height': $(window).height()
       });
@@ -193,7 +311,7 @@ var Site = (function($, window, undefined) {
             $('.desktop [data-video-frame]').removeClass('fixed-video').css({
               left: '',
               width: ''
-            });;
+            });
           }
         });
       }
@@ -208,7 +326,7 @@ var Site = (function($, window, undefined) {
           var target = el.target;
           // if(target.closest('.block-img a')){
           //   e.preventDefault;
-          $(this).toggleClass('active');
+          // $(this).toggleClass('active');
           // }
         });
     });
@@ -265,6 +383,11 @@ var Site = (function($, window, undefined) {
         });
       }
     });
+    if(!$('[data-buttonslider]').hasClass('active')){
+      $('[data-buttonslider]').css({
+        left: '-88%'
+      });
+    }
     $('[data-buttonslider]').click(function(e){
       var that = $(this);
       if(that.hasClass('active')){
@@ -278,9 +401,9 @@ var Site = (function($, window, undefined) {
             that.removeClass('active');
           });
         }
-        // });
       }
       else{
+        console.log(1);
         that.addClass('active').stop().animate({
             left: 0
         }, 800, function(){
@@ -292,15 +415,17 @@ var Site = (function($, window, undefined) {
       $('[data-slidermobile]').stop().slideToggle(500);
       $('[data-slidermobile]').toggleClass('active');
     });
+    $('[data-buttonslider]').find('.btn-slider').click(function(e){
+      $('[data-slidermobile]').stop().slideToggle(500);
+      $('[data-slidermobile]').toggleClass('active');
+    });
     // $(document).ajaxError(function() {
     //   console.log('error connect internet!')
     //   setTimeout(function(){
     //     $('[data-modal-ajax]').modal('hide');
     //   },1000);
     // });
-    $('[data-modal-ajax]').on('hide.bs.modal', function() {
-      $(this).removeData();
-    });
+    
 
     if ($("[data-coverflow]").length) {
       $("[data-coverflow]").flipster({
@@ -349,9 +474,6 @@ var Site = (function($, window, undefined) {
             var that = this,
               currentCategory = "";
             ul.addClass('search-category');
-
-            
-
             $.each(items, function(index, item) {
               if (item.category != currentCategory) {
                 ul.append("<li class='ui-autocomplete-category " + item.class + "-icon '><span></span><p>" + item.category + "</p></li>");
@@ -584,7 +706,7 @@ var Site = (function($, window, undefined) {
     });
     $(window).on('resize.a', function(){
       $('.block-album .item').each(function(e){
-        if($(this).parent().hasClass('noslider')){
+        if($(this).closest('.noslider').length){
           $(this).hover(function(){
             return false;
           },
@@ -594,7 +716,7 @@ var Site = (function($, window, undefined) {
         }else{
           $(this).hover(function(){
             if($(window).width() > 768){
-              // $(this).find('.content').stop().slideDown(500);
+              $(this).find('.content').stop().slideDown(500);
             }
             if($(this).parent().hasClass('noslider')){
               return false;
@@ -602,7 +724,7 @@ var Site = (function($, window, undefined) {
           },
           function () {
             if($(window).width() > 768){
-              // $(this).find('.content').stop().slideUp(500);
+              $(this).find('.content').stop().slideUp(500);
             }
             if($(this).parent().hasClass('noslider')){
               return false;
@@ -610,6 +732,20 @@ var Site = (function($, window, undefined) {
           });
         }
       });
+        $('.mega-menu').on('mouseover', function(){
+          if($(window).width() > 992){
+            $('.sub-mega').stop(true).slideDown();
+          }
+        }).on('mouseout', function(){
+          $('.sub-mega').stop(true).slideUp();
+        });
+        $('.sub-mega').on('mouseover', function(){
+          if($(window).width() > 992){
+            $(this).stop(true).slideDown();
+          }
+        }).on('mouseout', function(){
+          $(this).stop(true).slideUp();
+        });
     }).trigger('resize.a');
     $('input[name="country"]').on('click.radiobtn', function(){
       if($(this).attr('value') === 'global'){
@@ -621,14 +757,14 @@ var Site = (function($, window, undefined) {
         $('[data-select="global"]').not('[data-select="local"]').hide();
       }
     });
-
     if ($('.slider-dashboard').length) {
       $('.slider-dashboard').slick({
         slidesToShow: 1,
         slidesToScroll: 1,
         arrows: false,
         autoplay: true,
-        autoplaySpeed: 2000
+        autoplaySpeed: 2000,
+        adaptiveHeight: true
       });
     }
     
@@ -643,20 +779,378 @@ var Site = (function($, window, undefined) {
         }
       });
     }
-    if($('[data-show-modal]').length){
-      $('[data-show-modal]').on('shown.bs.modal', function (e) {
-        // setTimeout(function(){
-        //   if($('.invitation-list').length){
-        //     $('.invitation-list').jScrollPane({
-        //       showArrows: true
-        //     });
-        //   }
-        // },200);
-      });
-    }
     $('[data-slider-small]').find('.slick-slide').eq(3).addClass('slick-current');
-    $('[data-modal-ajax]').on('show.bs.modal', function (e) {
+    var initPhotoSwipeFromDOM = function(gallerySelector) {
+      var parseThumbnailElements = function(el) {
+          var thumbElements = el.childNodes,
+              numNodes = thumbElements.length,
+              items = [],
+              el,
+              childElements,
+              thumbnailEl,
+              size,
+              item;
+
+          for(var i = 0; i < numNodes; i++) {
+              el = thumbElements[i];
+
+              // include only element nodes 
+              if(el.nodeType !== 1) {
+                continue;
+              }
+
+              childElements = el.children;
+
+              size = el.getAttribute('data-size').split('x');
+
+              // create slide object
+              item = {
+            src: el.getAttribute('href'),
+            w: parseInt(size[0], 10),
+            h: parseInt(size[1], 10),
+            author: el.getAttribute('data-author')
+              };
+
+              item.el = el; // save link to element for getThumbBoundsFn
+
+              if(childElements.length > 0) {
+                item.msrc = childElements[0].getAttribute('src'); // thumbnail url
+                if(childElements.length > 1) {
+                    item.title = childElements[1].innerHTML; // caption (contents of figure)
+                }
+              }
+
+
+          var mediumSrc = el.getAttribute('data-med');
+                if(mediumSrc) {
+                  size = el.getAttribute('data-med-size').split('x');
+                  // "medium-sized" image
+                  item.m = {
+                      src: mediumSrc,
+                      w: parseInt(size[0], 10),
+                      h: parseInt(size[1], 10)
+                  };
+                }
+                // original image
+                item.o = {
+                  src: item.src,
+                  w: item.w,
+                  h: item.h
+                };
+
+              items.push(item);
+          }
+
+          return items;
+      };
+
+      // find nearest parent element
+      var closest = function closest(el, fn) {
+          return el && ( fn(el) ? el : closest(el.parentNode, fn) );
+      };
+
+      var onThumbnailsClick = function(e) {
+          e = e || window.event;
+          e.preventDefault ? e.preventDefault() : e.returnValue = false;
+
+          var eTarget = e.target || e.srcElement;
+
+          var clickedListItem = closest(eTarget, function(el) {
+              return el.tagName === 'A';
+          });
+
+          if(!clickedListItem) {
+              return;
+          }
+
+          var clickedGallery = clickedListItem.parentNode;
+
+          var childNodes = clickedListItem.parentNode.childNodes,
+              numChildNodes = childNodes.length,
+              nodeIndex = 0,
+              index;
+
+          for (var i = 0; i < numChildNodes; i++) {
+              if(childNodes[i].nodeType !== 1) { 
+                  continue; 
+              }
+
+              if(childNodes[i] === clickedListItem) {
+                  index = nodeIndex;
+                  break;
+              }
+              nodeIndex++;
+          }
+
+          if(index >= 0) {
+              openPhotoSwipe( index, clickedGallery );
+          }
+          return false;
+      };
+
+      var photoswipeParseHash = function() {
+        var hash = window.location.hash.substring(1),
+          params = {};
+
+          if(hash.length < 5) { // pid=1
+              return params;
+          }
+
+          var vars = hash.split('&');
+          for (var i = 0; i < vars.length; i++) {
+              if(!vars[i]) {
+                  continue;
+              }
+              var pair = vars[i].split('=');  
+              if(pair.length < 2) {
+                  continue;
+              }           
+              params[pair[0]] = pair[1];
+          }
+
+          if(params.gid) {
+            params.gid = parseInt(params.gid, 10);
+          }
+
+          return params;
+      };
+
+      var openPhotoSwipe = function(index, galleryElement, disableAnimation, fromURL) {
+          var pswpElement = document.querySelectorAll('.pswp')[0],
+              gallery,
+              options,
+              items;
+
+        items = parseThumbnailElements(galleryElement);
+
+          // define options (if needed)
+          options = {
+
+              galleryUID: galleryElement.getAttribute('data-pswp-uid'),
+
+              getThumbBoundsFn: function(index) {
+                  // See Options->getThumbBoundsFn section of docs for more info
+                  var thumbnail = items[index].el.children[0],
+                      pageYScroll = window.pageYOffset || document.documentElement.scrollTop,
+                      rect = thumbnail.getBoundingClientRect(); 
+
+                  return {x:rect.left, y:rect.top + pageYScroll, w:rect.width};
+              },
+
+              addCaptionHTMLFn: function(item, captionEl, isFake) {
+            if(!item.title) {
+              captionEl.children[0].innerText = '';
+              return false;
+            }
+            captionEl.children[0].innerHTML = item.title +  '<br/><small>Photo: ' + item.author + '</small>';
+            return true;
+              }
+          
+          };
+
+
+          if(fromURL) {
+            if(options.galleryPIDs) {
+              // parse real index when custom PIDs are used 
+              // http://photoswipe.com/documentation/faq.html#custom-pid-in-url
+              for(var j = 0; j < items.length; j++) {
+                if(items[j].pid == index) {
+                  options.index = j;
+                  break;
+                }
+              }
+            } else {
+              options.index = parseInt(index, 10) - 1;
+            }
+          } else {
+            options.index = parseInt(index, 10);
+          }
+
+          // exit if index not found
+          if( isNaN(options.index) ) {
+            return;
+          }
+
+
+
+        var radios = document.getElementsByName('gallery-style');
+        for (var i = 0, length = radios.length; i < length; i++) {
+            if (radios[i].checked) {
+                if(radios[i].id == 'radio-all-controls') {
+
+                } else if(radios[i].id == 'radio-minimal-black') {
+                  options.mainClass = 'pswp--minimal--dark';
+                  options.barsSize = {top:0,bottom:0};
+              options.captionEl = false;
+              options.fullscreenEl = false;
+              options.shareEl = false;
+              options.bgOpacity = 0.85;
+              options.tapToClose = true;
+              options.tapToToggleControls = false;
+                }
+                break;
+            }
+        }
+
+          if(disableAnimation) {
+              options.showAnimationDuration = 0;
+          }
+
+          // Pass data to PhotoSwipe and initialize it
+          gallery = new PhotoSwipe( pswpElement, PhotoSwipeUI_Default, items, options);
+
+          // see: http://photoswipe.com/documentation/responsive-images.html
+        var realViewportWidth,
+            useLargeImages = false,
+            firstResize = true,
+            imageSrcWillChange;
+
+        gallery.listen('beforeResize', function() {
+
+          var dpiRatio = window.devicePixelRatio ? window.devicePixelRatio : 1;
+          dpiRatio = Math.min(dpiRatio, 2.5);
+            realViewportWidth = gallery.viewportSize.x * dpiRatio;
+
+
+            if(realViewportWidth >= 1200 || (!gallery.likelyTouchDevice && realViewportWidth > 800) || screen.width > 1200 ) {
+              if(!useLargeImages) {
+                useLargeImages = true;
+                  imageSrcWillChange = true;
+              }
+                
+            } else {
+              if(useLargeImages) {
+                useLargeImages = false;
+                  imageSrcWillChange = true;
+              }
+            }
+
+            if(imageSrcWillChange && !firstResize) {
+                gallery.invalidateCurrItems();
+            }
+
+            if(firstResize) {
+                firstResize = false;
+            }
+
+            imageSrcWillChange = false;
+
+        });
+
+        gallery.listen('gettingData', function(index, item) {
+            if( useLargeImages ) {
+                item.src = item.o.src;
+                item.w = item.o.w;
+                item.h = item.o.h;
+            } else {
+                item.src = item.m.src;
+                item.w = item.m.w;
+                item.h = item.m.h;
+            }
+        });
+
+          gallery.init();
+      };
+
+      // select all gallery elements
+      var galleryElements = document.querySelectorAll( gallerySelector );
+      for(var i = 0, l = galleryElements.length; i < l; i++) {
+        galleryElements[i].setAttribute('data-pswp-uid', i+1);
+        galleryElements[i].onclick = onThumbnailsClick;
+      }
+
+      // Parse URL and open gallery if it contains #&pid=3&gid=1
+      var hashData = photoswipeParseHash();
+      if(hashData.pid && hashData.gid) {
+        openPhotoSwipe( hashData.pid, galleryElements[ hashData.gid - 1 ], true, true );
+      }
+    };
+    initPhotoSwipeFromDOM('.show-gallery');
+    $('.table-condensed .tbody .table-row').each(function(){
+      var el = $(this);
+      if(!el.is(':hidden')){
+        $('.member[data-select]').on('customSelectChangeEvent',function(e) {
+          var val = '^(?=.*\\b' + $.trim($(this).find('select').val()).split(/\s+/).join('\\b)(?=.*\\b') + ').*$',
+              reg = RegExp(val, 'i'),
+              text,
+              col = $('[data-filter]'),
+              rows = $('[data-filter]').closest('.table-row');
+            rows.show().filter(function() {
+                text = $(this).find('[data-filter]').text().replace(/\s+/g, ' ');
+                return !reg.test(text);
+            }).hide();
+        });
+        $('.name').on('keyup',function(e) {
+          var val = '^(?=.*\\b' + $.trim($(this).val()).split(/\s+/).join('\\b)(?=.*\\b') + ').*$',
+              reg = RegExp(val, 'i'),
+              text,
+              col = $('[data-filter-name]'),
+              rows = $('[data-filter-name]').closest('.table-row');
+            rows.show().filter(function() {
+                text = $(this).find('[data-filter-name]').text().replace(/\s+/g, ' ');
+                return !reg.test(text);
+            }).hide();
+        });
+      }
+    });
+    // $('[data-toggle="modal"]').each(function() {
+    //   var that = $(this);
+    //   var id = that.data('target'),
+    //       url = that.attr('href');
+    //   that.off('click.modalAjax').on('click.modalAjax', function(e){
+    //     if (url === 'undefined') {
+    //       $(id).removeData('bs.modal');
+    //       $(id).modal({remote: url });
+    //       $(id).modal('hide');
+          
+    //     };
+    //     // $.ajax({
+    //     //     url: url,
+    //     //     type: 'GET',
+    //     //     progress: function(){
+    //     //       $('.loading-more').show();
+    //     //       // $(id).closest('body').addClass('.modal-open');
+    //     //     },
+    //     //     success: function(html){
+    //     //       $(id).modal('show');
+    //     //       $('.loading-more').hide();
+    //     //       // $('.modal-backdrop.fade.in').show();
+    //     //     },
+    //     //     error: function(){
+    //     //       alert('erro')
+    //     //     }
+    //     // });
+    //     // return false;
+    //   });
+    // });
+    $('[data-modal-ajax]').on('shown.bs.modal', function (e) {
+      e.preventDefault();
+      var dataUrl= $('.modal-favorite .form-search .input-form').data('url'),
+          rows = $('[data-filter]');
+      disableScrollBgd.call(this);
+      if(!$('.modal-content .modal-body').length){
+        $('.loading-more').show();
+        $('.loading-more').css({
+          'background' : 'transparent',
+          'z-index': 100000
+        });
+        setTimeout(function(){
+          if(!$('.modal-content .modal-body').length){
+            $('[data-modal-ajax]').modal('hide');
+            $('.loading-more').hide();
+          }else{
+            $('.loading-more').hide();
+          }
+        }, 5000);
+      }
       setTimeout(function(){
+        $('.modal-content').focus();
+        if($('.block-bgd-second').length){
+          $('.block-bgd-second').eqheight().init();
+          $('.block-bgd-second').find('.bgd-pink .wrap').css({
+            'height': $('.block-bgd-second .bgd-pink').height()
+          });
+        }
         $('.custome-fileupload').customFile();
         $('[data-money]').number(true);
         $('[data-check]').check();
@@ -680,7 +1174,13 @@ var Site = (function($, window, undefined) {
           if ($('[data-picker]').length) {
             $('[data-picker]').datepicker('hide');
               $('[data-picker]').blur();
-          }    
+          }
+          if($('.block-bgd-second').length){
+            $('.block-bgd-second').eqheight().init();
+            $('.block-bgd-second').find('.bgd-pink .wrap').css({
+              'height': $('.block-bgd-second .bgd-pink').height()
+            });
+          }
         });
 
         if ($('.slidershow-album .thumbnail-album').length) {
@@ -695,20 +1195,21 @@ var Site = (function($, window, undefined) {
             }
           });
         }
-          
-        var jsonAddress = function(){
-          var jsAddress= $('[data-autocomplete]').data('autocomplete');
-          $.ajax({
-            url: jsAddress,
-            dataType: 'json',
-            success: function(res){
-              $('[data-autocomplete]').autocomplete({
-                source: res.address
-              });
-            }
-          });
-        };
-        jsonAddress();
+        if ($('[data-autocomplete]').length){
+          var jsonAddress = function(){
+            var jsAddress= $('[data-autocomplete]').data('autocomplete');
+            $.ajax({
+              url: jsAddress,
+              dataType: 'json',
+              success: function(res){
+                $('[data-autocomplete]').autocomplete({
+                  source: res.address
+                });
+              }
+            });
+          };
+          jsonAddress();
+        }
         $(window).on('resize.album', function(){
           $('.modal-album .modal-dialog').each(function(e){
             if($(window).height() < $(this).height()){
@@ -732,15 +1233,66 @@ var Site = (function($, window, undefined) {
           vertical: true,
           focusOnSelect: true
         });
+
+        if($('.lists-ablum-1').length){
+          $(window).on('resize.scrollpanelList1', function(){
+            var jsp = $('.lists-ablum-1').data('jsp');
+            if (jsp) {
+              jsp.destroy();
+            }
+            $('.lists-ablum-1').jScrollPane({
+              mouseWheelSpeed: 50
+            });
+
+          }).trigger('resize.scrollpanelList1');
+        }
         if($('.invitation-list').length){
           $('.invitation-list').jScrollPane({
             showArrows: true
           });
         }
         $('.slidershow-album .control-album .slick-slide').eq(0).addClass('slick-current');
-      },400);
+        if($('.form-add-board').length){
+          $('.form-add-board .btn-1').on('click',function(e){
+            var form = $('.form-add-board');
+            e.preventDefault();
+            $.ajax({
+              url: form.attr('action'),
+              dataType: 'json',
+              type: 'POST',
+              data: $(this).serialize(),
+              success:function(data){
+                if(data.success){
+                  $('#success').html(data.success);
+                  $('#success').show(300);
+                  form.closest('.form-search').hide();
+                  $('.modal-favorite').on('hidden.bs.modal', function(e){
+                    window.location.reload();
+                  });
+                }else{
+                  $('#error').html(data.error);
+                  $('#error').show(300).fadeOut(5000);
+                }
+              },
+              error:function(data){
+                $('#error').show(300).fadeOut(5000);
+              }
+            });
+          });
+        }
+      }, 500);
     });
-
+    $('[data-modal-ajax]').on('hidden.bs.modal', function() {
+      resetScrollBgd.call(this);
+      $(this).removeData('modal');
+      $('.modal-content').html('');
+    });
+    $('body').on('hidden.bs.modal', '.modal', function () {
+      $(this).removeData('bs.modal');
+    });
+    setTimeout(function(){
+      $('[data-toggle="modal"]').addClass('active').fadeIn();
+    }, 500);
     if ($('.slidershow-album .thumbnail-album').length) {
       $('.slidershow-album .thumbnail-album').slick({
         slidesToShow: 1,
@@ -753,7 +1305,6 @@ var Site = (function($, window, undefined) {
         }
       }); 
     }
-
     if ($('.slidershow-album .control-album').length) {
       $('.slidershow-album .control-album').slick({
         slidesToShow: 8,
@@ -861,7 +1412,7 @@ var Site = (function($, window, undefined) {
       if ($('[data-picker]').length) {
         $('[data-picker]').datepicker('hide');
         $('[data-picker]').blur();
-      }    
+      }
     });
 
     $('.modal-1').on('show.bs.modal', function (e) {
@@ -982,6 +1533,8 @@ var Site = (function($, window, undefined) {
           urlContent = $(this).attr('href');
       var page = 1;
       $(this).on('click', function(e){
+        var button = $(this);
+        e.preventDefault();
         page ++;
         if (flag === true){
           $.ajax({
@@ -1001,55 +1554,66 @@ var Site = (function($, window, undefined) {
               var container = $(url);
               var currTop = $(window).scrollTop();
               var data = $(data).addClass('animated zoomIn');
-              container.append(data);
-              if (container.data('masonry')){
-                container.masonry('destroy');
-                container.masonry({
-                  itemSelector: '.item',
-                  columnWidth: '.item',
-                  percentPosition: true,
-                  isAnimated:true,
-                  animationOptions: {
-                    duration: 1000,
-                    easing:'linear',
-                    queue :false
+              if($(data).length !== 0){
+                container.append(data);
+                setTimeout(function(){
+                  if (container.data('masonry')){
+                    container.masonry('destroy');
+                    container.masonry({
+                      itemSelector: '.item',
+                      columnWidth: '.item',
+                      percentPosition: true,
+                      isAnimated:true,
+                      animationOptions: {
+                        duration: 1000,
+                        easing:'linear',
+                        queue :false
+                      }
+                    });
+                    $(window).scrollTop(currTop);
                   }
+                },400);
+                $(window).off('resize.a').on('resize.a', function(){
+                  $('.block-album .item').each(function(e){
+                    if($(window).width() > 768){
+                      $(this).hover(function(){
+                        $(this).find('.content').stop().slideDown(500);
+                      },
+                      function () {
+                        $(this).find('.content').stop().slideUp(500);
+                      });
+                    }
+                    if($(this).parent().hasClass('noslider')){
+                      $(this).hover(function(){
+                        $(this).find('.content').stop().slideDown(500);
+                      },
+                      function () {
+                        $(this).find('.content').stop().slideDown(500);
+                      });
+                    }
+                    else{
+                      $(this).hover(function(){
+                        $(this).find('.content').stop().slideUp(500);
+                      },
+                      function () {
+                        $(this).find('.content').stop().slideUp(500);
+                      });
+                    }
+                  });
+                }).trigger('resize.a');
+                if($('.album-detail').length){
+                  $('.album-detail').data('eqheight').init();
+                }
+                $(container).find('.item').on("animationend webkitAnimationEnd oAnimationEnd MSAnimationEnd",
+                 function(e){
+                    $(this).removeClass('animated zoomIn');
+                 });
+                
+              }else{
+                button.fadeOut(800,function(){
+                  button.remove();
                 });
               }
-              $(window).on('resize.a', function(){
-                $('.block-album .item').each(function(e){
-                  if($(window).width() > 768){
-                    $(this).hover(function(){
-                      $(this).find('.content').stop().slideDown(500);
-                    },
-                    function () {
-                      $(this).find('.content').stop().slideUp(500);
-                    });
-                  }
-                  if($(this).parent().hasClass('noslider')){
-                    $(this).hover(function(){
-                      $(this).find('.content').stop().slideDown(500);
-                    },
-                    function () {
-                      $(this).find('.content').stop().slideDown(500);
-                    });
-                  }
-                  else{
-                    $(this).hover(function(){
-                      $(this).find('.content').stop().slideDown(500);
-                    },
-                    function () {
-                      $(this).find('.content').stop().slideDown(500);
-                    });
-                  }
-                });
-              }).trigger('resize.a');
-              $(container).find('.item').on("animationend webkitAnimationEnd oAnimationEnd MSAnimationEnd",
-               function(e){
-                  $(this).removeClass('animated zoomIn');
-               });
-              $(window).scrollTop(currTop);
-              $('.album-detail').eqheight();
             },
             error: function(){
               alert('Please try again');
@@ -1092,7 +1656,7 @@ var Site = (function($, window, undefined) {
           });
         }
       });
-    })
+    });
   }
   function deleteImg() {
     $('.block-album .item').each(function(){
@@ -1123,116 +1687,139 @@ var Site = (function($, window, undefined) {
       });
     })
   }
-  function uploadIMG(){
-    if($('[data-upload-multi]').length){
-    var urlUpload = window.location.hostname === $('.upload-form-1').data('uploadlink'),
-        uploadButton = $('<button type="button"/>')
-            .addClass('btn btn-primary')
-            .prop('disabled', true)
-            .text('Processing...')
-            .on('click', function () {
-                var $this = $(this),
-                    data = $this.data();
-                $this
-                    .off('click')
-                    .text('Abort')
-                    .on('click', function () {
-                        $this.remove();
-                        data.abort();
-                    });
-                data.submit().always(function () {
-                    $this.remove();
-                });
-            });
-    $('[data-upload-multi]').fileupload({
-        url: urlUpload,
-        dataType: 'json',
-        autoUpload: false,
-        acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i,
-        maxFileSize: 999000,
-        // Enable image resizing, except for Android and Opera,
-        // which actually support image resizing, but fail to
-        // send Blob objects via XHR requests:
-        disableImageResize: /Android(?!.*Chrome)|Opera/
-            .test(window.navigator.userAgent),
-        previewMaxWidth: 100,
-        previewMaxHeight: 100,
-        previewCrop: true
-    }).on('fileuploadadd', function (e, data) {
-        data.context = $('<div/>').appendTo('.file');
-        $.each(data.files, function (index, file) {
-            var node = $('<p/>')
-                    .append($('<span/>').text(file.name));
-            if (!index) {
-                node
-                    .append('<br>')
-                    .append(uploadButton.clone(true).data(data));
-            }
-            node.appendTo(data.context);
-        });
-    }).on('fileuploadprocessalways', function (e, data) {
-        var index = data.index,
-            file = data.files[index],
-            node = $(data.context.children()[index]);
-        if (file.preview) {
-            node
-                .prepend('<br>')
-                .prepend(file.preview);
-        }
-        if (file.error) {
-            node
-                .append('<br>')
-                .append($('<span class="text-danger"/>').text(file.error));
-        }
-        if (index + 1 === data.files.length) {
-            data.context.find('button')
-                .text('Upload')
-                .prop('disabled', !!data.files.error);
-        }
-    }).on('fileuploadprogressall', function (e, data) {
-        var progress = parseInt(data.loaded / data.total * 100, 10);
-        $('.progress .progress-bar').css(
-            'width',
-            progress + '%'
-        );
-    }).on('fileuploaddone', function (e, data) {
-        $.each(data.result.files, function (index, file) {
-            if (file.url) {
-                var link = $('<a>')
-                    .attr('target', '_blank')
-                    .prop('href', file.url);
-                $(data.context.children()[index])
-                    .wrap(link);
-            } else if (file.error) {
-                var error = $('<span class="text-danger"/>').text(file.error);
-                $(data.context.children()[index])
-                    .append('<br>')
-                    .append(error);
-            }
-        });
-    }).on('fileuploadfail', function (e, data) {
-        $.each(data.files, function (index) {
-            var error = $('<span class="text-danger"/>').text('File upload failed.');
-            $(data.context.children()[index])
-                .append('<br>')
-                .append(error);
-        });
-    }).prop('disabled', !$.support.fileInput)
-        .parent().addClass($.support.fileInput ? undefined : 'disabled');
+  function changeDom(){
+    if($('[data-sortable]').length && localStorage.table){
+    var arrTable = localStorage.table;
+      var parent = $('[data-sortable]');
+      var div;
+      for (var i = arrTable.length - 1; i >= 0; i --) {
+        div = parent.find('[data-counter="' + arrTable[i] + '"]');
+        parent.prepend(div);
+      }
+      
+    }
+
+    $('[data-sortable]').on( "sortstop", function( event, ui ) {
+      var div = $('[data-sortable]').children();
+      var arr = [];
+      for (var i = 0; i < div.length; i ++) {
+        arr.push($(div[i]).data('counter'));
+      }
+      localStorage.table = arr;
+    });
   }
-  }
+
+  // function uploadIMG(){
+  //   if($('[data-upload-multi]').length){
+  //   var urlUpload = window.location.hostname === $('.upload-form-1').data('uploadlink'),
+  //       uploadButton = $('<button type="button"/>')
+  //           .addClass('btn btn-primary')
+  //           .prop('disabled', true)
+  //           .text('Processing...')
+  //           .on('click', function () {
+  //               var $this = $(this),
+  //                   data = $this.data();
+  //               $this
+  //                   .off('click')
+  //                   .text('Abort')
+  //                   .on('click', function () {
+  //                       $this.remove();
+  //                       data.abort();
+  //                   });
+  //               data.submit().always(function () {
+  //                   $this.remove();
+  //               });
+  //           });
+  //   $('[data-upload-multi]').fileupload({
+  //       url: urlUpload,
+  //       dataType: 'json',
+  //       autoUpload: false,
+  //       acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i,
+  //       maxFileSize: 999000,
+  //       // Enable image resizing, except for Android and Opera,
+  //       // which actually support image resizing, but fail to
+  //       // send Blob objects via XHR requests:
+  //       disableImageResize: /Android(?!.*Chrome)|Opera/
+  //           .test(window.navigator.userAgent),
+  //       previewMaxWidth: 100,
+  //       previewMaxHeight: 100,
+  //       previewCrop: true
+  //   }).on('fileuploadadd', function (e, data) {
+  //       data.context = $('<div/>').appendTo('.file');
+  //       $.each(data.files, function (index, file) {
+  //           var node = $('<p/>')
+  //                   .append($('<span/>').text(file.name));
+  //           if (!index) {
+  //               node
+  //                   .append('<br>')
+  //                   .append(uploadButton.clone(true).data(data));
+  //           }
+  //           node.appendTo(data.context);
+  //       });
+  //   }).on('fileuploadprocessalways', function (e, data) {
+  //       var index = data.index,
+  //           file = data.files[index],
+  //           node = $(data.context.children()[index]);
+  //       if (file.preview) {
+  //           node
+  //               .prepend('<br>')
+  //               .prepend(file.preview);
+  //       }
+  //       if (file.error) {
+  //           node
+  //               .append('<br>')
+  //               .append($('<span class="text-danger"/>').text(file.error));
+  //       }
+  //       if (index + 1 === data.files.length) {
+  //           data.context.find('button')
+  //               .text('Upload')
+  //               .prop('disabled', !!data.files.error);
+  //       }
+  //   }).on('fileuploadprogressall', function (e, data) {
+  //       var progress = parseInt(data.loaded / data.total * 100, 10);
+  //       $('.progress .progress-bar').css(
+  //           'width',
+  //           progress + '%'
+  //       );
+  //   }).on('fileuploaddone', function (e, data) {
+  //       $.each(data.result.files, function (index, file) {
+  //           if (file.url) {
+  //               var link = $('<a>')
+  //                   .attr('target', '_blank')
+  //                   .prop('href', file.url);
+  //               $(data.context.children()[index])
+  //                   .wrap(link);
+  //           } else if (file.error) {
+  //               var error = $('<span class="text-danger"/>').text(file.error);
+  //               $(data.context.children()[index])
+  //                   .append('<br>')
+  //                   .append(error);
+  //           }
+  //       });
+  //   }).on('fileuploadfail', function (e, data) {
+  //       $.each(data.files, function (index) {
+  //           var error = $('<span class="text-danger"/>').text('File upload failed.');
+  //           $(data.context.children()[index])
+  //               .append('<br>')
+  //               .append(error);
+  //       });
+  //   }).prop('disabled', !$.support.fileInput)
+  //       .parent().addClass($.support.fileInput ? undefined : 'disabled');
+  // }
+  // }
   return {
     publicVar: 1,
     publicObj: {
       var1: 1,
       var2: 2
     },
+    events: GlobalEvents,
     loadMore: loadMore,
     deleteInvitation: deleteInvitation,
     deleteImg: deleteImg,
     effectSocial: effectSocial,
     loadingImg: loadingImg,
-    uploadIMG: uploadIMG,
+    changeDom: changeDom,
     scrollPane: scrollPane,
     publicMethod1: privateMethod1
   };
@@ -1244,7 +1831,7 @@ jQuery(function() {
   Site.loadMore();
   Site.scrollPane();
   Site.effectSocial();
-  Site.uploadIMG();
+  Site.changeDom();
   Site.loadingImg();
   Site.deleteInvitation();
   Site.deleteImg();
@@ -1706,6 +2293,16 @@ var googleDrive = new GoogleDrive();
 //  googleDrive.getListFriend();
 //});
 
+$(document).on('ready', function() {
+  if ($('[data-google]').length) {
+    googleDrive.CLIENT_ID = $('[data-google]').data('google-clientid');
+  }
+  
+  if ($('[data-google]').length) {  
+    googleDrive.API_KEY = $('[data-google]').data('google-apikey');
+  }
+});
+
 window.onGooglClientApiLoadedHandler = function() {
   var interval = setInterval(function() {
     if (window['gapi'] && window['gapi']['client']) {
@@ -1760,6 +2357,8 @@ window.onGooglClientApiLoadedHandler = function() {
   var FROM_LIBRARY = 'library';
   var FROM_UPLOAD = 'upload';
   var FROM_YOURS = 'yours';
+  
+  var AUDIO_UNTITLE = '';
 
   var bgTpl =  '<div class="box">' +
                '  <div class="img-add">' +
@@ -1790,7 +2389,9 @@ window.onGooglClientApiLoadedHandler = function() {
                  '  </div>' +
                  '  <div class="desc"><span class="icon-edit-text" title="Click to change text effect"></span><p class="frame-text" title="Click to change frame text">{frame_text}</p></div>' +
                  '</div>';
-                                  
+
+  var timeTpl = '<li><span>{time}</span></li>';
+
   /* ================= */
   /* MODULE DEFINITION */
   /* ================= */
@@ -1848,6 +2449,8 @@ window.onGooglClientApiLoadedHandler = function() {
 
     this.googleDrive = null;
     this.facebook = null;
+
+    this.dragSource = null;
 
     return this.init();
   }
@@ -1910,8 +2513,14 @@ window.onGooglClientApiLoadedHandler = function() {
 
     this.initShare();
 
+    $(document).on('keyup', function(evt){
+      if (evt.keyCode == 46) {
+        that.deleteActive();
+      }
+    });
+
     //add new
-    $('.vc-backgrounds').find('.add-more').off('click').on('click', function(evt) { that.addBackground(null, true);});
+    //$('.vc-backgrounds').find('.add-more').off('click').on('click', function(evt) { that.addBackground(null, true);});
     $('.vc-audios').find('.add-more').off('click').on('click', function(evt) { that.addBackgroundAudio(null, true);});
     $('.vc-frames').find('.add-more-effect').off('click').on('click', function(evt) { that.onClickAddFrameHandler(evt);});
     $('#vc-add-intro').find('.intro-click').off('click').on('click', function(evt) { that.onClickAddFrameHandler(evt);});
@@ -1937,6 +2546,26 @@ window.onGooglClientApiLoadedHandler = function() {
       that.selectFrameData(this, FrameData.IMAGE);
     });
 
+    imageLibrary.each(function() {
+      that.addDragEvent(this);
+    });
+
+    var content = $('.vc-frames').find('.content')[0];
+    content.addEventListener('dragover', function(evt) { 
+      if (evt.preventDefault) {
+        evt.preventDefault();
+      }
+      return false;
+    });
+
+    content.addEventListener('drop', function(evt) {
+      if (that.dragSource == 'I') {
+        var offset = $(content).find('.list-frame').offset();
+        var pos = Math.floor((evt.pageX - offset.left) / 130) - 1;
+        that.addFrameAt(content, pos, evt.dataTransfer.getData('itemId'), evt.dataTransfer.getData('itemUrl'), evt.dataTransfer.getData('itemSrc'));
+      }
+    }, false);
+
     //select FrameData.IMAGE from local
     var imageUpload = $('#vc-image-upload').find('.vc-image-upload-local');
     imageUpload.off('click').on('click', function(evt) {
@@ -1957,6 +2586,10 @@ window.onGooglClientApiLoadedHandler = function() {
     var imageYours = $('#vc-image-yours').find('.item');
     imageYours.off('click').on('click', function(evt) {
       that.selectFrameData(this, FrameData.IMAGE);
+    });
+
+    imageYours.each(function() {
+      that.addDragEvent(this);
     });
 
     //select video from library
@@ -2096,8 +2729,8 @@ window.onGooglClientApiLoadedHandler = function() {
     });
 
     if($('.change-title').length){
-      var replaceWith = $('<input name="temp" type="text" />'),
-          connectWith = $('input[name="hiddenField"]');
+      var replaceWith = $('<input name="temp" type="text" />');
+      var connectWith = $('input[name="hiddenField"]');
       $('.change-title').inlineEdit(replaceWith, connectWith);
     }
 
@@ -2146,7 +2779,7 @@ window.onGooglClientApiLoadedHandler = function() {
 
       if (i == frames.length - 1) {
         frame.click();
-        this.showPanel(PANEL_TEXT);
+        this.showPanel(PANEL_IMAGE);
       }
     }
 
@@ -2164,7 +2797,7 @@ window.onGooglClientApiLoadedHandler = function() {
       audioData = new AudioData();
       audioData.parse(audios[i]);
       this.addBackgroundAudio(audioData, false);
-    }    
+    }
   };
 
   VideoClip.prototype.resize = function() {
@@ -2240,7 +2873,7 @@ window.onGooglClientApiLoadedHandler = function() {
 
   VideoClip.prototype.onClickDropDownMenuHandler = function(item) {
     
-    var arrPanel = [PANEL_TEXT, PANEL_TEXT_EFFECT, PANEL_IMAGE, PANEL_VIDEO, PANEL_EFFECT, PANEL_AUDIO];
+    var arrPanel = [PANEL_TEXT, PANEL_TEXT_EFFECT, PANEL_IMAGE, PANEL_VIDEO, PANEL_EFFECT];//, PANEL_AUDIO];
       
     var name = $(item).attr('class').split(' ').pop();
     name = name.split('-').pop();
@@ -2278,7 +2911,7 @@ window.onGooglClientApiLoadedHandler = function() {
     var select = dialog.find("button[name='select']");
     select.off('click').on('click', function (evt) {
 
-      var items = $('#cloud-content').find('.active');      
+      var items = $('#cloud-content').find('.active');
       var arrUrl = [];
       for (var i = 0; i < items.length; i ++) {
         arrUrl.push($(items[i]).data('item-url'));
@@ -2374,19 +3007,30 @@ window.onGooglClientApiLoadedHandler = function() {
     var box =  $(strBG);
 
     var listbox  =$('.vc-backgrounds').find('.list-box');
+    var newWidth = (listbox.find('.box').length + 2) * (listbox.find('.box').outerWidth(true));
     listbox.append(box);
 
-    listbox.closest('.wrap-list').css({
-      width: ((listbox.find('.box').length) * 190) + 30
-    });
-    
-    var jsp = $('.vc-backgrounds').find('.content').data('jsp');
-    if (jsp) {
-      jsp.destroy();
-    }
-    $('.vc-backgrounds').find('.content').jScrollPane({
-      autoReinitialise: true
-    });
+    /*
+    $(window).on('resize.backgrounds',function(){
+      if(newWidth > $('.wrap-list').width()){
+        listbox.closest('.wrap-list').css({
+          width: newWidth
+        });
+        var jsp = $('.add-function-block').data('jsp');
+        if (jsp) {
+          jsp.destroy();
+        }
+        $('.add-function-block').jScrollPane({
+          autoReinitialise: true
+        });
+      }else{
+        listbox.closest('.wrap-list').css({
+          width: $('.add-function-block .wrap-list').width()
+        });
+      }
+    }).trigger('resize.backgrounds');
+    */
+    this.updateScroll();
 
     if (!bgData) {
       bgData = new BackgroundData();
@@ -2443,37 +3087,130 @@ window.onGooglClientApiLoadedHandler = function() {
     }
   };
 
+  VideoClip.prototype.updateBackgroundAudio = function() {
+     
+    var listBox = $('.vc-audios').find('.box');
+    var bgAudioData;
+    var time = 0;
+    var obj;
+    var width;
+    
+    for (var i =  0; i < listBox.length; i ++) {
+      bgAudioData = this.arrBGAudio[i];
+
+      obj = this.getFrameByAudioTime(time, time + bgAudioData.getTime());
+
+      width = this.getBGAudioWidthByFrame(time, time + bgAudioData.getTime(), obj);
+
+      $(listBox[i]).css({
+        width: width + 'px'
+      });
+      
+      this.updateBackgroundAudioTitle(width - 55, $(listBox[i]).find('.title strong'));
+      
+      time += bgAudioData.getTime();
+    }
+  };
+  
+  VideoClip.prototype.updateBackgroundAudioTitle = function(width, title) {
+    
+    if (title.width() > width) {
+      var str = title.html();
+      while (title.width() > width) {
+        str = str.substr(0, str.length - 1);
+        title.html(str);
+      }
+      
+      str = str.substr(0, str.lastIndexOf(' '));
+      str = str + '...';
+      title.html(str);
+    }
+  };
+
+  VideoClip.prototype.getBGAudioWidthByFrame = function(startTime, endTime, obj) {
+
+    if (obj.startFrame < 0 || obj.startFrame >= this.arrFrame.length) {
+      return 150;
+    }
+
+    //start frame
+    var startFrameData = this.arrFrame[obj.startFrame];
+    var startDuration = startFrameData.getDuration();
+    var startPiece = 150 / startDuration;
+    var startFrameWidth = (obj.startTime + startDuration - startTime) * startPiece;
+    
+    //middle frame
+    var middleFrameWidth = (obj.endFrame - obj.startFrame - 1) * 150;
+
+    //end frame
+    var endFrameData = this.arrFrame[obj.endFrame];
+    var endDuration = endFrameData.getDuration();
+    var endPiece = 150 / endDuration;
+
+    if (endTime > obj.endTime) {
+      endTime = obj.endTime;
+      endPiece = 130 / endDuration;
+    };
+    var endFrameWidth = (endTime - (obj.endTime - endDuration)) * endPiece;
+
+    return startFrameWidth + endFrameWidth + middleFrameWidth;
+  };
+
+  VideoClip.prototype.getFrameByAudioTime = function(startTime, endTime) {
+    
+    var frameData;
+    var totalTime = 0;
+
+    var objResult = {startFrame: -1, startTime: 0, endFrame: -1, endTime: 0};
+
+    for (var i = 0; i < this.arrFrame.length; i ++) {
+      frameData = this.arrFrame[i];
+
+
+      if (startTime >= totalTime && startTime < totalTime + frameData.getDuration()) {
+        objResult.startTime = totalTime;
+        objResult.startFrame = i;
+      }
+
+      totalTime += frameData.getDuration();
+
+      if (endTime <= totalTime) {
+        objResult.endTime = totalTime;
+        objResult.endFrame = i;
+        break;
+      } 
+
+      else {
+        if (i == this.arrFrame.length - 1) {
+          objResult.endTime = totalTime;
+          objResult.endFrame = i;
+        }
+      }
+    }
+
+    return objResult;
+  };
+
   VideoClip.prototype.addBackgroundAudio = function(audioData, actived) {
     var that = this;
-
-    var audio_title = audioData ? audioData.title : "No selected audio";
-    var audio_time = audioData ? EffectUtils.formatTime(audioData.time) : EffectUtils.formatTime(30);
-      
-    var strAudio = audioTpl;
-    strAudio = strAudio.replace('{audio_title}', audio_title);
-    strAudio = strAudio.replace('{audio_time}', audio_time);
-
-    var box = $(strAudio);
-
-    var listbox = $('.vc-audios').find('.list-box')
-    listbox.append(box);
-
-    listbox.closest('.wrap-list').css({
-      width: ((listbox.find('.box').length) * 190) + 30
-    });
-
-    var jsp = $('.vc-audios').find('.content').data('jsp');
-    if (jsp) {
-      jsp.destroy();
-    }
-    $('.vc-audios').find('.content').jScrollPane({
-      autoReinitialise: true
-    });
 
     if (!audioData) {
       audioData = new AudioData();
     }  
     this.arrBGAudio.push(audioData);
+
+    var audio_title = audioData.title ? audioData.title : AUDIO_UNTITLE;
+    var strAudio = audioTpl;
+    strAudio = strAudio.replace('{audio_title}', audio_title);
+    strAudio = strAudio.replace('{audio_time}', EffectUtils.formatTime(audioData.time));
+
+    var box = $(strAudio);
+    var listbox = $('.vc-audios').find('.list-box')
+    var newWidth = (listbox.find('.box').length + 2) * (listbox.find('.box').outerWidth(true));
+    listbox.append(box);
+
+    this.updateBackgroundAudio();
+    this.updateScroll();
 
     box.on('click', function(evt) {
 
@@ -2617,20 +3354,51 @@ window.onGooglClientApiLoadedHandler = function() {
   VideoClip.prototype.deactiveBackground = function(item, type) {
     item = $(item);
 
-    if (this.isAudio) {
-      if (item.is(this.curBGAudio)) {
-        this.loading.hide();
-        this.mediaSetting.hide();
-        this.clearAudio();
+    var replace = false;
 
-        if (this.curFrameAudio) {
-          this.curFrameAudio.removeClass('active');
-          this.curFrameAudio = null;
-        }
+    //if (this.isAudio) {
+    if (item.is(this.curBGAudio)) {
+      this.loading.hide();
+      this.mediaSetting.hide();
+      this.clearAudio();
+
+      if (this.curFrameAudio) {
+        this.curFrameAudio.removeClass('active');
+        this.curFrameAudio.find('.add-more span').removeClass('fa fa-minus').addClass('fa fa-plus');
+        this.curFrameAudio = null;
       }
-
-      this.arrBGAudio.splice(item.index(), 1);
+      replace = true;
     }
+
+    this.arrBGAudio.splice(item.index(), 1);
+
+    if (replace) {
+      var index = item.index();
+      index = index < this.arrBGAudio.length ? index : index - 1;
+
+      if (index >= 0) {
+        var bgAudioItem = $('.vc-audios').find('.box')[index];
+        this.activeBackground(bgAudioItem, FrameData.AUDIO);
+      } else {
+
+        var frameItem = $('.vc-frames').find('.frame')[this.curFrameIndex];
+        this.activeFrame(frameItem);
+      }
+    }
+
+    //}
+
+    //else if (this.isBackground) {
+    //  if (item.is(this.curBG)) {
+    //    this.loading.hide();
+    //    this.mediaSetting.hide();
+    //    if (this.curFrameAudio) {
+    //      this.curFrameAudio.removeClass('active');
+    //      this.curFrameAudio = null;
+    //    }
+    //  }
+    //  this.arrBG.splice(item.index(), 1);
+    //}
 
     item.off();
     item.remove();
@@ -2709,10 +3477,10 @@ window.onGooglClientApiLoadedHandler = function() {
       this.bitmapContainer.visible = false;
       
       this.bgContainer.removeAllChildren();
-      this.bgContainer.visible = true;        
+      this.bgContainer.visible = true;
       
       if (bgData.url) {
-        this.loadBackgroundImage(bgData.url);        
+        this.loadBackgroundImage(bgData.url);
       }
     }
   };
@@ -2738,6 +3506,9 @@ window.onGooglClientApiLoadedHandler = function() {
       item.off('click').on('click', function(evt) {
         that.selectFrameData(this, type);
       });
+
+      this.addDragEvent(item);
+
     }
     list.append(item);
 
@@ -2766,8 +3537,68 @@ window.onGooglClientApiLoadedHandler = function() {
     element.jScrollPane({autoReinitialise: true});
   };
 
+  VideoClip.prototype.deleteActive = function() {
+    var replace;
+
+    if (this.isAudio) {
+      if (this.curBGAudio) {
+        this.deactiveBackground(this.curBGAudio, FrameData.AUDIO);
+      }
+    }
+
+    else {
+      if (this.curFrame) {
+        this.deleteFrame();
+      }
+    }
+
+    //if (this.isBackground) {
+    //  if (this.curBG) {
+    //    replace = this.curBG.next();
+    //    replace = replace.length ? replace : this.curBG.prev();
+
+    //    this.deactiveBackground(this.curBG, FrameData.IMAGE);
+
+    //    if (replace.length) {
+    //      this.activeBackground(replace, FrameData.IMAGE);
+    //    }
+        
+    //  }
+    //}
+  };
+
+  VideoClip.prototype.addFrameAt = function(content, pos, itemId, itemUrl, itemSrc) {
+
+    //litmitation
+    pos = pos < 0 ? 0 : pos;
+    pos = pos > this.arrFrame.length - 1 ? this.arrFrame.length - 1 : pos;
+
+    var target = $(content).find('.list-frame .frame').length ? $(content).find('.list-frame .frame')[pos] : null;
+
+    var frameData = new FrameData();
+    frameData.type = FrameData.IMAGE;
+    frameData.bitmapId = itemId;
+    frameData.bitmapUrl = itemUrl;
+
+    var frame = this.addEmptyFrame(frameData);
+    frame.find('.thumb img').attr('src', itemSrc);
+
+    if (target) {
+      frame.insertAfter($(target));
+    }
+
+    frame.click();
+
+    this.updateTime();
+  };
+
   VideoClip.prototype.addEmptyFrame = function(frameData) {
     var that = this;
+
+    if (!frameData)  {
+      frameData = new FrameData();
+    }
+    this.arrFrame.push(frameData);
 
     var listframe =  $('.vc-frames').find('.list-frame');
     
@@ -2779,26 +3610,25 @@ window.onGooglClientApiLoadedHandler = function() {
     strFrame = strFrame.replace('{frame_text}', frame_text);
 
     var frame =  $(strFrame);
-
     listframe.append(frame);
-    var newWidth = (listframe.find('.frame').length + 1 ) * (frame.width() + 24);
 
-    listframe.closest('.wrap-list').css({
-      width: newWidth + 'px'
-    });
+    var frameWidth = frame.outerWidth(true);
+    var newWidth = (listframe.find('.frame').length + 1) * frameWidth + frameWidth/2;
 
-    var jsp = $('.vc-frames').find('.content').data('jsp');
-    if (jsp) {
-      jsp.destroy();
-    }
+    //update time
+    var totalTime = EffectUtils.getTimeByFrame(this.arrFrame, this.arrFrame.length - 1);
+    
+    var strTime = timeTpl;
+    strTime = strTime.replace('{time}', EffectUtils.formatTime(totalTime));
+    
+    var timelap = $('.timelap').find('ul');
+    timelap.append($(strTime));
+    //$('.timelap').css({width: newWidth + 'px'});
 
-    $('.vc-frames').find('.content').jScrollPane({
-      autoReinitialise: true
-    });
-
-    jsp = $('.vc-frames').find('.content').data('jsp');
-    jsp.scrollTo(newWidth, 0);
-
+    this.updateBackgroundAudio();
+    this.updateScroll();
+    
+    //add frame events
     this.addFrameEvents(frame[0]);
 
     frame.on('click', function(evt) {
@@ -2867,15 +3697,15 @@ window.onGooglClientApiLoadedHandler = function() {
       } 
 
       else {
+
+        that.showPanel(PANEL_IMAGE);
         that.activeFrame(frame);
+
+        var tab = $('#vc-add-image').find('a[href="#vc-image-library"]');
+        tab.click();
       }
     });
     
-    if (!frameData)  {
-      frameData = new FrameData();
-    }
-    this.arrFrame.push(frameData);
-
     if (frameData.type == FrameData.VIDEO) {
       frame.find('.thumb').addClass('video');
     }
@@ -2887,11 +3717,35 @@ window.onGooglClientApiLoadedHandler = function() {
     if (!frameData.audioId) {
       frame.find('.icon-audio').hide();
     }
-
-    var totalTime = EffectUtils.getTimeByFrame(this.arrFrame, this.arrFrame.length - 1);
-    $('.video-clip-time').html('Thời gian: ' + EffectUtils.formatTime(totalTime) + ' giây');
-
+    
     return frame;
+  };
+
+  VideoClip.prototype.addDragEvent = function(item) {
+    var that = this;
+
+    var itemId = $(item).data('item-id');
+    var itemSrc = $(item).find('.thumb img').attr('src');
+    var itemUrl = $(item).data('item-url');
+
+    item.setAttribute('draggable', 'true');
+    
+    item.addEventListener('dragstart', function(evt) { 
+      that.dragSource = 'I';
+
+      evt.dataTransfer.setData('itemId', itemId);
+      evt.dataTransfer.setData('itemSrc', itemSrc);
+      evt.dataTransfer.setData('itemUrl', itemUrl);
+
+    }, false);
+   
+    item.addEventListener('drop', function(evt) { 
+      that.dragSource = null;
+    }, false);
+    
+    item.addEventListener('dragend', function(evt) { 
+      that.dragSource = null;
+    }, false);
   };
 
   VideoClip.prototype.addFrameEvents = function(frame) {
@@ -2905,10 +3759,11 @@ window.onGooglClientApiLoadedHandler = function() {
     frame.addEventListener('dragend', function(evt) { that.handleDragEnd(evt); }, false);
   };
 
-  VideoClip.prototype.handleDragStart = function(evt) {          
+  VideoClip.prototype.handleDragStart = function(evt) {
     var frame = $( evt.target).closest( ".frame" );
 
     evt.dataTransfer.setData('text/html', frame.innerHTML);
+    this.dragSource = 'F';
 
     this.activeFrame(frame);
 
@@ -2924,14 +3779,18 @@ window.onGooglClientApiLoadedHandler = function() {
 
   VideoClip.prototype.handleDragEnter = function(evt) {
     var target = $( evt.target).closest( ".frame" );    
-    if (!target.hasClass('moving')) {
-      target.addClass('active');
+
+    if (!target.hasClass('moving') && this.dragSource == 'F') {
+      //target.addClass('active');
     }
   };
 
   VideoClip.prototype.handleDragLeave = function(evt) {
     var target = $( evt.target).closest( ".frame" );
-    target.removeClass('active');
+
+    if (this.dragSource == 'F') {
+      //target.removeClass('active');
+    }
   };
 
   VideoClip.prototype.handleDrop = function(evt) {
@@ -2939,36 +3798,64 @@ window.onGooglClientApiLoadedHandler = function() {
       evt.stopPropagation();
     }
 
-    evt.dataTransfer.setData('text/html', '');
+    if (this.dragSource == 'F') {
+      evt.dataTransfer.setData('text/html', '');
+      
+      var target = $( evt.target).closest( ".frame" );
 
-    var target = $( evt.target).closest( ".frame" );
+      if (this.curFrame != target && this.dragSource == 'F') {
 
-    if (this.curFrame != target) {
+        //swap frame data
+        var temp = this.arrFrame[target.index()];
+        this.arrFrame[target.index()] = this.arrFrame[this.curFrame.index()];
+        this.arrFrame[this.curFrame.index()] = temp;
 
-      //swap frame data
-      var temp = this.arrFrame[target.index()];
-      this.arrFrame[target.index()] = this.arrFrame[this.curFrame.index()];
-      this.arrFrame[this.curFrame.index()] = temp;
+        //swap frame item
+        var prev = this.curFrame.prev();
 
-      //swap frame item
-      var prev = this.curFrame.prev();
-
-      if (prev.length) {
-        if (target.index() == this.curFrame.index() - 1) {
-          target.insertAfter(this.curFrame);
+        if (prev.length) {
+          if (target.index() == this.curFrame.index() - 1) {
+            target.insertAfter(this.curFrame);
+          } else {
+            this.curFrame.insertAfter(target);
+            target.insertAfter(prev);
+          }
         } else {
-          this.curFrame.insertAfter(target);
-          target.insertAfter(prev);
+            var next = this.curFrame.next();
+            this.curFrame.insertAfter(target);
+            target.insertBefore(next);
         }
-      } else {
-          var next = this.curFrame.next();
-          this.curFrame.insertAfter(target);
-          target.insertBefore(next);
-      }
 
-      target.removeClass('active');
-      this.activeFrame(this.curFrame);
+        target.removeClass('active');
+        this.activeFrame(this.curFrame);
+
+        this.updateTime();
+
+        this.updateBackgroundAudio();
+      }
     }
+
+    else if (this.dragSource == 'I') {
+      var itemId = evt.dataTransfer.getData('itemId');
+      var itemSrc = evt.dataTransfer.getData('itemSrc');
+      var itemUrl = evt.dataTransfer.getData('itemUrl');
+
+      var frame = $( evt.target).closest( ".frame" );
+      var index = frame.index();
+
+      var frameData = this.arrFrame[index];
+      frameData.type = FrameData.IMAGE;
+      frameData.bitmapId = itemId;
+      frameData.bitmapUrl = itemUrl;
+
+      frameData.videoId = null;
+      frameData.videoUrl = null;
+      
+      frame.find('.thumb img').attr('src', itemSrc);
+      frame.click();
+    }
+
+    this.dragSource = null;
 
     return false;
   };
@@ -2976,6 +3863,7 @@ window.onGooglClientApiLoadedHandler = function() {
   VideoClip.prototype.handleDragEnd = function(evt) {
    var target = $(evt.target).closest( ".frame" );
     target.css('opacity', 1).removeClass('moving');
+    this.dragSource = null;
   };
 
   VideoClip.prototype.deactiveFrame = function() {
@@ -3004,8 +3892,12 @@ window.onGooglClientApiLoadedHandler = function() {
     
     var frame = this.addEmptyFrame(frameData);
     frame.find('.thumb img').attr('src', this.curFrame.find('.thumb img').attr('src'));
-    
+    frame.insertAfter(this.curFrame);
+
     this.activeFrame(frame);
+
+    this.updateTime();
+    this.updateBackgroundAudio();
   };
 
   VideoClip.prototype.deleteFrame = function() {
@@ -3023,8 +3915,13 @@ window.onGooglClientApiLoadedHandler = function() {
     this.curFrame.remove();
     this.arrFrame.splice(this.curFrameIndex, 1);
 
-    var totalTime = EffectUtils.getTimeByFrame(this.arrFrame, this.arrFrame.length - 1);
-    $('.video-clip-time').html('Thời gian: ' + EffectUtils.formatTime(totalTime) + ' giây');
+    //delete the corresponding time
+    $( ".timelap" ).find('ul li').last().remove();
+    this.updateTime();
+    this.updateBackgroundAudio();
+
+    //update scroll
+    this.updateScroll();
 
     //active next or prev frame 
     if (frame) {
@@ -3032,7 +3929,66 @@ window.onGooglClientApiLoadedHandler = function() {
     } else {
       this.curFrame = null;
       this.curFrameIndex = -1;
+
+      //remove image
+      this.bitmapContainer.visible = true;
+      this.bitmapContainer.removeAllChildren();
+
+      if (this.frameText) {
+        this.frameText.text = '';
+      }
+
+      this.clearAudio();
+
+      this.clearVideo();
+    
       this.displayOnlyMenu(true, PANEL_INTRO);
+    }
+  };
+
+  VideoClip.prototype.updateScroll = function() {
+    
+    var frameWidth = $('.list-frame').find('.frame').outerWidth(true);
+    var newWidth = ($('.list-frame').find('.frame').length + 1) * frameWidth + frameWidth / 2;
+
+    newWidth = Math.max($('.tfooter').width() - (97 - 20 - 2), newWidth);
+    
+    $('.timelap').css({width: newWidth + 'px'});
+
+
+    var wrapList = $('.list-frame').closest('.add-function-block .wrap-list');
+
+    //if(newWidth > wrapList.width()){
+      wrapList.css({
+        width: newWidth + 'px'
+      });
+      
+      var jsp = $('.add-function-block').data('jsp');
+      if (jsp) {
+        jsp.destroy();
+      }
+
+      $('.add-function-block').jScrollPane({ autoReinitialise: true });
+
+      jsp = $('.add-function-block').data('jsp');
+      
+      jsp.scrollTo(newWidth, 0);
+    
+    //} else {
+    //  wrapList.css({
+    //    width: $('.add-function-block .wrap-list .item').width()
+    //  });
+    //}  
+  };
+
+  VideoClip.prototype.updateTime = function() {
+    
+    var timelap = $('.timelap').find('ul li');
+    var totalTime = 0;
+
+    for (var i =  0; i < timelap.length; i ++) {
+      totalTime += this.arrFrame[i].getDuration();
+      $(timelap[i]).find('span').html(EffectUtils.formatTime(totalTime));
     }
   };
 
@@ -3214,8 +4170,9 @@ window.onGooglClientApiLoadedHandler = function() {
 
     if (!this.frameText) {
       this.frameText = new createjs.Text("Text", "20px Arial", "#ff7700");
-      this.textContainer.addChild(this.frameText);
     }
+    this.textContainer.removeAllChildren();
+    this.textContainer.addChild(this.frameText);
 
     var textarea = $('#vc-add-text').find('textarea[name="frametext"]');
     frameData.text.text = this.frameText.text = textarea.val();
@@ -3292,7 +4249,7 @@ window.onGooglClientApiLoadedHandler = function() {
       frameData.textEffect = this.curFrameText.data('item-id');
       frameData.textEffectClass = this.curFrameText.data('item-url');
 
-      this.effectSetting.find('input[name="delay"]').val(frameData.textEffectDelay);
+      //this.effectSetting.find('input[name="delay"]').val(frameData.textEffectDelay);
       this.effectSetting.find('input[name="time"]').val(frameData.textEffectDuration);
       this.effectSetting.find('input[name="next"]').val(frameData.textNextTime);
 
@@ -3321,7 +4278,7 @@ window.onGooglClientApiLoadedHandler = function() {
       frameData.bitmapEffect = this.curFrameEffect.data('item-id');
       frameData.bitmapEffectClass = this.curFrameEffect.data('item-url');
           
-      this.effectSetting.find('input[name="delay"]').val(frameData.bitmapEffectDelay);
+      //this.effectSetting.find('input[name="delay"]').val(frameData.bitmapEffectDelay);
       this.effectSetting.find('input[name="time"]').val(frameData.bitmapEffectDuration);
       this.effectSetting.find('input[name="next"]').val(frameData.bitmapNextTime);
 
@@ -3335,12 +4292,12 @@ window.onGooglClientApiLoadedHandler = function() {
     }
     var that = this;
 
-    var delayTime = this.effectSetting.find('input[name="delay"]').val();
+    var delayTime = 0;//this.effectSetting.find('input[name="delay"]').val();
     var effectTime = this.effectSetting.find('input[name="time"]').val();
     var nextTime = this.effectSetting.find('input[name="next"]').val();
 
-    delayTime = Number(delayTime);
-    delayTime = delayTime < 0 ? 0 : delayTime;
+    //delayTime = Number(delayTime);
+    //delayTime = delayTime < 0 ? 0 : delayTime;
 
     effectTime = Number(effectTime);
     effectTime = effectTime < 1 ? 1 : effectTime;
@@ -3381,6 +4338,9 @@ window.onGooglClientApiLoadedHandler = function() {
       }
     }
 
+    this.updateTime();
+    this.updateBackgroundAudio();
+
     //hide effect setting when preview and save selection
     this.effectSetting.hide();
 
@@ -3394,57 +4354,73 @@ window.onGooglClientApiLoadedHandler = function() {
     var that = this;
     var itemId = $(item).data('item-id');
     var itemUrl = $(item).data('item-url');
+    var audioData;
 
-    //select audio for video clip
-    if (this.isAudio) {
+    if (!this.isAudio) {
+      that.deactiveFrame();
+      this.displayOnlyMenu(PANEL_AUDIO);
+
+      audioData = new AudioData();
+      audioData.id = itemId;
+      audioData.url = itemUrl;
+      audioData.start = 0;
+      audioData.end = -1;
+      audioData.time = $(item).data('item-time');
+      audioData.title = $(item).find('.title strong').html();
       
-      if (this.curFrameAudio) {
-        this.curFrameAudio.removeClass('active');
-        this.curFrameAudio.find('.add-more span').removeClass('fa fa-minus').addClass('fa fa-plus');
-        this.curFrameAudio = null;
-      }
-
-      if (this.curBGAudioIndex < 0 || this.curBGAudioIndex >= this.arrBGAudio.length) {
-        return;
-      }
-
-      var audioData = this.arrBGAudio[this.curBGAudioIndex];
-      if (audioData.id == itemId) {
-        audioData.id = null;
-        audioData.url = null;
-        audioData.start = 0;
-        audioData.end = -1;
-        audioData.time = -1;
-        audioData.title = "No selected audio";
-
-        that.loading.hide();
-        this.mediaSetting.hide();
-        this.clearAudio();
-      }
-
-      else {
-        audioData.id = itemId;
-        audioData.url = itemUrl;
-        audioData.start = 0;
-        audioData.end = $(item).data('item-time');
-        audioData.time = $(item).data('item-time');
-        audioData.title = $(item).find('.title strong').html();
-
-        this.curFrameAudio =  $(item);
-        this.curFrameAudio.addClass('active');
-        this.curFrameAudio.find('.add-more span').removeClass('fa fa-plus').addClass('fa fa-minus');
-
-        this.mediaSetting.hide();
-        this.loadFrameAudio(itemId, itemUrl);
-      }
-
-      //update box here
-      this.curBGAudio.find('.title strong').html(audioData.id == null ? 'No selected audio' : this.curFrameAudio.find('.title strong').html());
-      this.curBGAudio.find('.time').html(audioData.end == -1 ? '00:00' : EffectUtils.formatTime(audioData.end - audioData.start));
-
+      this.addBackgroundAudio(audioData, true);
+      this.isAudio = true;
       return;
-    } 
+    }
+    
+    if (this.curFrameAudio) {
+      this.curFrameAudio.removeClass('active');
+      this.curFrameAudio.find('.add-more span').removeClass('fa fa-minus').addClass('fa fa-plus');
+      this.curFrameAudio = null;
+    }
 
+    if (this.curBGAudioIndex < 0 || this.curBGAudioIndex >= this.arrBGAudio.length) {
+      return;
+    }
+
+    var audioData = this.arrBGAudio[this.curBGAudioIndex];
+
+    if (audioData.id == itemId) {
+      audioData.id = null;
+      audioData.url = null;
+      audioData.start = 0;
+      audioData.end = -1;
+      audioData.time = 8;
+      audioData.title = AUDIO_UNTITLE;
+
+      that.loading.hide();
+      this.mediaSetting.hide();
+      this.clearAudio();
+    }
+
+    else {
+      audioData.id = itemId;
+      audioData.url = itemUrl;
+      audioData.start = 0;
+      audioData.end = $(item).data('item-time');
+      audioData.time = $(item).data('item-time');
+      audioData.title = $(item).find('.title strong').html();
+
+      this.curFrameAudio =  $(item);
+      this.curFrameAudio.addClass('active');
+      this.curFrameAudio.find('.add-more span').removeClass('fa fa-plus').addClass('fa fa-minus');
+
+      this.mediaSetting.hide();
+      this.loadFrameAudio(itemId, itemUrl);
+    }
+
+    //update box here
+    this.curBGAudio.find('.title strong').html(audioData.title);
+    this.curBGAudio.find('.time').html(audioData.end == -1 ? EffectUtils.formatTime(audioData.time) : EffectUtils.formatTime(audioData.end - audioData.start));
+
+    this.updateBackgroundAudio();
+
+    /*
     //select audio for frame
     if (this.curFrameIndex < 0 || this.curFrameIndex >= this.arrFrame.length) {
       return;
@@ -3479,6 +4455,7 @@ window.onGooglClientApiLoadedHandler = function() {
     this.clearVideo();
 
     this.loadFrameAudio(itemId, itemUrl);
+    */
   };
 
   VideoClip.prototype.onClickPlayPauseHandler = function(item) {
@@ -3515,7 +4492,10 @@ window.onGooglClientApiLoadedHandler = function() {
       } else {
         audioData.end = position;
       }
-    } else {
+    } 
+
+    /* 
+    else {
       var frameData = this.arrFrame[this.curFrameIndex];
       if (isStart) {
         if (this.audioInstance) {
@@ -3531,6 +4511,7 @@ window.onGooglClientApiLoadedHandler = function() {
         }
       }
     }
+    */
   };
 
   VideoClip.prototype.updateMedia = function(position) {
@@ -3557,6 +4538,7 @@ window.onGooglClientApiLoadedHandler = function() {
       return;
     }
 
+    /*
     //frame data audio
     if (this.curFrameIndex < 0 || this.curFrameIndex >= this.arrFrame.length) {
       return;
@@ -3576,6 +4558,7 @@ window.onGooglClientApiLoadedHandler = function() {
       this.videoInstance.currentTime = startTime;
       this.videoInstance.play();
     }
+    */
   };
 
   VideoClip.prototype.endMedia = function() {
@@ -3625,11 +4608,11 @@ window.onGooglClientApiLoadedHandler = function() {
       var frameData = this.arrFrame[this.curFrameIndex];
         
       if (name == PANEL_TEXT_EFFECT) {
-        this.effectSetting.find('input[name="delay"]').val(frameData.textEffectDelay);
+        //this.effectSetting.find('input[name="delay"]').val(frameData.textEffectDelay);
         this.effectSetting.find('input[name="time"]').val(frameData.textEffectDuration);
         this.effectSetting.find('input[name="next"]').val(frameData.textNextTime);        
       } else if (name == PANEL_EFFECT) {
-        this.effectSetting.find('input[name="delay"]').val(frameData.bitmapEffectDelay);
+        //this.effectSetting.find('input[name="delay"]').val(frameData.bitmapEffectDelay);
         this.effectSetting.find('input[name="time"]').val(frameData.bitmapEffectDuration);
         this.effectSetting.find('input[name="next"]').val(frameData.bitmapNextTime);
       }
@@ -3640,11 +4623,11 @@ window.onGooglClientApiLoadedHandler = function() {
     }
 
     //hide media setting
-    if (name == PANEL_VIDEO) {
-      this.mediaSetting.show();
-    } else {
-      this.mediaSetting.hide();
-    }
+    //if (name == PANEL_VIDEO) {
+    //  this.mediaSetting.show();
+    //} else {
+      //this.mediaSetting.hide();
+    //}
   };
 
   VideoClip.prototype.displayOnlyMenu = function(disabled, name) {
@@ -3701,11 +4684,17 @@ window.onGooglClientApiLoadedHandler = function() {
       this.curBGAudio = null;
     }
 
-    this.isBackground = false;
-    if (this.curBG) {
-      this.curBG.removeClass('active');
-      this.curBG = null;
+    if(this.curFrameAudio) {
+      this.curFrameAudio.removeClass('active');
+      this.curFrameAudio.find('.add-more span').removeClass('fa fa-minus').addClass('fa fa-plus');
+      this.curFrameAudio = null;
     }
+
+    //this.isBackground = false;
+    //if (this.curBG) {
+    //  this.curBG.removeClass('active');
+    //  this.curBG = null;
+    //}
 
     this.previewVC.clear();
     
@@ -3724,9 +4713,9 @@ window.onGooglClientApiLoadedHandler = function() {
     $('#vc-video-library').find('div[data-item-id]').removeClass('active');
     $('#vc-video-yours').find('div[data-item-id]').removeClass('active');
 
-    this.curFrameAudio = null;
-    $('#vc-audio-library').find('div[data-item-id]').removeClass('active');
-    $('#vc-audio-yours').find('div[data-item-id]').removeClass('active');
+    //this.curFrameAudio = null;
+    //$('#vc-audio-library').find('div[data-item-id]').removeClass('active');
+    //$('#vc-audio-yours').find('div[data-item-id]').removeClass('active');
 
     //stop all sounds
     this.clearAudio();
@@ -3737,6 +4726,9 @@ window.onGooglClientApiLoadedHandler = function() {
     this.bitmapContainer.visible = true;
     this.bitmapContainer.removeAllChildren();
     
+    if (this.frameText) {
+      this.frameText.text = '';
+    }
     this.textContainer.visible = true;
     
     //stop all videos
@@ -3810,9 +4802,13 @@ window.onGooglClientApiLoadedHandler = function() {
         this.curFrameVideo = $(itemVideo[0]);
         this.curFrameVideo.addClass('active');
 
-        //load frame image
+        //load frame video
         if (frameData.videoUrl) {
           this.loadFrameVideo(frameData.videoUrl);
+
+          if (this.curPanel == PANEL_TEXT_EFFECT) {
+            this.mediaSetting.hide();
+          }
         }
       }
     }
@@ -3833,19 +4829,19 @@ window.onGooglClientApiLoadedHandler = function() {
     }
 
     //show current audio edit
-    var itemAudio = $('#vc-audio-library').find('div[data-item-id="'+ frameData.audioId + '"]');
-      if (!itemAudio.length) {
-        itemAudio = $('#vc-audio-yours').find('div[data-item-id="'+ frameData.audioId + '"]');
-      }
-      if (itemAudio.length) {
-        this.curFrameAudio = $(itemAudio[0]);
-        this.curFrameAudio.addClass('active');
+    //var itemAudio = $('#vc-audio-library').find('div[data-item-id="'+ frameData.audioId + '"]');
+    //  if (!itemAudio.length) {
+    //    itemAudio = $('#vc-audio-yours').find('div[data-item-id="'+ frameData.audioId + '"]');
+    //  }
+    //  if (itemAudio.length) {
+    //    this.curFrameAudio = $(itemAudio[0]);
+    //    this.curFrameAudio.addClass('active');
 
         //load frame audio
-        if (frameData.audioUrl && this.curPanel == PANEL_AUDIO) {
-          this.loadFrameAudio(frameData.audioId, frameData.audioUrl);
-        }
-      }
+    //    if (frameData.audioUrl && this.curPanel == PANEL_AUDIO) {
+    //      this.loadFrameAudio(frameData.audioId, frameData.audioUrl);
+    //    }
+    //  }
   };
 
   VideoClip.prototype.loadFrameImage = function(url) {
@@ -3962,9 +4958,10 @@ window.onGooglClientApiLoadedHandler = function() {
 
     if (this.isAudio) {
       var audioData = this.arrBGAudio[this.curBGAudioIndex];
-    } else {
-      var frameData = this.arrFrame[this.curFrameIndex];
-    }
+    } 
+    //else {
+    //  var frameData = this.arrFrame[this.curFrameIndex];
+    //}
 
     function onAudioLoadHandler(evt) {
       that.loading.hide();
@@ -3985,6 +4982,7 @@ window.onGooglClientApiLoadedHandler = function() {
     }
 
     function onAudioPlayProgressHandler(evt) {
+
       if (that.audioInstance) {
         that.updateMedia(that.audioInstance.position/1000);
 
@@ -3995,15 +4993,16 @@ window.onGooglClientApiLoadedHandler = function() {
             that.audioInstance.resumeTime = audioData.start;
             that.audioInstance.stop();
           }
+        } 
 
-        } else {
-          if (frameData.audioEnd != -1 && that.audioInstance.position/1000 >= frameData.audioEnd) {
-            that.mediaSetting.find('.play-pause').find('span').removeClass('fa-pause').addClass('fa-play');
+        //else {
+        //  if (frameData.audioEnd != -1 && that.audioInstance.position/1000 >= frameData.audioEnd) {
+        //    that.mediaSetting.find('.play-pause').find('span').removeClass('fa-pause').addClass('fa-play');
             
-            that.audioInstance.resumeTime = frameData.audioStart;
-            that.audioInstance.stop();
-          }
-        }
+        //    that.audioInstance.resumeTime = frameData.audioStart;
+        //    that.audioInstance.stop();
+        //  }
+        //}
       }
     }
 
@@ -4264,7 +5263,7 @@ function AudioData() {
   this.start = 0;
   this.end = -1;
 
-  this.time = -1;
+  this.time = 8;
   this.title = null;
 
   this.audioInstance = null;
@@ -4322,19 +5321,19 @@ BackgroundData.prototype.toJSON = function() {
 function FrameData() {
   //text data
   this.text = new TextData();
-  this.textEffect = 'TNone';
-  this.textEffectClass = 'TEffect_None';
-  this.textEffectDelay = 5;
-  this.textEffectDuration = 5;
+  this.textEffect = 'TFade';
+  this.textEffectClass = 'TEffect_Fade';
+  this.textEffectDelay = 0;
+  this.textEffectDuration = 3;
   this.textNextTime = 0;
 
   //image data
   this.bitmapId = null;
   this.bitmapUrl =  null;
-  this.bitmapEffect = 'BNone';
-  this.bitmapEffectClass = 'BEffect_None';
-  this.bitmapEffectDelay = 3;
-  this.bitmapEffectDuration = 5;
+  this.bitmapEffect = 'BFade';
+  this.bitmapEffectClass = 'BEffect_Fade';
+  this.bitmapEffectDelay = 0;
+  this.bitmapEffectDuration = 3;
   this.bitmapNextTime = 5;
 
   //video data
@@ -4435,7 +5434,7 @@ FrameData.prototype.parse = function(data) {
   
   this.textEffect = data.textEffect;
   this.textEffectClass = data.textEffectClass;
-  this.textEffectDelay = data.textEffectDelay;
+  this.textEffectDelay = 0;//data.textEffectDelay;
   this.textEffectDuration = data.textEffectDuration;
   this.textNextTime = data.textNextTime;
 
@@ -4444,7 +5443,7 @@ FrameData.prototype.parse = function(data) {
   this.bitmapUrl =  data.bitmapUrl == 'null' ? null : data.bitmapUrl;
   this.bitmapEffect = data.bitmapEffect;
   this.bitmapEffectClass = data.bitmapEffectClass;
-  this.bitmapEffectDelay = data.bitmapEffectDelay;
+  this.bitmapEffectDelay = 0;//data.bitmapEffectDelay;
   this.bitmapEffectDuration = data.bitmapEffectDuration;
   this.bitmapNextTime = data.bitmapNextTime;
   
@@ -4615,9 +5614,6 @@ TEffect_None.prototype.play = function(container, preText, frameData) {
   frameData.textView = createText(container, container.VC_WIDTH, container.VC_HEIGHT, frameData);
 };
 TEffect_None.prototype.stop = function() {
-  for (var i = 0; i < this.arrTween.length; i ++) {
-    this.arrTween[i].pause();
-  }
 };
 window.TEffect_None = TEffect_None;
 
@@ -4640,7 +5636,7 @@ TEffect_Fade.prototype.play = function(container, preText, frameData) {
   text.alpha = 0;
   container.addChild(text);
   frameData.textView = text;
-  tween = TweenLite.to(text, frameData.textEffectDuration, {delay: frameData.textEffectDelay, alpha: 1});    
+  tween = TweenLite.to(text, frameData.textEffectDuration, {alpha: 1});
   this.arrTween.push(tween);
 };
 TEffect_Fade.prototype.stop = function() {
@@ -4657,7 +5653,7 @@ function TEffect_SlideLeft() {
 TEffect_SlideLeft.prototype.play = function(container, preText, frameData) {
   var tween;
   if (preText) {
-    tween = TweenLite.to(preText, time, {delay: delay, x: -container.VC_WIDTH, onComplete: function() {
+    tween = TweenLite.to(preText, frameData.textEffectDuration, {x: -container.VC_WIDTH, onComplete: function() {
       container.removeChild(preText);
     }});
     this.arrTween.push(tween);
@@ -4669,7 +5665,7 @@ TEffect_SlideLeft.prototype.play = function(container, preText, frameData) {
    container.addChild(text);
    frameData.textView = text;
   
-    tween = TweenLite.to(text, frameData.textEffectDuration, {delay: frameData.textEffectDelay, x: orgX});
+    tween = TweenLite.to(text, frameData.textEffectDuration, {x: orgX});
     this.arrTween.push(tween);
 };
 TEffect_SlideLeft.prototype.stop = function() {
@@ -4686,7 +5682,7 @@ function TEffect_SlideRight() {
 TEffect_SlideRight.prototype.play = function(container, preText, frameData) {
   var tween;
   if (preText) {
-    tween = TweenLite.to(preText, time, {delay: delay, x: container.VC_WIDTH, onComplete: function() {
+    tween = TweenLite.to(preText, frameData.textEffectDuration, {x: container.VC_WIDTH, onComplete: function() {
       container.removeChild(preText);
     }});
     this.arrTween.push(tween);
@@ -4698,7 +5694,7 @@ TEffect_SlideRight.prototype.play = function(container, preText, frameData) {
    container.addChild(text);
    frameData.textView = text;
   
-    tween = TweenLite.to(text, frameData.textEffectDuration, {delay: frameData.textEffectDelay, x: orgX});
+    tween = TweenLite.to(text, frameData.textEffectDuration, {x: orgX});
     this.arrTween.push(tween);
 };
 TEffect_SlideRight.prototype.stop = function() {
@@ -4715,7 +5711,7 @@ function TEffect_SlideUp() {
 TEffect_SlideUp.prototype.play = function(container, preText, frameData) {
   var tween;
   if (preText) {
-    tween = TweenLite.to(preText, time, {delay: delay, y: container.VC_HEIGHT, onComplete: function() {
+    tween = TweenLite.to(preText, frameData.textEffectDuration, {y: container.VC_HEIGHT, onComplete: function() {
       container.removeChild(preText);
     }});
     this.arrTween.push(tween);
@@ -4727,7 +5723,7 @@ TEffect_SlideUp.prototype.play = function(container, preText, frameData) {
    container.addChild(text);
    frameData.textView = text;
   
-    tween = TweenLite.to(text, frameData.textEffectDuration, {delay: frameData.textEffectDelay, y: orgY});
+    tween = TweenLite.to(text, frameData.textEffectDuration, {y: orgY});
     this.arrTween.push(tween);
 };
 TEffect_SlideUp.prototype.stop = function() {
@@ -4744,7 +5740,7 @@ function TEffect_SlideDown() {
 TEffect_SlideDown.prototype.play = function(container, preText, frameData) {
   var tween;
   if (preText) {
-    tween = TweenLite.to(preText, time, {delay: delay, y: -container.VC_HEIGHT, onComplete: function() {
+    tween = TweenLite.to(preText, frameData.textEffectDuration, {y: -container.VC_HEIGHT, onComplete: function() {
       container.removeChild(preText);
     }});
     this.arrTween.push(tween);
@@ -4756,7 +5752,7 @@ TEffect_SlideDown.prototype.play = function(container, preText, frameData) {
    container.addChild(text);
    frameData.textView = text;
   
-    tween = TweenLite.to(text, frameData.textEffectDuration, {delay: frameData.textEffectDelay, y: orgY});
+    tween = TweenLite.to(text, frameData.textEffectDuration, {y: orgY});
     this.arrTween.push(tween);
 };
 TEffect_SlideDown.prototype.stop = function() {
@@ -4791,6 +5787,10 @@ TEffect_FastBounceText.prototype.play = function(container, preText, frameData) 
   var blur = new createjs.BlurFilter(1, 1, 1);
   var colorFilter = new createjs.ColorFilter(0, 0, 0, 1, 255, 255, 255, 0);
   
+  var len = str.replace(/''/g, '\n');
+  len = len.length;
+  var delayTime = frameData.textEffectDuration / len;
+
   for (var i = 0; i < arrText.length; i ++) {
     character = arrText[i];
 
@@ -4800,16 +5800,16 @@ TEffect_FastBounceText.prototype.play = function(container, preText, frameData) 
       txt.orgY = toY;
       
       tempW = txt.getMeasuredWidth();
-      tempH = txt.getMeasuredLineHeight();        
+      tempH = txt.getMeasuredLineHeight();
       toX += tempW;
       
-      txt.scaleX = txt.scaleY = 5;        
+      txt.scaleX = txt.scaleY = 5;
       txt.x = toX - tempW * 5 / 2;
       txt.y = toY - tempH * 5 / 2;
               
       container.addChild(txt);
       txt.alpha = 0;
-      tween = TweenLite.to(txt, 0.2, {alpha: 1, x: txt.orgX, y: txt.orgY, scaleX: 1, scaleY: 1, delay: 0.05 * (i + 1) * j})
+      tween = TweenLite.to(txt, 0.2, {alpha: 1, x: txt.orgX, y: txt.orgY, scaleX: 1, scaleY: 1, delay: delayTime * (i + 1) * j})
       this.arrTween.push(tween);
     }   
     toX = 0; 
@@ -4831,12 +5831,9 @@ TEffect_StarLeft.prototype.play = function(container, preText, frameData) {
   var tween;
   var that = this;
   if (preText) {
-    tween = TweenLite.to(preText, time, {delay: delay, y: -container.VC_HEIGHT, onComplete: function() {
-      container.removeChild(preText);
-    }});      
-    this.arrTween.push(tween);
+    container.removeChild(preText);
   }
-  
+
   //create text and set position
   text = createText(container, container.VC_WIDTH, container.VC_HEIGHT, frameData);
   var orgX = text.x;
@@ -4844,12 +5841,13 @@ TEffect_StarLeft.prototype.play = function(container, preText, frameData) {
   frameData.textView = text;
   
   var fromY = getTextPositionVertical(text, container.VC_HEIGHT, frameData.text);
-  tween = TweenLite.to(text, 2, {x: orgX});
+  tween = TweenLite.to(text, frameData.textEffectDuration, {x: orgX});
   this.arrTween.push(tween);
   
   var randomX, randomY;
-  var star, numOfStar = Math.ceil(container.VC_WIDTH/ 40);    
+  var star, numOfStar = Math.ceil(container.VC_WIDTH/ 40);
   var row = Math.ceil(text.getBounds().height / 10) + 4;
+  var delayTime = (frameData.textEffectDuration - 1) / numOfStar;
   
   for(var i = 0; i < row; i ++) {
     for(var j = 0; j < numOfStar; j ++) {
@@ -4866,10 +5864,11 @@ TEffect_StarLeft.prototype.play = function(container, preText, frameData) {
       randomY = Math.random() < 0.5 ? star.y + Math.random() * 50 : star.y - Math.random() * 50;
       
       star.alpha = 0;
-      tween = TweenLite.to(star, 0.01, {alpha: 1, delay: j * 0.05, 
-        onComplete: function(star, randomX, randomY) {     
+      
+      tween = TweenLite.to(star, 0.01, {alpha: 1, delay: j * delayTime,
+        onComplete: function(star, randomX, randomY) {
           var scale = Math.random();
-          var tw = TweenLite.to(star, 1, {alpha: 0, rotation: Math.random() * 360, x: randomX, y: randomY, scaleX: scale, scaleY: scale});    
+          var tw = TweenLite.to(star, 1, {alpha: 0, rotation: Math.random() * 360, x: randomX, y: randomY, scaleX: scale, scaleY: scale});
           that.arrTween.push(tw);
         }, onCompleteParams: [star, randomX, randomY]});
       this.arrTween.push(tween);
@@ -4891,10 +5890,7 @@ TEffect_StarRight.prototype.play = function(container, preText, frameData) {
   var tween;
   var that = this;
   if (preText) {
-    tween = TweenLite.to(preText, time, {delay: delay, y: -container.VC_HEIGHT, onComplete: function() {
-      container.removeChild(preText);
-    }});      
-    this.arrTween.push(tween);
+    container.removeChild(preText);
   }
   
   //create text and set position
@@ -4904,13 +5900,14 @@ TEffect_StarRight.prototype.play = function(container, preText, frameData) {
   frameData.textView = text;
   
   var fromY = getTextPositionVertical(text, container.VC_HEIGHT, frameData.text);
-  tween = TweenLite.to(text, 2, {x: orgX});
+  tween = TweenLite.to(text, frameData.textEffectDuration, {x: orgX});
   this.arrTween.push(tween);
   
   var randomX, randomY;
-  var star, numOfStar = Math.ceil(container.VC_WIDTH/ 40);    
+  var star, numOfStar = Math.ceil(container.VC_WIDTH/ 40);
   var row = Math.ceil(text.getBounds().height / 10) + 4;
-  
+  var delayTime = (frameData.textEffectDuration - 1) / numOfStar;
+
   for(var i = 0; i < row; i ++) {
     for(var j = 0; j < numOfStar; j ++) {
       star = new createjs.Shape();
@@ -4926,10 +5923,10 @@ TEffect_StarRight.prototype.play = function(container, preText, frameData) {
       randomY = Math.random() < 0.5 ? star.y + Math.random() * 50 : star.y - Math.random() * 50;
       
       star.alpha = 0;
-      tween = TweenLite.to(star, 0.01, {alpha: 1, delay: (numOfStar - j) * 0.05, 
+      tween = TweenLite.to(star, 0.01, {alpha: 1, delay: (numOfStar - j) * delayTime,
         onComplete: function(star, randomX, randomY) {     
           var scale = Math.random();
-          var tw = TweenLite.to(star, 1, {alpha: 0, rotation: Math.random() * 360, x: randomX, y: randomY, scaleX: scale, scaleY: scale});    
+          var tw = TweenLite.to(star, 1, {alpha: 0, rotation: Math.random() * 360, x: randomX, y: randomY, scaleX: scale, scaleY: scale});
           that.arrTween.push(tw);
         }, onCompleteParams: [star, randomX, randomY]});
       this.arrTween.push(tween);
@@ -4951,10 +5948,7 @@ TEffect_HeartLeft.prototype.play = function(container, preText, frameData) {
   var tween;
   var that = this;
   if (preText) {
-    tween = TweenLite.to(preText, time, {delay: delay, y: -container.VC_HEIGHT, onComplete: function() {
-      container.removeChild(preText);
-    }});      
-    this.arrTween.push(tween);
+    container.removeChild(preText);
   }
   
   //create text and set position
@@ -4964,13 +5958,14 @@ TEffect_HeartLeft.prototype.play = function(container, preText, frameData) {
   frameData.textView = text;
   
   var fromY = getTextPositionVertical(text, container.VC_HEIGHT, frameData.text);
-  tween = TweenLite.to(text, 2, {x: orgX});
+  tween = TweenLite.to(text, frameData.textEffectDuration, {x: orgX});
   this.arrTween.push(tween);
   
   var randomX, randomY;
-  var heart, numOfHeart = Math.ceil(container.VC_WIDTH/ 40);    
+  var heart, numOfHeart = Math.ceil(container.VC_WIDTH/ 40);
   var row = Math.ceil(text.getBounds().height / 10) + 4;
   var baseLen = 7;
+  var delayTime = (frameData.textEffectDuration - 1) / numOfHeart;
   
   for(var i = 0; i < row; i ++) {
     for(var j = 0; j < numOfHeart; j ++) {
@@ -4987,7 +5982,7 @@ TEffect_HeartLeft.prototype.play = function(container, preText, frameData) {
       randomY = Math.random() < 0.5 ? heart.y + Math.random() * 50 : heart.y - Math.random() * 50;
       
       heart.alpha = 0;
-      tween = TweenLite.to(heart, 0.01, {alpha: 1, delay: j * 0.05, 
+      tween = TweenLite.to(heart, 0.01, {alpha: 1, delay: j * delayTime, 
         onComplete: function(heart, randomX, randomY) {     
           var scale = Math.random();
           var tw = TweenLite.to(heart, 1, {alpha: 0, rotation: Math.random() * 360, x: randomX, y: randomY, scaleX: scale, scaleY: scale});    
@@ -5012,10 +6007,7 @@ TEffect_HeartRight.prototype.play = function(container, preText, frameData) {
   var tween;
   var that = this;
   if (preText) {
-    tween = TweenLite.to(preText, time, {delay: delay, y: -container.VC_HEIGHT, onComplete: function() {
-      container.removeChild(preText);
-    }});      
-    this.arrTween.push(tween);
+    container.removeChild(preText);
   }
   
   //create text and set position
@@ -5025,13 +6017,14 @@ TEffect_HeartRight.prototype.play = function(container, preText, frameData) {
   frameData.textView = text;
   
   var fromY = getTextPositionVertical(text, container.VC_HEIGHT, frameData.text);
-  tween = TweenLite.to(text, 2, {x: orgX});
+  tween = TweenLite.to(text, frameData.textEffectDuration, {x: orgX});
   this.arrTween.push(tween);
   
   var randomX, randomY;
-  var heart, numOfHeart = Math.ceil(container.VC_WIDTH/ 40);    
+  var heart, numOfHeart = Math.ceil(container.VC_WIDTH/ 40);
   var row = Math.ceil(text.getBounds().height / 10) + 4;
   var baseLen = 7;
+  var delayTime = (frameData.textEffectDuration - 1) / numOfHeart;
   
   for(var i = 0; i < row; i ++) {
     for(var j = 0; j < numOfHeart; j ++) {
@@ -5048,8 +6041,8 @@ TEffect_HeartRight.prototype.play = function(container, preText, frameData) {
       randomY = Math.random() < 0.5 ? heart.y + Math.random() * 50 : heart.y - Math.random() * 50;
       
       heart.alpha = 0;
-      tween = TweenLite.to(heart, 0.01, {alpha: 1, delay: (numOfHeart - j) * 0.05, 
-        onComplete: function(heart, randomX, randomY) {     
+      tween = TweenLite.to(heart, 0.01, {alpha: 1, delay: (numOfHeart - j) * delayTime, 
+        onComplete: function(heart, randomX, randomY) {
           var scale = Math.random();
           var tw = TweenLite.to(heart, 1, {alpha: 0, rotation: Math.random() * 360, x: randomX, y: randomY, scaleX: scale, scaleY: scale});    
           that.arrTween.push(tw);
@@ -5070,10 +6063,9 @@ function TEffect_CenterGo()   {
   this.arrTween = [];
 };
 TEffect_CenterGo.prototype.play = function(container, preText, frameData) {
+  var tween;
   if (preText) {
-    TweenLite.to(preText, time, {delay: delay, y: -container.VC_HEIGHT, onComplete: function() {
-      container.removeChild(preText);
-    }});
+    container.removeChild(preText);
   }
 
   text = createText(container, container.VC_WIDTH, container.VC_HEIGHT, frameData);
@@ -5089,6 +6081,10 @@ TEffect_CenterGo.prototype.play = function(container, preText, frameData) {
   var character;
   var tempW, tempH;
   
+  var len = str.replace(/''/g, '\n');
+  len = len.length;
+  var delayTime = frameData.textEffectDuration / len;
+  
   for (var i = 0; i < arrText.length; i ++) {
     character = arrText[i];
 
@@ -5101,7 +6097,7 @@ TEffect_CenterGo.prototype.play = function(container, preText, frameData) {
       txt.scaleX = txt.scaleY = 0;
       
       tempW = txt.getMeasuredWidth();
-      tempH = txt.getMeasuredLineHeight();        
+      tempH = txt.getMeasuredLineHeight();
       toX += tempW;
      
       txt.x = container.VC_WIDTH/2;
@@ -5110,10 +6106,16 @@ TEffect_CenterGo.prototype.play = function(container, preText, frameData) {
       container.addChild(txt);
 
       txt.alpha = 0;
-      TweenLite.to(txt, 0.5, {alpha: 1, x: txt.orgX, y: txt.orgY, scaleX: 1, scaleY: 1, delay: 0.03 * (i + 1) * j})
+      tween = TweenLite.to(txt, 0.5, {alpha: 1, x: txt.orgX, y: txt.orgY, scaleX: 1, scaleY: 1, delay: delayTime * (i + 1) * j});
+      this.arrTween.push(tween);
     }   
     toX = 0; 
     toY += txt.getMeasuredLineHeight();
+  }
+};
+TEffect_CenterGo.prototype.stop = function() {
+  for (var i = 0; i < this.arrTween.length; i ++) {
+    this.arrTween[i].pause();
   }
 };
 window.TEffect_CenterGo = TEffect_CenterGo;
@@ -5125,32 +6127,40 @@ function TEffect_LightLeft() {
 TEffect_LightLeft.prototype.play = function(container, preText, frameData) {
   var tween;
   if (preText) {
-    tween = TweenLite.to(preText, time, {delay: delay, y: container.VC_HEIGHT, onComplete: function() {
-      container.removeChild(preText);
-    }});
-    this.arrTween.push(tween);
+    container.removeChild(preText);
   }
 
-  var text = createText(container, container.VC_WIDTH, container.VC_HEIGHT, frameData);
-  text.alpha = 0;
-  frameData.textView = text;
-  tween = TweenLite.to(text, 0.1, {delay: frameData.textEffectDelay/2, alpha: 0.3});
-  this.arrTween.push(tween);
+  //var text = createText(container, container.VC_WIDTH, container.VC_HEIGHT, frameData);
+  //text.alpha = 0;
+  //frameData.textView = text;
+  //tween = TweenLite.to(text, 0.1, {delay: frameData.textEffectDelay/2, alpha: 0.3});
+  //this.arrTween.push(tween);
 
   var textEffect = createText(container, container.VC_WIDTH, container.VC_HEIGHT, frameData);
  
   var mask = new createjs.Shape();
   mask.x = getStartTextPositionByHAlign(textEffect, container.VC_WIDTH, frameData.text);
   mask.y = getStartTextPositionByVAlign(textEffect, container.VC_HEIGHT, frameData.text);
+
   mask.graphics.beginFill('#FF00FF').drawRect(0, 0, textEffect.getBounds().width, textEffect.getBounds().height);
   textEffect.mask = mask;
+
+  var toX = 0;
+  if (frameData.text.halign == TextData.HA_LEFT) {
+    toX = textEffect.x;
+  }
+
+  else if (frameData.text.halign == TextData.HA_CENTER) {
+    toX = textEffect.x - textEffect.getBounds().width/2;
+  }
+
+  else if (frameData.text.halign == TextData.HA_RIGHT) {
+    toX = textEffect.x - textEffect.getBounds().width;
+  }
+
   mask.x = mask.x - textEffect.getBounds().width;
-   
-  tween = TweenLite.to(mask, frameData.textEffectDuration, {delay: frameData.textEffectDelay, x: textEffect.x, onComplete: function() {
-    mask.x = mask.x - textEffect.getBounds().width;
-    tween.restart();  
-  }});      
   
+  tween = TweenLite.to(mask, frameData.textEffectDuration, {x: toX});
   this.arrTween.push(tween);
 };
 TEffect_LightLeft.prototype.stop = function() {
@@ -5167,17 +6177,14 @@ function TEffect_LightRight() {
 TEffect_LightRight.prototype.play = function(container, preText, frameData) {
   var tween;
   if (preText) {
-    tween = TweenLite.to(preText, time, {delay: delay, y: container.VC_HEIGHT, onComplete: function() {
-      container.removeChild(preText);
-    }});
-    this.arrTween.push(tween);
+    container.removeChild(preText);
   }
 
-  var text = createText(container, container.VC_WIDTH, container.VC_HEIGHT, frameData);
-  text.alpha = 0;
-  frameData.textView = text;
-  tween = TweenLite.to(text, 0.1, {delay: frameData.textEffectDelay/2, alpha: 0.3});
-  this.arrTween.push(tween);
+  //var text = createText(container, container.VC_WIDTH, container.VC_HEIGHT, frameData);
+  //text.alpha = 0;
+  //frameData.textView = text;
+  //tween = TweenLite.to(text, 0.1, {delay: frameData.textEffectDelay/2, alpha: 0.3});
+  //this.arrTween.push(tween);
   
   var textEffect = createText(container, container.VC_WIDTH, container.VC_HEIGHT, frameData);
    
@@ -5186,12 +6193,23 @@ TEffect_LightRight.prototype.play = function(container, preText, frameData) {
   mask.y = getStartTextPositionByVAlign(textEffect, container.VC_HEIGHT, frameData.text);
   mask.graphics.beginFill('#FF00FF').drawRect(0, 0, textEffect.getBounds().width, textEffect.getBounds().height);
   textEffect.mask = mask;
+  
+  var toX = 0;
+  if (frameData.text.halign == TextData.HA_LEFT) {
+    toX = textEffect.x;
+  }
+
+  else if (frameData.text.halign == TextData.HA_CENTER) {
+    toX = textEffect.x - textEffect.getBounds().width/2;
+  }
+
+  else if (frameData.text.halign == TextData.HA_RIGHT) {
+    toX = textEffect.x - textEffect.getBounds().width;
+  }
+
   mask.x = mask.x + textEffect.getBounds().width;
    
-  tween = TweenLite.to(mask, frameData.textEffectDuration, {delay: frameData.textEffectDelay, x: textEffect.x, onComplete: function() {
-    mask.x = mask.x + textEffect.getBounds().width;
-    tween.restart(true);  
-  }});      
+  tween = TweenLite.to(mask, frameData.textEffectDuration, {x: toX});
   this.arrTween.push(tween);
 };
 TEffect_LightRight.prototype.stop = function() {
@@ -5257,13 +6275,13 @@ BEffect_SlideLeft.prototype.play = function(container, prevBitmap, nextBitmap, d
   if (prevBitmap) {
     container.addChild(prevBitmap);
     prevBitmap.x = prevBitmap.y = 0;
-    tween = TweenLite.to(prevBitmap, 1.5, {x: -container.VC_WIDTH});
+    tween = TweenLite.to(prevBitmap, time, {x: -container.VC_WIDTH});
     this.arrTween.push(tween);
   }
 
   container.addChild(nextBitmap);
   nextBitmap.x = container.VC_WIDTH;
-  tween = TweenLite.to(nextBitmap, 1.5, {x: 0});
+  tween = TweenLite.to(nextBitmap, time, {x: 0});
   this.arrTween.push(tween);
 }
 BEffect_SlideLeft.prototype.stop = function() {
@@ -5280,13 +6298,13 @@ function BEffect_SlideRight() {
 BEffect_SlideRight.prototype.play = function(container, prevBitmap, nextBitmap, delay, time) {
   var tween;
   if (prevBitmap) {
-    tween = TweenLite.to(prevBitmap, 1.5, {x: container.VC_WIDTH});
+    tween = TweenLite.to(prevBitmap, time, {x: container.VC_WIDTH});
     this.arrTween.push(tween);
   }
 
   container.addChild(nextBitmap);
   nextBitmap.x = -container.VC_WIDTH;
-  tween = TweenLite.to(nextBitmap, 1.5, {x: 0});
+  tween = TweenLite.to(nextBitmap, time, {x: 0});
   this.arrTween.push(tween);
 }
 BEffect_SlideRight.prototype.stop = function() {
@@ -5303,13 +6321,13 @@ function BEffect_SlideUp() {
 BEffect_SlideUp.prototype.play = function(container, prevBitmap, nextBitmap, delay, time) {
   var tween;
   if (prevBitmap) {
-    tween = TweenLite.to(prevBitmap, 1.5, {y: -container.VC_HEIGHT});
+    tween = TweenLite.to(prevBitmap, time, {y: -container.VC_HEIGHT});
     this.arrTween.push(tween);
   }
 
   container.addChild(nextBitmap);
   nextBitmap.y = container.VC_HEIGHT;
-  tween = TweenLite.to(nextBitmap, 1.5, {y: 0});
+  tween = TweenLite.to(nextBitmap, time, {y: 0});
   this.arrTween.push(tween);
 }
 BEffect_SlideUp.prototype.stop = function() {
@@ -5326,13 +6344,13 @@ function BEffect_SlideDown() {
 BEffect_SlideDown.prototype.play = function(container, prevBitmap, nextBitmap, delay, time) {
   var tween;
   if (prevBitmap) {
-    tween = TweenLite.to(prevBitmap, 1.5, {y: container.VC_HEIGHT});
+    tween = TweenLite.to(prevBitmap, time, {y: container.VC_HEIGHT});
     this.arrTween.push(tween);
   }
 
   container.addChild(nextBitmap);
   nextBitmap.y = -container.VC_HEIGHT;
-  tween = TweenLite.to(nextBitmap, 1.5, {y: 0});
+  tween = TweenLite.to(nextBitmap, time, {y: 0});
   this.arrTween.push(tween);
 }
 BEffect_SlideDown.prototype.stop = function() {
@@ -5381,7 +6399,7 @@ BEffect_ZoomOut.prototype.play = function(container, prevBitmap, nextBitmap, del
   nextBitmap.x = - nextBitmap.getBounds().width / 2;
   nextBitmap.y = - nextBitmap.getBounds().height / 2;
   
-  tween = TweenLite.to(nextBitmap, 3, {alpha: 1, x: 0, y :0, scaleX: scale, scaleY: scale});
+  tween = TweenLite.to(nextBitmap, time, {alpha: 1, x: 0, y :0, scaleX: scale, scaleY: scale});
   this.arrTween.push(tween);
 }
 BEffect_ZoomOut.prototype.stop = function() {
@@ -5415,7 +6433,7 @@ BEffect_AlphaBars.prototype.play = function(container, prevBitmap, nextBitmap, d
   var numOfBar = Math.ceil(container.VC_WIDTH / barWidth);
   var bar;
   var showTime = 0.5;
-  var delayTime = 0.03;
+  var delayTime = time / numOfBar;
   
   for (var i = 0; i < numOfBar; i ++) {
     bar = new createjs.Bitmap(bitmapData.canvas);
@@ -5480,11 +6498,11 @@ BEffect_SquareExplode.prototype.play = function(container, prevBitmap, nextBitma
   var barWidth = 40;
   var barHeight = 40;
   var col = Math.ceil(container.VC_HEIGHT / barHeight);
-  var row = Math.ceil(container.VC_WIDTH / barWidth);      
+  var row = Math.ceil(container.VC_WIDTH / barWidth);
   var i, j;
   var bar;      
   var showTime = 1;
-  var delayTime = 0.06;
+  var delayTime = time / (col * row);
   var distance = 150;
   var toX, toY;
   
@@ -5538,14 +6556,14 @@ BEffect_BrightSquares.prototype.play = function(container, prevBitmap, nextBitma
   var barWidth = 40;
   var barHeight = 40;
   var col = Math.ceil(container.VC_HEIGHT / barHeight);
-  var row = Math.ceil(container.VC_WIDTH / barWidth);      
+  var row = Math.ceil(container.VC_WIDTH / barWidth);
   var i, j;
   var bar;      
   var bitmap;
   var bright;
   var showTime = 0.5;
-  var delayTime = 0.01;
-  var delay;
+  var delayTime = time / (col * row);
+  var delayBar;
   
   for (i = 0; i < row; i ++) {
     for (j = 0; j < col; j ++) {
@@ -5565,11 +6583,11 @@ BEffect_BrightSquares.prototype.play = function(container, prevBitmap, nextBitma
       bright.graphics.beginFill('#FFFFFF').drawRect(0, 0, barWidth, barHeight).endFill();
       bar.addChild(bright);
       
-      delay = delayTime *  i * (col - j);                    
-      tween = TweenLite.to(bright, showTime + 0.2, {alpha: 0, delay: delay + 0.2});
+      delayBar = delayTime *  i * (col - j);
+      tween = TweenLite.to(bright, showTime + 0.2, {alpha: 0, delay: delayBar + 0.2});
       this.arrTween.push(tween);
       
-      tween = TweenLite.to(bar, showTime, {alpha: 1, x: bar.orgX, y: bar.orgY, scaleX: 1, scaleY: 1, delay: delay, onComplete: onCompleteShowEffect, onCompleteParams: [bar]});
+      tween = TweenLite.to(bar, showTime, {alpha: 1, x: bar.orgX, y: bar.orgY, scaleX: 1, scaleY: 1, delay: delayBar, onComplete: onCompleteShowEffect, onCompleteParams: [bar]});
       this.arrTween.push(tween);
     }      
   }
@@ -5840,6 +6858,8 @@ BEffect_TopMerge.prototype.play = function(container, prevBitmap, nextBitmap, de
   var bar;      
   var bitmap;
   var showTime = time / row;
+
+  delay = delay ? delay : 0;
   
   for (i = 0; i < row; i ++) {
     for (j = 0; j < col; j ++) {
@@ -5901,6 +6921,7 @@ BEffect_BottomMerge.prototype.play = function(container, prevBitmap, nextBitmap,
   var bar;      
   var bitmap;
   var showTime = time / row;
+  delay = delay ? delay : 0;
   
   for (i = 0; i < row; i ++) {
     for (j = 0; j < col; j ++) {
@@ -6177,6 +7198,7 @@ EffectUtils.addEffectPlugin('BBottomMerge', new window['BEffect_BottomMerge']())
 EffectUtils.addEffectPlugin('BHeartMask', new window['BEffect_HeartMask']());
 EffectUtils.addEffectPlugin('BRotateLeft', new window['BEffect_RotateLeft']());
 EffectUtils.addEffectPlugin('BRotateRight', new window['BEffect_RotateRight']());
+
 function PreviewVC() {
   this.curFrameIndex = -1;
   this.arrFrame = [];
@@ -6289,7 +7311,8 @@ PreviewVC.prototype.setData = function(arrBG, arrAudio, arrFrame, stage, width, 
     this.duration += frameData.getDuration();
   }
 
-  this.loadNextBackgroundImage(0);
+  //this.loadNextBackgroundImage(0);
+  this.loadNextImage(0);
 };
 
 PreviewVC.prototype.gotoFullscreen = function(element) {
@@ -6314,6 +7337,7 @@ PreviewVC.prototype.exitFullscreen = function() {
   }
 };
 
+/*
 PreviewVC.prototype.loadNextBackgroundImage = function(index) {
 
   if (index >= this.arrBG.length) {
@@ -6339,6 +7363,7 @@ PreviewVC.prototype.loadNextBackgroundImage = function(index) {
   };
   image.src = this.arrBG[index].url;
 };
+*/
 
 PreviewVC.prototype.loadNextImage = function(index) {
 
@@ -6369,7 +7394,7 @@ PreviewVC.prototype.loadNextImage = function(index) {
 PreviewVC.prototype.loadNextAudio = function(index) {
 
   if (index >= this.arrAudio.length) {
-    this.loadNextFrameAudio(0);
+    this.loadNextVideo(0);
     return;
   }
 
@@ -6396,6 +7421,7 @@ PreviewVC.prototype.loadNextAudio = function(index) {
   };
 };
 
+/*
 PreviewVC.prototype.loadNextFrameAudio = function(index) {
 
   if (index >= this.arrFrame.length) {
@@ -6425,6 +7451,7 @@ PreviewVC.prototype.loadNextFrameAudio = function(index) {
     that.loadNextFrameAudio(index);
   };
 };
+*/
 
 PreviewVC.prototype.loadNextVideo = function(index) {
   if (index >= this.arrFrame.length) {
@@ -6546,13 +7573,6 @@ PreviewVC.prototype.nextAudio = function(index, startTime) {
       return;
     }
 
-    audioData.audioInstance.volume = 0;
-    audioData.audioInstance.position = startTime ? startTime * 1000 : audioData.start * 1000;
-
-    audioData.audioInstance.play();
-    audioData.audioInstance.on("complete", onAudioPlayCompleteHandler);
-    audioData.audioInstance.playProgressTimeout = setInterval(onAudioPlayProgressHandler, 100);
-
     function onAudioPlayProgressHandler(evt) {
       if (audioData.audioInstance) {
 
@@ -6581,6 +7601,12 @@ PreviewVC.prototype.nextAudio = function(index, startTime) {
       that.nextAudio(index);
     }
   }
+
+  audioData.audioInstance.volume = 0;
+  audioData.audioInstance.position = startTime ? startTime * 1000 : audioData.start * 1000;
+  audioData.audioInstance.play();
+  audioData.audioInstance.on("complete", onAudioPlayCompleteHandler);
+  audioData.audioInstance.playProgressTimeout = setInterval(onAudioPlayProgressHandler, 100);
 };
 
 PreviewVC.prototype.nextFrame = function() {
@@ -6636,7 +7662,7 @@ PreviewVC.prototype.playFrame = function(prev, next, callback) {
 
     this.bitmapEffectPlugin = EffectUtils.getEffectPlugin(next.bitmapEffect);
     if (this.bitmapEffectPlugin) {
-      this.bitmapEffectPlugin.play(this.bitmapContainer, prev ? prev.bitmapView : null, next.bitmapView, next.bitmapEffectDelay, next.bitmapEffectDuration); 
+      this.bitmapEffectPlugin.play(this.bitmapContainer, prev && prev.bitmapUrl != null ? prev.bitmapView : null, next.bitmapView, next.bitmapEffectDelay, next.bitmapEffectDuration); 
     }
   } else {
     this.bitmapEffectPlugin = null;
@@ -6644,12 +7670,20 @@ PreviewVC.prototype.playFrame = function(prev, next, callback) {
   }
 
   //video 
+  if ($(this.videoInstance).attr('src') != '') {
+    $(this.videoInstance).animate({opacity: 0}, 2000);
+  }
+
   $(this.videoInstance).attr('src', '');
+  $(this.videoInstance).css('opacity', 1);
   
   if (next.type == FrameData.VIDEO && next.videoView != null) {
     $(this.videoInstance).attr('src', next.videoView);
-
+    $(this.videoInstance).css('opacity', 0);
+    $(this.videoInstance).animate({opacity: 1}, 2000);
+    
     $(this.videoInstance).off('timeupdate').on('timeupdate', function(evt) {
+
       if (next.videoEnd != -1 && that.videoInstance.currentTime >= next.videoEnd) {
         that.videoInstance.pause();
       }
@@ -6659,6 +7693,7 @@ PreviewVC.prototype.playFrame = function(prev, next, callback) {
   }
 
   //audio
+  /*
   if (prev && prev.audioInstance) {
     clearInterval(prev.audioInstance.playProgressTimeout);
     prev.audioInstance.removeAllEventListeners();
@@ -6688,7 +7723,8 @@ PreviewVC.prototype.playFrame = function(prev, next, callback) {
     next.audioInstance.play();
   }  
   this.frameAudioInstance = next.audioInstance;
-  
+  */
+
   //frame duration timeout
   this.frameTimeoutId = setTimeout(function() {
     clearTimeout(that.frameTimeoutId);
@@ -6729,7 +7765,7 @@ PreviewVC.prototype.startTime = function() {
     that.previewSetting.find('.timeline').css('width', Math.floor(100 * that.playedTime / (that.duration * 1000)) + '%');
 
     //show background image here
-    that.playBackground(that.playedTime / 1000);
+    //that.playBackground(that.playedTime / 1000);
 
     if (that.playedTime >= that.duration * 1000) {
       clearInterval(that.timeoutId);
@@ -6810,6 +7846,7 @@ PreviewVC.prototype.stop = function() {
 
   $(this.videoInstance).attr('src', '');
 
+  /*
   if (this.curFrameIndex >=0 && this.curFrameIndex< this.arrFrame.length) {
     var frameData = this.arrFrame[this.curFrameIndex];
 
@@ -6818,6 +7855,7 @@ PreviewVC.prototype.stop = function() {
       frameData.audioInstance.stop();
     }
   }
+  */
 
   createjs.Sound.stop();
   createjs.Sound.removeAllEventListeners();
@@ -6851,12 +7889,14 @@ PreviewVC.prototype.seek = function(position) {
   this.textContainer.removeAllChildren();
   this.bitmapContainer.removeAllChildren();
 
+  /*
   if (this.frameAudioInstance) {
     clearInterval(this.frameAudioInstance.playProgressTimeout);
     this.frameAudioInstance.stop();
     this.frameAudioInstance.removeAllEventListeners();
     this.frameAudioInstance = null;
   }
+  */
   
   if (this.audioInstance) {
     this.audioInstance.stop();
@@ -6919,12 +7959,14 @@ PreviewVC.prototype.clear = function(clearSound) {
   this.textContainer.removeAllChildren();
   this.bitmapContainer.removeAllChildren();
 
+  /*
   if (this.frameAudioInstance) {
     clearInterval(this.frameAudioInstance.playProgressTimeout);
     //this.frameAudioInstance.stop();
     this.frameAudioInstance.removeAllEventListeners();
     this.frameAudioInstance = null;
   }
+  */
   
   if (this.audioInstance) {
     clearInterval(this.audioInstance.playProgressTimeout);
@@ -7640,8 +8682,7 @@ PreviewVC.prototype.clear = function(clearSound) {
           data: formEl,
           dataType: 'json',
           success: function(data){
-            if(res.result === 1){
-              // alert(1);
+            if(data.result === 1){
               marryBlock.find('.list-unstyled').html(data.content);
             }
           }
@@ -7810,6 +8851,13 @@ PreviewVC.prototype.clear = function(clearSound) {
           //   }
           // }
         });
+        $('.custom-select select').each(function() {
+          var el = $(this);
+          var titleSpan = el.siblings('.text-val');
+          titleSpan.text(el.find('option:selected').text());
+          titleSpan.data('val', el.find('option:selected').value);
+          titleSpan.trigger("customSelectChangeEvent");
+        });
         that.vars.doc.on('click.' + pluginName , function(e){
           var target = $(e.target);
           that.offsetSelect();
@@ -7948,12 +8996,13 @@ PreviewVC.prototype.clear = function(clearSound) {
 
   $.fn[pluginName].defaults = {
     effect: 'slide',
-    duration: 500
+    duration: 500,
+    callback: function() {}
   };
 
   $(function() {
     $('[data-' + pluginName + ']')[pluginName]({
-      duration: 400
+      duration: 400,
     });
   });
 
@@ -8025,70 +9074,90 @@ PreviewVC.prototype.clear = function(clearSound) {
  *    destroy
  */
 (function($, window) {
-    'use strict';
+  'use strict';
 
-    var pluginName = 'eqheight',
-        win = $(window);
+  var pluginName = 'eqheight',
+    win = $(window);
 
-    var setHeight = function() {
-        var maxHeight = 0;
-        this.vars.blocks.css('height', '').each(function() {
-            maxHeight = Math.max(maxHeight, $(this).outerHeight());
-        });
-        this.vars.blocks.css('height', maxHeight);
-    };
-
-    function Plugin(element, options) {
-        this.element = $(element);
-        this.options = $.extend({}, $.fn[pluginName].defaults, this.element.data(), options);
-        this.init();
-    }
-
-    Plugin.prototype = {
-        init: function() {
-            var that = this,
-                arrImage = $('[data-load] img', that.element),
-                count = 0,
-                i;
-            that.vars = {
-                blocks: $(that.options.block, that.element)
-            };
-            function loadImage(evt){
-              count ++;
-              if (count === arrImage.length) {
-                win.on('resize.' + pluginName, $.proxy(setHeight, that)).trigger('resize.' + pluginName);
-              }
-            }
-            for ( i = 0; i < arrImage.length; i ++) {
-              arrImage[i].onload = loadImage;
-            }
-            win.on('resize.' + pluginName, $.proxy(setHeight, that)).trigger('resize.' + pluginName);
-        },
-        destroy: function() {
-            win.off('resize.' + pluginName);
-            $.removeData(this.element[0], pluginName);
-        }
-
-    };
-
-    $.fn[pluginName] = function(options, params) {
-    return this.each(function() {
-      var instance = $.data(this, pluginName);
-      if (!instance) {
-        $.data(this, pluginName, new Plugin(this, options));
-      } else if (instance[options]) {
-        instance[options](params);
-      }
+  var setHeight = function() {
+    var maxHeight = 0;
+    this.vars.blocks.css('height', '').each(function() {
+      maxHeight = Math.max(maxHeight, $(this).outerHeight());
+    });
+    this.vars.blocks.css({
+      'height': maxHeight
     });
   };
-
-    $.fn[pluginName].defaults = {
-        block: '[data-block]'
-    };
-
-    $(function() {
-        $('[data-' + pluginName + ']')[pluginName]();
+  var setHeightResize = function() {
+    var maxWidth = 0;
+    this.vars.blocks.css('width', '').each(function() {
+      maxWidth = Math.max(maxWidth, $(this).width());
     });
+    this.vars.blocks.css({
+      'height': maxWidth,
+      'min-height': 'inherit'
+    });
+  };
+  function Plugin(element, options) {
+    this.element = $(element);
+    this.options = $.extend({}, $.fn[pluginName].defaults, this.element.data(), options);
+    this.init();
+  }
+
+  Plugin.prototype = {
+    init: function() {
+      var that = this,
+        arrImage = $('[data-load] img', that.element),
+        count = 0,
+        i;
+      that.vars = {
+        blocks: $(that.options.block, that.element)
+      };
+      function loadImage(evt){
+        count ++;
+        if (count === arrImage.length) {
+          if($(that.options.block, that.element).hasClass('row')){
+            win.on('resize.' + pluginName + '1', $.proxy(setHeightResize, that)).trigger('resize.' + pluginName + '1');
+          }else{
+            win.on('resize.' + pluginName, $.proxy(setHeight, that)).trigger('resize.' + pluginName);
+          }
+        }
+      }
+      for ( i = 0; i < arrImage.length; i ++) {
+        arrImage[i].onload = loadImage;
+      }
+      // win.on('resize.' + pluginName, $.proxy(setHeight, that)).trigger('resize.' + pluginName);
+      if($(that.options.block, that.element).hasClass('row')){
+        win.on('resize.' + pluginName + '1', $.proxy(setHeightResize, that)).trigger('resize.' + pluginName + '1');
+      }else{
+        win.on('resize.' + pluginName, $.proxy(setHeight, that)).trigger('resize.' + pluginName);
+      }
+    },
+    destroy: function() {
+      win.off('resize.' + pluginName);
+      win.off('resize.' + pluginName + '1');
+      $.removeData(this.element[0], pluginName);
+    }
+  };
+
+  $.fn[pluginName] = function(options, params) {
+  return this.each(function() {
+    var instance = $.data(this, pluginName);
+    if (!instance) {
+    $.data(this, pluginName, new Plugin(this, options));
+    } else if (instance[options]) {
+    instance[options](params);
+    }
+  });
+  };
+
+  $.fn[pluginName].defaults = {
+    block: '[data-block]'
+  };
+
+  $(function() {
+    $('[data-' + pluginName + ']')[pluginName]();
+  });
 
 }(jQuery, window));
 /* =========
@@ -11385,6 +12454,177 @@ and dependencies (minified).
 
 }(jQuery, window));
 /**
+ *  @name loadmore
+ *  @description description
+ *  @version 1.0
+ *  @options
+ *    option
+ *  @events
+ *    event
+ *  @methods
+ *    init
+ *    publicMethod
+ *    destroy
+ */
+;(function($, window, undefined) {
+  var pluginName = 'loadmore-collasap',
+      win = $(window),
+      loadingEle = $('.loading-more');
+
+  function Plugin(element, options) {
+    this.element = $(element);
+    this.options = $.extend({}, $.fn[pluginName].defaults, this.element.data(), options);
+    this.init();
+  }
+
+  Plugin.prototype = {
+    init: function() {
+      var that = this;
+      that.vars = {
+        group: $(that.options.listWrapper, that.element),
+        trigger: $(that.options.loadmoreTrigger, that.element),
+        page: 0,
+        endLoad: false   // not have data to load more for autoload (ended data)
+      };
+
+      if (!that.vars.group.length || !that.options.urlLoadmore.length) {
+        return;
+      }
+
+      that.vars.trigger.on('click.' + pluginName, function(e) {
+        e.preventDefault();
+        var link = that.element.attr('data-url-loadmore');
+        if (!link.length || that.vars.endLoad || loadingEle.is(':visible')) { return; }
+        loadingEle.fadeIn(function() {
+          that.vars.page = that.vars.page + 1;
+          $.ajax({
+            url: link,
+            dataType: 'json',
+            success: function(response) {
+              var items, listMedia, lenItemBefore;
+              var flag = true;
+              if (response.status !== 'ok') {
+                // that.vars.page = that.vars.page - 1;
+                return;
+              }
+              if (response.endPage) {
+                that.vars.trigger.hide();
+                if (that.vars.trigger.closest('.full').length){
+                  that.vars.trigger.closest('.full').hide();
+                }
+              }
+              if (response.content.length > 0) {
+                listMedia = that.element.children('[data-media-social]');
+                lenItemBefore = listMedia.children('.item').length;
+                items = $(response.content.join(''));
+                items
+                  .css('opacity', 0)
+                  .appendTo(that.vars.group);
+                  // .animate({ 'opacity': 1 });
+                if (listMedia.length) {
+                  listMedia.on('completeCheckSize', function() {
+                    items.animate({ 'opacity': 1 });
+                  });
+                  listMedia['media-social']('setHeightImg');
+                  listMedia['media-social']('checkSizeImg', lenItemBefore);
+                } else {
+                  items.animate({ 'opacity': 1 });
+                }
+              }
+              if (response['url-loadmore'].length) {
+                that.element.attr('data-url-loadmore', response['url-loadmore']);
+              }
+              if (0 === response.remain) {
+                that.vars.trigger.hide();
+                if (that.vars.trigger.closest('.full').length){
+                  that.vars.trigger.closest('.full').hide();
+                }
+              }
+              loadingEle.fadeOut();
+              setTimeout(function(){
+                $('.accordion .item').each(function(){
+                  var deleteBtn = $('.icon-delete', $(this)),
+                      that = $(this),
+                      marryBlock = $('[data-manage]');
+                  // $(deleteBtn).on('click', function(){
+                  //   that.remove();
+                  // });
+                  var urlContent = deleteBtn.parent().data('delete');
+                  $(deleteBtn).on('click', function(e){
+                    if (flag === true){
+                      $.ajax({
+                        url: urlContent,
+                        dataType: 'json',
+                        beforeSend: function(){
+                          flag = false;
+                          // loading.appendTo();
+                        },
+                        success: function(data){
+                          if (data.result === 1) {
+                            that.fadeOut(800,function(){
+                              that.remove();
+                            });
+                            marryBlock.find('.list-unstyled').html(data.content);
+                          }
+                        },
+                        error: function(){
+                          alert('Please try again');
+                        }
+                      });
+                    }
+                  });
+                });
+                $('[data-check]').check();
+              },200);
+            },
+            error: function(err) {
+              that.vars.page = that.vars.page - 1;
+              loadingEle.fadeOut();
+            }
+          });
+        });
+      });
+    },
+    resetValues: function() {
+      this.vars.page = 0;
+      this.vars.endLoad = false;
+    },
+    destroy: function() {
+      win.off('click.' + pluginName);
+      $.removeData(this.element[0], pluginName);
+    }
+  };
+
+  $.fn[pluginName] = function(options, params) {
+    return this.each(function() {
+      var instance = $.data(this, pluginName);
+      if (!instance) {
+        $.data(this, pluginName, new Plugin(this, options));
+      } else if (instance[options]) {
+        instance[options](params);
+      } else {
+        window.console && console.log(options ? options + ' method is not exists in ' + pluginName : pluginName + ' plugin has been initialized');
+      }
+    });
+  };
+
+  $.fn[pluginName].defaults = {
+    listWrapper: '',
+    urlLoadmore: '',
+    classLoading: 'loading-animated',
+    loadmoreTrigger: '[data-loadmore-trigger]'
+  };
+
+  $(function() {
+    win.on(Site.events.AJAX_SUCCESS + '.' + pluginName, function() {
+      $('[data-' + pluginName + ']')[pluginName]();
+    });
+    $('[data-' + pluginName + ']')[pluginName]();
+  });
+
+}(jQuery, window));
+
+/**
  *  @name scroll-video
  *  @description description
  *  @version 1.0
@@ -11542,7 +12782,7 @@ and dependencies (minified).
 
   var defaults = {
     mobileMaxWidth: 996,
-    animateDuration: 400,
+    animateDuration: 200,
     mobileRightSpace: 50,
     navTopPos: 74
   };

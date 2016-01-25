@@ -13,6 +13,11 @@
     <meta name="robots" content="index, follow">
     <meta name="author" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1">
+    <meta property="og:url" content="http://www.your-domain.com/your-page.html">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Your Website Title">
+    <meta property="og:description" content="Your description">
+    <meta property="og:image" content="http://www.your-domain.com/path/image.jpg">
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="css/style.css">
     <!--[if lt IE 8]><link rel="stylesheet" href="css/ie.css"><![endif]-->
@@ -22,20 +27,6 @@
   <body class="video-detail page-1">
     <div id="app">
       <header id="header">
-        <div class="search-block hidden-sm hidden-xs">
-          <div class="container">
-            <form id="search-form" name="search-form" method="get" action="#" class="form">
-              <div class="row">
-                <div class="col-sm-6 col-sm-offset-3 text-center">
-                  <div class="form-group">
-                    <input type="text" name="input-search-head" id="input-search" value="" autocomplete="off" class="input-1" alert="" placeholder="Find an article..."/>
-                    <button type="submit" name="submit-button-head" id="submit-button-head" title="Search" class="btn submit-btn">Search</button>
-                  </div>
-                </div>
-              </div>
-            </form>
-          </div><a href="javascript:;" title="" class="fa fa-times close"></a>
-        </div>
         <div class="middle-head hidden-sm hidden-xs">
           <div class="container">
             <div class="logo"><a href="index.html" title=""><img src="images/logo.png" alt=""></a></div>
@@ -49,7 +40,14 @@
               </div>
               <div class="item">
                 <ul class="list-inline list">
-                  <li><a href="dangnhap.html" title="đăng nhập">đăng nhập</a></li>
+                  <li><a href="dangnhap.html" title="đăng nhập">đăng nhập</a>
+                    <ul class="sub-nav">
+                      <li><a href="#" title="Bảng điều khiển">Bảng điều khiển</a></li>
+                      <li><a href="#" title="Tài khoản">Tài khoản</a></li>
+                      <li><a href="#" title="Cài đặt">Cài đặt</a></li>
+                      <li><a href="#" title="Đăng xuất">Đăng xuất</a></li>
+                    </ul>
+                  </li>
                   <li><a href="dangky.html" title="đăng ký">đăng ký</a></li>
                 </ul>
               </div>
@@ -59,7 +57,13 @@
                   <li><a href="#" title="tham gia!">tham gia!</a></li>
                 </ul>
               </div>
-              <div class="item"><a href="javascript:;" title="search" data-target=".search-block" data-toggle-slide><span class="fa fa-search"></span></a></div>
+              <div class="item last search-spec"><a href="javascript:;" title="search" data-target=".search-block" data-toggle-slide><span class="fa fa-search"></span></a>
+                <form id="search-form" name="search-form" method="get" action="#" class="form">
+                  <div class="form-group">
+                    <input type="text" name="input-search-head" id="input-search" value="" autocomplete="off" class="input-1" alert="" placeholder="Find an article..."/>
+                  </div>
+                </form>
+              </div>
             </div>
           </div>
         </div>
@@ -109,7 +113,7 @@
                   </li>
                   <li><a href="#" title="địa điểm">địa điểm</a>
                   </li>
-                  <li><a href="#" title="trang sức">trang sức</a>
+                  <li class="mega-menu"><a href="#" title="Nhà cung cấp">Nhà cung cấp</a>
                   </li>
                   <li><a href="#" title="ảnh &amp; video">ảnh & video</a>
                   </li>
@@ -163,6 +167,74 @@
                   </li>
                 </ul>
               </nav>
+              <div class="sub-mega">
+                <div class="row">
+                  <div class="col-xs-8">
+                    <div class="title-mega">
+                      <h3>THEO LOẠI HÌNH</h3>
+                    </div>
+                    <div class="content-mega row">
+                      <ul class="col-sm-4">
+                        <li><a href="#" title="Lorem ipsum"><span class="fa fa-long-arrow-right"></span><span class="text">Lorem ipsum</span></a></li>
+                        <li><a href="#" title="Lorem ipsum"><span class="fa fa-long-arrow-right"></span><span class="text">Lorem ipsum</span></a></li>
+                        <li><a href="#" title="Lorem ipsum"><span class="fa fa-long-arrow-right"></span><span class="text">Lorem ipsum</span></a></li>
+                        <li><a href="#" title="Lorem ipsum"><span class="fa fa-long-arrow-right"></span><span class="text">Lorem ipsum</span></a></li>
+                        <li><a href="#" title="Lorem ipsum"><span class="fa fa-long-arrow-right"></span><span class="text">Lorem ipsum</span></a></li>
+                        <li><a href="#" title="Lorem ipsum"><span class="fa fa-long-arrow-right"></span><span class="text">Lorem ipsum</span></a></li>
+                        <li><a href="#" title="Lorem ipsum"><span class="fa fa-long-arrow-right"></span><span class="text">Lorem ipsum</span></a></li>
+                        <li><a href="#" title="Lorem ipsum"><span class="fa fa-long-arrow-right"></span><span class="text">Lorem ipsum</span></a></li>
+                      </ul>
+                      <ul class="col-sm-4">
+                        <li><a href="#" title="Lorem ipsum"><span class="fa fa-long-arrow-right"></span><span class="text">Lorem ipsum</span></a></li>
+                        <li><a href="#" title="Lorem ipsum"><span class="fa fa-long-arrow-right"></span><span class="text">Lorem ipsum</span></a></li>
+                        <li><a href="#" title="Lorem ipsum"><span class="fa fa-long-arrow-right"></span><span class="text">Lorem ipsum</span></a></li>
+                        <li><a href="#" title="Lorem ipsum"><span class="fa fa-long-arrow-right"></span><span class="text">Lorem ipsum</span></a></li>
+                        <li><a href="#" title="Lorem ipsum"><span class="fa fa-long-arrow-right"></span><span class="text">Lorem ipsum</span></a></li>
+                        <li><a href="#" title="Lorem ipsum"><span class="fa fa-long-arrow-right"></span><span class="text">Lorem ipsum</span></a></li>
+                        <li><a href="#" title="Lorem ipsum"><span class="fa fa-long-arrow-right"></span><span class="text">Lorem ipsum</span></a></li>
+                        <li><a href="#" title="Lorem ipsum"><span class="fa fa-long-arrow-right"></span><span class="text">Lorem ipsum</span></a></li>
+                      </ul>
+                      <ul class="col-sm-4">
+                        <li><a href="#" title="Lorem ipsum"><span class="fa fa-long-arrow-right"></span><span class="text">Lorem ipsum</span></a></li>
+                        <li><a href="#" title="Lorem ipsum"><span class="fa fa-long-arrow-right"></span><span class="text">Lorem ipsum</span></a></li>
+                        <li><a href="#" title="Lorem ipsum"><span class="fa fa-long-arrow-right"></span><span class="text">Lorem ipsum</span></a></li>
+                        <li><a href="#" title="Lorem ipsum"><span class="fa fa-long-arrow-right"></span><span class="text">Lorem ipsum</span></a></li>
+                        <li><a href="#" title="Lorem ipsum"><span class="fa fa-long-arrow-right"></span><span class="text">Lorem ipsum</span></a></li>
+                        <li><a href="#" title="Lorem ipsum"><span class="fa fa-long-arrow-right"></span><span class="text">Lorem ipsum</span></a></li>
+                        <li><a href="#" title="Lorem ipsum"><span class="fa fa-long-arrow-right"></span><span class="text">Lorem ipsum</span></a></li>
+                        <li><a href="#" title="Xem Thêm"><span class="fa fa-long-arrow-right"></span><span class="text">Xem Thêm</span></a></li>
+                      </ul>
+                    </div>
+                  </div>
+                  <div class="col-xs-4">
+                    <div class="title-mega">
+                      <h3>THEO ĐỊA ĐIỂM</h3>
+                    </div>
+                    <div class="content-mega row">
+                      <ul class="col-sm-6">
+                        <li><a href="#" title="Lorem ipsum"><span class="fa fa-long-arrow-right"></span><span class="text">Lorem ipsum</span></a></li>
+                        <li><a href="#" title="Lorem ipsum"><span class="fa fa-long-arrow-right"></span><span class="text">Lorem ipsum</span></a></li>
+                        <li><a href="#" title="Lorem ipsum"><span class="fa fa-long-arrow-right"></span><span class="text">Lorem ipsum</span></a></li>
+                        <li><a href="#" title="Lorem ipsum"><span class="fa fa-long-arrow-right"></span><span class="text">Lorem ipsum</span></a></li>
+                        <li><a href="#" title="Lorem ipsum"><span class="fa fa-long-arrow-right"></span><span class="text">Lorem ipsum</span></a></li>
+                        <li><a href="#" title="Lorem ipsum"><span class="fa fa-long-arrow-right"></span><span class="text">Lorem ipsum</span></a></li>
+                        <li><a href="#" title="Lorem ipsum"><span class="fa fa-long-arrow-right"></span><span class="text">Lorem ipsum</span></a></li>
+                        <li><a href="#" title="Lorem ipsum"><span class="fa fa-long-arrow-right"></span><span class="text">Lorem ipsum</span></a></li>
+                      </ul>
+                      <ul class="col-sm-6">
+                        <li><a href="#" title="Lorem ipsum"><span class="fa fa-long-arrow-right"></span><span class="text">Lorem ipsum</span></a></li>
+                        <li><a href="#" title="Lorem ipsum"><span class="fa fa-long-arrow-right"></span><span class="text">Lorem ipsum</span></a></li>
+                        <li><a href="#" title="Lorem ipsum"><span class="fa fa-long-arrow-right"></span><span class="text">Lorem ipsum</span></a></li>
+                        <li><a href="#" title="Lorem ipsum"><span class="fa fa-long-arrow-right"></span><span class="text">Lorem ipsum</span></a></li>
+                        <li><a href="#" title="Lorem ipsum"><span class="fa fa-long-arrow-right"></span><span class="text">Lorem ipsum</span></a></li>
+                        <li><a href="#" title="Lorem ipsum"><span class="fa fa-long-arrow-right"></span><span class="text">Lorem ipsum</span></a></li>
+                        <li><a href="#" title="Lorem ipsum"><span class="fa fa-long-arrow-right"></span><span class="text">Lorem ipsum</span></a></li>
+                        <li><a href="#" title="Xem Thêm"><span class="fa fa-long-arrow-right"></span><span class="text">Xem Thêm</span></a></li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -377,7 +449,7 @@
           </form>
         </div>
         <div data-buttonslider class="btn-slide-content"><a href="javascript:void(0);" title="Tìm nhà cung cấp" class="btn-show">Tìm nhà cung cấp</a>
-          <div class="btn-slider"><span class="fa fa-angle-double-left"></span></div>
+          <div class="btn-slider"><span class="fa fa-angle-double-right"></span></div>
         </div>
       </div>
       <div class="backtotop"><img src="images/icon_gototop.png" alt="BackToTop"></div>
@@ -396,6 +468,45 @@
           <div class="modal-content"></div>
         </div>
       </div>
+      <div id="favorite-modal" data-modal-ajax tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" class="modal modal-favorite fade">
+        <div class="modal-dialog">
+          <div class="modal-content"></div>
+        </div>
+      </div>
+      <div id="gallery" tabindex="-1" role="dialog" aria-hidden="true" class="pswp">
+        <div class="pswp__bg"></div>
+        <div class="pswp__scroll-wrap">
+          <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+          </div>
+          <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+              <div class="pswp__counter"></div>
+              <button title="Close (Esc)" class="pswp__button pswp__button--close"></button>
+              <button title="Share" class="pswp__button pswp__button--share"></button>
+              <button title="Toggle fullscreen" class="pswp__button pswp__button--fs"></button>
+              <button title="Zoom in/out" class="pswp__button pswp__button--zoom"></button>
+              <div class="pswp__preloader">
+                <div class="pswp__preloader__icn">
+                  <div class="pswp__preloader__cut">
+                    <div class="pswp__preloader__donut"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden">pswp__single-tap
+              <div class="pswp__share-tooltip"></div>
+            </div>
+            <button title="Previous (arrow left)" class="pswp__button pswp__button--arrow--left"></button>
+            <button title="Next (arrow right)" class="pswp__button pswp__button--arrow--right"></button>
+            <div class="pswp__caption">
+              <div class="pswp__caption__center"></div>
+            </div>
+          </div>
+        </div>
+      </div>
       <div id="listFriend" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" class="modal modal-1 fade">
         <div class="modal-dialog">
           <div class="modal-content">
@@ -410,7 +521,7 @@
                     <div class="social-block text-center">
                       <ul class="list-inline">
                         <li><a href="#facebookfriend" title="Download" data-toggle="modal" data-list-friend-fb class="fb"><span class="fa fa-facebook"></span></a></li>
-                        <li><a href="#googlefriend" title="Download" data-toggle="modal" data-list-friend-gp class="gp"><span class="fa fa-google-plus"></span></a></li>
+                        <li><a href="#googlefriend" title="Download" data-toggle="modal" data-list-friend-gp data-google data-google-clientid="691726389794-s28o1ikvvepsjclilk8e6tv1gdmua7f9.apps.googleusercontent.com" data-google-apikey="AIzaSyBo1FC19SxyHcSgS_1qBTMzvU-xRHKF7wQ" class="gp"><span class="fa fa-google-plus"></span></a></li>
                       </ul>
                     </div>
                   </div>
@@ -558,7 +669,7 @@
               <div id="cloud-breadcrumb" class="row">
                 <div class="col-sm-6"><span class="root"></span><span class="separate"> / </span><span class="album"></span></div>
                 <div class="col-sm-6">
-                  <p class="selected-item">           </p>
+                  <p class="selected-item"></p>
                 </div>
               </div>
               <div class="row">
@@ -591,10 +702,40 @@
         <div class="item dm-texteffect"><a href="javascript:void(0);" title="Add/Edit text effect"><i class="fa fa-file-text-o"></i><span>Add/Edit text effect</span></a></div>
         <div class="item dm-image"><a href="javascript:void(0);" title="Add/Edit image"><i class="fa fa-file-text"></i><span>Add/Edit image</span></a></div>
         <div class="item dm-effect"><a href="javascript:void(0);" title="Add/Edit image effect"><i class="fa fa-exchange"></i><span>Add/Edit image effect</span></a></div>
-        <div class="item dm-audio"><a href="javascript:void(0);" title="Add/Edit audio"><i class="fa fa-music"></i><span>Add/Edit audio </span></a></div>
-        <div class="item dm-video"><a href="javascript:void(0);" title="Add/Edit video"><i class="fa fa-film"></i><span>Add/Edit video</span></a></div>
+        <!--
+        .item.dm-audio
+          a(href="javascript:void(0);", title="Add/Edit audio")
+            i.fa.fa-music
+            span Add/Edit audio 
+        .item.dm-video
+        a(href="javascript:void(0);", title="Add/Edit video")
+          i.fa.fa-film
+          span Add/Edit video
+          
+          
+        -->
       </div>
     </div>
+    <div class="loading-more">
+      <div class="load-wrapp">
+        <div class="load-1">
+          <div class="line"></div>
+          <div class="line"></div>
+          <div class="line"></div>
+        </div>
+      </div>
+    </div>
+    <div id="fb-root"></div>
+    <script>
+      (function(d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) return;
+        js = d.createElement(s); js.id = id;
+        js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.5";
+        fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));
+        
+    </script>
     <script src="http://maps.googleapis.com/maps/api/js"></script>
     <script src="js/l10n.js"></script>
     <script src="js/libs.js"></script>

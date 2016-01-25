@@ -1,0 +1,13 @@
+{
+  "status": "ok",
+  "url-loadmore": "../data/load-item.json",
+  "remain": 1,
+  "num-items": "5 articles",
+  "content": [
+    "<div class=\"table-row\"><div class=\"table-cell\">Album<a href=\"data/chinhsua.html\" title=\"edit\" data-toggle=\"modal\" data-target=\"#myModal1\" class=\"active\"><span class=\"icon-edit\"></span></a></div><div class=\"table-cell\">5.000.000</div><div class=\"table-cell\">0</div><div class=\"table-cell\">Chồng</div></div>",
+    "<div class=\"table-row\"><div class=\"table-cell\">Album<a href=\"data/chinhsua.html\" title=\"edit\" data-toggle=\"modal\" data-target=\"#myModal1\" class=\"active\"><span class=\"icon-edit\"></span></a></div><div class=\"table-cell\">5.000.000</div><div class=\"table-cell\">0</div><div class=\"table-cell\">Chồng</div></div>",
+    "<div class=\"table-row\"><div class=\"table-cell\">Album<a href=\"data/chinhsua.html\" title=\"edit\" data-toggle=\"modal\" data-target=\"#myModal1\" class=\"active\"><span class=\"icon-edit\"></span></a></div><div class=\"table-cell\">5.000.000</div><div class=\"table-cell\">0</div><div class=\"table-cell\">Chồng</div></div>",
+    "<div class=\"table-row\"><div class=\"table-cell\">Album<a href=\"data/chinhsua.html\" title=\"edit\" data-toggle=\"modal\" data-target=\"#myModal1\" class=\"active\"><span class=\"icon-edit\"></span></a></div><div class=\"table-cell\">5.000.000</div><div class=\"table-cell\">0</div><div class=\"table-cell\">Chồng</div></div>"
+  ],
+  "endPage": true
+}

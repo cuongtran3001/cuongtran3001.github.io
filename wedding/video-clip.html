@@ -13,6 +13,11 @@
     <meta name="robots" content="index, follow">
     <meta name="author" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1">
+    <meta property="og:url" content="http://www.your-domain.com/your-page.html">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="Your Website Title">
+    <meta property="og:description" content="Your description">
+    <meta property="og:image" content="http://www.your-domain.com/path/image.jpg">
     <link rel="shortcut icon" href="favicon.ico" type="image/x-icon">
     <link rel="stylesheet" href="css/style.css">
     <!--[if lt IE 8]><link rel="stylesheet" href="css/ie.css"><![endif]-->
@@ -22,20 +27,6 @@
   <body class="video-clip-page non-fixed">
     <div id="app">
       <header id="header">
-        <div class="search-block hidden-sm hidden-xs">
-          <div class="container">
-            <form id="search-form" name="search-form" method="get" action="#" class="form">
-              <div class="row">
-                <div class="col-sm-6 col-sm-offset-3 text-center">
-                  <div class="form-group">
-                    <input type="text" name="input-search-head" id="input-search" value="" autocomplete="off" class="input-1" alert="" placeholder="Find an article..."/>
-                    <button type="submit" name="submit-button-head" id="submit-button-head" title="Search" class="btn submit-btn">Search</button>
-                  </div>
-                </div>
-              </div>
-            </form>
-          </div><a href="javascript:;" title="" class="fa fa-times close"></a>
-        </div>
         <div class="middle-head hidden-sm hidden-xs">
           <div class="container">
             <div class="logo"><a href="index.html" title=""><img src="images/logo.png" alt=""></a></div>
@@ -49,7 +40,14 @@
               </div>
               <div class="item">
                 <ul class="list-inline list">
-                  <li><a href="dangnhap.html" title="đăng nhập">đăng nhập</a></li>
+                  <li><a href="dangnhap.html" title="đăng nhập">đăng nhập</a>
+                    <ul class="sub-nav">
+                      <li><a href="#" title="Bảng điều khiển">Bảng điều khiển</a></li>
+                      <li><a href="#" title="Tài khoản">Tài khoản</a></li>
+                      <li><a href="#" title="Cài đặt">Cài đặt</a></li>
+                      <li><a href="#" title="Đăng xuất">Đăng xuất</a></li>
+                    </ul>
+                  </li>
                   <li><a href="dangky.html" title="đăng ký">đăng ký</a></li>
                 </ul>
               </div>
@@ -59,7 +57,13 @@
                   <li><a href="#" title="tham gia!">tham gia!</a></li>
                 </ul>
               </div>
-              <div class="item"><a href="javascript:;" title="search" data-target=".search-block" data-toggle-slide><span class="fa fa-search"></span></a></div>
+              <div class="item last search-spec"><a href="javascript:;" title="search" data-target=".search-block" data-toggle-slide><span class="fa fa-search"></span></a>
+                <form id="search-form" name="search-form" method="get" action="#" class="form">
+                  <div class="form-group">
+                    <input type="text" name="input-search-head" id="input-search" value="" autocomplete="off" class="input-1" alert="" placeholder="Find an article..."/>
+                  </div>
+                </form>
+              </div>
             </div>
           </div>
         </div>
@@ -109,7 +113,7 @@
                   </li>
                   <li><a href="#" title="địa điểm">địa điểm</a>
                   </li>
-                  <li><a href="#" title="trang sức">trang sức</a>
+                  <li class="mega-menu"><a href="#" title="Nhà cung cấp">Nhà cung cấp</a>
                   </li>
                   <li><a href="#" title="ảnh &amp; video">ảnh & video</a>
                   </li>
@@ -163,6 +167,74 @@
                   </li>
                 </ul>
               </nav>
+              <div class="sub-mega">
+                <div class="row">
+                  <div class="col-xs-8">
+                    <div class="title-mega">
+                      <h3>THEO LOẠI HÌNH</h3>
+                    </div>
+                    <div class="content-mega row">
+                      <ul class="col-sm-4">
+                        <li><a href="#" title="Lorem ipsum"><span class="fa fa-long-arrow-right"></span><span class="text">Lorem ipsum</span></a></li>
+                        <li><a href="#" title="Lorem ipsum"><span class="fa fa-long-arrow-right"></span><span class="text">Lorem ipsum</span></a></li>
+                        <li><a href="#" title="Lorem ipsum"><span class="fa fa-long-arrow-right"></span><span class="text">Lorem ipsum</span></a></li>
+                        <li><a href="#" title="Lorem ipsum"><span class="fa fa-long-arrow-right"></span><span class="text">Lorem ipsum</span></a></li>
+                        <li><a href="#" title="Lorem ipsum"><span class="fa fa-long-arrow-right"></span><span class="text">Lorem ipsum</span></a></li>
+                        <li><a href="#" title="Lorem ipsum"><span class="fa fa-long-arrow-right"></span><span class="text">Lorem ipsum</span></a></li>
+                        <li><a href="#" title="Lorem ipsum"><span class="fa fa-long-arrow-right"></span><span class="text">Lorem ipsum</span></a></li>
+                        <li><a href="#" title="Lorem ipsum"><span class="fa fa-long-arrow-right"></span><span class="text">Lorem ipsum</span></a></li>
+                      </ul>
+                      <ul class="col-sm-4">
+                        <li><a href="#" title="Lorem ipsum"><span class="fa fa-long-arrow-right"></span><span class="text">Lorem ipsum</span></a></li>
+                        <li><a href="#" title="Lorem ipsum"><span class="fa fa-long-arrow-right"></span><span class="text">Lorem ipsum</span></a></li>
+                        <li><a href="#" title="Lorem ipsum"><span class="fa fa-long-arrow-right"></span><span class="text">Lorem ipsum</span></a></li>
+                        <li><a href="#" title="Lorem ipsum"><span class="fa fa-long-arrow-right"></span><span class="text">Lorem ipsum</span></a></li>
+                        <li><a href="#" title="Lorem ipsum"><span class="fa fa-long-arrow-right"></span><span class="text">Lorem ipsum</span></a></li>
+                        <li><a href="#" title="Lorem ipsum"><span class="fa fa-long-arrow-right"></span><span class="text">Lorem ipsum</span></a></li>
+                        <li><a href="#" title="Lorem ipsum"><span class="fa fa-long-arrow-right"></span><span class="text">Lorem ipsum</span></a></li>
+                        <li><a href="#" title="Lorem ipsum"><span class="fa fa-long-arrow-right"></span><span class="text">Lorem ipsum</span></a></li>
+                      </ul>
+                      <ul class="col-sm-4">
+                        <li><a href="#" title="Lorem ipsum"><span class="fa fa-long-arrow-right"></span><span class="text">Lorem ipsum</span></a></li>
+                        <li><a href="#" title="Lorem ipsum"><span class="fa fa-long-arrow-right"></span><span class="text">Lorem ipsum</span></a></li>
+                        <li><a href="#" title="Lorem ipsum"><span class="fa fa-long-arrow-right"></span><span class="text">Lorem ipsum</span></a></li>
+                        <li><a href="#" title="Lorem ipsum"><span class="fa fa-long-arrow-right"></span><span class="text">Lorem ipsum</span></a></li>
+                        <li><a href="#" title="Lorem ipsum"><span class="fa fa-long-arrow-right"></span><span class="text">Lorem ipsum</span></a></li>
+                        <li><a href="#" title="Lorem ipsum"><span class="fa fa-long-arrow-right"></span><span class="text">Lorem ipsum</span></a></li>
+                        <li><a href="#" title="Lorem ipsum"><span class="fa fa-long-arrow-right"></span><span class="text">Lorem ipsum</span></a></li>
+                        <li><a href="#" title="Xem Thêm"><span class="fa fa-long-arrow-right"></span><span class="text">Xem Thêm</span></a></li>
+                      </ul>
+                    </div>
+                  </div>
+                  <div class="col-xs-4">
+                    <div class="title-mega">
+                      <h3>THEO ĐỊA ĐIỂM</h3>
+                    </div>
+                    <div class="content-mega row">
+                      <ul class="col-sm-6">
+                        <li><a href="#" title="Lorem ipsum"><span class="fa fa-long-arrow-right"></span><span class="text">Lorem ipsum</span></a></li>
+                        <li><a href="#" title="Lorem ipsum"><span class="fa fa-long-arrow-right"></span><span class="text">Lorem ipsum</span></a></li>
+                        <li><a href="#" title="Lorem ipsum"><span class="fa fa-long-arrow-right"></span><span class="text">Lorem ipsum</span></a></li>
+                        <li><a href="#" title="Lorem ipsum"><span class="fa fa-long-arrow-right"></span><span class="text">Lorem ipsum</span></a></li>
+                        <li><a href="#" title="Lorem ipsum"><span class="fa fa-long-arrow-right"></span><span class="text">Lorem ipsum</span></a></li>
+                        <li><a href="#" title="Lorem ipsum"><span class="fa fa-long-arrow-right"></span><span class="text">Lorem ipsum</span></a></li>
+                        <li><a href="#" title="Lorem ipsum"><span class="fa fa-long-arrow-right"></span><span class="text">Lorem ipsum</span></a></li>
+                        <li><a href="#" title="Lorem ipsum"><span class="fa fa-long-arrow-right"></span><span class="text">Lorem ipsum</span></a></li>
+                      </ul>
+                      <ul class="col-sm-6">
+                        <li><a href="#" title="Lorem ipsum"><span class="fa fa-long-arrow-right"></span><span class="text">Lorem ipsum</span></a></li>
+                        <li><a href="#" title="Lorem ipsum"><span class="fa fa-long-arrow-right"></span><span class="text">Lorem ipsum</span></a></li>
+                        <li><a href="#" title="Lorem ipsum"><span class="fa fa-long-arrow-right"></span><span class="text">Lorem ipsum</span></a></li>
+                        <li><a href="#" title="Lorem ipsum"><span class="fa fa-long-arrow-right"></span><span class="text">Lorem ipsum</span></a></li>
+                        <li><a href="#" title="Lorem ipsum"><span class="fa fa-long-arrow-right"></span><span class="text">Lorem ipsum</span></a></li>
+                        <li><a href="#" title="Lorem ipsum"><span class="fa fa-long-arrow-right"></span><span class="text">Lorem ipsum</span></a></li>
+                        <li><a href="#" title="Lorem ipsum"><span class="fa fa-long-arrow-right"></span><span class="text">Lorem ipsum</span></a></li>
+                        <li><a href="#" title="Xem Thêm"><span class="fa fa-long-arrow-right"></span><span class="text">Xem Thêm</span></a></li>
+                      </ul>
+                    </div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -183,7 +255,8 @@
                     <input type="hidden" name="hiddenField">
                   </form>
                   <h2 title="Click to change your video clip title" class="change-title">VIDEO CLIP NOTITLE</h2><span class="fa fa-pencil"></span>
-                  <h2 class="video-clip-time">Thời gian 00:00 giây</h2>
+                  <!--h2.video-clip-time Thời gian 00:00 giây
+                  -->
                 </div>
                 <div class="list-control">
                   <ul class="list-inline">
@@ -200,25 +273,19 @@
                   <div class="effect-setting">
                     <div class="form-style-1">
                       <div class="row">
-                        <div class="col-xs-3">
-                          <label for="delay">Delay time:</label>
-                          <div class="form-group">
-                            <input id="delay" type="number" name="delay" value="0" class="input-1"><span>giây</span>
-                          </div>
-                        </div>
-                        <div class="col-xs-3">
+                        <div class="col-xs-4">
                           <label for="time">Effect time: </label>
                           <div class="form-group">
                             <input id="time" type="number" name="time" value="3" class="input-1"><span>giây</span>
                           </div>
                         </div>
-                        <div class="col-xs-3">
+                        <div class="col-xs-4">
                           <label for="next">Next time: </label>
                           <div class="form-group">
                             <input id="time" type="number" name="next" value="3" class="input-1"><span>giây</span>
                           </div>
                         </div>
-                        <div class="col-xs-3">
+                        <div class="col-xs-4">
                           <button type="submit" title="Xem và lưu" class="btn-1 transparent full save">Xem và lưu</button>
                         </div>
                       </div>
@@ -362,7 +429,7 @@
                             <div class="col-sm-6">
                               <label for="textpadding">Border padding:</label>
                               <div class="form-group">
-                                <input type="number" name="textpadding" id="textpadding" value="20" autocomplete="off" class="input-1" placeholder=""/>
+                                <input type="range" name="textpadding" id="textpadding" value="20" autocomplete="off" class="input-1" placeholder="" min="0" max="1000"/>
                               </div>
                             </div>
                             <div class="col-sm-6">
@@ -757,17 +824,17 @@
                             <div class="content">
                               <div id="vc-audio-library" data-content-small class="tab active">
                                 <div class="audio-control">
-                                  <div data-item-id="item_audio-library_1" data-item-url="audios/Audio1.mp3" data-item-time="266" class="item">
-                                    <div class="title"><strong>My heart will go on</strong></div><a href="javascript:void(0)" title="Select" class="add-more"><span class="fa fa-plus"></span></a><span class="time">04:26</span>
+                                  <div data-item-id="item_audio-library_1" data-item-url="audios/Audio1_10.mp3" data-item-time="10" class="item">
+                                    <div class="title"><strong>My heart will go on 10</strong></div><a href="javascript:void(0)" title="Select" class="add-more"><span class="fa fa-plus"></span></a><span class="time">00:10</span>
                                   </div>
-                                  <div data-item-id="item_audio-library_2" data-item-url="audios/Audio2.mp3" data-item-time="206" class="item">
-                                    <div class="title"><strong>Tonight i celebrate my love for you</strong></div><a href="javascript:void(0)" title="Select" class="add-more"><span class="fa fa-plus"></span></a><span class="time">03:26</span>
+                                  <div data-item-id="item_audio-library_2" data-item-url="audios/Audio1_12.mp3" data-item-time="12" class="item">
+                                    <div class="title"><strong>My heart will go on 12</strong></div><a href="javascript:void(0)" title="Select" class="add-more"><span class="fa fa-plus"></span></a><span class="time">00:12</span>
                                   </div>
-                                  <div data-item-id="item_audio-library_3" data-item-url="audios/Audio2.mp3" data-item-time="206" class="item">
-                                    <div class="title"><strong>Tonight i celebrate my love for you</strong></div><a href="javascript:void(0)" title="Select" class="add-more"><span class="fa fa-plus"></span></a><span class="time">03:26</span>
+                                  <div data-item-id="item_audio-library_3" data-item-url="audios/Audio1_18.mp3" data-item-time="18" class="item">
+                                    <div class="title"><strong>My heart will go on 18</strong></div><a href="javascript:void(0)" title="Select" class="add-more"><span class="fa fa-plus"></span></a><span class="time">00:18</span>
                                   </div>
-                                  <div data-item-id="item_audio-library_4" data-item-url="audios/Audio1.mp3" data-item-time="266" class="item">
-                                    <div class="title"><strong>My heart will go on</strong></div><a href="javascript:void(0)" title="Select" class="add-more"><span class="fa fa-plus"></span></a><span class="time">04:26</span>
+                                  <div data-item-id="item_audio-library_4" data-item-url="audios/Audio1_25.mp3" data-item-time="25" class="item">
+                                    <div class="title"><strong>My heart will go on 25</strong></div><a href="javascript:void(0)" title="Select" class="add-more"><span class="fa fa-plus"></span></a><span class="time">00:25</span>
                                   </div>
                                 </div>
                               </div>
@@ -780,35 +847,35 @@
                               </div>
                               <div id="vc-audio-yours" data-content-small class="tab">
                                 <div class="audio-control">
-                                  <div data-item-id="item_audio-yours_1" data-item-url="audios/Audio1.mp3" data-item-time="300" class="item">
-                                    <div class="title"><strong>Audio song name</strong></div><a href="javascript:void(0)" title="Select" class="add-more"><span class="fa fa-plus"></span></a><span class="time">05:00</span>
+                                  <div data-item-id="item_audio-yours_1" data-item-url="audios/Audio1.mp3" data-item-time="266" class="item">
+                                    <div class="title"><strong>My heart will go on</strong></div><a href="javascript:void(0)" title="Select" class="add-more"><span class="fa fa-plus"></span></a><span class="time">04:26</span>
                                   </div>
-                                  <div data-item-id="item_audio-yours_2" data-item-url="audios/Audio2.mp3" data-item-time="300" class="item">
-                                    <div class="title"><strong>Audio song name</strong></div><a href="javascript:void(0)" title="Select" class="add-more"><span class="fa fa-plus"></span></a><span class="time">05:00</span>
+                                  <div data-item-id="item_audio-yours_2" data-item-url="audios/Audio1.mp3" data-item-time="266" class="item">
+                                    <div class="title"><strong>My heart will go on</strong></div><a href="javascript:void(0)" title="Select" class="add-more"><span class="fa fa-plus"></span></a><span class="time">04:26</span>
                                   </div>
-                                  <div data-item-id="item_audio-yours_3" data-item-url="audios/Audio1.mp3" data-item-time="300" class="item">
-                                    <div class="title"><strong>Audio song name</strong></div><a href="javascript:void(0)" title="Select" class="add-more"><span class="fa fa-plus"></span></a><span class="time">05:00</span>
+                                  <div data-item-id="item_audio-yours_3" data-item-url="audios/Audio1.mp3" data-item-time="266" class="item">
+                                    <div class="title"><strong>My heart will go on</strong></div><a href="javascript:void(0)" title="Select" class="add-more"><span class="fa fa-plus"></span></a><span class="time">04:26</span>
                                   </div>
-                                  <div data-item-id="item_audio-yours_4" data-item-url="audios/Audio2.mp3" data-item-time="300" class="item">
-                                    <div class="title"><strong>Audio song name</strong></div><a href="javascript:void(0)" title="Select" class="add-more"><span class="fa fa-plus"></span></a><span class="time">05:00</span>
+                                  <div data-item-id="item_audio-yours_4" data-item-url="audios/Audio1.mp3" data-item-time="266" class="item">
+                                    <div class="title"><strong>My heart will go on</strong></div><a href="javascript:void(0)" title="Select" class="add-more"><span class="fa fa-plus"></span></a><span class="time">04:26</span>
                                   </div>
-                                  <div data-item-id="item_audio-yours_5" data-item-url="audios/Audio1.mp3" data-item-time="300" class="item">
-                                    <div class="title"><strong>Audio song name</strong></div><a href="javascript:void(0)" title="Select" class="add-more"><span class="fa fa-plus"></span></a><span class="time">05:00</span>
+                                  <div data-item-id="item_audio-yours_5" data-item-url="audios/Audio1.mp3" data-item-time="266" class="item">
+                                    <div class="title"><strong>My heart will go on</strong></div><a href="javascript:void(0)" title="Select" class="add-more"><span class="fa fa-plus"></span></a><span class="time">04:26</span>
                                   </div>
-                                  <div data-item-id="item_audio-yours_6" data-item-url="audios/Audio2.mp3" data-item-time="300" class="item">
-                                    <div class="title"><strong>Audio song name</strong></div><a href="javascript:void(0)" title="Select" class="add-more"><span class="fa fa-plus"></span></a><span class="time">05:00</span>
+                                  <div data-item-id="item_audio-yours_6" data-item-url="audios/Audio1.mp3" data-item-time="266" class="item">
+                                    <div class="title"><strong>My heart will go on</strong></div><a href="javascript:void(0)" title="Select" class="add-more"><span class="fa fa-plus"></span></a><span class="time">04:26</span>
                                   </div>
-                                  <div data-item-id="item_audio-yours_7" data-item-url="audios/Audio1.mp3" data-item-time="300" class="item">
-                                    <div class="title"><strong>Audio song name</strong></div><a href="javascript:void(0)" title="Select" class="add-more"><span class="fa fa-plus"></span></a><span class="time">05:00</span>
+                                  <div data-item-id="item_audio-yours_7" data-item-url="audios/Audio1.mp3" data-item-time="266" class="item">
+                                    <div class="title"><strong>My heart will go on</strong></div><a href="javascript:void(0)" title="Select" class="add-more"><span class="fa fa-plus"></span></a><span class="time">04:26</span>
                                   </div>
-                                  <div data-item-id="item_audio-yours_8" data-item-url="audios/Audio2.mp3" data-item-time="300" class="item">
-                                    <div class="title"><strong>Audio song name</strong></div><a href="javascript:void(0)" title="Select" class="add-more"><span class="fa fa-plus"></span></a><span class="time">05:00</span>
+                                  <div data-item-id="item_audio-yours_8" data-item-url="audios/Audio1.mp3" data-item-time="266" class="item">
+                                    <div class="title"><strong>My heart will go on</strong></div><a href="javascript:void(0)" title="Select" class="add-more"><span class="fa fa-plus"></span></a><span class="time">04:26</span>
                                   </div>
-                                  <div data-item-id="item_audio-yours_9" data-item-url="audios/Audio1.mp3" data-item-time="300" class="item">
-                                    <div class="title"><strong>Audio song name</strong></div><a href="javascript:void(0)" title="Select" class="add-more"><span class="fa fa-plus"></span></a><span class="time">05:00</span>
+                                  <div data-item-id="item_audio-yours_9" data-item-url="audios/Audio1.mp3" data-item-time="266" class="item">
+                                    <div class="title"><strong>My heart will go on</strong></div><a href="javascript:void(0)" title="Select" class="add-more"><span class="fa fa-plus"></span></a><span class="time">04:26</span>
                                   </div>
-                                  <div data-item-id="item_audio-yours_10" data-item-url="audios/Audio2.mp3" data-item-time="300" class="item">
-                                    <div class="title"><strong>Audio song name</strong></div><a href="javascript:void(0)" title="Select" class="add-more"><span class="fa fa-plus"></span></a><span class="time">05:00</span>
+                                  <div data-item-id="item_audio-yours_10" data-item-url="audios/Audio1.mp3" data-item-time="266" class="item">
+                                    <div class="title"><strong>My heart will go on</strong></div><a href="javascript:void(0)" title="Select" class="add-more"><span class="fa fa-plus"></span></a><span class="time">04:26</span>
                                   </div>
                                 </div>
                               </div>
@@ -917,28 +984,39 @@
                 </div>
               </div>
               <div class="tfooter">
+                <div class="item style-1">
+                  <div class="head"><span class="icon-edit-video-img"></span></div>
+                </div>
+                <div class="item style-2">
+                  <div class="head"><span class="icon-edit-audio"></span></div>
+                </div>
+                <!--
+                .item.style-3
+                  .head
+                    span.icon-edit-img
+                    
+                -->
                 <div class="add-function-block">
-                  <div class="item vc-backgrounds">
-                    <div class="head"><span class="icon-edit-img"></span></div>
-                    <div class="content">
-                      <div class="wrap-list">
-                        <div class="list-box">
-                          <!--
-                          .box
-                            .img-add
-                              img(src="images/upload/pic-1.jpg", alt="")
-                            span.time 00:05
-                            a.delete(href="javascript:void(0);", title="Delete")
-                              span.fa.fa-minus
-                          -->
-                        </div><a href="javascript:void(0)" title="Thêm hình nền" class="add-more"><span class="fa fa-plus"></span></a>
+                  <div class="wrap-list">
+                    <div class="timelap">
+                      <ul>
+                        <!--
+                        li
+                          span 00.00.00
+                        -->
+                      </ul>
+                    </div>
+                    <div class="item vc-frames">
+                      <div class="content">
+                        <div class="list-frame"></div>
+                        <div class="responsive-container add-more-effect">
+                          <div class="wrap"></div><a href="javascript:void(0);" title="Thêm khung hình" class="img-container">
+                            <div class="inner"><span class="icon-plus"></span></div></a>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                  <div class="item vc-audios">
-                    <div class="head"><span class="icon-edit-audio"></span></div>
-                    <div class="content">
-                      <div class="wrap-list">
+                    <div class="item vc-audios">
+                      <div class="content">
                         <div class="list-box">
                           <!--
                           .box
@@ -954,18 +1032,21 @@
                         </div><a href="javascript:void(0)" title="Thêm audio" class="add-more"><span class="fa fa-plus"></span></a>
                       </div>
                     </div>
-                  </div>
-                  <div class="item vc-frames">
-                    <div class="head"><span class="icon-edit-video-img"></span></div>
-                    <div class="content">
-                      <div class="wrap-list">
-                        <div class="list-frame"></div>
-                        <div class="responsive-container add-more-effect">
-                          <div class="wrap"></div><a href="javascript:void(0);" title="Thêm khung hình" class="img-container">
-                            <div class="inner"><span class="icon-plus"></span></div></a>
-                        </div>
-                      </div>
-                    </div>
+                    <!--
+                    .item.vc-backgrounds
+                      .content
+                      
+                          .list-box
+                            //
+                              .box
+                                .img-add
+                                  img(src="images/upload/pic-1.jpg", alt="")
+                                span.time 00:05
+                                a.delete(href="javascript:void(0);", title="Delete")
+                                  span.fa.fa-minus
+                          a.add-more(href="javascript:void(0)", title="Thêm hình nền")
+                            span.fa.fa-plus
+                    -->
                   </div>
                 </div>
               </div>
@@ -1059,7 +1140,7 @@
           </form>
         </div>
         <div data-buttonslider class="btn-slide-content"><a href="javascript:void(0);" title="Tìm nhà cung cấp" class="btn-show">Tìm nhà cung cấp</a>
-          <div class="btn-slider"><span class="fa fa-angle-double-left"></span></div>
+          <div class="btn-slider"><span class="fa fa-angle-double-right"></span></div>
         </div>
       </div>
       <div class="backtotop"><img src="images/icon_gototop.png" alt="BackToTop"></div>
@@ -1078,6 +1159,45 @@
           <div class="modal-content"></div>
         </div>
       </div>
+      <div id="favorite-modal" data-modal-ajax tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" class="modal modal-favorite fade">
+        <div class="modal-dialog">
+          <div class="modal-content"></div>
+        </div>
+      </div>
+      <div id="gallery" tabindex="-1" role="dialog" aria-hidden="true" class="pswp">
+        <div class="pswp__bg"></div>
+        <div class="pswp__scroll-wrap">
+          <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+          </div>
+          <div class="pswp__ui pswp__ui--hidden">
+            <div class="pswp__top-bar">
+              <div class="pswp__counter"></div>
+              <button title="Close (Esc)" class="pswp__button pswp__button--close"></button>
+              <button title="Share" class="pswp__button pswp__button--share"></button>
+              <button title="Toggle fullscreen" class="pswp__button pswp__button--fs"></button>
+              <button title="Zoom in/out" class="pswp__button pswp__button--zoom"></button>
+              <div class="pswp__preloader">
+                <div class="pswp__preloader__icn">
+                  <div class="pswp__preloader__cut">
+                    <div class="pswp__preloader__donut"></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="pswp__share-modal pswp__share-modal--hidden">pswp__single-tap
+              <div class="pswp__share-tooltip"></div>
+            </div>
+            <button title="Previous (arrow left)" class="pswp__button pswp__button--arrow--left"></button>
+            <button title="Next (arrow right)" class="pswp__button pswp__button--arrow--right"></button>
+            <div class="pswp__caption">
+              <div class="pswp__caption__center"></div>
+            </div>
+          </div>
+        </div>
+      </div>
       <div id="listFriend" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" class="modal modal-1 fade">
         <div class="modal-dialog">
           <div class="modal-content">
@@ -1092,7 +1212,7 @@
                     <div class="social-block text-center">
                       <ul class="list-inline">
                         <li><a href="#facebookfriend" title="Download" data-toggle="modal" data-list-friend-fb class="fb"><span class="fa fa-facebook"></span></a></li>
-                        <li><a href="#googlefriend" title="Download" data-toggle="modal" data-list-friend-gp class="gp"><span class="fa fa-google-plus"></span></a></li>
+                        <li><a href="#googlefriend" title="Download" data-toggle="modal" data-list-friend-gp data-google data-google-clientid="691726389794-s28o1ikvvepsjclilk8e6tv1gdmua7f9.apps.googleusercontent.com" data-google-apikey="AIzaSyBo1FC19SxyHcSgS_1qBTMzvU-xRHKF7wQ" class="gp"><span class="fa fa-google-plus"></span></a></li>
                       </ul>
                     </div>
                   </div>
@@ -1240,7 +1360,7 @@
               <div id="cloud-breadcrumb" class="row">
                 <div class="col-sm-6"><span class="root"></span><span class="separate"> / </span><span class="album"></span></div>
                 <div class="col-sm-6">
-                  <p class="selected-item">           </p>
+                  <p class="selected-item"></p>
                 </div>
               </div>
               <div class="row">
@@ -1273,10 +1393,40 @@
         <div class="item dm-texteffect"><a href="javascript:void(0);" title="Add/Edit text effect"><i class="fa fa-file-text-o"></i><span>Add/Edit text effect</span></a></div>
         <div class="item dm-image"><a href="javascript:void(0);" title="Add/Edit image"><i class="fa fa-file-text"></i><span>Add/Edit image</span></a></div>
         <div class="item dm-effect"><a href="javascript:void(0);" title="Add/Edit image effect"><i class="fa fa-exchange"></i><span>Add/Edit image effect</span></a></div>
-        <div class="item dm-audio"><a href="javascript:void(0);" title="Add/Edit audio"><i class="fa fa-music"></i><span>Add/Edit audio </span></a></div>
-        <div class="item dm-video"><a href="javascript:void(0);" title="Add/Edit video"><i class="fa fa-film"></i><span>Add/Edit video</span></a></div>
+        <!--
+        .item.dm-audio
+          a(href="javascript:void(0);", title="Add/Edit audio")
+            i.fa.fa-music
+            span Add/Edit audio 
+        .item.dm-video
+        a(href="javascript:void(0);", title="Add/Edit video")
+          i.fa.fa-film
+          span Add/Edit video
+          
+          
+        -->
       </div>
     </div>
+    <div class="loading-more">
+      <div class="load-wrapp">
+        <div class="load-1">
+          <div class="line"></div>
+          <div class="line"></div>
+          <div class="line"></div>
+        </div>
+      </div>
+    </div>
+    <div id="fb-root"></div>
+    <script>
+      (function(d, s, id) {
+        var js, fjs = d.getElementsByTagName(s)[0];
+        if (d.getElementById(id)) return;
+        js = d.createElement(s); js.id = id;
+        js.src = "//connect.facebook.net/en_US/sdk.js#xfbml=1&version=v2.5";
+        fjs.parentNode.insertBefore(js, fjs);
+        }(document, 'script', 'facebook-jssdk'));
+        
+    </script>
     <script src="http://maps.googleapis.com/maps/api/js"></script>
     <script src="js/l10n.js"></script>
     <script src="js/libs.js"></script>
