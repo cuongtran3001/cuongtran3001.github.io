@@ -4991,7 +4991,7 @@ window.onGooglClientApiLoadedHandler = function() {
       that.mediaSetting.find('.time-start').offset({left: toLeft});
 
       //time-end
-      var toRight = controlWidth - 10;
+      var toRight = left + controlWidth - 10;
 
       if (audioData.end != -1) {
         toRight = left + audioData.end * controlWidth / duration - 10;
