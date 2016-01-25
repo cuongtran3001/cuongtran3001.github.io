@@ -2867,6 +2867,8 @@ window.onGooglClientApiLoadedHandler = function() {
       $(document.body).off("mousemove");
       $(document.body).off("mouseup");
 
+      that.updateBackgroundAudio();
+
       that.seekMedia((that.mediaSetting.find('.timeline').offset().left - left) * duration / width);
     });
   };
@@ -3105,17 +3107,21 @@ window.onGooglClientApiLoadedHandler = function() {
       $(listBox[i]).css({
         width: width + 'px'
       });
+
+      this.updateBackgroundAudioTitle(width - 55, $(listBox[i]).find('.title strong'), bgAudioData.title);
       
-      this.updateBackgroundAudioTitle(width - 55, $(listBox[i]).find('.title strong'));
-      
+      $(listBox[i]).find('.time').html(EffectUtils.formatTime(bgAudioData.getTime()));
+
       time += bgAudioData.getTime();
     }
   };
   
-  VideoClip.prototype.updateBackgroundAudioTitle = function(width, title) {
+  VideoClip.prototype.updateBackgroundAudioTitle = function(width, title, data) {
     
-    if (title.width() > width) {
-      var str = title.html();
+    title.html(data);
+
+    if (title.width() > width && width > 0) {
+      var str = data;
       while (title.width() > width) {
         str = str.substr(0, str.length - 1);
         title.html(str);
@@ -3228,8 +3234,8 @@ window.onGooglClientApiLoadedHandler = function() {
           that.curBG = null;
         }
 
-        that.bitmapContainer.visible = false;
-        that.bgContainer.visible = true;
+        //that.bitmapContainer.visible = false;
+        //that.bgContainer.visible = true;
         that.activeBackground(box, FrameData.AUDIO);
         
         if (!that.arrBGAudio[box.index()].id) {
@@ -3246,8 +3252,8 @@ window.onGooglClientApiLoadedHandler = function() {
           that.curBG = null;
         }
 
-        that.bitmapContainer.visible = false;
-        that.bgContainer.visible = true;
+        //that.bitmapContainer.visible = false;
+        //that.bgContainer.visible = true;
         that.activeBackground(box, FrameData.AUDIO);
       }
     });
@@ -3439,10 +3445,11 @@ window.onGooglClientApiLoadedHandler = function() {
         this.curFrameAudio.addClass('active');
         this.curFrameAudio.find('.add-more span').removeClass('fa fa-plus').addClass('fa fa-minus');
 
-        this.loadFrameAudio(audioData.id, audioData.url);
+        this.loadFrameAudio(audioData);
       }
     }
 
+    /*
     else if (type == FrameData.IMAGE) {
       this.isBackground = true;
       this.displayOnlyMenu(true, PANEL_IMAGE);
@@ -3483,6 +3490,7 @@ window.onGooglClientApiLoadedHandler = function() {
         this.loadBackgroundImage(bgData.url);
       }
     }
+    */
   };
 
   VideoClip.prototype.uploadFrameData = function(type, name, url, actived) {
@@ -4411,7 +4419,7 @@ window.onGooglClientApiLoadedHandler = function() {
       this.curFrameAudio.find('.add-more span').removeClass('fa fa-plus').addClass('fa fa-minus');
 
       this.mediaSetting.hide();
-      this.loadFrameAudio(itemId, itemUrl);
+      this.loadFrameAudio(audioData);
     }
 
     //update box here
@@ -4939,9 +4947,11 @@ window.onGooglClientApiLoadedHandler = function() {
     $('#video').attr('src', '');
   };
 
-  VideoClip.prototype.loadFrameAudio = function(id, url) {
-
+  VideoClip.prototype.loadFrameAudio = function(audioData) {
     var that = this;
+
+    var id = audioData.id;
+    var url = audioData.url;
 
     this.previewVC.clear();
 
@@ -4971,11 +4981,31 @@ window.onGooglClientApiLoadedHandler = function() {
       
       that.audioInstance = createjs.Sound.play(evt.src);
       that.saveMediaMetaData(0, that.audioInstance.duration / 1000);
+
+      var left = that.mediaSetting.find('.time').offset().left;
+      var controlWidth = that.mediaSetting.find('.time').width();
+      var duration = that.audioInstance.duration / 1000;
+      var toLeft = left + audioData.start * controlWidth / duration - 10;
       
+      //time-start
+      that.mediaSetting.find('.time-start').offset({left: toLeft});
+
+      //time-end
+      var toRight = controlWidth - 10;
+
+      if (audioData.end != -1) {
+        toRight = left + audioData.end * controlWidth / duration - 10;
+      }
+      that.mediaSetting.find('.time-end').offset({left: toRight});
+
+      //timeline
+      that.mediaSetting.find('.timeline').offset({left: toLeft + 10});
+      that.mediaSetting.find('.timeline').width(toRight - toLeft);
+
       that.mediaSetting.find('.play-pause').find('span').removeClass('fa-play').addClass('fa-pause');
-      that.mediaSetting.find('.time').data('duration', that.audioInstance.duration / 1000);
-      that.mediaSetting.find('.time-start .text').html(EffectUtils.formatTime(0));
-      that.mediaSetting.find('.time-end .text').html(EffectUtils.formatTime(that.audioInstance.duration / 1000));
+      that.mediaSetting.find('.time').data('duration', audioData.getTime());
+      that.mediaSetting.find('.time-start .text').html(EffectUtils.formatTime(audioData.start));
+      that.mediaSetting.find('.time-end .text').html(EffectUtils.formatTime(audioData.end));
       
       that.audioInstance.on("complete", onAudioPlayCompleteHandler);
       that.audioInstance.playProgressTimeout = setInterval(onAudioPlayProgressHandler, 100);
@@ -5282,7 +5312,7 @@ AudioData.prototype.getTime = function() {
   if (this.end != -1) {
     return (this.end - this.start);
   } 
-  return this.time;
+  return this.time - this.start;
 };
 
 AudioData.prototype.toJSON = function() {
