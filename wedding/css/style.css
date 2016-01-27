@@ -14606,6 +14606,9 @@ textarea.input-1 {
   height: auto;
   line-height: 14px;
 }
+.btn-4.pink {
+  background-color: #bc2670;
+}
 .btn-4.full {
   width: 100%;
 }
@@ -17775,6 +17778,10 @@ See http://bgrins.github.io/spectrum/themes/ for instructions.
 .tags {
   margin-top: 15px;
 }
+.tags ul {
+  height: 31px;
+  overflow: hidden;
+}
 .tags ul li:before {
   content: "";
   background: url(../images/left-bgd-tag.png) left top no-repeat;
@@ -19262,6 +19269,8 @@ See http://bgrins.github.io/spectrum/themes/ for instructions.
   box-shadow: 0 0 4px rgba(0, 0, 0, 0.3);
   overflow: hidden;
   background-color: #ffffff;
+  position: relative;
+  z-index: 2;
 }
 .marry-block .block-title.style-1 {
   background-color: #ffffff;
@@ -22709,7 +22718,6 @@ See http://bgrins.github.io/spectrum/themes/ for instructions.
 }
 .wrapper-video .tfooter .list-frame .frame {
   width: 130px;
-  margin-right: 20px;
   position: relative;
   display: inline-block;
   margin-top: 10px;
@@ -22733,7 +22741,12 @@ See http://bgrins.github.io/spectrum/themes/ for instructions.
 }
 .wrapper-video .tfooter .list-frame .frame .thumb img {
   display: block;
-  width: 100%;
+  width: 200%;
+  margin-left: -100%;
+  position: relative;
+  left: 50%;
+  margin-top: -50%;
+  top: 50%;
 }
 .wrapper-video .tfooter .list-frame .frame .thumb.video:before {
   content: "";
@@ -23204,16 +23217,6 @@ See http://bgrins.github.io/spectrum/themes/ for instructions.
   box-sizing: border-box;
   padding: 3px 0;
   float: left;
-  margin-right: 20px;
-}
-.timelap ul li:before {
-  position: absolute;
-  bottom: 0;
-  right: 0;
-  content: "";
-  height: 6px;
-  width: 1px;
-  background-color: #b49a8d;
 }
 .timelap ul li:after {
   position: absolute;
@@ -25327,6 +25330,17 @@ a.evo-hist {
   .backtotop {
     bottom: 50px;
   }
+  .block-bgd-full {
+    background-image: url(../images/upload/mobile-bgd-signup-signin.jpg);
+    background-position: top center;
+    background-size: auto;
+  }
+  .modal-1 .form-group {
+    margin-bottom: 12px;
+  }
+  .modal-1 .wizard > .content > .body label {
+    margin-bottom: 5px;
+  }
   .up-block {
     margin-top: 20px!important;
   }
@@ -25356,6 +25370,9 @@ a.evo-hist {
   .list-banner-video .item .img-block.video .inner .thumb .img-responsive {
     width: 100%;
     height: auto;
+  }
+  .list-banner-video .item .img-block {
+    width: 100%;
   }
   #header {
     height: 50px;
