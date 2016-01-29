@@ -97,47 +97,47 @@ var Site = (function($, window, undefined) {
     });
   }
   var templateLoading= '<div class="wrapLoad bgd-rgba"><div class="load-wrapp"><div class="load-1"><div class="line"></div><div class="line"></div><div class="line"></div></div></div></div>';
-  if ($('#app').length && $('#app').imagesLoaded) {
-    $('#app').imagesLoaded()
-    .always( function( instance ) {
-      // $('.wrapLoad').remove();
-      // console.log('all images loaded');
-    })
-    .done( function( instance ) {
-      $('.wrapLoad').remove();
-      $('#app').css({
-        'height' : '',
-        'overflow': ''
-      });
-    })
-    .fail( function() {
-      $('.wrapLoad').remove();
-      $('#app').css({
-        'height' : '',
-        'overflow': ''
-      });
-      // console.log('all images loaded, at least one is broken');
-    })
-    .error( function() {
-      $('.wrapLoad').remove();
-      $('#app').css({
-        'height' : '',
-        'overflow': ''
-      });
-      // console.log('all images loaded, at least one is broken');
-    })
-    .progress( function( instance, image ) {
-      $('#app').before(templateLoading);
-      $('#app').css({
-        'height' : $(window).height(),
-        'overflow': 'hidden'
-      });
-      $('.wrapLoad').hide();
-      $('.wrapLoad').eq(1).show();
-      // var result = image.isLoaded ? 'loaded' : 'broken';
-      // console.log( 'image is ' + result + ' for ' + image.img.src );
-    });
-  }
+  // if ($('#app').length && $('#app').imagesLoaded) {
+  //   $('#app').imagesLoaded()
+  //   .always( function( instance ) {
+  //     // $('.wrapLoad').remove();
+  //     // console.log('all images loaded');
+  //   })
+  //   .done( function( instance ) {
+  //     $('.wrapLoad').remove();
+  //     $('#app').css({
+  //       'height' : '',
+  //       'overflow': ''
+  //     });
+  //   })
+  //   .fail( function() {
+  //     $('.wrapLoad').remove();
+  //     $('#app').css({
+  //       'height' : '',
+  //       'overflow': ''
+  //     });
+  //     // console.log('all images loaded, at least one is broken');
+  //   })
+  //   .error( function() {
+  //     $('.wrapLoad').remove();
+  //     $('#app').css({
+  //       'height' : '',
+  //       'overflow': ''
+  //     });
+  //     // console.log('all images loaded, at least one is broken');
+  //   })
+  //   .progress( function( instance, image ) {
+  //     $('#app').before(templateLoading);
+  //     $('#app').css({
+  //       'height' : $(window).height(),
+  //       'overflow': 'hidden'
+  //     });
+  //     $('.wrapLoad').hide();
+  //     $('.wrapLoad').eq(1).show();
+  //     // var result = image.isLoaded ? 'loaded' : 'broken';
+  //     // console.log( 'image is ' + result + ' for ' + image.img.src );
+  //   });
+  // }
   function loadingImg() {
     $('img').each(function(){
       var that = $(this);
@@ -419,14 +419,6 @@ var Site = (function($, window, undefined) {
       $('[data-slidermobile]').stop().slideToggle(500);
       $('[data-slidermobile]').toggleClass('active');
     });
-    // $(document).ajaxError(function() {
-    //   console.log('error connect internet!')
-    //   setTimeout(function(){
-    //     $('[data-modal-ajax]').modal('hide');
-    //   },1000);
-    // });
-    
-
     if ($("[data-coverflow]").length) {
       $("[data-coverflow]").flipster({
         itemContainer:      '> ul', // Container for the flippin' items.
@@ -578,7 +570,7 @@ var Site = (function($, window, undefined) {
           columnWidth: '.item',
           isAnimated:true,
           animationOptions: {
-            duration: 500,
+            duration: 700,
             easing:'swing',
             queue :false
           }
@@ -690,7 +682,7 @@ var Site = (function($, window, undefined) {
             percentPosition: true,
             isAnimated:true,
             animationOptions: {
-              duration: 500,
+              duration: 700,
               easing:'swing',
               queue :false
             }
@@ -781,63 +773,51 @@ var Site = (function($, window, undefined) {
     }
     $('[data-slider-small]').find('.slick-slide').eq(3).addClass('slick-current');
     var initPhotoSwipeFromDOM = function(gallerySelector) {
+
+      // parse slide data (url, title, size ...) from DOM elements 
+      // (children of gallerySelector)
       var parseThumbnailElements = function(el) {
           var thumbElements = el.childNodes,
               numNodes = thumbElements.length,
               items = [],
-              el,
-              childElements,
-              thumbnailEl,
+              figureEl,
+              linkEl,
               size,
               item;
 
-          for(var i = 0; i < numNodes; i++) {
-              el = thumbElements[i];
+          for (var i = 0; i < numNodes; i++) {
+
+              figureEl = thumbElements[i]; // <figure> element
 
               // include only element nodes 
-              if(el.nodeType !== 1) {
-                continue;
+              if (figureEl.nodeType !== 1) {
+                  continue;
               }
 
-              childElements = el.children;
+              linkEl = figureEl.children[0]; // <a> element
 
-              size = el.getAttribute('data-size').split('x');
+              size = linkEl.getAttribute('data-size').split('x');
 
               // create slide object
               item = {
-            src: el.getAttribute('href'),
-            w: parseInt(size[0], 10),
-            h: parseInt(size[1], 10),
-            author: el.getAttribute('data-author')
+                  src: linkEl.getAttribute('href'),
+                  w: parseInt(size[0], 10),
+                  h: parseInt(size[1], 10)
               };
 
-              item.el = el; // save link to element for getThumbBoundsFn
 
-              if(childElements.length > 0) {
-                item.msrc = childElements[0].getAttribute('src'); // thumbnail url
-                if(childElements.length > 1) {
-                    item.title = childElements[1].innerHTML; // caption (contents of figure)
-                }
+
+              if (figureEl.children.length > 1) {
+                  // <figcaption> content
+                  item.title = figureEl.children[1].innerHTML;
               }
 
+              if (linkEl.children.length > 0) {
+                  // <img> thumbnail element, retrieving thumbnail url
+                  item.msrc = linkEl.children[0].getAttribute('src');
+              }
 
-          var mediumSrc = el.getAttribute('data-med');
-                if(mediumSrc) {
-                  size = el.getAttribute('data-med-size').split('x');
-                  // "medium-sized" image
-                  item.m = {
-                      src: mediumSrc,
-                      w: parseInt(size[0], 10),
-                      h: parseInt(size[1], 10)
-                  };
-                }
-                // original image
-                item.o = {
-                  src: item.src,
-                  w: item.w,
-                  h: item.h
-                };
-
+              item.el = figureEl; // save link to element for getThumbBoundsFn
               items.push(item);
           }
 
@@ -846,225 +826,160 @@ var Site = (function($, window, undefined) {
 
       // find nearest parent element
       var closest = function closest(el, fn) {
-          return el && ( fn(el) ? el : closest(el.parentNode, fn) );
+          return el && (fn(el) ? el : closest(el.parentNode, fn));
       };
 
+      // triggers when user clicks on thumbnail
       var onThumbnailsClick = function(e) {
           e = e || window.event;
           e.preventDefault ? e.preventDefault() : e.returnValue = false;
 
           var eTarget = e.target || e.srcElement;
 
+          // find root element of slide
           var clickedListItem = closest(eTarget, function(el) {
-              return el.tagName === 'A';
+              return (el.tagName && el.tagName.toUpperCase() === 'FIGURE');
           });
 
-          if(!clickedListItem) {
+          if (!clickedListItem) {
               return;
           }
 
-          var clickedGallery = clickedListItem.parentNode;
-
-          var childNodes = clickedListItem.parentNode.childNodes,
+          // find index of clicked item by looping through all child nodes
+          // alternatively, you may define index via data- attribute
+          var clickedGallery = clickedListItem.parentNode,
+              childNodes = clickedListItem.parentNode.childNodes,
               numChildNodes = childNodes.length,
               nodeIndex = 0,
               index;
 
           for (var i = 0; i < numChildNodes; i++) {
-              if(childNodes[i].nodeType !== 1) { 
-                  continue; 
+              if (childNodes[i].nodeType !== 1) {
+                  continue;
               }
 
-              if(childNodes[i] === clickedListItem) {
+              if (childNodes[i] === clickedListItem) {
                   index = nodeIndex;
                   break;
               }
               nodeIndex++;
           }
 
-          if(index >= 0) {
-              openPhotoSwipe( index, clickedGallery );
+
+
+          if (index >= 0) {
+              // open PhotoSwipe if valid index found
+              openPhotoSwipe(index, clickedGallery);
           }
           return false;
       };
 
+      // parse picture index and gallery index from URL (#&pid=1&gid=2)
       var photoswipeParseHash = function() {
-        var hash = window.location.hash.substring(1),
-          params = {};
+          var hash = window.location.hash.substring(1),
+              params = {};
 
-          if(hash.length < 5) { // pid=1
+          if (hash.length < 5) {
               return params;
           }
 
           var vars = hash.split('&');
           for (var i = 0; i < vars.length; i++) {
-              if(!vars[i]) {
+              if (!vars[i]) {
                   continue;
               }
-              var pair = vars[i].split('=');  
-              if(pair.length < 2) {
-                  continue;
-              }           
-              params[pair[0]] = pair[1];
-          }
-
-          if(params.gid) {
-            params.gid = parseInt(params.gid, 10);
-          }
-
-          return params;
-      };
-
-      var openPhotoSwipe = function(index, galleryElement, disableAnimation, fromURL) {
-          var pswpElement = document.querySelectorAll('.pswp')[0],
-              gallery,
-              options,
-              items;
-
-        items = parseThumbnailElements(galleryElement);
-
-          // define options (if needed)
-          options = {
-
-              galleryUID: galleryElement.getAttribute('data-pswp-uid'),
-
-              getThumbBoundsFn: function(index) {
-                  // See Options->getThumbBoundsFn section of docs for more info
-                  var thumbnail = items[index].el.children[0],
-                      pageYScroll = window.pageYOffset || document.documentElement.scrollTop,
-                      rect = thumbnail.getBoundingClientRect(); 
-
-                  return {x:rect.left, y:rect.top + pageYScroll, w:rect.width};
-              },
-
-              addCaptionHTMLFn: function(item, captionEl, isFake) {
-            if(!item.title) {
-              captionEl.children[0].innerText = '';
-              return false;
-            }
-            captionEl.children[0].innerHTML = item.title +  '<br/><small>Photo: ' + item.author + '</small>';
-            return true;
-              }
-          
-          };
-
-
-          if(fromURL) {
-            if(options.galleryPIDs) {
-              // parse real index when custom PIDs are used 
-              // http://photoswipe.com/documentation/faq.html#custom-pid-in-url
-              for(var j = 0; j < items.length; j++) {
-                if(items[j].pid == index) {
-                  options.index = j;
-                  break;
+              var pair = vars[i].split('=');
+                if (pair.length < 2) {
+                    continue;
                 }
-              }
+                params[pair[0]] = pair[1];
+            }
+
+            if (params.gid) {
+                params.gid = parseInt(params.gid, 10);
+            }
+
+            return params;
+        };
+
+        var openPhotoSwipe = function(index, galleryElement, disableAnimation, fromURL) {
+            var pswpElement = document.querySelectorAll('.pswp')[0],
+                gallery,
+                options,
+                items;
+
+            items = parseThumbnailElements(galleryElement);
+
+            // define options (if needed)
+            options = {
+
+                // define gallery index (for URL)
+                galleryUID: galleryElement.getAttribute('data-pswp-uid'),
+
+                getThumbBoundsFn: function(index) {
+                    // See Options -> getThumbBoundsFn section of documentation for more info
+                    var thumbnail = items[index].el.getElementsByTagName('img')[0], // find thumbnail
+                        pageYScroll = window.pageYOffset || document.documentElement.scrollTop,
+                        rect = thumbnail.getBoundingClientRect();
+
+                    return {
+                        x: rect.left,
+                        y: rect.top + pageYScroll,
+                        w: rect.width
+                    };
+                }
+
+            };
+
+            // PhotoSwipe opened from URL
+            if (fromURL) {
+                if (options.galleryPIDs) {
+                    // parse real index when custom PIDs are used 
+                    // http://photoswipe.com/documentation/faq.html#custom-pid-in-url
+                    for (var j = 0; j < items.length; j++) {
+                        if (items[j].pid == index) {
+                            options.index = j;
+                            break;
+                        }
+                    }
+                } else {
+                    // in URL indexes start from 1
+                    options.index = parseInt(index, 10) - 1;
+                }
             } else {
-              options.index = parseInt(index, 10) - 1;
+                options.index = parseInt(index, 10);
             }
-          } else {
-            options.index = parseInt(index, 10);
-          }
 
-          // exit if index not found
-          if( isNaN(options.index) ) {
-            return;
-          }
-
-
-
-        var radios = document.getElementsByName('gallery-style');
-        for (var i = 0, length = radios.length; i < length; i++) {
-            if (radios[i].checked) {
-                if(radios[i].id == 'radio-all-controls') {
-
-                } else if(radios[i].id == 'radio-minimal-black') {
-                  options.mainClass = 'pswp--minimal--dark';
-                  options.barsSize = {top:0,bottom:0};
-              options.captionEl = false;
-              options.fullscreenEl = false;
-              options.shareEl = false;
-              options.bgOpacity = 0.85;
-              options.tapToClose = true;
-              options.tapToToggleControls = false;
-                }
-                break;
+            // exit if index not found
+            if (isNaN(options.index)) {
+                return;
             }
+
+            if (disableAnimation) {
+                options.showAnimationDuration = 0;
+            }
+
+            // Pass data to PhotoSwipe and initialize it
+            gallery = new PhotoSwipe(pswpElement, PhotoSwipeUI_Default, items, options);
+            gallery.init();
+        };
+
+        // loop through all gallery elements and bind events
+        var galleryElements = document.querySelectorAll(gallerySelector);
+
+        for (var i = 0, l = galleryElements.length; i < l; i++) {
+            galleryElements[i].setAttribute('data-pswp-uid', i + 1);
+            galleryElements[i].onclick = onThumbnailsClick;
         }
 
-          if(disableAnimation) {
-              options.showAnimationDuration = 0;
-          }
-
-          // Pass data to PhotoSwipe and initialize it
-          gallery = new PhotoSwipe( pswpElement, PhotoSwipeUI_Default, items, options);
-
-          // see: http://photoswipe.com/documentation/responsive-images.html
-        var realViewportWidth,
-            useLargeImages = false,
-            firstResize = true,
-            imageSrcWillChange;
-
-        gallery.listen('beforeResize', function() {
-
-          var dpiRatio = window.devicePixelRatio ? window.devicePixelRatio : 1;
-          dpiRatio = Math.min(dpiRatio, 2.5);
-            realViewportWidth = gallery.viewportSize.x * dpiRatio;
-
-
-            if(realViewportWidth >= 1200 || (!gallery.likelyTouchDevice && realViewportWidth > 800) || screen.width > 1200 ) {
-              if(!useLargeImages) {
-                useLargeImages = true;
-                  imageSrcWillChange = true;
-              }
-                
-            } else {
-              if(useLargeImages) {
-                useLargeImages = false;
-                  imageSrcWillChange = true;
-              }
-            }
-
-            if(imageSrcWillChange && !firstResize) {
-                gallery.invalidateCurrItems();
-            }
-
-            if(firstResize) {
-                firstResize = false;
-            }
-
-            imageSrcWillChange = false;
-
-        });
-
-        gallery.listen('gettingData', function(index, item) {
-            if( useLargeImages ) {
-                item.src = item.o.src;
-                item.w = item.o.w;
-                item.h = item.o.h;
-            } else {
-                item.src = item.m.src;
-                item.w = item.m.w;
-                item.h = item.m.h;
-            }
-        });
-
-          gallery.init();
-      };
-
-      // select all gallery elements
-      var galleryElements = document.querySelectorAll( gallerySelector );
-      for(var i = 0, l = galleryElements.length; i < l; i++) {
-        galleryElements[i].setAttribute('data-pswp-uid', i+1);
-        galleryElements[i].onclick = onThumbnailsClick;
-      }
-
-      // Parse URL and open gallery if it contains #&pid=3&gid=1
-      var hashData = photoswipeParseHash();
-      if(hashData.pid && hashData.gid) {
-        openPhotoSwipe( hashData.pid, galleryElements[ hashData.gid - 1 ], true, true );
-      }
+        // Parse URL and open gallery if it contains #&pid=3&gid=1
+        var hashData = photoswipeParseHash();
+        if (hashData.pid && hashData.gid) {
+            openPhotoSwipe(hashData.pid, galleryElements[hashData.gid - 1], true, true);
+        }
     };
+
+    // execute above function
     initPhotoSwipeFromDOM('.show-gallery');
     $('.table-condensed .tbody .table-row').each(function(){
       var el = $(this);
@@ -1093,36 +1008,7 @@ var Site = (function($, window, undefined) {
         });
       }
     });
-    // $('[data-toggle="modal"]').each(function() {
-    //   var that = $(this);
-    //   var id = that.data('target'),
-    //       url = that.attr('href');
-    //   that.off('click.modalAjax').on('click.modalAjax', function(e){
-    //     if (url === 'undefined') {
-    //       $(id).removeData('bs.modal');
-    //       $(id).modal({remote: url });
-    //       $(id).modal('hide');
-          
-    //     };
-    //     // $.ajax({
-    //     //     url: url,
-    //     //     type: 'GET',
-    //     //     progress: function(){
-    //     //       $('.loading-more').show();
-    //     //       // $(id).closest('body').addClass('.modal-open');
-    //     //     },
-    //     //     success: function(html){
-    //     //       $(id).modal('show');
-    //     //       $('.loading-more').hide();
-    //     //       // $('.modal-backdrop.fade.in').show();
-    //     //     },
-    //     //     error: function(){
-    //     //       alert('erro')
-    //     //     }
-    //     // });
-    //     // return false;
-    //   });
-    // });
+    
     $('[data-modal-ajax]').on('shown.bs.modal', function (e) {
       e.preventDefault();
       var dataUrl= $('.modal-favorite .form-search .input-form').data('url'),
@@ -1140,6 +1026,37 @@ var Site = (function($, window, undefined) {
             $('.loading-more').hide();
           }else{
             $('.loading-more').hide();
+          }
+          if (e.type === 'shown') {
+            if($('[data-search-filter]').length){
+              $('[data-search-filter]').keyup(function() {
+                var val = '^(?=.*\\b' + $.trim($(this).val()).split(/\s+/).join('\\b)(?=.*\\b') + ').*$',
+                    reg = RegExp(val, 'i'),
+                    text;
+                var jsp = $('.list-option').data('jsp');
+                rows.show().filter(function() {
+                    text = $(this).text().replace(/\s+/g, ' ');
+                    return !reg.test(text);
+                }).hide();
+                if (jsp) {
+                  jsp.destroy();
+                }
+                $('.list-option').jScrollPane({
+                  mouseWheelSpeed: 50
+                });
+              });
+              if($('.modal-favorite .list-option').length){
+                $(window).on('resize.scrollpanelList', function(){
+                  var jsp = $('.list-option').data('jsp');
+                  if (jsp) {
+                    jsp.destroy();
+                  }
+                  $('.list-option').jScrollPane({
+                    mouseWheelSpeed: 50
+                  });
+                }).trigger('resize.scrollpanelList');
+              }
+            }
           }
         }, 5000);
       }
@@ -1197,8 +1114,12 @@ var Site = (function($, window, undefined) {
         }
         if ($('[data-autocomplete]').length){
           var jsonAddress = function(){
-            var jsAddress= $('[data-autocomplete]').data('autocomplete');
-            $.ajax({
+            var jsAddress= $('[data-autocomplete]').data('autocomplete'),
+                xhr;
+            if(xhr){
+              xhr.abort();
+            }
+            xhr = $.ajax({
               url: jsAddress,
               dataType: 'json',
               success: function(res){
@@ -1234,29 +1155,33 @@ var Site = (function($, window, undefined) {
           focusOnSelect: true
         });
 
-        if($('.lists-ablum-1').length){
+        if($('[data-modal-ajax] .lists-ablum-1').length){
           $(window).on('resize.scrollpanelList1', function(){
-            var jsp = $('.lists-ablum-1').data('jsp');
+            var jsp = $('[data-modal-ajax] .lists-ablum-1').data('jsp');
             if (jsp) {
               jsp.destroy();
             }
-            $('.lists-ablum-1').jScrollPane({
+            $('[data-modal-ajax] .lists-ablum-1').jScrollPane({
               mouseWheelSpeed: 50
             });
 
           }).trigger('resize.scrollpanelList1');
         }
-        if($('.invitation-list').length){
-          $('.invitation-list').jScrollPane({
+        if($('[data-modal-ajax] .invitation-list').length){
+          $('[data-modal-ajax] .invitation-list').jScrollPane({
             showArrows: true
           });
         }
         $('.slidershow-album .control-album .slick-slide').eq(0).addClass('slick-current');
         if($('.form-add-board').length){
           $('.form-add-board .btn-1').on('click',function(e){
-            var form = $('.form-add-board');
+            var form = $('.form-add-board')
+                xhr;
             e.preventDefault();
-            $.ajax({
+            if(xhr){
+              xhr.abort();
+            }
+            xhr = $.ajax({
               url: form.attr('action'),
               dataType: 'json',
               type: 'POST',
@@ -1422,109 +1347,6 @@ var Site = (function($, window, undefined) {
         });
       },300);
     });
-    
-    if($('#fileupload1').length){
-    var url = window.location.hostname === 'blueimp.github.io' ?'//jquery-file-upload.appspot.com/' : $('.upload-form').data('uploadlink'),
-    uploadButton = $('<button type="button"/>')
-        .addClass('btn-2')
-        .prop('disabled', true)
-        .text('Processing...')
-        .on('click', function () {
-            var $this = $(this),
-                data = $this.data();
-            $this
-                .off('click')
-                .text('Abort')
-                .on('click', function () {
-                    $this.remove();
-                    data.abort();
-                });
-            data.submit().always(function () {
-                $this.remove();
-            });
-        });
-    $('#fileupload1').fileupload({
-        url: url,
-        dataType: 'json',
-        autoUpload: false,
-        acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i,
-        disableImageResize: /Android(?!.*Chrome)|Opera/
-            .test(window.navigator.userAgent),
-        previewMaxWidth: 100,
-        previewMaxHeight: 100,
-        previewCrop: true
-    }).on('fileuploadadd', function (e, data) {
-        data.context = $('<div class="canvas"/>').appendTo('#files1');
-        $.each(data.files, function (index, file) {
-            var node = $('<div class="inner"/>')
-                    .append($('<span/>'));
-            var error = $('<span class="text-danger"/>').text(file.error);
-            if (!index) {
-              node.append(uploadButton.clone(true).data(data));
-              setTimeout(function(){
-              if($('.fileinput-button').length){
-                $('.file-upload-custom.cover .fileinput-button span').hide();
-              }else{
-
-              }
-            },100);
-            }
-            node.appendTo(data.context);
-        });
-    }).on('fileuploadprocessalways', function (e, data) {
-        var index = data.index,
-            file = data.files[index],
-            node = $(data.context.children()[index]);
-        if (file.preview) {
-            $('.file-upload-custom.cover .text-danger').hide();
-            node.prepend(file.preview);
-        }
-        if (file.error) {
-            node
-                .append('<br>')
-                .append($('<span class="text-danger"/>').text(file.error));
-            $(data.context.children()[index]).addClass('error-file');
-        }
-        if (index + 1 === data.files.length) {
-            data.context.find('button')
-                .text('Upload')
-                .prop('disabled', !!data.files.error);
-        }
-        if(data.files.length){
-          // file.error.hide();
-        }
-    }).on('fileuploadprogressall', function (e, data) {
-        var progress = parseInt(data.loaded / data.total * 100, 10);
-        $('#progress1').show();
-        $('#progress1 .progress-bar').css(
-            'width',
-            progress + '%'
-        );
-    }).on('fileuploaddone', function (e, data) {
-        $.each(data.result.files, function (index, file) {
-            if (file.url) {
-                var link = $('<a>')
-                    .attr('target', '_blank')
-                    .prop('href', file.url);
-                $(data.context.children()[index])
-                    .wrap(link);
-                $('.file-upload-custom.cover .fileinput-button span').show();
-            } else if (file.error) {
-                var error = $('<span class="text-danger"/>').text(file.error);
-                $('.file-upload-custom.cover .fileinput-button span').show();
-                $(data.context.children()[index])
-                    .append(error);
-                
-            }
-        });
-    }).on('fileuploadfail', function (e, data) {
-        $.each(data.files, function (index) {
-            var error = $('<span class="text-danger"/>').text('File upload failed.');
-            $(data.context.children()[index])
-                .append(error);
-        });
-    }).prop('disabled', !$.support.fileInput).parent().addClass($.support.fileInput ? undefined : 'disabled');
-  }
   }
   function loadMore() {
     var flag = true;
@@ -1565,14 +1387,14 @@ var Site = (function($, window, undefined) {
                       percentPosition: true,
                       isAnimated:true,
                       animationOptions: {
-                        duration: 1000,
+                        duration: 700,
                         easing:'linear',
                         queue :false
                       }
                     });
                     $(window).scrollTop(currTop);
                   }
-                },400);
+                },800);
                 $(window).off('resize.a').on('resize.a', function(){
                   $('.block-album .item').each(function(e){
                     if($(window).width() > 768){
@@ -1662,11 +1484,9 @@ var Site = (function($, window, undefined) {
     $('.block-album .item').each(function(){
       var deleteBtn = $('.fancybox-close', $(this)),
           that = $(this);
-      // $(deleteBtn).on('click', function(){
-      //   that.remove();
-      // });
       var urlContent = $(deleteBtn).data('url');
       $(deleteBtn).on('click', function(e){
+        e.stopImmediatePropagation();
         $.ajax({
           url: urlContent,
           dataType: 'json',
@@ -1685,7 +1505,7 @@ var Site = (function($, window, undefined) {
           }
         });
       });
-    })
+    });
   }
   function changeDom(){
     if($('[data-sortable]').length && localStorage.table){
@@ -1709,104 +1529,88 @@ var Site = (function($, window, undefined) {
     });
   }
 
-  // function uploadIMG(){
-  //   if($('[data-upload-multi]').length){
-  //   var urlUpload = window.location.hostname === $('.upload-form-1').data('uploadlink'),
-  //       uploadButton = $('<button type="button"/>')
-  //           .addClass('btn btn-primary')
-  //           .prop('disabled', true)
-  //           .text('Processing...')
-  //           .on('click', function () {
-  //               var $this = $(this),
-  //                   data = $this.data();
-  //               $this
-  //                   .off('click')
-  //                   .text('Abort')
-  //                   .on('click', function () {
-  //                       $this.remove();
-  //                       data.abort();
-  //                   });
-  //               data.submit().always(function () {
-  //                   $this.remove();
-  //               });
-  //           });
-  //   $('[data-upload-multi]').fileupload({
-  //       url: urlUpload,
+  // function changeDom(){
+  //   if($('[data-sortable]').length && localStorage.table){
+      
+  //     getOrder(function(arrTable) {
+  //       var arrTable = localStorage.table;
+  //       var parent = $('[data-sortable]');
+  //       var div;
+  //         for (var i = arrTable.length - 1; i >= 0; i --) {
+  //         div = parent.find('[data-counter="' + arrTable[i] + '"]');
+  //         parent.prepend(div);
+  //       }
+  //     });
+  //   }
+
+  //   $('[data-sortable]').on( "sortstop", function( event, ui ) {
+  //     var div = $('[data-sortable]').children();
+  //     var arr = [];
+  //     for (var i = 0; i < div.length; i ++) {
+  //       arr.push($(div[i]).data('counter'));
+  //     }
+  //     saveOrder(arr);
+  //   });
+
+  //   function getOrder(callback) {
+      
+  //     // var arrTable = localStorage.table;
+  //     // callback(arrTable);
+      
+  //     $.ajax({
+  //       url: 'data/getOrder.json',
   //       dataType: 'json',
-  //       autoUpload: false,
-  //       acceptFileTypes: /(\.|\/)(gif|jpe?g|png)$/i,
-  //       maxFileSize: 999000,
-  //       // Enable image resizing, except for Android and Opera,
-  //       // which actually support image resizing, but fail to
-  //       // send Blob objects via XHR requests:
-  //       disableImageResize: /Android(?!.*Chrome)|Opera/
-  //           .test(window.navigator.userAgent),
-  //       previewMaxWidth: 100,
-  //       previewMaxHeight: 100,
-  //       previewCrop: true
-  //   }).on('fileuploadadd', function (e, data) {
-  //       data.context = $('<div/>').appendTo('.file');
-  //       $.each(data.files, function (index, file) {
-  //           var node = $('<p/>')
-  //                   .append($('<span/>').text(file.name));
-  //           if (!index) {
-  //               node
-  //                   .append('<br>')
-  //                   .append(uploadButton.clone(true).data(data));
-  //           }
-  //           node.appendTo(data.context);
-  //       });
-  //   }).on('fileuploadprocessalways', function (e, data) {
-  //       var index = data.index,
-  //           file = data.files[index],
-  //           node = $(data.context.children()[index]);
-  //       if (file.preview) {
-  //           node
-  //               .prepend('<br>')
-  //               .prepend(file.preview);
+  //       method: "GET",
+  //       beforeSend: function(){
+  //         // loading.appendTo();
+  //       },
+  //       success: function(data){
+  //         // if (data.result === 0) {
+  //         //   that.fadeOut(800,function(){
+  //         //     that.remove();
+  //         //   });
+  //         // }
+  //         callback(data);
+  //       },
+  //       error: function(){
+  //         // alert('Please try again');
   //       }
-  //       if (file.error) {
-  //           node
-  //               .append('<br>')
-  //               .append($('<span class="text-danger"/>').text(file.error));
+  //    });
+  //   }
+
+  //   function saveOrder(data) {
+  //    //localStorage.table = data;
+
+  //     $.ajax({
+  //       url: 'data/saveOrder.json',
+  //       dataType: 'json',
+  //       method: "POST",
+  //       data: { order : data },
+  //       beforeSend: function(){
+  //         // loading.appendTo();
+  //       },
+  //       success: function(data){
+  //         // if (data.result === 0) {
+  //         //   that.fadeOut(800,function(){
+  //         //     that.remove();
+  //         //   });
+  //         // }
+  //       },
+  //       error: function(){
+  //         // alert('Please try again');
   //       }
-  //       if (index + 1 === data.files.length) {
-  //           data.context.find('button')
-  //               .text('Upload')
-  //               .prop('disabled', !!data.files.error);
-  //       }
-  //   }).on('fileuploadprogressall', function (e, data) {
-  //       var progress = parseInt(data.loaded / data.total * 100, 10);
-  //       $('.progress .progress-bar').css(
-  //           'width',
-  //           progress + '%'
-  //       );
-  //   }).on('fileuploaddone', function (e, data) {
-  //       $.each(data.result.files, function (index, file) {
-  //           if (file.url) {
-  //               var link = $('<a>')
-  //                   .attr('target', '_blank')
-  //                   .prop('href', file.url);
-  //               $(data.context.children()[index])
-  //                   .wrap(link);
-  //           } else if (file.error) {
-  //               var error = $('<span class="text-danger"/>').text(file.error);
-  //               $(data.context.children()[index])
-  //                   .append('<br>')
-  //                   .append(error);
-  //           }
-  //       });
-  //   }).on('fileuploadfail', function (e, data) {
-  //       $.each(data.files, function (index) {
-  //           var error = $('<span class="text-danger"/>').text('File upload failed.');
-  //           $(data.context.children()[index])
-  //               .append('<br>')
-  //               .append(error);
-  //       });
-  //   }).prop('disabled', !$.support.fileInput)
-  //       .parent().addClass($.support.fileInput ? undefined : 'disabled');
+  //    });
+  //   }
   // }
-  // }
+  function historyBackWFallback(fallbackUrl) {
+    //fallbackUrl = fallbackUrl || '/';
+    //var prevPage = window.location.href;
+
+    //window.history.go(-1);
+
+    //setTimeout(function(){ if (window.location.href == prevPage) window.location.href = fallbackUrl; }, 500);
+  }
+  
   return {
     publicVar: 1,
     publicObj: {
@@ -1821,7 +1625,8 @@ var Site = (function($, window, undefined) {
     loadingImg: loadingImg,
     changeDom: changeDom,
     scrollPane: scrollPane,
-    publicMethod1: privateMethod1
+    publicMethod1: privateMethod1,
+    historyBackWFallback: historyBackWFallback
   };
 
 })(jQuery, window);
@@ -1835,6 +1640,7 @@ jQuery(function() {
   Site.loadingImg();
   Site.deleteInvitation();
   Site.deleteImg();
+  Site.historyBackWFallback();
 });
 (function (window, App) {
 
@@ -4324,10 +4130,13 @@ window.onGooglClientApiLoadedHandler = function() {
     //delayTime = delayTime < 0 ? 0 : delayTime;
 
     effectTime = Number(effectTime);
-    effectTime = effectTime < 1 ? 1 : effectTime;
+    effectTime = effectTime < 3 ? 3 : effectTime;
     
     nextTime = Number(nextTime);
-    nextTime = nextTime < 0 ? 0 : nextTime;
+    nextTime = nextTime < 5 ? 5 : nextTime;
+
+    this.effectSetting.find('input[name="time"]').val(effectTime);
+    this.effectSetting.find('input[name="next"]').val(nextTime);
 
     var frameData = this.arrFrame[this.curFrameIndex];
     var prevData = this.curFrameIndex <= 0 ? null : this.arrFrame[this.curFrameIndex - 1];
@@ -4369,8 +4178,8 @@ window.onGooglClientApiLoadedHandler = function() {
     //hide effect setting when preview and save selection
     this.effectSetting.hide();
 
-    var timeoutId = setTimeout(function() {
-      clearTimeout(timeoutId);
+    this.effectTimeoutId = setTimeout(function() {
+      clearTimeout(that.effectTimeoutId);
       that.effectSetting.show();
     }, (delayTime + effectTime) * 1000);
   };
@@ -5169,6 +4978,7 @@ window.onGooglClientApiLoadedHandler = function() {
     this.bitmapContainer.visible = false;
     this.bgContainer.visible = false;
     
+    clearTimeout(this.effectTimeoutId);
     this.effectSetting.hide();
     this.mediaSetting.hide();
 
@@ -5413,8 +5223,8 @@ function FrameData() {
 };
 
 FrameData.prototype.getDuration = function() {
-  var textTime = this.textEffectDelay + this.textEffectDuration + this.textNextTime;
-  var bitmapTime = this.bitmapEffectDelay + this.bitmapEffectDuration + this.bitmapNextTime;
+  var textTime = this.textEffectDuration + this.textNextTime;
+  var bitmapTime = this.bitmapEffectDuration + this.bitmapNextTime;
 
   return Math.max(textTime, bitmapTime);
 }
@@ -7359,6 +7169,7 @@ PreviewVC.prototype.setData = function(arrBG, arrAudio, arrFrame, stage, width, 
   
   //duration
   var frameData;
+  this.duration = 0;
   for (var i = 0; i < this.arrFrame.length; i ++) {
     frameData = this.arrFrame[i];
     this.duration += frameData.getDuration();

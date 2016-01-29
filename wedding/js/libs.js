@@ -37836,6 +37836,7 @@ var PhotoSwipeUI_Default =
 		if(!_overlayUIUpdated) {
 			ui.update();
 		}
+		console.log(1);
 		framework.removeClass(_controls,'pswp__ui--hidden');
 	};
 
