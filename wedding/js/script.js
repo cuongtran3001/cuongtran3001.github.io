@@ -3840,6 +3840,7 @@ window.onGooglClientApiLoadedHandler = function() {
     var itemUrl = $(item).data('item-url');
 
     //background data
+    /*
     if (this.isBackground && type == FrameData.IMAGE) {
 
       if (this.curFrameImage) {
@@ -3881,6 +3882,7 @@ window.onGooglClientApiLoadedHandler = function() {
       
       return;
     }
+    */
 
     //frame data
     if (this.curFrameIndex < 0 || this.curFrameIndex >= this.arrFrame.length) {
@@ -3983,6 +3985,8 @@ window.onGooglClientApiLoadedHandler = function() {
         frameData.videoId = itemId;
         frameData.videoUrl = itemUrl;
 
+        frameData.duration = $(item).data('item-time');;
+
         frameData.bitmapId = null;
         frameData.bitmapUrl = null;
 
@@ -3994,6 +3998,9 @@ window.onGooglClientApiLoadedHandler = function() {
         this.curFrame.find('.icon-effect').hide();
 
         this.loadFrameVideo(frameData.videoUrl);
+
+        this.updateTime();
+        this.updateScroll();
       }
     }
   };
@@ -5219,7 +5226,7 @@ function FrameData() {
 
   //time data
   this.delayTime = 5;
-  this.duration = 5;
+  this.duration = 0;
 
   this.type = null;
 
@@ -5231,10 +5238,17 @@ function FrameData() {
 };
 
 FrameData.prototype.getDuration = function() {
-  var textTime = this.textEffectDuration + this.textNextTime;
-  var bitmapTime = this.bitmapEffectDuration + this.bitmapNextTime;
 
-  return Math.max(textTime, bitmapTime);
+  var textTime = this.textEffectDuration + this.textNextTime;
+  var compareTime = 0;
+
+  if (this.type == FrameData.IMAGE) {
+    compareTime = this.bitmapEffectDuration + this.bitmapNextTime;
+  } else {
+    compareTime = this.duration;
+  } 
+
+  return Math.max(textTime, compareTime);
 }
 
 //bug: when duplicate frame, the getDuration is not cloned
