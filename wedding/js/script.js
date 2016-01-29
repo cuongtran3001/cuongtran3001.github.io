@@ -2673,7 +2673,11 @@ window.onGooglClientApiLoadedHandler = function() {
       $(document.body).off("mousemove");
       $(document.body).off("mouseup");
 
-      that.updateBackgroundAudio();
+      if (!that.isAudio) {
+        that.updateTime();
+      } else {
+        that.updateBackgroundAudio();
+      } 
       that.updateScroll();
 
       that.seekMedia((that.mediaSetting.find('.timeline').offset().left - left) * duration / width);
@@ -3985,7 +3989,8 @@ window.onGooglClientApiLoadedHandler = function() {
         frameData.videoId = itemId;
         frameData.videoUrl = itemUrl;
 
-        frameData.duration = $(item).data('item-time');;
+        frameData.videoStart = 0;
+        frameData.duration = frameData.videoEnd = $(item).data('item-time');;
 
         frameData.bitmapId = null;
         frameData.bitmapUrl = null;
@@ -4343,24 +4348,24 @@ window.onGooglClientApiLoadedHandler = function() {
       }
     } 
 
-    /* 
     else {
       var frameData = this.arrFrame[this.curFrameIndex];
       if (isStart) {
         if (this.audioInstance) {
-          frameData.audioStart = position;
+          //frameData.audioStart = position;
         } else {
           frameData.videoStart = position;
+          frameData.duration = frameData.videoEnd - frameData.videoStart;
         }  
       } else {
         if (this.audioInstance) {
-          frameData.audioEnd = position;
+          //frameData.audioEnd = position;
         } else {
           frameData.videoEnd = position;
+          frameData.duration = frameData.videoEnd - frameData.videoStart;
         }
       }
     }
-    */
   };
 
   VideoClip.prototype.updateMedia = function(position) {
@@ -4387,27 +4392,23 @@ window.onGooglClientApiLoadedHandler = function() {
       return;
     }
 
-    /*
     //frame data audio
     if (this.curFrameIndex < 0 || this.curFrameIndex >= this.arrFrame.length) {
       return;
     }
     var frameData = this.arrFrame[this.curFrameIndex];
 
-    if (this.audioInstance) {
-      frameData.audioStart = startTime;
+    //if (this.audioInstance) {
+    //  frameData.audioStart = startTime;
+    //  this.audioInstance.position = startTime * 1000;
+    //  this.audioInstance.play();
+    //}
 
-      this.audioInstance.position = startTime * 1000;
-      this.audioInstance.play();
-    }
-
-    else {
+    if (this.videoInstance) {
       frameData.videoStart = startTime;
-
       this.videoInstance.currentTime = startTime;
       this.videoInstance.play();
     }
-    */
   };
 
   VideoClip.prototype.endMedia = function() {
@@ -4912,6 +4913,8 @@ window.onGooglClientApiLoadedHandler = function() {
 
     $('#video').off('timeupdate').on('timeupdate', function(evt) {
       that.updateMedia(that.videoInstance.currentTime);
+
+      //console.log(that.videoInstance.currentTime, frameData.videoEnd);
 
       if (frameData.videoEnd != -1 && that.videoInstance.currentTime >= frameData.videoEnd) {
         that.mediaSetting.find('.play-pause').find('span').removeClass('fa-pause').addClass('fa-play');
