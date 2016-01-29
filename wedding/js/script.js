@@ -2674,6 +2674,7 @@ window.onGooglClientApiLoadedHandler = function() {
       $(document.body).off("mouseup");
 
       that.updateBackgroundAudio();
+      that.updateScroll();
 
       that.seekMedia((that.mediaSetting.find('.timeline').offset().left - left) * duration / width);
     });
@@ -2815,7 +2816,6 @@ window.onGooglClientApiLoadedHandler = function() {
     var box =  $(strBG);
 
     var listbox  =$('.vc-backgrounds').find('.list-box');
-    var newWidth = (listbox.find('.box').length + 2) * (listbox.find('.box').outerWidth(true));
     listbox.append(box);
 
     /*
@@ -3020,7 +3020,6 @@ window.onGooglClientApiLoadedHandler = function() {
 
     var box = $(strAudio);
     var listbox = $('.vc-audios').find('.list-box')
-    var newWidth = (listbox.find('.box').length + 2) * (listbox.find('.box').outerWidth(true));
     listbox.append(box);
 
     this.updateBackgroundAudio();
@@ -3216,6 +3215,8 @@ window.onGooglClientApiLoadedHandler = function() {
 
     item.off();
     item.remove();
+
+    this.updateScroll();
   };
 
   VideoClip.prototype.activeBackground = function(item, type) {
@@ -3430,9 +3431,6 @@ window.onGooglClientApiLoadedHandler = function() {
     var frame =  $(strFrame);
     listframe.append(frame);
 
-    var frameWidth = frame.outerWidth(true);
-    var newWidth = (listframe.find('.frame').length + 1) * frameWidth + frameWidth/2;
-
     //update time
     var totalTime = EffectUtils.getTimeByFrame(this.arrFrame, this.arrFrame.length - 1);
     
@@ -3441,8 +3439,7 @@ window.onGooglClientApiLoadedHandler = function() {
     
     var timelap = $('.timelap').find('ul');
     timelap.append($(strTime));
-    //$('.timelap').css({width: newWidth + 'px'});
-
+  
     this.updateTime();
     this.updateBackgroundAudio();
     this.updateScroll();
@@ -3767,13 +3764,24 @@ window.onGooglClientApiLoadedHandler = function() {
 
   VideoClip.prototype.updateScroll = function() {
     
-    var frameWidth = $('.list-frame').find('.frame').outerWidth(true);
-    var newWidth = ($('.list-frame').find('.frame').length + 1) * frameWidth + frameWidth / 2;
+    var frameTime = 0;
+    for (var i =  0; i < this.arrFrame.length; i ++) {
+      frameTime += this.arrFrame[i].getDuration();
+    }
 
-    newWidth = Math.max($('.tfooter').width() - (97 - 20 - 2), newWidth);
+    var audioTime = 0;
+    for (var i =  0; i < this.arrBGAudio.length; i ++) {
+      audioTime += this.arrBGAudio[i].getTime();
+    }
+
+    var frameWidth = 20 + frameTime * 15 + $('.vc-frames').find('.add-more-effect').outerWidth(true) + 65;
+    var audioWidth = 20 + audioTime * 15 + $('.vc-audios').find('.add-more').outerWidth(true) + 65;
+ 
+    var newWidth = Math.max($('.tfooter').width() - (97 - 20 - 2), frameWidth);
     
     $('.timelap').css({width: newWidth + 'px'});
 
+    newWidth = Math.max(newWidth, audioWidth);
 
     var wrapList = $('.list-frame').closest('.add-function-block .wrap-list');
 
@@ -3819,7 +3827,6 @@ window.onGooglClientApiLoadedHandler = function() {
       frameTime = this.arrFrame[i].getDuration();
       $(listFrame[i]).css('width', frameTime * 15);
     }
-
   };
 
   VideoClip.prototype.selectFrameData = function(item, type) {
@@ -4133,7 +4140,7 @@ window.onGooglClientApiLoadedHandler = function() {
     effectTime = effectTime < 3 ? 3 : effectTime;
     
     nextTime = Number(nextTime);
-    nextTime = nextTime < 5 ? 5 : nextTime;
+    nextTime = nextTime < 3 ? 3 : nextTime;
 
     this.effectSetting.find('input[name="time"]').val(effectTime);
     this.effectSetting.find('input[name="next"]').val(nextTime);
@@ -4253,6 +4260,7 @@ window.onGooglClientApiLoadedHandler = function() {
     this.curBGAudio.find('.time').html(audioData.end == -1 ? EffectUtils.formatTime(audioData.time) : EffectUtils.formatTime(audioData.end - audioData.start));
 
     this.updateBackgroundAudio();
+    this.updateScroll();
 
     /*
     //select audio for frame
@@ -5186,7 +5194,7 @@ function FrameData() {
   this.textEffectClass = 'TEffect_Fade';
   this.textEffectDelay = 0;
   this.textEffectDuration = 3;
-  this.textNextTime = 0;
+  this.textNextTime = 5;
 
   //image data
   this.bitmapId = null;
