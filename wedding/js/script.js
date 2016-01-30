@@ -2621,14 +2621,19 @@ window.onGooglClientApiLoadedHandler = function() {
     var that = this;
     target = $(target);
 
-    var left = that.mediaSetting.find('.time').offset().left;
-    var width = that.mediaSetting.find('.time').width();
-    var duration = that.mediaSetting.find('.time').data('duration');
+    var time = that.mediaSetting.find('.time');
+    var left = time.offset().left;
+    var width = time.width();
+    var duration = time.data('duration');
+    var start = time.data('start');
+    var end = time.data('end');
 
     $(document.body).off("mousemove").on("mousemove", function(evt) {
       if (!target) {
         return;
       }
+
+      //console.log(start, end);
     
       var toX = evt.pageX - 10;
 
@@ -2636,7 +2641,11 @@ window.onGooglClientApiLoadedHandler = function() {
         var timeEnd = that.mediaSetting.find('.time-end').offset().left;
   
         toX = toX < left - 10 ? left - 10: toX;
-        toX = (toX > timeEnd) ? timeEnd : toX;
+
+        //5s min from time-end
+        var maxRight = left + (end - 8) * width / duration - 10;
+        
+        toX = (toX > maxRight) ? maxRight : toX;
 
         target.offset({left: toX});
         
@@ -2646,13 +2655,18 @@ window.onGooglClientApiLoadedHandler = function() {
         var ts = (that.mediaSetting.find('.timeline').offset().left - left) * duration / width;
         target.find('.text').html(EffectUtils.formatTime(ts));
 
-        that.updateAudioData(true, ts);
-
+        that.updateMediaData(true, ts);
+        
+        that.mediaSetting.find('.time').data('start', ts);
+    
       } else {
         
         var timeStart = that.mediaSetting.find('.time-start').offset().left;
 
-        toX = (toX < timeStart) ? timeStart : toX;
+        //5s min from time-start
+        var minLeft = left + (start + 8) * width / duration - 10;
+        toX = (toX < minLeft) ? minLeft : toX;
+
         toX = (toX > left + width - 10) ? left + width - 10 : toX;
 
         target.offset({left: toX});
@@ -2662,7 +2676,9 @@ window.onGooglClientApiLoadedHandler = function() {
         var te = (that.mediaSetting.find('.timeline').offset().left + that.mediaSetting.find('.timeline').width() - left) * duration / width;
         target.find('.text').html(EffectUtils.formatTime(te));
 
-        that.updateAudioData(false, te);
+        that.updateMediaData(false, te);
+
+        that.mediaSetting.find('.time').data('end', te);
       }
     });
 
@@ -4337,7 +4353,7 @@ window.onGooglClientApiLoadedHandler = function() {
     }
   };
 
-  VideoClip.prototype.updateAudioData = function(isStart, position) {
+  VideoClip.prototype.updateMediaData = function(isStart, position) {
     if (this.isAudio) {
       var audioData = this.arrBGAudio[this.curBGAudioIndex];
 
@@ -4823,32 +4839,9 @@ window.onGooglClientApiLoadedHandler = function() {
       
       that.audioInstance = createjs.Sound.createInstance(id);
 
-      that.saveMediaMetaData(0, that.audioInstance.duration / 1000);
+      that.saveMediaMetaData(0, audioData.start, audioData.end, that.audioInstance.duration / 1000);
 
-      var left = that.mediaSetting.find('.time').offset().left;
-      var controlWidth = that.mediaSetting.find('.time').width();
-      var duration = that.audioInstance.duration / 1000;
-      var toLeft = left + audioData.start * controlWidth / duration - 10;
-      
-      //time-start
-      that.mediaSetting.find('.time-start').offset({left: toLeft});
-
-      //time-end
-      var toRight = left + controlWidth - 10;
-
-      if (audioData.end != -1) {
-        toRight = left + audioData.end * controlWidth / duration - 10;
-      }
-      that.mediaSetting.find('.time-end').offset({left: toRight});
-
-      //timeline
-      that.mediaSetting.find('.timeline').offset({left: toLeft + 10});
-      that.mediaSetting.find('.timeline').width(toRight - toLeft);
-
-      that.mediaSetting.find('.play-pause').find('span').removeClass('fa-play').addClass('fa-pause');
-      //that.mediaSetting.find('.time').data('duration', audioData.getTime());
-      that.mediaSetting.find('.time-start .text').html(EffectUtils.formatTime(audioData.start));
-      that.mediaSetting.find('.time-end .text').html(EffectUtils.formatTime(audioData.end));
+      that.initMediaSetting(audioData.start, audioData.end, that.audioInstance.duration / 1000);
       
       that.audioInstance.position = audioData.start * 1000;
       that.audioInstance.play();
@@ -4893,19 +4886,21 @@ window.onGooglClientApiLoadedHandler = function() {
   VideoClip.prototype.loadFrameVideo = function(url) {
     var that = this;
 
-    this.loading.show();
-
     $('#video').attr('src', url);
     this.videoInstance.play();
 
-    this.mediaSetting.show();
-    that.mediaSetting.find('.play-pause').find('span').removeClass('fa-play').addClass('fa-pause');
-
+    this.loading.show();
+    this.mediaSetting.hide();
+    
     var frameData = this.arrFrame[this.curFrameIndex];
 
     $('#video').off('loadedmetadata').on('loadedmetadata', function(evt) {
       that.loading.hide();
-      that.saveMediaMetaData(0, that.videoInstance.duration);
+      that.mediaSetting.show();
+
+      that.saveMediaMetaData(0, frameData.videoStart, frameData.videoEnd, that.videoInstance.duration);
+
+      that.initMediaSetting(frameData.videoStart, frameData.videoEnd, that.videoInstance.duration);
 
       that.videoInstance.currentTime = frameData.videoStart;
       that.videoInstance.play();
@@ -4913,8 +4908,6 @@ window.onGooglClientApiLoadedHandler = function() {
 
     $('#video').off('timeupdate').on('timeupdate', function(evt) {
       that.updateMedia(that.videoInstance.currentTime);
-
-      //console.log(that.videoInstance.currentTime, frameData.videoEnd);
 
       if (frameData.videoEnd != -1 && that.videoInstance.currentTime >= frameData.videoEnd) {
         that.mediaSetting.find('.play-pause').find('span').removeClass('fa-pause').addClass('fa-play');
@@ -4928,21 +4921,50 @@ window.onGooglClientApiLoadedHandler = function() {
     }); 
   };
 
-  VideoClip.prototype.saveMediaMetaData = function(position, duration) {
+  VideoClip.prototype.initMediaSetting = function(start, end, duration) {
+    var left = this.mediaSetting.find('.time').offset().left;
+    var controlWidth = this.mediaSetting.find('.time').width();
+    var toLeft = left + start * controlWidth / duration - 10;
+    
+    //time-start
+    this.mediaSetting.find('.time-start').offset({left: toLeft});
+
+    //time-end
+    var toRight = left + controlWidth - 10;
+
+    if (end != -1) {
+      toRight = left + end * controlWidth / duration - 10;
+    }
+    this.mediaSetting.find('.time-end').offset({left: toRight});
+
+    //timeline
+    this.mediaSetting.find('.timeline').offset({left: toLeft + 10});
+    this.mediaSetting.find('.timeline').width(toRight - toLeft);
+
+    this.mediaSetting.find('.play-pause').find('span').removeClass('fa-play').addClass('fa-pause');
+    this.mediaSetting.find('.time-start .text').html(EffectUtils.formatTime(start));
+    this.mediaSetting.find('.time-end .text').html(EffectUtils.formatTime(end));      
+  };
+
+  VideoClip.prototype.saveMediaMetaData = function(position, start, end, duration) {
 
     this.mediaSetting.find('.position').html(EffectUtils.formatTime(position));
     this.mediaSetting.find('.duration').html(EffectUtils.formatTime(duration));
 
-    var left = this.mediaSetting.find('.time').offset().left;
-    var width = this.mediaSetting.find('.time').width();
+    var time = this.mediaSetting.find('.time');
+    //var left = time.offset().left;
+    //var width = time.width();
 
-    this.mediaSetting.find('.time').data('duration', duration);
-    this.mediaSetting.find('.timeline').offset({left: left});
-    this.mediaSetting.find('.timeline').width(width);
-    this.mediaSetting.find('.time-start').offset({left: left - 10});
-    this.mediaSetting.find('.time-end').offset({left: left + width - 10});
-    this.mediaSetting.find('.time-start .text').html(EffectUtils.formatTime(position));
-    this.mediaSetting.find('.time-end .text').html(EffectUtils.formatTime(duration));
+    time.data('start', start);
+    time.data('end', end);
+    time.data('duration', duration);
+
+    //this.mediaSetting.find('.timeline').offset({left: left});
+    //this.mediaSetting.find('.timeline').width(width);
+    //this.mediaSetting.find('.time-start').offset({left: left - 10});
+    //this.mediaSetting.find('.time-end').offset({left: left + width - 10});
+    this.mediaSetting.find('.time-start .text').html(EffectUtils.formatTime(start));
+    this.mediaSetting.find('.time-end .text').html(EffectUtils.formatTime(end));
   };
 
   VideoClip.prototype.toJSON = function() {
