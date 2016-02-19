@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>SM - HTML5 - Henkel</title>
+  <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body onload="init()">
+  <div id="banner">
+    <div id="bg" class="layer"></div>
+    <div id="squirts-1" class="layer"></div>
+    <div id="bgd-lemons" class="layer-visible"></div>
+    <div id="lemons-group-1" class="layer-visible">
+      <div class="lemons-group-1" id="group-1">
+      </div>
+    </div>
+    <div id="bottle-1" class="layer"></div>
+    <div id="text-F1" class="layer"></div>
+    <img id="ico-hand" src="images/ico-hand.png" alt="">
+    <div id="bgd-F4" class="layer"></div>
+    <div id="text-F4-1" class="layer"></div>
+    <div id="text-F4-2" class="layer"></div>
+    <div id="text-F4-3" class="layer"></div>
+    <div id="bgd-F5" class="layer-visible"></div>
+    <div id="text-F5" class="layer"></div>
+    <div id="logo" class="layer"></div>
+    <div id="bottle-2-shadow" class="layer"></div>
+    <div id="bottle-2" class="layer-visible"></div>
+    <div id="squirts-2" class="layer-visible"></div>
+    <div id="cta" class="layer"></div>
+    <a id="click-tag" class="layer" href="javascript:window.open(window.clickTag)" style="display:inline-block;"></a>
+    <a id="btn-replay" href="javascript:" onclick="restart();"></a>
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/latest/TweenMax.min.js"></script>
+  <script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+  <script type="text/javascript">
+    var clickTag = "http://www.google.com";
+    var isCreated = false;
+    var bannerTween = new TimelineLite();
+    var myFun;
+    var bg = document.getElementById('bg'),
+        bottle_1 = document.getElementById('bottle-1'),
+        text_F1 = document.getElementById('text-F1'),
+        ico_hand = document.getElementById('ico-hand'),
+        squirts_1 = document.getElementById('squirts-1'),
+        bgd_F4 = document.getElementById('bgd-F4'),
+        bgd_lemons = document.getElementById('bgd-lemons'),
+        text_F4_1 = document.getElementById('text-F4-1'),
+        text_F4_2 = document.getElementById('text-F4-2'),
+        text_F4_3 = document.getElementById('text-F4-3'),
+        bgd_F5 = document.getElementById('bgd-F5'),
+        text_F5 = document.getElementById('text-F5'),
+        cta = document.getElementById('cta'),
+        bottle_2 = document.getElementById('bottle-2'),
+        logo = document.getElementById('logo'),
+        bottle_2_shadow = document.getElementById('bottle-2-shadow'),
+        squirts_2 = document.getElementById('squirts-2')
+        btn_replay = document.getElementById('btn-replay');
+    function init() {
+      bannerTween.to(bg, 0.8, {autoAlpha: 1});
+      bannerTween.to(bottle_1, 0.1, {autoAlpha: 1, scale: 1});
+      bannerTween.to(text_F1, 0.5, {autoAlpha: 1});
+      bannerTween.to(ico_hand, 0.5, {autoAlpha: 1},'-=0.4');
+      myFun = setTimeout(autoPlay, 2000);
+    }
+    function randomLemon() {
+      var width = 20;
+      var height = 20;
+      var row = 20;
+      var col = 20;
+      var img;
+      var group = document.getElementById('group-1');
+      group.style.display = 'block';
+      var duration = 0.3;
+      for (var i = 0; i < row; i ++) {
+        for (var j = 0; j < col; j ++) {
+          var delay = Math.random();
+          var params = {top: -150, delay: delay};
+          if (!isCreated) {
+            img = document.createElement('img');
+          } else {
+            img = document.getElementById('lemon_' + i + '_' + j);
+          }
+          img.setAttribute('id', 'lemon_' + i + '_' + j);
+          img.style.top = Math.floor(Math.random()*250)-20 + 'px';
+          img.style.left = Math.floor(Math.random()*300)-20 +'px';
+          img.className = 'img-lemons';
+          var rotate = Math.random() * 100 - 5;
+          var scale = 1;
+          var x = Math.random();
+          if ( x > 0.85){
+            scale = x;
+          }
+          img.style.transform = 'rotate('+rotate+'deg)' + 'scale('+scale+')';
+          img.src = 'images/lemon-slice-' + (Math.floor(Math.random() * 3)) + '.png';
+          group.appendChild(img);
+
+          TweenLite.from(img, duration, params);
+        }
+      }
+      isCreated = true;
+      bannerTween.to(bottle_1, 0.3, {scaleX: 1, delay: 1.5})
+                  .to(squirts_1, 0.1, {autoAlpha: 0},'-=0.5')
+                  .to(bottle_1, 0.1, {autoAlpha: 0},'-=0.1')
+                  .to(text_F4_1, 0.3, {autoAlpha: 1, left: 0, ease: Back.easeOut.config(1), y: 0})
+                  .to(text_F4_2, 0.3, {autoAlpha: 1, scale: 1, ease: Back.easeOut.config(1), y: 0})
+                  .to(text_F4_3, 0.3, {autoAlpha: 1, left: 0, ease: Back.easeOut.config(1), y: 0});
+      bannerTween.to(bgd_F5, 0.1, {top: 0},'+=2')
+                    .to(text_F5, 0.3, {autoAlpha: 1, left: 0, ease: Back.easeOut.config(1), y: 0})
+                    .to(cta, 0.3, {autoAlpha: 1, top: 0})
+                    .to(bottle_2, 0.3, {top: 0})
+                    .to(bottle_2_shadow, 0.1, {autoAlpha: 1})
+                    .to(squirts_2, 0.5, {autoAlpha:1})
+                    .to(logo, 0.3, {autoAlpha: 1})
+                    .to(btn_replay, 0.3, {autoAlpha: 1, rotation: 180});
+    }
+    function restart() {
+      var group = document.getElementById('group-1');
+      group.style.display = 'none';
+      bannerTween.restart().stop();
+      setTimeout(function() {
+        bannerTween = new TimelineLite();
+        init();
+        $('#banner').on('mousemove',function(event) {
+          clearTimeout(myFun);
+          setIconPos($(this));
+        });
+      }, 500);
+    }
+    $('#banner').on('mousemove',function(event) {
+      clearTimeout(myFun);
+      setIconPos($(this));
+    });
+    function setIconPos(element) {
+      $(element).find('#click-tag').css('cursor', 'none');
+      var offset = $(element).offset();
+      var relativeX = (event.pageX - offset.left);
+      var relativeY = (event.pageY - offset.top);
+      $("#ico-hand").css({'top': relativeY , 'left': relativeX});
+      console.log('top:'+ relativeY + 'left:'+ relativeX);
+      if((165<=relativeY && relativeY<=220)&&(110<=relativeX && relativeX<=185)){
+        $('#banner').off('mousemove');
+        $("#ico-hand").css({'top': 196 , 'left': 220});
+        $(element).find('#click-tag').css('cursor', 'pointer');
+        playNext();
+        return;
+      }
+    }
+    function autoPlay() {
+      clearTimeout(myFun);
+      $('#banner').off('mousemove');
+      bannerTween.to(ico_hand, 0.3, {left: 180});
+      playNext();
+    }
+    function playNext() {
+      bannerTween.to(ico_hand, 0.3, {rotation: 20});
+      bannerTween.to(ico_hand, 0.3, {autoAlpha: 0},'-=0.3');
+      bannerTween.to(bottle_1, 0.3, {scaleX: 0.9},'-=0.3');
+      bannerTween.to(squirts_1, 0.2, {autoAlpha: 1, top: 0},'-=0.2');
+      bannerTween.to(text_F1, 0.5, {autoAlpha: 0, top: -20},'-=0.2');
+      bannerTween.to(bottle_1, 0.3, {scaleX: 0.9, onComplete: randomLemon});
+    }
+  </script>
+</body>
+</html>

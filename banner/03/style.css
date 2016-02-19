@@ -1,0 +1,122 @@
+body {
+  margin: 0;
+  padding: 0;
+  background: #ffffee;
+}
+img {
+  vertical-align: middle;
+}
+a {
+  border: none;
+}
+#banner {
+  position: relative;
+  overflow: hidden;
+  width: 298px;
+  height: 248px;
+  border: 1px solid #000000;
+  background: white;
+}
+.layer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 300px;
+  height: 250px;
+  visibility: hidden;
+  opacity: 0;
+}
+.layer-visible {
+  position: absolute;
+  width: 300px;
+  height: 250px;
+}
+.img-lemons{
+  position: absolute;
+}
+#lemons-group-1{
+  top: 0;
+  left: 0;
+}
+.lemons-group-1 {
+  position: relative;
+  top: 0;
+  left: 0;
+  width: 300px;
+  height: 250px;
+}
+#ico-hand {
+  position: absolute;
+  top: 196px;
+  left: 220px;
+  visibility: hidden;
+  opacity: 0;
+}
+#bg {
+  background: url(images/bgd.jpg) no-repeat;
+}
+#bottle-1 {
+  background: url(images/bottle-1.png) no-repeat;
+  transform: scale(1.5);
+}
+#text-F1 {
+  background: url(images/text-F1.png) no-repeat;
+}
+#text-F4-1 {
+  background: url(images/text-F4-1.png) no-repeat;
+  left: -300px;
+}
+#text-F4-2 {
+  background: url(images/text-F4-2.png) no-repeat;
+  transform: scale(1.5);
+}
+#text-F4-3 {
+  background: url(images/text-F4-3.png) no-repeat;
+  left: -300px;
+}
+#text-F5 {
+  background: url(images/text-F5.png) no-repeat;
+  left: -100px;
+}
+#squirts-1 {
+  background: url(images/squirts-1.png) no-repeat;
+  top: 130px;
+}
+#squirts-2 {
+  background: url(images/squirts-2.png) no-repeat;
+  top: 0;
+  opacity: 0;
+}
+#bgd-F5 {
+  top: 250px;
+  background: url(images/bgd-F5.jpg) no-repeat;
+}
+#bottle-2 {
+  background: url(images/bottle-2.png) no-repeat;
+  top: -250px;
+}
+#cta {
+  background: url(images/cta.png) no-repeat;
+  top: 50px;
+}
+#logo {
+  background: url(images/logo.png) no-repeat;
+}
+#bottle-2-shadow {
+  background: url(images/bottle-2-shadow.png) no-repeat;
+}
+#btn-replay {
+  position: absolute;
+  bottom: 5px;
+  left: 5px;
+  background: url(images/btn-replay.png) no-repeat;
+  background-size: 100%;
+  width: 13px;
+  height: 14px;
+  visibility: hidden;
+  opacity: 0;
+}
+#click-tag {
+  visibility: visible;
+  opacity: 1
+}
