@@ -139,11 +139,21 @@
 			onMoveHandler(touch.clientX, touch.clientY);			
 		};
 		
+		cube.addEventListener('touchend', function (evt) {
+			var touch = evt.changedTouches[0];	
+			onClickCubeHandler(touch.clientX, touch.clientY);
+			evt.preventDefault();
+		}, false);
+		
 		cube.addEventListener('click', function (evt) {
-			if (currentPoint.x == evt.clientX && currentPoint.y == evt.clientY) {
+			onClickCubeHandler(evt.clientX, evt.clientY);
+		}, false);
+		
+		function onClickCubeHandler(x,y) {
+			if (currentPoint.x == x && currentPoint.y == y) {
 				window.open('http://www.google.com', '_blank');
 			}
-		}, false);
+		};
 
 		window.addEventListener('mouseup', onMouseUpHandler, false);
 		function onMouseUpHandler(evt) {
