@@ -86,7 +86,7 @@
     <script>
 		  var faces = document.querySelectorAll('.face'), nunOfFace = 6, width = 300, height = 250, styles = [], isDrag = false, isVertical = false, currentPoint, currentAngle, upAngle, perspective = 'perspective(1000px) ';
 	
-		function onMouseMoveHandler(x, y) {
+		function onMoveHandler(x, y) {
 			var nextPoint = {
 				'x': x - currentPoint.x,
 				'y': y - currentPoint.y
@@ -112,11 +112,14 @@
 			
 			var touch = evt.targetTouches[0];			
 			onMouseDownOrTouchStart(touch.clientX, touch.clientY);
+			window.addEventListener('touchmove', onTouchMoveHandler, false);
+			
 		}, false);
 			
 		cube.addEventListener('mousedown', function (evt) {
 			evt.preventDefault();
 			onMouseDownOrTouchStart(evt.clientX, evt.clientY);
+			window.addEventListener('mousemove', onMouseMoveHandler, false);			
 		}, false);
 		
 		function onMouseDownOrTouchStart(x, y) {
@@ -124,16 +127,16 @@
 				'x': x,
 				'y': y
 			};
-			isDrag = true;
-			
-			window.addEventListener('mousemove', function(evt) {
-				onMouseMoveHandler(evt.clientX, evt.clientY);
-			}, false);
-			
-			window.addEventListener('touchmove', function(evt) {
-				var touch = evt.targetTouches[0];			
-				onMouseMoveHandler(touch.clientX, touch.clientY);
-			}, false);
+			isDrag = true;			
+		};
+		
+		function onMouseMoveHandler(evt) {
+			onMoveHandler(evt.clientX, evt.clientY);
+		};
+		
+		function onTouchMoveHandler(evt) {
+			var touch = evt.targetTouches[0];			
+			onMoveHandler(touch.clientX, touch.clientY);			
 		};
 		
 		cube.addEventListener('click', function (evt) {
@@ -144,11 +147,13 @@
 
 		window.addEventListener('mouseup', onMouseUpHandler, false);
 		function onMouseUpHandler(evt) {
+			window.removeEventListener('mousemove', onMouseMoveHandler, false);		
 			onUpHandler();
 		}
 		
 		window.addEventListener('touchend', onTouchEndHandler, false);
 		function onTouchEndHandler(evt) {
+			window.removeEventListener('touchmove', onTouchMoveHandler, false);
 			onUpHandler();
 		}
 		
@@ -166,7 +171,6 @@
 				});
 			}
 			isDrag = false;
-			window.removeEventListener('mousemove', onMouseMoveHandler, false);
 		}
 		
 		function resetFaces() {
