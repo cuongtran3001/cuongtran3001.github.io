@@ -5,7 +5,7 @@
 
     <title>3D Cube  Cross Browser</title>
     
-        <style>
+    <style>
 		body {
 		  margin: 0;
 		  pading: 0;
@@ -39,194 +39,235 @@
 		  /*border: solid 1px;*/
 		  backface-visibility: hidden;
 		}
-
-		.front {
-		  background: rgba(255, 0, 0, 1);
-		}
-
-		.right {
-		  background: rgba(255, 255, 0, 1);
-		}
-
-		.back {
-		  background: rgba(0, 255, 0, 1);
-		}
-
-		.left {
-		  background: rgba(0, 255, 255, 1);
-		}
-
-		.top {
-		  background: rgba(0, 0, 255, 1);
-		}
-
-		.bottom {
-		  background: rgba(255, 0, 255, 1);
-		}
-
-		</style>
+	</style>
     
   </head>
 
   <body>
 
-    <input id="direction" type="checkbox">Change to vertical scroll
+    <!--input id="direction" type="checkbox">Change to vertical scroll</input-->
 
 	<div class="cube" id="banner">
-	  <div class="face front" style="margin-left: -150px; margin-top: -125px; width: 300px; height: 250px; transform: perspective(1000px) rotateY(180deg) rotateY(-90deg) rotateY(0deg) translateZ(150px);"><iframe src="http://cuongtran3001.github.io/banner/01/" width="300" height="250"></iframe><div class="clickTag"></div></div>
-	  <div class="face right" style="margin-left: -150px; margin-top: -125px; width: 300px; height: 250px; transform: perspective(1000px) rotateY(180deg) rotateY(-90deg) rotateY(90deg) translateZ(150px);"><img src="http://demo.akadigital.vn/3DCube/assets/wall1.png" width="300" height="250"></div>
-	  <div class="face back" style="margin-left: -150px; margin-top: -125px; width: 300px; height: 250px; transform: perspective(1000px) rotateY(180deg) rotateY(-90deg) rotateX(0deg) rotateY(180deg) translateZ(150px);"><img src="http://demo.akadigital.vn/3DCube/assets/wall3.png" width="300" height="250"></div>
-	  <div class="face left" style="margin-left: -150px; margin-top: -125px; width: 300px; height: 250px; transform: perspective(1000px) rotateY(180deg) rotateY(-90deg) rotateY(270deg) translateZ(150px);"><img src="http://demo.akadigital.vn/3DCube/assets/wall4.png" width="300" height="250"></div>
-	  <div class="face top" style="margin-left: -150px; margin-top: -150px; width: 300px; height: 300px; transform: perspective(1000px) rotateY(180deg) rotateY(-90deg) rotateX(90deg) translateZ(125px);"><img src="http://placehold.it/300x300" width="300" height="300"></div>
-	  <div class="face bottom" style="margin-left: -150px; margin-top: -150px; width: 300px; height: 300px; transform: perspective(1000px) rotateY(180deg) rotateY(-90deg) rotateX(-90deg) translateZ(125px);"><img src="http://placehold.it/300x300" width="300" height="300"></div>
+	  <div class="face front"><iframe src="http://cuongtran3001.github.io/banner/01/" width="300" height="250"></iframe><div class="clickTag"></div></div>
+	  <div class="face right"><img src="http://demo.akadigital.vn/3DCube/assets/wall1.png" width="300" height="250"></div>
+	  <div class="face back"><img src="http://demo.akadigital.vn/3DCube/assets/wall3.png" width="300" height="250"></div>
+	  <div class="face left"><img src="http://demo.akadigital.vn/3DCube/assets/wall4.png" width="300" height="250"></div>
+	  <div class="face top" ><img src="http://placehold.it/300x300" width="300" height="300"></div>
+	  <div class="face bottom"><img src="http://placehold.it/300x300" width="300" height="300"></div>
 	</div>
       
     <script src="http://cdnjs.cloudflare.com/ajax/libs/gsap/1.18.0/TweenMax.min.js"></script>
 
     <script>
-		  var faces = document.querySelectorAll('.face'), nunOfFace = 6, width = 300, height = 250, styles = [], isDrag = false, isVertical = false, currentPoint, currentAngle, upAngle, perspective = 'perspective(1000px) ';
-	
-		function onMoveHandler(x, y) {
-			var nextPoint = {
-				'x': x - currentPoint.x,
-				'y': y - currentPoint.y
-			};
-			var angle = {
-				'x': -nextPoint.y / 2,
-				'y': nextPoint.x / 2
-			};
-			updateFaces(isVertical ? angle.x : angle.y);
-			currentAngle = isVertical ? angle.x : angle.y;
-			var piece = currentAngle % 90;
-			if (Math.abs(piece) >= 45) {
-				upAngle = piece > 0 ? currentAngle + 90 - piece : currentAngle - 90 - piece;
-			} else {
-				upAngle = currentAngle - piece;
+		
+		function Cube(options) {
+			
+			var faces = document.querySelectorAll('.face'), 
+			nunOfFace = 6, 
+			width = 0, 
+			height = 0, 
+			styles = [], 
+			isDrag = false, 
+			isVertical = false, 
+			currentPoint, 
+			currentAngle, 
+			upAngle, 
+			clickTag = '',
+			autoRotate = 0,		
+			perspective = 'perspective(1000px) ';
+			
+			parse(options);
+			init();
+			
+			function parse(options) {
+				width = options.width;
+				height = options.height;
+				isVertical = options.vertical;
+				clickTag = options.clickTag;
+				autoRotate = options.autoRotate;
+				links = options.faces;
 			}
-		};
-
-		var cube = document.getElementById('banner');
-		
-		cube.addEventListener('touchstart', function(evt){
-			evt.preventDefault();
 			
-			var touch = evt.targetTouches[0];			
-			onMouseDownOrTouchStart(touch.clientX, touch.clientY);
-			window.addEventListener('touchmove', onTouchMoveHandler, false);
-			
-		}, false);
-			
-		cube.addEventListener('mousedown', function (evt) {
-			evt.preventDefault();
-			onMouseDownOrTouchStart(evt.clientX, evt.clientY);
-			window.addEventListener('mousemove', onMouseMoveHandler, false);			
-		}, false);
-		
-		function onMouseDownOrTouchStart(x, y) {
-			currentPoint = {
-				'x': x,
-				'y': y
-			};
-			isDrag = true;			
-		};
-		
-		function onMouseMoveHandler(evt) {
-			onMoveHandler(evt.clientX, evt.clientY);
-		};
-		
-		function onTouchMoveHandler(evt) {
-			var touch = evt.targetTouches[0];			
-			onMoveHandler(touch.clientX, touch.clientY);			
-		};
-		
-		cube.addEventListener('touchend', function (evt) {
-			var touch = evt.changedTouches[0];	
-			onClickCubeHandler(touch.clientX, touch.clientY);
-			evt.preventDefault();
-		}, false);
-		
-		cube.addEventListener('click', function (evt) {
-			onClickCubeHandler(evt.clientX, evt.clientY);
-		}, false);
-		
-		function onClickCubeHandler(x,y) {
-			if (currentPoint.x == x && currentPoint.y == y) {
-				window.open('http://www.google.com', '_blank');
+			function init() {
+				
+				
+				var transform;
+				styles = [];
+				for (var i = 0; i < nunOfFace; i++) {
+					transform = i < 4 ? 'rotateY(' + i * 90 + 'deg)' : 'rotateX(' + Math.pow(-1, i) * 90 + 'deg)';
+					if (i == 2) {
+						transform = isVertical ? 'rotateX(180deg) rotateY(0deg)' : 'rotateX(0deg) rotateY(180deg)';
+					}
+					transform = transform + ' translateZ(' + (i < 4 ? width / 2 : height / 2) + 'px)';
+					faces[i].style.marginLeft = -width / 2 + 'px';
+					faces[i].style.marginTop = -(i < 4 ? height / 2 : width / 2) + 'px';
+					faces[i].style.width = width + 'px';
+					faces[i].style.height = (i < 4 ? height : width) + 'px';
+					faces[i].style.transform = faces[i].style.webkitTransform = perspective + transform;
+					styles.push(transform);
+				}
+				
 			}
-		};
+			
+			
+			function onMoveHandler(x, y) {
+				var nextPoint = {
+					'x': x - currentPoint.x,
+					'y': y - currentPoint.y
+				};
+				var angle = {
+					'x': -nextPoint.y / 2,
+					'y': nextPoint.x / 2
+				};
+				updateFaces(isVertical ? angle.x : angle.y);
+				currentAngle = isVertical ? angle.x : angle.y;
+				var piece = currentAngle % 90;
+				if (Math.abs(piece) >= 45) {
+					upAngle = piece > 0 ? currentAngle + 90 - piece : currentAngle - 90 - piece;
+				} else {
+					upAngle = currentAngle - piece;
+				}
+			};
 
-		window.addEventListener('mouseup', onMouseUpHandler, false);
-		function onMouseUpHandler(evt) {
-			window.removeEventListener('mousemove', onMouseMoveHandler, false);		
-			onUpHandler();
-		}
-		
-		window.addEventListener('touchend', onTouchEndHandler, false);
-		function onTouchEndHandler(evt) {
-			window.removeEventListener('touchmove', onTouchMoveHandler, false);
-			onUpHandler();
-		}
-		
-		function onUpHandler() {
-			if (isDrag) {
-				var obj = { angle: currentAngle };
-				TweenMax.to(obj, 0.3, {
-					angle: upAngle,
+			var cube = document.getElementById('banner');
+			
+			cube.addEventListener('touchstart', function(evt){
+				evt.preventDefault();
+				
+				var touch = evt.targetTouches[0];			
+				onMouseDownOrTouchStart(touch.clientX, touch.clientY);
+				window.addEventListener('touchmove', onTouchMoveHandler, false);
+				
+			}, false);
+				
+			cube.addEventListener('mousedown', function (evt) {
+				evt.preventDefault();
+				onMouseDownOrTouchStart(evt.clientX, evt.clientY);
+				window.addEventListener('mousemove', onMouseMoveHandler, false);			
+			}, false);
+			
+			function onMouseDownOrTouchStart(x, y) {
+				currentPoint = {
+					'x': x,
+					'y': y
+				};
+				isDrag = true;			
+			};
+			
+			function onMouseMoveHandler(evt) {
+				onMoveHandler(evt.clientX, evt.clientY);
+			};
+			
+			function onTouchMoveHandler(evt) {
+				var touch = evt.targetTouches[0];			
+				onMoveHandler(touch.clientX, touch.clientY);			
+			};
+			
+			cube.addEventListener('touchend', function (evt) {
+				var touch = evt.changedTouches[0];	
+				onClickCubeHandler(touch.clientX, touch.clientY, evt.path);
+				evt.preventDefault();
+			}, false);
+			
+			cube.addEventListener('click', function (evt) {
+				onClickCubeHandler(evt.clientX, evt.clientY, evt.path);
+			}, false);
+			
+			function onClickCubeHandler(x,y,path) {
+				if (currentPoint.x == x && currentPoint.y == y) {
+					//window.open(clickTag, '_blank');
+					
+					var face;
+					for (var i = 0; i < path.length; i ++) {
+						face = path[i];
+						
+						if (face.className.indexOf('face') != -1) {
+							alert(face.className);
+							return;
+						}
+					}					
+				}
+			};
+
+			window.addEventListener('mouseup', onMouseUpHandler, false);
+			function onMouseUpHandler(evt) {
+				window.removeEventListener('mousemove', onMouseMoveHandler, false);		
+				onUpHandler();
+			}
+			
+			window.addEventListener('touchend', onTouchEndHandler, false);
+			function onTouchEndHandler(evt) {
+				window.removeEventListener('touchmove', onTouchMoveHandler, false);
+				onUpHandler();
+			}
+			
+			function onUpHandler() {
+				if (isDrag) {
+					var obj = { angle: currentAngle };
+					TweenMax.to(obj, 0.3, {
+						angle: upAngle,
+						onUpdate: function () {
+							updateFaces(obj.angle);
+						},
+						onComplete: function () {
+							resetFaces();
+						}
+					});
+				}
+				isDrag = false;
+			}
+			
+			function resetFaces() {
+				var transform;
+				for (var i = 0; i < nunOfFace; i++) {
+					transform = faces[i].style.transform || faces[i].style.webkitTransform;
+					styles[i] = transform.replace(perspective, '');
+				}    
+			}
+			function updateFaces(angle) {
+				var transform;
+				for (var i = 0; i < nunOfFace; i++) {
+					transform = (isVertical ? 'rotateX(' + angle + 'deg)' : 'rotateY(' + angle + 'deg)') + styles[i];
+					faces[i].style.transform = faces[i].style.webkitTransform = perspective + transform;
+				}    
+			}
+			
+			
+			//rotate(0);
+			
+			function rotate(fromAngle) {
+				var obj = { angle: fromAngle };
+					TweenMax.to(obj, 2, {
+					delay: 2,
+					angle: fromAngle + 90,
 					onUpdate: function () {
 						updateFaces(obj.angle);
 					},
 					onComplete: function () {
-						resetFaces();
+						//resetFaces();					
+						rotate(fromAngle + 90);
 					}
 				});
 			}
-			isDrag = false;
 		}
 		
-		function resetFaces() {
-			var transform;
-			for (var i = 0; i < nunOfFace; i++) {
-				transform = faces[i].style.transform || faces[i].style.webkitTransform;
-				styles[i] = transform.replace(perspective, '');
-			}    
-		}
-		function updateFaces(angle) {
-			var transform;
-			for (var i = 0; i < nunOfFace; i++) {
-				transform = (isVertical ? 'rotateX(' + angle + 'deg)' : 'rotateY(' + angle + 'deg)') + styles[i];
-				faces[i].style.transform = faces[i].style.webkitTransform = perspective + transform;
-			}    
-		}
-		
-		function initFaces() {
-			var transform;
-			styles = [];
-			for (var i = 0; i < nunOfFace; i++) {
-				transform = i < 4 ? 'rotateY(' + i * 90 + 'deg)' : 'rotateX(' + Math.pow(-1, i) * 90 + 'deg)';
-				if (i == 2) {
-					transform = isVertical ? 'rotateX(180deg) rotateY(0deg)' : 'rotateX(0deg) rotateY(180deg)';
-				}
-				transform = transform + ' translateZ(' + (i < 4 ? width / 2 : height / 2) + 'px)';
-				faces[i].style.marginLeft = -width / 2 + 'px';
-				faces[i].style.marginTop = -(i < 4 ? height / 2 : width / 2) + 'px';
-				faces[i].style.width = width + 'px';
-				faces[i].style.height = (i < 4 ? height : width) + 'px';
-				faces[i].style.transform = faces[i].style.webkitTransform = perspective + transform;
-				styles.push(transform);
-			}
-		}
-
-		initFaces();
-		
-		var direction = document.getElementById('direction');
-		direction.addEventListener('click', function () {
-			changeDirection(this.checked);
-		}, false);
-		
-		function changeDirection(isChecked) {
-			isVertical = isChecked;
-			initFaces();
-		}
+		new Cube({
+			width: 300,
+			height: 250,
+			vertical: false,
+			autoRotate: 5,			
+			autoRotateLeft: true,
+			autoRotateTop: true,
+			faces: {
+				front: 'http://demo.akadigital.vn/3DCube/assets/wall1.png',
+				right: 'http://demo.akadigital.vn/3DCube/assets/wall1.png',
+				back: 'http://demo.akadigital.vn/3DCube/assets/wall1.png',
+				left: 'http://demo.akadigital.vn/3DCube/assets/wall1.png',
+				top: 'http://demo.akadigital.vn/3DCube/assets/wall1.png',
+				bottom: 'http://demo.akadigital.vn/3DCube/assets/wall1.png'
+			},
+			clickTag: 'http://www.google.com'		
+		});
       
     </script>
  
