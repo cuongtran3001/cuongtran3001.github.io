@@ -1,274 +1,97 @@
-<html><head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-	<meta name="viewport" content="width=device-width,initial-scale=1">
-
-    <title>3D Cube  Cross Browser</title>
-    
-    <style>
-		body {
-		  margin: 0;
-		  pading: 0;
-		  overflow: hidden;
-		}
-		.cube, .cube .face {
-		  position: absolute;
-		  top: 50%;
-		  left: 50%;
-		}
-
-		.cube .face * {
-		  position: absolute;
-		}
-
-		.clickTag {
-		  width: 100%;
-		  height: 100%;
-		  background: white;
-		  opacity: 0.01;
-		}
-
-		.cube {
-		  -webkit-user-select: none;
-		  cursor: move;
-		}
-
-		.face {
-		  text-transform: uppercase;
-		  box-sizing: border-box;
-		  /*border: solid 1px;*/
-		  backface-visibility: hidden;
-		}
-	</style>
-    
-  </head>
-
-  <body>
-
-    <!--input id="direction" type="checkbox">Change to vertical scroll</input-->
-
-	<div class="cube" id="banner">
-	  <div class="face front"><iframe src="http://cuongtran3001.github.io/banner/01/" width="300" height="250"></iframe><div class="clickTag"></div></div>
-	  <div class="face right"><img src="http://demo.akadigital.vn/3DCube/assets/wall1.png" width="300" height="250"></div>
-	  <div class="face back"><img src="http://demo.akadigital.vn/3DCube/assets/wall3.png" width="300" height="250"></div>
-	  <div class="face left"><img src="http://demo.akadigital.vn/3DCube/assets/wall4.png" width="300" height="250"></div>
-	  <div class="face top" ><img src="http://placehold.it/300x300" width="300" height="300"></div>
-	  <div class="face bottom"><img src="http://placehold.it/300x300" width="300" height="300"></div>
-	</div>
-      
-    <script src="http://cdnjs.cloudflare.com/ajax/libs/gsap/1.18.0/TweenMax.min.js"></script>
-
-    <script>
-		
-		function Cube(options) {
-			
-			var faces = document.querySelectorAll('.face'), 
-			nunOfFace = 6, 
-			width = 0, 
-			height = 0, 
-			styles = [], 
-			isDrag = false, 
-			isVertical = false, 
-			currentPoint, 
-			currentAngle, 
-			upAngle, 
-			clickTag = '',
-			autoRotate = 0,		
-			perspective = 'perspective(1000px) ';
-			
-			parse(options);
-			init();
-			
-			function parse(options) {
-				width = options.width;
-				height = options.height;
-				isVertical = options.vertical;
-				clickTag = options.clickTag;
-				autoRotate = options.autoRotate;
-				links = options.faces;
+<html>
+	<head>
+	  <meta charset="UTF-8">
+	  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+		<meta name="viewport" content="width=device-width,initial-scale=1">
+	  <title>3D Cube Banner</title>
+	  
+	  <style>
+			body {
+			  margin: 0;
+			  pading: 0;
+			  overflow: hidden;
+			}
+			.cube {
+			  -webkit-user-select: none;
+			  cursor: move;
+			  transform: scale(0.81);
+			}
+			.cube, .cube .face {
+			  position: absolute;
+			  top: 50%;
+			  left: 50%;
+			}
+			.cube .face iframe {
+			  border: none;
+			  margin: 0;
+			  pading: 0;
+			  overflow: hidden;
+			}
+			.cube .face * {
+			  position: absolute;
+			}
+			.clickTag {
+			  width: 100%;
+			  height: 100%;
+			  background: white;
+			  opacity: 0.01;
 			}
 			
-			function init() {
-				
-				
-				var transform;
-				styles = [];
-				for (var i = 0; i < nunOfFace; i++) {
-					transform = i < 4 ? 'rotateY(' + i * 90 + 'deg)' : 'rotateX(' + Math.pow(-1, i) * 90 + 'deg)';
-					if (i == 2) {
-						transform = isVertical ? 'rotateX(180deg) rotateY(0deg)' : 'rotateX(0deg) rotateY(180deg)';
-					}
-					transform = transform + ' translateZ(' + (i < 4 ? width / 2 : height / 2) + 'px)';
-					faces[i].style.marginLeft = -width / 2 + 'px';
-					faces[i].style.marginTop = -(i < 4 ? height / 2 : width / 2) + 'px';
-					faces[i].style.width = width + 'px';
-					faces[i].style.height = (i < 4 ? height : width) + 'px';
-					faces[i].style.transform = faces[i].style.webkitTransform = perspective + transform;
-					styles.push(transform);
-				}
-				
+			.face {
+			  text-transform: uppercase;
+			  box-sizing: border-box;
+			  /*border: solid 1px #cccccc;*/
+			  backface-visibility: hidden;
 			}
-			
-			
-			function onMoveHandler(x, y) {
-				var nextPoint = {
-					'x': x - currentPoint.x,
-					'y': y - currentPoint.y
-				};
-				var angle = {
-					'x': -nextPoint.y / 2,
-					'y': nextPoint.x / 2
-				};
-				updateFaces(isVertical ? angle.x : angle.y);
-				currentAngle = isVertical ? angle.x : angle.y;
-				var piece = currentAngle % 90;
-				if (Math.abs(piece) >= 45) {
-					upAngle = piece > 0 ? currentAngle + 90 - piece : currentAngle - 90 - piece;
-				} else {
-					upAngle = currentAngle - piece;
-				}
-			};
+		</style>
+	</head>
 
-			var cube = document.getElementById('banner');
-			
-			cube.addEventListener('touchstart', function(evt){
-				evt.preventDefault();
-				
-				var touch = evt.targetTouches[0];			
-				onMouseDownOrTouchStart(touch.clientX, touch.clientY);
-				window.addEventListener('touchmove', onTouchMoveHandler, false);
-				
-			}, false);
-				
-			cube.addEventListener('mousedown', function (evt) {
-				evt.preventDefault();
-				onMouseDownOrTouchStart(evt.clientX, evt.clientY);
-				window.addEventListener('mousemove', onMouseMoveHandler, false);			
-			}, false);
-			
-			function onMouseDownOrTouchStart(x, y) {
-				currentPoint = {
-					'x': x,
-					'y': y
-				};
-				isDrag = true;			
-			};
-			
-			function onMouseMoveHandler(evt) {
-				onMoveHandler(evt.clientX, evt.clientY);
-			};
-			
-			function onTouchMoveHandler(evt) {
-				var touch = evt.targetTouches[0];			
-				onMoveHandler(touch.clientX, touch.clientY);			
-			};
-			
-			cube.addEventListener('touchend', function (evt) {
-				var touch = evt.changedTouches[0];	
-				onClickCubeHandler(touch.clientX, touch.clientY, evt.path);
-				evt.preventDefault();
-			}, false);
-			
-			cube.addEventListener('click', function (evt) {
-				onClickCubeHandler(evt.clientX, evt.clientY, evt.path);
-			}, false);
-			
-			function onClickCubeHandler(x,y,path) {
-				if (currentPoint.x == x && currentPoint.y == y) {
-					//window.open(clickTag, '_blank');
-					
-					var face;
-					for (var i = 0; i < path.length; i ++) {
-						face = path[i];
-						
-						if (face.className.indexOf('face') != -1) {
-							alert(face.className);
-							return;
-						}
-					}					
-				}
-			};
+	<body>
+			<div class="cube" id="banner">
+		  	<div class="face front">
+		  		<div class="clickTag"></div>
+		  	</div>
+		  	<div class="face right">
+		  		<div class="clickTag"></div>
+		  	</div>
+		  	<div class="face back">
+					<div class="clickTag"></div>
+		  	</div>
+		  	<div class="face left">
+		  		<div class="clickTag"></div>
+		  	</div>
+		  	<div class="face top" >
+		  		<div class="clickTag"></div>
+		  	</div>
+		  	<div class="face bottom">
+		  		<div class="clickTag"></div>
+		  	</div>
+		</div>
+	  
+	  <script src="http://cdnjs.cloudflare.com/ajax/libs/gsap/1.18.0/TweenMax.min.js"></script>
+	  <script src="http://cuongtran3001.github.io/banner/cube.min.js"></script>
 
-			window.addEventListener('mouseup', onMouseUpHandler, false);
-			function onMouseUpHandler(evt) {
-				window.removeEventListener('mousemove', onMouseMoveHandler, false);		
-				onUpHandler();
-			}
+	  <script>
 			
-			window.addEventListener('touchend', onTouchEndHandler, false);
-			function onTouchEndHandler(evt) {
-				window.removeEventListener('touchmove', onTouchMoveHandler, false);
-				onUpHandler();
-			}
-			
-			function onUpHandler() {
-				if (isDrag) {
-					var obj = { angle: currentAngle };
-					TweenMax.to(obj, 0.3, {
-						angle: upAngle,
-						onUpdate: function () {
-							updateFaces(obj.angle);
-						},
-						onComplete: function () {
-							resetFaces();
-						}
-					});
-				}
-				isDrag = false;
-			}
-			
-			function resetFaces() {
-				var transform;
-				for (var i = 0; i < nunOfFace; i++) {
-					transform = faces[i].style.transform || faces[i].style.webkitTransform;
-					styles[i] = transform.replace(perspective, '');
-				}    
-			}
-			function updateFaces(angle) {
-				var transform;
-				for (var i = 0; i < nunOfFace; i++) {
-					transform = (isVertical ? 'rotateX(' + angle + 'deg)' : 'rotateY(' + angle + 'deg)') + styles[i];
-					faces[i].style.transform = faces[i].style.webkitTransform = perspective + transform;
-				}    
-			}
-			
-			
-			//rotate(0);
-			
-			function rotate(fromAngle) {
-				var obj = { angle: fromAngle };
-					TweenMax.to(obj, 2, {
-					delay: 2,
-					angle: fromAngle + 90,
-					onUpdate: function () {
-						updateFaces(obj.angle);
-					},
-					onComplete: function () {
-						//resetFaces();					
-						rotate(fromAngle + 90);
-					}
-				});
-			}
-		}
-		
-		new Cube({
-			width: 300,
-			height: 250,
-			vertical: false,
-			autoRotate: 5,			
-			autoRotateLeft: true,
-			autoRotateTop: true,
-			faces: {
-				front: 'http://demo.akadigital.vn/3DCube/assets/wall1.png',
-				right: 'http://demo.akadigital.vn/3DCube/assets/wall1.png',
-				back: 'http://demo.akadigital.vn/3DCube/assets/wall1.png',
-				left: 'http://demo.akadigital.vn/3DCube/assets/wall1.png',
-				top: 'http://demo.akadigital.vn/3DCube/assets/wall1.png',
-				bottom: 'http://demo.akadigital.vn/3DCube/assets/wall1.png'
-			},
-			clickTag: 'http://www.google.com'		
-		});
-      
-    </script>
- 
-</body></html>
+			new Cube({
+				width: 300,
+				height: 250,
+				vertical: true,
+				autoRotate: false,
+				autoRotateDelay: 5,
+				autoRotateTime: 1,
+				autoRotateLeft: true,
+				autoRotateTop: false,
+				faces: [
+					{face: 'front', link: 'http://cuongtran3001.github.io/banner/01', clickTag: 'http://www.google.com'},
+					{face: 'right', link: 'http://demo.akadigital.vn/3DCube/assets/wall1.png', clickTag: 'http://www.facebook.com'},
+					{face: 'back', link: 'http://demo.akadigital.vn/3DCube/assets/wall2.png', clickTag: 'http://www.twitter.com'},
+					{face: 'left', link: 'http://demo.akadigital.vn/3DCube/assets/wall3.png', clickTag: 'http://www.instagram.com'},
+					{face: 'top', link: 'https://placehold.it/300x300', clickTag: 'http://www.flickr.com'},
+					{face: 'bottom', link: 'https://placehold.it/300x300', clickTag: 'http://www.yahoo.com'}
+				]
+			});
+	  </script>
+	 
+	</body>
+</html>
