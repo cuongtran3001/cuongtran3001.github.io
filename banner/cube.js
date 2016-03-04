@@ -68,12 +68,17 @@ function Cube(options) {
     var divFace = document.querySelectorAll('.' + face)[0];
     divFace.setAttribute('clickTag', objFace.clickTag);
 
-    var iframe = document.createElement('iframe');
-    iframe.setAttribute('src', objFace.link);
-    iframe.setAttribute('width', parseInt(divFace.style.width));
-    iframe.setAttribute('height', parseInt(divFace.style.height));
-
-    divFace.insertBefore(iframe, divFace.childNodes[0]);
+    var banner;
+    if (objFace.type.toLowerCase() == 'banner') {
+      banner = document.createElement('iframe');
+    }
+    else {
+      banner = document.createElement('img');
+    }  
+    banner.setAttribute('src', objFace.link);
+    banner.setAttribute('width', parseInt(divFace.style.width));
+    banner.setAttribute('height', parseInt(divFace.style.height));
+    divFace.insertBefore(banner, divFace.childNodes[0]);
   }
 
   function resetFaces() {

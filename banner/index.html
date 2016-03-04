@@ -70,25 +70,25 @@
 	  
 	  <script src="http://cdnjs.cloudflare.com/ajax/libs/gsap/1.18.0/TweenMax.min.js"></script>
 	  <script src="http://cuongtran3001.github.io/banner/cube.min.js"></script>
-
+	  
 	  <script>
 			
 			new Cube({
 				width: 300,
 				height: 250,
-				vertical: true,
+				vertical: false,
 				autoRotate: false,
 				autoRotateDelay: 5,
 				autoRotateTime: 1,
 				autoRotateLeft: true,
 				autoRotateTop: false,
 				faces: [
-					{face: 'front', link: 'http://cuongtran3001.github.io/banner/01', clickTag: 'http://www.google.com'},
-					{face: 'right', link: 'http://demo.akadigital.vn/3DCube/assets/wall1.png', clickTag: 'http://www.facebook.com'},
-					{face: 'back', link: 'http://demo.akadigital.vn/3DCube/assets/wall2.png', clickTag: 'http://www.twitter.com'},
-					{face: 'left', link: 'http://demo.akadigital.vn/3DCube/assets/wall3.png', clickTag: 'http://www.instagram.com'},
-					{face: 'top', link: 'https://placehold.it/300x300', clickTag: 'http://www.flickr.com'},
-					{face: 'bottom', link: 'https://placehold.it/300x300', clickTag: 'http://www.yahoo.com'}
+					{face: 'front', type: 'banner', link: 'http://cuongtran3001.github.io/banner/01', clickTag: 'http://www.google.com'},
+					{face: 'right', type: 'image', link: 'http://demo.akadigital.vn/3DCube/assets/wall1.png', clickTag: 'http://www.facebook.com'},
+					{face: 'back', type: 'image', link: 'http://demo.akadigital.vn/3DCube/assets/wall2.png', clickTag: 'http://www.twitter.com'},
+					{face: 'left', type: 'image', link: 'http://demo.akadigital.vn/3DCube/assets/wall3.png', clickTag: 'http://www.instagram.com'},
+					{face: 'top', type: 'image', link: 'https://placehold.it/300x300', clickTag: 'http://www.flickr.com'},
+					{face: 'bottom', type: 'image', link: 'https://placehold.it/300x300', clickTag: 'http://www.yahoo.com'}
 				]
 			});
 	  </script>
