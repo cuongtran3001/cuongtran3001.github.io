@@ -15,11 +15,12 @@
 		
 		cb.oauth2_token(
 			function (reply) {
-				console.log(reply);
 				var bearer_token = reply.access_token;
 				cb.setBearerToken(bearer_token);
 				
-				cb.followers_list(
+				cb.__call(
+					"followers_list",
+					{},
 					function (result) {
 						console.log(result);
 					}
