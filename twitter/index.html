@@ -19,10 +19,10 @@
 				cb.setBearerToken(bearer_token);
 				
 				cb.__call(
-					"followers_list",
+					"statuses_homeTimeline",
 					{},
-					function (result) {
-						console.log(result);
+					function (reply) {
+						console.log(reply);
 					}
 				);
 			}
