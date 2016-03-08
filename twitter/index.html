@@ -14,10 +14,12 @@
 		cb.setToken("2890345524-Q7WExh7aJ6tswslPfpz2lWs3QvYey0X2yjX9HZD", "5YIBSfNXOawi2LXLgJ3fpPRILP3OXYmbvSCY3kgu385HE");
 		
 		cb.oauth2_token(
-			function (a) {
-				cb.__call(
-					"followers_list",
-					{},
+			function (reply) {
+				console.log(reply);
+				var bearer_token = reply.access_token;
+				cb.setBearerToken(bearer_token);
+				
+				cb.followers_list(
 					function (result) {
 						console.log(result);
 					}
