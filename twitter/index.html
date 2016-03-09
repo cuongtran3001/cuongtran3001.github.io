@@ -11,31 +11,16 @@
 		
 		var cb = new Codebird();
 		cb.setConsumerKey("fRD4MQg0cfH99ztTriaeILzO7", "HaySW3txsqvWt8IvLCsqMr1KtG5e7ZSUebLe1qnzJldkgSjm1B");
-		cb.setToken("2890345524-Q7WExh7aJ6tswslPfpz2lWs3QvYey0X2yjX9HZD", "5YIBSfNXOawi2LXLgJ3fpPRILP3OXYmbvSCY3kgu385HE");
+		cb.setToken("2890345524-Q7WExh7aJ6tswslPfpz2lWs3QvYey0X2yjX9HZD", "	5YIBSfNXOawi2LXLgJ3fpPRILP3OXYmbvSCY3kgu385HE");
 		
 		cb.__call(
-			"oauth_requestToken", {
-			oauth_callback: "http://cuongtran3001.github.io/twitter/callback.html"
-        },
-        function (reply, rate, err) {
-          if (err) {
-            console.log("error response or timeout exceeded" + err.error);
-          }
-          if (reply) {
-            console.log("reply", reply)
-              // stores it
-            cb.setToken(reply.oauth_token, reply.oauth_token_secret);
-
-            // gets the authorize screen URL
-            cb.__call(
-              "oauth_authorize", {},
-              function (auth_url) {
-                console.log("auth_url", auth_url);
-                 window.open(auth_url);                
-              });
+			"oauth_authorize", 
+			{oauth_callback: "http://cuongtran3001.github.io/twitter/callback.html"},
+			function (auth_url) {
+				console.log("auth_url", auth_url);
+				window.open(auth_url);                
 			}
-        });    
-	
+		);  
 	</script>
     
   </head>
