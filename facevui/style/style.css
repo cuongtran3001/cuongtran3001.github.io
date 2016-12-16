@@ -1,0 +1,120 @@
+@font-face {
+  font-family: 'fontawesome';
+  src: url('../fonts/fontawesome-webfont.woff2') format('woff2'), url('../fonts/fontawesome-webfont.woff') format('woff'), url('../fonts/fontawesome-webfont.ttf') format('truetype');
+}
+.thumbnail-wrapper {
+  display: inline-block;
+  margin-bottom: 1.786rem;
+}
+.thumbnail-wrapper:hover,
+.thumbnail-wrapper:focus {
+  text-decoration: none;
+  color: #333333;
+}
+.thumbnail-wrapper .image {
+  overflow: hidden;
+  text-align: center;
+}
+.thumbnail-wrapper img {
+  display: inline-block;
+  max-width: 100%;
+  border-radius: 5px;
+  vertical-align: middle;
+}
+.thumbnail-wrapper .desc {
+  margin-top: 0.5rem;
+}
+.main-title {
+  text-transform: uppercase;
+  font-size: 1.714rem;
+}
+.sub-title {
+  margin: 0 0 1.429rem 0;
+  color: #3b5998;
+  font-size: 1.286rem;
+  text-transform: uppercase;
+}
+html {
+  font-size: 14px;
+}
+body {
+  background-color: #ebeef7;
+  color: #333333;
+  font-size: 14px;
+}
+header .logo {
+  font-size: 30px;
+  opacity: 0.5;
+}
+header nav {
+  margin: 5px 0;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 3px;
+  box-shadow: 0 1px 1px;
+}
+header nav:before,
+header nav:after {
+  content: " ";
+  display: table;
+}
+header nav:after {
+  clear: both;
+}
+header nav li {
+  float: left;
+  position: relative;
+  display: block;
+}
+header nav li a {
+  padding: 5px;
+}
+header nav .active a {
+  color: gray;
+}
+footer {
+  margin-top: 3.571rem;
+  padding: 0.714rem 0;
+  background-color: #3b5998;
+  color: white;
+  font-size: 0.857rem;
+}
+.introduction {
+  padding: 2.5rem;
+  border-radius: 5px;
+  background: #ec6b76;
+  color: white;
+  text-align: center;
+}
+.introduction .main-title {
+  max-width: 80%;
+  margin: 0 auto;
+}
+.introduction .image {
+  margin-top: 2.5rem;
+  margin-bottom: 1.786rem;
+}
+.paragraph {
+  margin-bottom: 2.857rem;
+}
+.paragraph .main-title {
+  margin: 1.786rem 0;
+  color: #3b5998;
+}
+.paragraph .infor {
+  font-size: 1.143rem;
+}
+.paragraph .infor p {
+  margin-bottom: 1.429rem;
+}
+.paragraph .infor p:last-child {
+  margin-bottom: 0;
+}
+.you-may-like {
+  margin-bottom: 1.786rem;
+}
+@media screen and (min-width: 992px) {
+  .you-may-like {
+    margin-bottom: 8.571rem;
+  }
+}
