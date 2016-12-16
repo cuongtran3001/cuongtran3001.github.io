@@ -1,15 +1,39 @@
 @font-face {
-  font-family: 'fontawesome';
-  src: url('../fonts/fontawesome-webfont.woff2') format('woff2'), url('../fonts/fontawesome-webfont.woff') format('woff'), url('../fonts/fontawesome-webfont.ttf') format('truetype');
+  font-family: "FacebookLetterFaces-Regular";
+  src: url('../fonts/FacebookLetterFaces-Regular.woff') format('woff'), url('../fonts/FacebookLetterFaces-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: "MyriadPro-Regular";
+  src: url('../fonts/MyriadPro-Regular.woff') format('woff'), url('../fonts/MyriadPro-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: "OpenSans";
+  src: url('../fonts/OpenSans.woff') format('woff'), url('../fonts/OpenSans.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+}
+.wrapper {
+  margin-top: 2.143rem;
 }
 .thumbnail-wrapper {
-  display: inline-block;
+  display: block;
+  color: #333333;
+  text-align: center;
   margin-bottom: 1.786rem;
+}
+@media screen and (min-width: 992px) {
+  .thumbnail-wrapper {
+    text-align: left;
+  }
 }
 .thumbnail-wrapper:hover,
 .thumbnail-wrapper:focus {
   text-decoration: none;
-  color: #333333;
+  color: #3b5998;
 }
 .thumbnail-wrapper .image {
   overflow: hidden;
@@ -25,14 +49,173 @@
   margin-top: 0.5rem;
 }
 .main-title {
+  font-family: "FacebookLetterFaces-Regular";
   text-transform: uppercase;
   font-size: 1.714rem;
 }
 .sub-title {
   margin: 0 0 1.429rem 0;
   color: #3b5998;
+  font-family: "FacebookLetterFaces-Regular";
   font-size: 1.286rem;
   text-transform: uppercase;
+}
+.icon-circle {
+  display: none;
+  margin: 10px auto;
+  width: 40px;
+  height: 40px;
+  position: relative;
+  text-align: center;
+}
+.icon-circle .icon-child {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+.icon-circle .icon-child:before {
+  content: '';
+  display: block;
+  margin: 0 auto;
+  width: 15%;
+  height: 15%;
+  background-color: #333;
+  border-radius: 100%;
+  -webkit-animation: sk-circleBounceDelay 1.2s infinite ease-in-out both;
+  animation: sk-circleBounceDelay 1.2s infinite ease-in-out both;
+}
+.icon-circle .icon-circle2 {
+  -webkit-transform: rotate(30deg);
+  -ms-transform: rotate(30deg);
+  transform: rotate(30deg);
+}
+.icon-circle .icon-circle3 {
+  -webkit-transform: rotate(60deg);
+  -ms-transform: rotate(60deg);
+  transform: rotate(60deg);
+}
+.icon-circle .icon-circle4 {
+  -webkit-transform: rotate(90deg);
+  -ms-transform: rotate(90deg);
+  transform: rotate(90deg);
+}
+.icon-circle .icon-circle5 {
+  -webkit-transform: rotate(120deg);
+  -ms-transform: rotate(120deg);
+  transform: rotate(120deg);
+}
+.icon-circle .icon-circle6 {
+  -webkit-transform: rotate(150deg);
+  -ms-transform: rotate(150deg);
+  transform: rotate(150deg);
+}
+.icon-circle .icon-circle7 {
+  -webkit-transform: rotate(180deg);
+  -ms-transform: rotate(180deg);
+  transform: rotate(180deg);
+}
+.icon-circle .icon-circle8 {
+  -webkit-transform: rotate(210deg);
+  -ms-transform: rotate(210deg);
+  transform: rotate(210deg);
+}
+.icon-circle .icon-circle9 {
+  -webkit-transform: rotate(240deg);
+  -ms-transform: rotate(240deg);
+  transform: rotate(240deg);
+}
+.icon-circle .icon-circle10 {
+  -webkit-transform: rotate(270deg);
+  -ms-transform: rotate(270deg);
+  transform: rotate(270deg);
+}
+.icon-circle .icon-circle11 {
+  -webkit-transform: rotate(300deg);
+  -ms-transform: rotate(300deg);
+  transform: rotate(300deg);
+}
+.icon-circle .icon-circle12 {
+  -webkit-transform: rotate(330deg);
+  -ms-transform: rotate(330deg);
+  transform: rotate(330deg);
+}
+.icon-circle .icon-circle2:before {
+  -webkit-animation-delay: -1.1s;
+  animation-delay: -1.1s;
+}
+.icon-circle .icon-circle3:before {
+  -webkit-animation-delay: -1s;
+  animation-delay: -1s;
+}
+.icon-circle .icon-circle4:before {
+  -webkit-animation-delay: -0.9s;
+  animation-delay: -0.9s;
+}
+.icon-circle .icon-circle5:before {
+  -webkit-animation-delay: -0.8s;
+  animation-delay: -0.8s;
+}
+.icon-circle .icon-circle6:before {
+  -webkit-animation-delay: -0.7s;
+  animation-delay: -0.7s;
+}
+.icon-circle .icon-circle7:before {
+  -webkit-animation-delay: -0.6s;
+  animation-delay: -0.6s;
+}
+.icon-circle .icon-circle8:before {
+  -webkit-animation-delay: -0.5s;
+  animation-delay: -0.5s;
+}
+.icon-circle .icon-circle9:before {
+  -webkit-animation-delay: -0.4s;
+  animation-delay: -0.4s;
+}
+.icon-circle .icon-circle10:before {
+  -webkit-animation-delay: -0.3s;
+  animation-delay: -0.3s;
+}
+.icon-circle .icon-circle11:before {
+  -webkit-animation-delay: -0.2s;
+  animation-delay: -0.2s;
+}
+.icon-circle .icon-circle12:before {
+  -webkit-animation-delay: -0.1s;
+  animation-delay: -0.1s;
+}
+@-webkit-keyframes sk-circleBounceDelay {
+  0%,
+  80%,
+  100% {
+    -webkit-transform: scale(0);
+    transform: scale(0);
+  }
+  40% {
+    -webkit-transform: scale(1);
+    transform: scale(1);
+  }
+}
+@keyframes sk-circleBounceDelay {
+  0%,
+  80%,
+  100% {
+    -webkit-transform: scale(0);
+    transform: scale(0);
+  }
+  40% {
+    -webkit-transform: scale(1);
+    transform: scale(1);
+  }
+}
+@keyframes scrollUp {
+  from {
+    top: -400px;
+  }
+  to {
+    top: 0;
+  }
 }
 html {
   font-size: 14px;
@@ -42,35 +225,67 @@ body {
   color: #333333;
   font-size: 14px;
 }
-header .logo {
-  font-size: 30px;
-  opacity: 0.5;
-}
-header nav {
-  margin: 5px 0;
-  padding: 10px;
-  border: 1px solid #ddd;
-  border-radius: 3px;
-  box-shadow: 0 1px 1px;
-}
-header nav:before,
-header nav:after {
-  content: " ";
-  display: table;
-}
-header nav:after {
-  clear: both;
-}
-header nav li {
-  float: left;
+.header {
   position: relative;
-  display: block;
+  width: 100%;
+  padding: 1.429rem;
+  background-color: white;
+  z-index: 2;
+  transition: all 0.5s ease;
 }
-header nav li a {
-  padding: 5px;
+.header.scroll-up {
+  position: fixed;
+  -webkit-animation: scrollUp 0.5s ease forwards;
+  -o-animation: scrollUp 0.5s ease forwards;
+  animation: scrollUp 0.5s ease forwards;
 }
-header nav .active a {
-  color: gray;
+@media only screen and (min-width: 768px) {
+  .header {
+    padding: 0.714rem;
+  }
+}
+.header img {
+  max-width: 100%;
+}
+.header .logo {
+  display: inline-block;
+  width: 100%;
+  text-align: center;
+  vertical-align: middle;
+}
+@media only screen and (min-width: 992px) {
+  .header .logo {
+    text-align: left;
+  }
+}
+.header .buttons-facebook {
+  text-align: center;
+  margin-top: 1.786rem;
+}
+@media only screen and (min-width: 768px) {
+  .header .buttons-facebook {
+    margin-top: 0;
+  }
+}
+@media (min-width: 768px) and (max-width: 1199px) {
+  .header .buttons-facebook {
+    text-align: right;
+  }
+}
+@media only screen and (min-width: 992px) {
+  .header .buttons-facebook {
+    text-align: left;
+  }
+}
+.header .button-facebook {
+  display: inline-block;
+  margin-right: 0.429rem;
+}
+@media only screen and (min-width: 768px) {
+  .equal-height {
+    display: flex;
+    align-items: center;
+  }
 }
 footer {
   margin-top: 3.571rem;
@@ -81,10 +296,19 @@ footer {
 }
 .introduction {
   padding: 2.5rem;
-  border-radius: 5px;
   background: #ec6b76;
   color: white;
   text-align: center;
+}
+@media screen and (min-width: 992px) {
+  .introduction {
+    border-radius: 5px;
+  }
+}
+@media screen and (max-width: 767px) {
+  .introduction {
+    margin: 0 -15px;
+  }
 }
 .introduction .main-title {
   max-width: 80%;
@@ -94,6 +318,15 @@ footer {
   margin-top: 2.5rem;
   margin-bottom: 1.786rem;
 }
+.introduction .infor {
+  font-family: "MyriadPro-Regular";
+  font-size: 1.143rem;
+}
+.introduction .btn-share,
+.introduction .btn-login,
+.introduction .status {
+  display: none;
+}
 .paragraph {
   margin-bottom: 2.857rem;
 }
@@ -101,10 +334,8 @@ footer {
   margin: 1.786rem 0;
   color: #3b5998;
 }
-.paragraph .infor {
-  font-size: 1.143rem;
-}
 .paragraph .infor p {
+  font-size: 1.143rem;
   margin-bottom: 1.429rem;
 }
 .paragraph .infor p:last-child {
