@@ -1,9 +1,0 @@
-{
-  "status": "success",
-  "data": [
-    "<div class=\"col-md-4\"><a class=\"thumbnail-wrapper\" href=\"./detail.html\" title=\"What DC Or Marvel Superhero Are You?\"><div class=\"image\"><img src=\"images/upload/photo-1.jpg\" alt=\"\"></div><div class=\"desc\">What DC Or Marvel Superhero Are You?</div></a></div>",
-    "<div class=\"col-md-4\"><a class=\"thumbnail-wrapper\" href=\"./detail.html\" title=\"Which Winter Trend Should You Warm Up To?\"><div class=\"image\"><img src=\"images/upload/photo-2.jpg\" alt=\"\"></div><div class=\"desc\">Which Winter Trend Should You Warm Up To?</div></a></div>",
-    "<div class=\"col-md-4\"><a class=\"thumbnail-wrapper\" href=\"./detail.html\" title=\"Why did Twinkies disappear from retailers’ shelves?\"><div class=\"image\"><img src=\"images/upload/photo-3.jpg\" alt=\"\"></div><div class=\"desc\">Why did Twinkies disappear from retailers’ shelves?</div></a></div>"
-    ],
-  "totalRecord": 3
-}
