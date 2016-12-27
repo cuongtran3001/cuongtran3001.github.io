@@ -41,7 +41,7 @@
 }
 .thumbnail-wrapper img {
   display: inline-block;
-  max-width: 100%;
+  width: 100%;
   border-radius: 5px;
   vertical-align: middle;
 }
@@ -49,7 +49,7 @@
   margin-top: 0.5rem;
 }
 .main-title {
-  font-family: "FacebookLetterFaces-Regular";
+  font-family: "OpenSans", "Helvetica Neue", Helvetica, Arial, sans-serif;
   text-transform: uppercase;
   font-size: 1.714rem;
 }
@@ -233,12 +233,6 @@ body {
   z-index: 2;
   transition: all 0.5s ease;
 }
-.header.scroll-up {
-  position: fixed;
-  -webkit-animation: scrollUp 0.5s ease forwards;
-  -o-animation: scrollUp 0.5s ease forwards;
-  animation: scrollUp 0.5s ease forwards;
-}
 @media only screen and (min-width: 768px) {
   .header {
     padding: 0.714rem;
@@ -294,9 +288,44 @@ footer {
   color: white;
   font-size: 0.857rem;
 }
+.back-to-top {
+  position: fixed;
+  bottom: 1.429rem;
+  right: 1.429rem;
+  width: 2.857rem;
+  height: 2.857rem;
+  line-height: 2.857rem;
+  cursor: pointer;
+  text-align: center;
+  padding: 0;
+  z-index: 2;
+  appearance: none;
+  background: #3b5998;
+  display: none;
+  border: none;
+  border-radius: 10px;
+}
+.back-to-top:after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  border-left: 7px solid transparent;
+  border-right: 7px solid transparent;
+  border-bottom: 7px solid #fff;
+}
+.back-to-top:focus {
+  outline: none;
+}
+@media only screen and (max-width: 767px) {
+  .back-to-top.show {
+    display: block;
+  }
+}
 .introduction {
   padding: 2.5rem;
-  background: #ec6b76;
+  background: #3b5998;
   color: white;
   text-align: center;
 }

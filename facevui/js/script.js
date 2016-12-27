@@ -1,4 +1,67 @@
 
+;(function($, window, undefined) {
+  'use strict';
+
+  var pluginName = 'backtotop';
+
+  function Plugin(element, options) {
+    this.element = $(element);
+    this.options = $.extend({}, $.fn[pluginName].defaults, this.element.data(), options);
+    this.init();
+  }
+
+  Plugin.prototype = {
+    init: function() {
+
+      var showCls = this.options.class,
+          time = this.options.time,
+          self = $(this.element),
+          scrollTop;
+
+      $(window).on('scroll load resize', function(){
+        scrollTop = $(window).scrollTop();
+        if (scrollTop > 100) {
+          self.addClass(showCls);
+        } else {
+          self.removeClass(showCls);
+        }
+      });
+
+      self.click(function(){
+        $('html, body').animate({
+          scrollTop: 0
+        }, time);
+        return false;
+      });
+    },
+    destroy: function() {
+
+      $.removeData(this.element[0], pluginName);
+    }
+  };
+
+  $.fn[pluginName] = function(options, params) {
+    return this.each(function() {
+      var instance = $.data(this, pluginName);
+      if (!instance) {
+        $.data(this, pluginName, new Plugin(this, options));
+      } else if (instance[options]) {
+        instance[options](params);
+      }
+    });
+  };
+
+  $.fn[pluginName].defaults = {
+    class: 'show',
+    time: 800
+  };
+
+  $(function() {
+    $('[data-' + pluginName + ']')[pluginName]();
+  });
+
+}(jQuery, window));
+
 ;(function($, window, FB, undefined) {
   'use strict';
 
@@ -177,58 +240,3 @@
 
 }(jQuery, window));
 
-
-;(function($, window, undefined) {
-  'use strict';
-
-  var pluginName = 'scroll-header';
-
-  function Plugin(element, options) {
-    this.element = $(element);
-    this.options = $.extend({}, $.fn[pluginName].defaults, this.element.data(), options);
-    this.init();
-  }
-
-  Plugin.prototype = {
-    init: function() {
-      var that = this,
-          scrollTop,
-          isScrollPos = 0;
-
-      $(window).off('scroll.' + pluginName).on('scroll.' + pluginName, function() {
-        scrollTop = $(window).scrollTop();
-
-        if((scrollTop > isScrollPos) || (scrollTop === 0)) {
-          that.element.removeClass('scroll-up');
-        }
-        else {
-          that.element.addClass('scroll-up');
-        }
-
-        isScrollPos = scrollTop;
-      }).trigger('scroll.' + pluginName);
-    },
-    destroy: function() {
-
-      $.removeData(this.element[0], pluginName);
-    }
-  };
-
-  $.fn[pluginName] = function(options, params) {
-    return this.each(function() {
-      var instance = $.data(this, pluginName);
-      if (!instance) {
-        $.data(this, pluginName, new Plugin(this, options));
-      } else if (instance[options]) {
-        instance[options](params);
-      }
-    });
-  };
-
-  $.fn[pluginName].defaults = {};
-
-  $(function() {
-    $('[data-' + pluginName + ']')[pluginName]();
-  });
-
-}(jQuery, window));
