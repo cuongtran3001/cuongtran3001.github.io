@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Facebook API</title>
+  <style>
+    #fb-logout-btn,
+    #get-images,
+    #share-current-page {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <script src="script.js"></script>
+
+  <fb:login-button id="fb-login-btn" scope="public_profile,email,user_photos" onlogin="checkLoginState();">
+  </fb:login-button>
+
+
+  <div id="status"></div>
+  <div id="images"></div>
+  
+  <button id="share-current-page" onclick="pageShare()">Share this page</button>
+  <button id="get-images" onclick="getImages(userId)">Get Images</button>
+  <button id="fb-logout-btn" onclick="doLogout()">Log Out</button>
+</body>
+</html>

@@ -1,0 +1,40 @@
+<html>
+  <head>
+    <script src="./assets/javascript/jquery.js"></script>
+    <script src="./assets/javascript/fb-social.js"></script>
+    <style>
+      .profile-list li{
+        float: left;
+        list-style-type: none;
+      }
+      .hidden{
+        display: none !important;
+      }
+      .avatar{
+        cursor: pointer;
+      }
+
+      .loading{
+        position: absolute;
+        top: 30%;
+        left: 50%;
+        transform: translate(-50%);
+        background: #bbbbbb;
+        padding: 6px;
+      }
+    </style>
+  </head>
+  <body>
+    <div data-fb-social>
+      <button data-fb-share-link>share</button>
+      <div class="infor">
+        <img src="#" alt="avatar" id="avatar"  class="hidden avatar" />
+        <p>Your name: <span id="yourname"></span></p>
+        <p>Email: <span id="email"></span></p>
+        <p></p>
+        <ul id="profile-pics-list" class="profile-list">
+        </ul>
+      </div>
+    </div>
+    <p id="loading" class="loading">Loading...</p>
+</html>

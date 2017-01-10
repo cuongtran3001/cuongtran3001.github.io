@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>Homepage</title>
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <meta name="robots" content="index, follow">
+    <meta name="author" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="icon" href="favicon-16x16.png" type="image/x-icon" sizes="16x16">    
+    <link rel="stylesheet" href="style/style.css">
+   
+  </head>
+  <body class="home">
+    <div class="container">    
+      <main>
+        <script src="http://connect.facebook.net/en_US/all.js"></script>
+        <div id="status" data-status></div><img class="profileImage" src="" data-profileimage>
+        <div class="fb-login-button" data-login-button data-max-rows="1" data-size="medium" data-show-faces="false" data-auto-logout-link="false" onlogin="checkLoginState();"> </div>
+        <button class="share-button" data-share data-url="http://localhost:3000/" data-text="Share" data-title="share title">Share</button>
+        <div class="popup" data-avatarPopup>
+          <div class="avatar"></div>
+        </div>
+      </main>
+    </div>
+    <!-- build:js js/script.js-->    
+    <script src="js/libs.js"></script>
+    <script src="js/script.js"></script>
+ 
+  </body>
+</html>

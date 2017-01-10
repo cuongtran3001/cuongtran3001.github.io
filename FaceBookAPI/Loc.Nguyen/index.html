@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html class="no-js" lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>index</title>
+    <meta name="description" content="">
+    <meta name="keywords" content="">
+    <meta name="robots" content="index, follow">
+    <meta name="author" content="">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- build:css css/style.css-->
+    <link rel="stylesheet" href="style/style.css">
+    <!-- endbuild-->
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+    <script src="js/script.js"></script>
+  </head>
+  <body>
+    <div class="container" data-face-app>
+      <div id="fb-root"></div>
+      <button id="shareBtn" data-share>Share current page</button>
+      <button id="profile-pictures" data-profile-pictures>profile pictures</button>
+      <div id="avatar"></div>
+    </div>
+    <!-- endbuild-->
+    <script>
+      window.fbAsyncInit = function () {
+        FB.init({
+          appId: '390145291021310',
+          status: true,
+          cookie: true,
+          xfbml: true
+        });
+      };
+      (function (doc) {
+        var js;
+        var id = 'facebook-jssdk';
+        var ref = doc.getElementsByTagName('script')[0];
+        if (doc.getElementById(id)) {
+          return;
+        }
+        js = doc.createElement('script');
+        js.id = id;
+        js.async = true;
+        js.src = "//connect.facebook.net/en_US/all.js";
+        ref.parentNode.insertBefore(js, ref);
+      }(document));
+    </script>
+    <!--[if lte IE 9]><p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p><![endif]-->
+    <noscript>JavaScript is off. Please enable to view full site.</noscript>
+  </body>
+</html>

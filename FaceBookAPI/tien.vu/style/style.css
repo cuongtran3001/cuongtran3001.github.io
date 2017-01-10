@@ -1,0 +1,21 @@
+
+.profileImage {
+  display: none;
+}
+.popup {
+  display: none;
+  position: fixed;
+  z-index: 999;
+  width: 100px;
+  height: 100px;
+  border: 1px solid #ccc;
+  background-color: #fbfbfb;
+  left: 15%;
+  top: 15%;
+  text-align: center;
+  padding: 15px;
+}
+.popup .avatar {
+  background-color: #fff;
+}
+

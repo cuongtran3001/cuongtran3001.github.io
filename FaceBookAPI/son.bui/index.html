@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>facebook html</title>
+  </head>
+  <body>
+    <h1>demo Facebook Api</h1>
+    <script>
+    // Load the SDK asynchronously
+    (function(d, s, id) {
+      var js, fjs = d.getElementsByTagName(s)[0];
+      if (d.getElementById(id)) return;
+      js = d.createElement(s); js.id = id;
+      js.src = "//connect.facebook.net/en_US/sdk.js";
+      fjs.parentNode.insertBefore(js, fjs);
+    }(document, 'script', 'facebook-jssdk'));
+
+    var globalUserID,globalAccessToken,albumid;
+
+    function statusChangeCallback(response) {
+      console.log('statusChangeCallback');
+      console.log(response);
+      if (response.status === 'connected') {
+        console.log('userID: ', response.authResponse.userID);
+        globalUserID = response.authResponse.userID;
+        console.log('accesstoken: ', response.authResponse.accessToken);
+        globalAccessToken = response.authResponse.accessToken;
+        testAPI(response.authResponse.userID,response.authResponse.accessToken);
+      } else if (response.status === 'not_authorized') {
+        document.getElementById('status').innerHTML = 'Please log ' + 'into this app.';
+      } else {
+        document.getElementById('status').innerHTML = 'Please log ' + 'into Facebook.';
+      }
+    }
+
+    function checkLoginState() {
+      FB.getLoginStatus(function(response) {
+        statusChangeCallback(response);
+      });
+    }
+
+    function logout() {
+      FB.logout(function(response) {
+         console.log(response);
+      });
+    }
+
+    function login() {
+        FB.login(function(response) {
+            console.log(response);
+            if (response.status == 'connected') {
+              checkLoginState()
+            } else {
+             console.log('User cancelled login or did not fully authorize.');
+            }
+        },  {scope: 'email,user_photos'});
+    };
+
+
+  window.fbAsyncInit = function() {
+    FB.init({
+      appId      : '390145291021310',
+      cookie     : true,
+      xfbml      : true,
+      version    : 'v2.8'
+    });
+
+    FB.getLoginStatus(function(response) {
+      statusChangeCallback(response);
+    });
+  };
+
+  function testAPI(userID,access_token) {
+    FB.api('/me?fields=email,name', function(response) {
+      console.log('Successful login for: ' + response);
+      document.getElementById('status').innerHTML =
+        'Thanks for logging in, <br/>' + response.name + '<br/>' + response.email;
+    });
+    FB.api("/"+ userID+ "/picture",function (response) {
+        if (response && !response.error){
+          console.log("avt", response);
+          var avatar = new Image();
+          avatar.src = response.data.url;
+          document.getElementById('avt').appendChild(avatar);
+        }
+      }
+    );
+
+    FB.api("/"+userID+"/albums?access_token="+access_token,
+        function (response) {
+          if (response && !response.error) {
+            console.log('albums',response);
+            var profilealbum = response.data.filter(
+              function (al) {
+                if (al.name === "Profile Pictures"){
+                  return al;
+                }
+              }
+            );
+            albumid = profilealbum[0].id;
+            console.log(albumid);
+            console.log(profilealbum);
+          }
+        }
+    );
+  }
+
+  function shareFB() {
+    // var href = window.location.href;
+    var href = 'http://sutrixgroup.com/';
+    FB.ui(
+      {
+        method: 'share',
+        href: href,
+      }, function(response){
+        console.log('share response',response );
+      }
+    );
+  };
+
+  function getAlbums() {
+    FB.api(
+        "/"+albumid+"/photos?fields=source,name,id",
+        function (response) {
+          if (response && !response.error) {
+            console.log('album avt',response);
+            loadimage(response.data)
+          }
+        }
+    );
+  }
+
+  function loadimage(data) {
+    var list = '<ul>';
+    data.forEach(function(img) {
+    list += '<li><img src="'+img.source +'" /></li>'
+    });
+    list += '</ul>';
+    document.getElementById('album').innerHTML = list;
+  }
+
+</script>
+<div id="login">
+
+  <fb:login-button scope="public_profile,email,user_posts,user_photos" onlogin="checkLoginState();">
+  </fb:login-button>
+
+  <br />
+  <br />
+
+  <button type="button" name="button" onclick="login()">
+    custom login with photo user scope
+  </button>
+</div>
+<div id="status"></div>
+<br />
+<div id="avt"></div>
+<br />
+<button type="button" id="share" onclick="shareFB()" name="button">
+  share page
+</button>
+<button type="button" name="button" onclick="logout()"> logout </button>
+<br />
+<br />
+ <button type="button" name="button" onclick="getAlbums()">
+  getAlbums
+</button>
+<div id="album">
+
+</div>
+  </body>
+</html>
