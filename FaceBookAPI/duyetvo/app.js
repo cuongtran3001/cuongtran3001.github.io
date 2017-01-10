@@ -19,7 +19,7 @@ $(document).ready(function() {
   };
 
   window.fbAsyncInit = function() {
-    initFaceBook('578250409038186');
+    initFaceBook('390145291021310');
     handleFBLogin();
   };
 
